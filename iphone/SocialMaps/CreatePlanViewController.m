@@ -22,6 +22,7 @@
 #import "Globals.h"
 #import "SelectCircleTableCell.h"
 #import "NotificationController.h"
+#import "UIImageView+Cached.h"
 
 @interface CreatePlanViewController ()
 
@@ -617,31 +618,9 @@ int createCounter=0, updateCounter=0;
                 UserFriends *userFrnd=[FriendList objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
-                if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil))
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }               
-                }
+                if(!isDragging_msg && !isDecliring_msg)
+                    [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+                
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
@@ -684,27 +663,6 @@ int createCounter=0, updateCounter=0;
             }        
             x+=80;
         }
-    }
-}
-
--(void)DownLoad:(NSNumber *)path
-{
-    if (isBgDlRunning==TRUE)
-    {
-        int index = [path intValue];
-        UserFriends *userFrnd=[FriendList objectAtIndex:index];
-        
-        NSString *Link = userFrnd.imageUrl;
-        //Start download image from url
-        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-        if(img)
-        {
-            //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
-            [self reloadScrollview];
-        }
-        [img release];
-        // Now, we need to reload scroll view to load downloaded image
     }
 }
 
@@ -964,8 +922,6 @@ int createCounter=0, updateCounter=0;
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",FriendList,friendListArr,[FriendList count],[friendListArr count], dicImages_msg);
-        
         for (UserFriends *sTemp in friendListArr)
         {
             NSRange titleResultsRange = [sTemp.userName rangeOfString:searchTexts options:NSCaseInsensitiveSearch];		
@@ -980,8 +936,7 @@ int createCounter=0, updateCounter=0;
             }
         }
     }
-    
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",FriendList,friendListArr,[FriendList count],[friendListArr count], dicImages_msg);
+ 
     [self reloadScrollview];
 }
 
