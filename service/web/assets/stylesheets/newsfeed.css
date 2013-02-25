@@ -96,9 +96,8 @@ ul li .row .name h4 {
 }
 ul li .row .time {
   float: right;
-  margin-right: 10px;
+  /*margin-right: 10px;*/
   margin-top: 10px;
-  margin-left: 10px;
   color: #888;
 }
 ul li .row .comment {
@@ -109,7 +108,7 @@ ul li .row .comment {
   margin-left: 60px;
   margin-right: 5px;
   margin-top: 30px;
-  position: absolute;
+  /*position: absolute;*/
   width: 60%;
   z-index: 200;
   -webkit-border-radius: 5px;
@@ -158,7 +157,7 @@ ul li .activity .row .comment {
   width: 60%;
   /*max-width: 230px;*/
 
-  max-height: 27px;
+  /*max-height: 27px;*/
   overflow: hidden;
 }
 ul li .activity .row .tools {
