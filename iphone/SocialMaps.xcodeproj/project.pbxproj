@@ -467,6 +467,8 @@
 		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
 		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
 		B04EFA3116591358002C2D6B /* EachFriendInList.m in Sources */ = {isa = PBXBuildFile; fileRef = B04EFA3016591358002C2D6B /* EachFriendInList.m */; };
+		B06FA5C316DB79DB00872578 /* sm_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B06FA5C116DB79DB00872578 /* sm_icon.png */; };
+		B06FA5C416DB79DB00872578 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B06FA5C216DB79DB00872578 /* sm_icon@2x.png */; };
 		B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07777CC163E3A0A00969699 /* DirectionViewController.xib */; };
 		B07777D4163E6D9900969699 /* transport1.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D0163E6D9800969699 /* transport1.png */; };
 		B07777D5163E6D9900969699 /* transport2.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D1163E6D9800969699 /* transport2.png */; };
@@ -499,9 +501,6 @@
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
 		B0D648E915FC4F460006DF0E /* MeetUpRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */; };
-		B0DB870E16D1FDFD0022AC01 /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = B0DB870D16D1FDFD0022AC01 /* icon_event.png */; };
-		B0DB871516D212700022AC01 /* sm_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B0DB871316D212700022AC01 /* sm_icon.png */; };
-		B0DB871616D212700022AC01 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0DB871416D212700022AC01 /* sm_icon@2x.png */; };
 		B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */; };
 /* End PBXBuildFile section */
 
@@ -1162,6 +1161,8 @@
 		B032F99B162C52C1002AFCDB /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = Images/icon_57x57.png; sourceTree = SOURCE_ROOT; };
 		B04EFA2F16591358002C2D6B /* EachFriendInList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EachFriendInList.h; sourceTree = "<group>"; };
 		B04EFA3016591358002C2D6B /* EachFriendInList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EachFriendInList.m; sourceTree = "<group>"; };
+		B06FA5C116DB79DB00872578 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
+		B06FA5C216DB79DB00872578 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sm_icon@2x.png"; sourceTree = "<group>"; };
 		B07777CA163E3A0A00969699 /* DirectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionViewController.h; sourceTree = "<group>"; };
 		B07777CB163E3A0A00969699 /* DirectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionViewController.m; sourceTree = "<group>"; };
 		B07777CC163E3A0A00969699 /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
@@ -1213,8 +1214,6 @@
 		B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequestController.m; sourceTree = "<group>"; };
 		B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestController.xib; sourceTree = "<group>"; };
 		B0DB870D16D1FDFD0022AC01 /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
-		B0DB871316D212700022AC01 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
-		B0DB871416D212700022AC01 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sm_icon@2x.png"; sourceTree = "<group>"; };
 		B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpListButtonsView.h; sourceTree = "<group>"; };
 		B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpListButtonsView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1489,10 +1488,10 @@
 		4F98A2BC15BB387D000B3124 = {
 			isa = PBXGroup;
 			children = (
+				B06FA5C116DB79DB00872578 /* sm_icon.png */,
+				B06FA5C216DB79DB00872578 /* sm_icon@2x.png */,
 				4F469CD115FD1CC4008341C2 /* Default@2x.png */,
 				4F469CCF15FD1CB5008341C2 /* Default.png */,
-				B0DB871316D212700022AC01 /* sm_icon.png */,
-				B0DB871416D212700022AC01 /* sm_icon@2x.png */,
 				4FE4253B15C0699F00A6B6A3 /* FB */,
 				4F8257C315BDD24900760CE1 /* SBJson */,
 				4F82578C15BD823200760CE1 /* AsiHTTP */,
@@ -2413,6 +2412,8 @@
 				208CED6016B510D100434D49 /* icon_directions_new.png in Resources */,
 				208CED6116B510D100434D49 /* icon_meet_up_new.png in Resources */,
 				208CED6216B510D100434D49 /* icon_myplaces.png in Resources */,
+				B06FA5C316DB79DB00872578 /* sm_icon.png in Resources */,
+				B06FA5C416DB79DB00872578 /* sm_icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2694,8 +2695,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2707,8 +2708,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2721,8 +2722,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2734,8 +2735,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
