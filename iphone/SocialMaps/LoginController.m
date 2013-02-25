@@ -279,7 +279,7 @@ int fbRegCounter=0;
         }
     
         // Always Register device token. This takes care of multiple user using same device
-        RestClient *restClient = [[RestClient alloc] init];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
         if (smAppDelegate.loginCount == 1)
@@ -380,7 +380,7 @@ int fbRegCounter=0;
             smAppDelegate.email = txtEmail.text;
             smAppDelegate.password = txtPassword.text;
         }
-        RestClient *restClient = [[RestClient alloc] init];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient login:txtEmail.text password:txtPassword.text];
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
@@ -391,7 +391,7 @@ int fbRegCounter=0;
 - (void)fbFriendListDone:(NSNotification *)notif
 {
     NSLog(@"In LoginController:fbFriendListDone");
-    User *user = [[User alloc] init];
+    User *user = [[[User alloc] init] autorelease];
     user.facebookId = smAppDelegate.fbId;
     user.facebookAuthToken = smAppDelegate.fbAccessToken;
 
@@ -433,7 +433,7 @@ int fbRegCounter=0;
                 [smAppDelegate getUserInformation:regInfo.authToken];
                 
                 // Always Register device token. This takes care of multiple user using same device
-                RestClient *restClient = [[RestClient alloc] init];
+                RestClient *restClient = [[[RestClient alloc] init] autorelease];
                 [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
                 
                 if (smAppDelegate.loginCount == 1)
@@ -442,9 +442,10 @@ int fbRegCounter=0;
                 {
                     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
                     MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-                    [controller retain];
+                    [controller retain]; //why??
                     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                     [self presentModalViewController:controller animated:YES];
+                    [controller release];
                 }
             } else {
                 if (smAppDelegate.smLogin==FALSE)
@@ -576,7 +577,7 @@ int fbRegCounter=0;
 }
 
 - (IBAction)sendReset:(id)sender {
-    RestClient *restClient = [[RestClient alloc] init];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient forgotPassword:txtForgotPWEmail.text];
     [self.view endEditing:YES];
     

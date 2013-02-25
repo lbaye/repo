@@ -21,6 +21,7 @@
 #import "RestClient.h"
 #import "LocationItemPlace.h"
 #import "NotificationController.h"
+#import "UIImageView+Cached.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_MY_PLACES           1002
@@ -34,7 +35,7 @@ static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 bool searchFlag;
 __strong NSMutableArray *filteredList,*friendListArr, *circleList;
 __strong NSString *searchTexts;
-NSMutableDictionary *imageDownloadsInProgress, *friendsNameArr, *friendsIDArr;
+NSMutableDictionary *friendsNameArr, *friendsIDArr;
 static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
@@ -58,8 +59,6 @@ DDAnnotation *annotation;
     selectedFriendsIndex=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    imageDownloadsInProgress = [NSMutableDictionary dictionary];
-    [imageDownloadsInProgress retain];
     
     //set scroll view content size.
     [self loadDummydata];
@@ -152,8 +151,6 @@ DDAnnotation *annotation;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
     
-    NSArray *allDownloads = [imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
     [super viewDidDisappear:animated];
 }
 
@@ -179,11 +176,6 @@ DDAnnotation *annotation;
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
-    // terminate all pending download connections
-    NSArray *allDownloads = [imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -224,6 +216,7 @@ DDAnnotation *annotation;
     
     [restClient sendMeetUpRequest:[NSString stringWithFormat:@"%@ has invited you to meet up at ", smAppDelegate.userAccountPrefs.username] description:textViewPersonalMsg.text latitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude] longitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude] address:labelAddress.text time:dateString recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     [self dismissModalViewControllerAnimated:YES];
+    [userIDs release];
 }
 
 - (IBAction)actionSelectAll:(id)sender {
@@ -349,6 +342,7 @@ DDAnnotation *annotation;
         [labelPlaceName setFont:[UIFont fontWithName:kFontName size:kMediumLabelFontSize]];
         labelPlaceName.tag = 1001;
         [cell.contentView addSubview:labelPlaceName];
+        [labelPlaceName release];
     } 
 
     UILabel *labelPlaceName = (UILabel*)[cell.contentView viewWithTag:1001];
@@ -506,7 +500,7 @@ DDAnnotation *annotation;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [selectedFriendsIndex removeAllObjects];
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
@@ -662,7 +656,7 @@ DDAnnotation *annotation;
 {
     int x=7; //declared for imageview x-axis point    
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
-    UIImageView *imgView;
+    
     for (UIView* view in subviews) 
     {
         if([view isKindOfClass :[UIView class]])
@@ -674,73 +668,47 @@ DDAnnotation *annotation;
     
     for(int i=0; i<[filteredList count];i++)               
     {
-        if(i< [filteredList count]) 
-        { 
-            UserFriends *userFrnd=[filteredList objectAtIndex:i];
-            imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+        UserFriends *userFrnd=[filteredList objectAtIndex:i];
+        UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+        
+        if(!isDragging_msg && !isDecliring_msg) 
+            [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+        
+        UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 45, 45)];
+        
+        UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(2, 28, 45 - 4, 15)];
+        [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];        
+        [name setNumberOfLines:1];        
+        [name setTextColor:[UIColor whiteColor]];        
+        [name setText:userFrnd.userName];        
+        [name setBackgroundColor:[UIColor colorWithWhite:0 alpha:.3]];        
+        imgView.userInteractionEnabled = YES;        
+        imgView.tag = i;        
+        aView.tag=i;        
+        imgView.exclusiveTouch = YES;
+        imgView.clipsToBounds = NO;
+        imgView.opaque = YES;
+        imgView.layer.borderColor=[[UIColor clearColor] CGColor];
+        imgView.userInteractionEnabled=YES;
+        imgView.layer.borderWidth=2.0;
+        imgView.layer.masksToBounds = YES;
+        [imgView.layer setCornerRadius:7.0];
+        imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+
+        for (int c=0; c<[selectedFriendsIndex count]; c++) {
+            if (i==[[selectedFriendsIndex objectAtIndex:c] intValue]) 
+                imgView.layer.borderColor=[[UIColor greenColor] CGColor];
             
-            IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFrnd.userId];
-            
-            if (iconDownloader && iconDownloader.userFriends.userProfileImage.size.height > 5){
-                imgView.image = iconDownloader.userFriends.userProfileImage; 
-            }
-            
-            else 
-            { 
-                if(!isDragging_msg && !isDecliring_msg)   
-                {
-                    if (!iconDownloader) {
-                        iconDownloader = [[IconDownloader alloc] init];
-                    }
-                    
-                    iconDownloader.userFriends = userFrnd;
-                    iconDownloader.delegate = self;
-                    
-                    iconDownloader.scrollSubViewTag = 420 + i;
-                    [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
-                    [iconDownloader startDownload];
-                    
-                }
-            }
-            
-            UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 45, 45)];
-            UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(2, 28, 45 - 4, 15)];
-            [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
-            [name setNumberOfLines:1];
-            [name setTextColor:[UIColor whiteColor]];
-            [name setText:userFrnd.userName];
-            [name setBackgroundColor:[UIColor colorWithWhite:0 alpha:.3]];
-            imgView.userInteractionEnabled = YES;
-            imgView.tag = i;
-            aView.tag=i;
-            imgView.exclusiveTouch = YES;
-            imgView.clipsToBounds = NO;
-            imgView.opaque = YES;
-            imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-            imgView.userInteractionEnabled=YES;
-            imgView.layer.borderWidth=2.0;
-            imgView.layer.masksToBounds = YES;
-            [imgView.layer setCornerRadius:7.0];
-            
-            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
-            
-            for (int c=0; c<[selectedFriendsIndex count]; c++)
-            {
-                if (i==[[selectedFriendsIndex objectAtIndex:c] intValue]) 
-                {
-                    imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                }
-            }
-            
-            [aView addSubview:imgView];
-            [aView addSubview:name];
-            UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-            tapGesture.numberOfTapsRequired = 1;
-            [aView addGestureRecognizer:tapGesture];
-            [tapGesture release];
-            
-            [frndListScrollView addSubview:aView];
         }
+        
+        [aView addSubview:imgView];
+        [aView addSubview:name];
+        UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+        tapGesture.numberOfTapsRequired = 1;
+        [aView addGestureRecognizer:tapGesture];
+        [tapGesture release];
+        [frndListScrollView addSubview:aView];
+        
         x+=50;
     }
 }
@@ -759,51 +727,12 @@ DDAnnotation *annotation;
     }
     [self reloadScrolview];
 }
-                   
-- (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag
-{
-    NSLog(@"appImageDidLoadForScrollView");
-    
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
-    if (iconDownloader) {
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-    } else {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.userFriends = userFriends;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-        [iconDownloader release];
-    }
-    
-    int tag = scrollSubViewTag - 420;
-    
-    if (tag == 0) {
-        for (UIView *view in [frndListScrollView subviews]) {
-            if (view.tag == 0) {
-                for (UIImageView *imageView in [view subviews]) {
-                    if ([imageView isKindOfClass:[UIImageView class]]) {
-                        imageView.image = image;
-                        break;
-                    }
-                }
-            }
-        }
-    } else {
-        for (UIImageView *imageView in [[frndListScrollView viewWithTag:tag] subviews]) {
-            if ([imageView isKindOfClass:[UIImageView class]]) {
-                imageView.image = image;
-                break;
-            }
-        }
-    }
-}
 
 -(void)loadDummydata
 {
-    UserFriends *frnds=[[UserFriends alloc] init];
-    
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
-        frnds=[[UserFriends alloc] init];
+        UserFriends *frnds=[[UserFriends alloc] init];
         frnds=[friendListGlobalArray objectAtIndex:i];
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
         {
@@ -872,7 +801,6 @@ DDAnnotation *annotation;
 }
 
 - (void)dealloc {
-    [imageDownloadsInProgress release];
     [tableViewPlaces release];
     [textViewPersonalMsg release];
     [viewComposePersonalMsg release];

@@ -25,9 +25,13 @@
 
 - (id)init
 {
-    location=[[Geolocation alloc] init];
-    permittedUsers=[[NSMutableArray alloc] init];
-    permittedCircles=[[NSMutableArray alloc] init];
+    self=[super init];
+    if (self)
+    {
+        location=[[Geolocation alloc] init];
+        permittedUsers=[[NSMutableArray alloc] init];
+        permittedCircles=[[NSMutableArray alloc] init];
+    }
     return self;
 }
 

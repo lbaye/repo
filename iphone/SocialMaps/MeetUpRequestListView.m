@@ -70,7 +70,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         
         //Thumb Image
-        UIImageView *imageViewReply = [[UIImageView alloc]initWithFrame:CGRectMake(10, 2, 48, 48)];
+        UIImageView *imageViewReply = [[[UIImageView alloc]initWithFrame:CGRectMake(10, 2, 48, 48)] autorelease];
         imageViewReply.tag = 3006;
         [imageViewReply.layer setCornerRadius:6.0f];
         [imageViewReply.layer setBorderWidth:2.0];

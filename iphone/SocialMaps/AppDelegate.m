@@ -70,6 +70,7 @@
 @synthesize notifPrefs;
 @synthesize currPosition;
 @synthesize lastPosition;
+@synthesize screenCenterPosition;
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
@@ -83,13 +84,16 @@
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
 @synthesize smLogin,geotagList;
+@synthesize resetZoom;
 @synthesize currentModelViewController;
 @synthesize isAppInBackgound;
 @synthesize shareLocationOption;
 @synthesize timerGotListing;
 @synthesize myPhotoList;
+@synthesize currZoom;
+@synthesize mapDrawnFirstTime;
 
-static AppDelegate *sharedInstance=nil;
+//static AppDelegate *sharedInstance=nil;
 
 // Get the shared instance and create it if necessary.
 + (AppDelegate *)sharedInstance {
@@ -149,14 +153,14 @@ static AppDelegate *sharedInstance=nil;
     userFriendslistIndex = [[NSMutableDictionary alloc] init];
 
     // Preferences data structure
-    platformPrefs = [[[Platform alloc] init] autorelease];
-    layerPrefs    = [[[Layer alloc] init] autorelease];
-    informationPrefs = [[[InformationPrefs alloc] init] autorelease];
-    userAccountPrefs = [[[UserInfo alloc] init] autorelease];
+    platformPrefs = [[Platform alloc] init];
+    layerPrefs    = [[Layer alloc] init];
+    informationPrefs = [[InformationPrefs alloc] init];
+    userAccountPrefs = [[UserInfo alloc] init];
     userAccountPrefs.icon = nil;
-    geofencePrefs = [[[Geofence alloc] init] autorelease];
-    locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
-    notifPrefs = [[[NotificationPref alloc] init] autorelease];
+    geofencePrefs = [[Geofence alloc] init];
+    locSharingPrefs = [[ShareLocation alloc] init];
+    notifPrefs = [[NotificationPref alloc] init];
     peopleList = [[NSMutableArray alloc] init];
     peopleIndex = [[NSMutableDictionary alloc] init];
     placeList  = [[NSMutableArray alloc] init];
@@ -169,16 +173,23 @@ static AppDelegate *sharedInstance=nil;
     // Location coordinates
     currPosition = [[Geolocation alloc] init];
     lastPosition = [[Geolocation alloc] init];
-                    
+    screenCenterPosition = [[Geolocation alloc] init];
+    currZoom.latitudeDelta = .02;
+    currZoom.longitudeDelta = .02;
+    
     UserDefault *userDefaults = [[UserDefault alloc] init];
     currPosition.latitude = [userDefaults readFromUserDefaults:@"lastLatitude"];
     currPosition.longitude = [userDefaults readFromUserDefaults:@"lastLongitude"];
+    screenCenterPosition.latitude = [userDefaults readFromUserDefaults:@"lastLatitude"];
+    screenCenterPosition.longitude = [userDefaults readFromUserDefaults:@"lastLongitude"];
     [userDefaults release];
     
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;
     showEvents = FALSE;
+    resetZoom  = TRUE;
+    mapDrawnFirstTime = TRUE;
     
     msgRead = FALSE;
     notifRead = FALSE;
@@ -247,6 +258,19 @@ static AppDelegate *sharedInstance=nil;
 	NSLog(@"Failed to get token, error: %@", error);
 }
 
+-(void)initData
+{
+    platformPrefs = [[Platform alloc] init];
+    layerPrefs    = [[Layer alloc] init];
+    informationPrefs = [[InformationPrefs alloc] init];
+    userAccountPrefs = [[UserInfo alloc] init];
+    userAccountPrefs.icon = nil;
+    geofencePrefs = [[Geofence alloc] init];
+    locSharingPrefs = [[ShareLocation alloc] init];
+    notifPrefs = [[NotificationPref alloc] init];
+
+}
+
 //
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
@@ -259,7 +283,7 @@ static AppDelegate *sharedInstance=nil;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
         
-        RestClient *rc=[[RestClient alloc] init];
+        RestClient *rc=[[[RestClient alloc] init] autorelease];
         [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
         
         if (newNotif.notifType == PushNotificationMessage || newNotif.notifType == PushNotificationMeetupRequest) {
@@ -354,6 +378,8 @@ static AppDelegate *sharedInstance=nil;
             frndProfile.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
             frndProfile.friendsId=[newNotif.objectIds objectAtIndex:0];
             [self.currentModelViewController presentModalViewController:frndProfile animated:YES];
+            [frndProfile release];
+            frndProfile = nil;
         }
         else if (newNotif.notifType == PushNotificationProximityAlert)
         {
@@ -432,7 +458,7 @@ static AppDelegate *sharedInstance=nil;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     self.isAppInBackgound = NO;
-    RestClient *rc = [[RestClient alloc] init];
+    RestClient *rc = [[[RestClient alloc] init] autorelease];
     if ([authToken isKindOfClass:[NSString class]]) {
         [rc getInbox:@"Auth-Token" authTokenVal:authToken];
     }

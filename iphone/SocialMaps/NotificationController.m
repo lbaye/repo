@@ -33,10 +33,9 @@
 @synthesize msgButton;
 @synthesize reqButton;
 @synthesize webView;
+@synthesize unreadMesg;
 
 #define SECTION_HEADER_HEIGHT   44
-
-NSMutableArray *unreadMesg;
 
 - (void)didReceiveMemoryWarning
 {
@@ -56,13 +55,10 @@ NSMutableArray *unreadMesg;
     notifTabArrow.frame = newFrame;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    // Dummy notifications
-    int ignoreCount = 0;
     smAppDelegate.msgRead = TRUE;
     
     if (smAppDelegate.notifRead == TRUE || smAppDelegate.notifications.count == 0) {
         alertCount.text = @"";
-        ignoreCount += [smAppDelegate.notifications count];
     } else
         alertCount.text = [NSString stringWithFormat:@"%d",smAppDelegate.notifications.count];
     
@@ -76,9 +72,9 @@ NSMutableArray *unreadMesg;
     // Default notification type
     selectedType = Message;
     smAppDelegate.msgRead = TRUE;
-    unreadMesg=[[NSMutableArray alloc] init];
+    //unreadMesg=[[NSMutableArray alloc] init];
     
-    unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
+    self.unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
     
     // NotifRequest delegate
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
@@ -87,7 +83,7 @@ NSMutableArray *unreadMesg;
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/minifeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.userId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]]]]];
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.webView.scrollView];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
-
+    [refreshControl release];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -147,7 +143,7 @@ NSMutableArray *unreadMesg;
         }
     }
     
-    return unReadMessage;
+    return [unReadMessage autorelease];
 }
 
 -(void)setNotificationImage
@@ -240,6 +236,7 @@ NSMutableArray *unreadMesg;
 }
 
 - (void)dealloc {
+    [unreadMesg release];
     [webView stopLoading];
     [notifTabArrow release];    
     [msgCount release];
@@ -271,7 +268,7 @@ NSMutableArray *unreadMesg;
                 cell = [notif getTableViewCell:tv sender:self];
             break;
         case Message:
-            msg = [unreadMesg objectAtIndex:indexPath.row];
+            msg = [self.unreadMesg objectAtIndex:indexPath.row];
             NSLog(@"MSG:sender = %@", msg.notifSender);
             NSLog(@"MSG:lastReply = %@", msg.lastReply);
             NSLog(@"MSG:msgContent = %@", msg.notifMessage);
@@ -297,7 +294,7 @@ NSMutableArray *unreadMesg;
     notifBadgeFlag=FALSE;
     switch (selectedType) {
         case Message:
-            msg = [unreadMesg objectAtIndex:indexPath.row];
+            msg = [self.unreadMesg objectAtIndex:indexPath.row];
             
             msg.msgStatus=@"read";
             
@@ -309,7 +306,7 @@ NSMutableArray *unreadMesg;
             [self presentModalViewController:nav animated:YES];
             nav.navigationBarHidden = YES;
             
-            [unreadMesg removeObjectAtIndex:indexPath.row];
+            [self.unreadMesg removeObjectAtIndex:indexPath.row];
             [self.notificationItems reloadData];
             
             break;
@@ -329,7 +326,7 @@ NSMutableArray *unreadMesg;
             numRows = [smAppDelegate.notifications count];
             break;
         case Message:
-            numRows = [unreadMesg count];
+            numRows = [self.unreadMesg count];
             break;
         case Request:
             numRows = [smAppDelegate.friendRequests count];
@@ -353,7 +350,7 @@ NSMutableArray *unreadMesg;
             cellHeight = [notif getRowHeight:tableView];
             break;
         case Message:
-            msg = [unreadMesg objectAtIndex:indexPath.row];
+            msg = [self.unreadMesg objectAtIndex:indexPath.row];
             cellHeight = [msg getRowHeight:tableView];
             break;
         case Request:
@@ -392,19 +389,19 @@ NSMutableArray *unreadMesg;
     [header addSubview: tempLabel];
     [tempLabel release];
 	
-	return header;
+	return [header autorelease];
 }
 
 -(void)moreButtonTapped:(id)sender {
     UITableViewCell *clickedCell = (UITableViewCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.notificationItems indexPathForCell:clickedCell];
     NSLog(@"Clicked %d item in notification list", clickedButtonPath.row);
-    NotifMessage *msg = [unreadMesg objectAtIndex:clickedButtonPath.row];
+    NotifMessage *msg = [self.unreadMesg objectAtIndex:clickedButtonPath.row];
     if (msg.showDetail == TRUE)
         msg.showDetail = FALSE;
     else
         msg.showDetail = TRUE;
-    [unreadMesg replaceObjectAtIndex:clickedButtonPath.row withObject:msg];
+    [self.unreadMesg replaceObjectAtIndex:clickedButtonPath.row withObject:msg];
     [notificationItems reloadData];
 }
 
@@ -419,8 +416,8 @@ NSMutableArray *unreadMesg;
 - (void)friendsRequestAccepted:(NSNotification *)notif
 {
     NSLog(@"friends request accepted");
-    RestClient *restClient=[[RestClient alloc] init];
-    [restClient getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];
 }
 
 - (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
@@ -479,12 +476,12 @@ NSMutableArray *unreadMesg;
     }
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
-        ignoreCount += [unreadMesg count];
+        ignoreCount += [self.unreadMesg count];
     
     if (smAppDelegate.notifRead == TRUE)
         ignoreCount += [smAppDelegate.notifications count];
     int totalCount = smAppDelegate.friendRequests.count+
-                        unreadMesg.count+smAppDelegate.notifications.count-
+                        self.unreadMesg.count+smAppDelegate.notifications.count-
                         smAppDelegate.ignoreCount-ignoreCount;
     if (totalCount <= 0)
         notifCount.text = @"";
@@ -529,8 +526,8 @@ NSMutableArray *unreadMesg;
 -(void)gotNewMessageDone:(NSNotification *)notif
 {
     msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
-    unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
-    NSLog(@"got new message %@",unreadMesg);
+    self.unreadMesg = [self getUnreadMessage:smAppDelegate.messages];
+    NSLog(@"got new message %@",self.unreadMesg);
     [notificationItems reloadData];
     [self displayNotificationCount];
 }

@@ -17,7 +17,7 @@ static char const * const ObjectTagKey = "ObjectTag";
 
 @dynamic imageInfo;
 
-#define TAG_INDICATOR_VIEW	420
+//#define TAG_INDICATOR_VIEW	420
 
 - (ImageInfo*)getImageInfo {
     ImageInfo *imageInfoObj = (ImageInfo*)objc_getAssociatedObject(self, ObjectTagKey);
@@ -30,21 +30,24 @@ static char const * const ObjectTagKey = "ObjectTag";
 
 - (void) observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
     if ([keyPath isEqual:@"image"]) {
-        [self performSelectorOnMainThread:@selector(setImage:) withObject:((ImageInfo*)object).image waitUntilDone:NO];
-        [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
-        NSLog(@"remove indicator");
+        [self performSelectorOnMainThread:@selector(setImage:) withObject:((ImageInfo*)object).image waitUntilDone:YES];
+        [self canclePreviousDownload];
+        //[[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
+        //NSLog(@"remove indicator");
     }
 }
 
-- (void)checkPreviousDownload:(ImageInfo*)imageInfo {
+- (void)canclePreviousDownload//:(ImageInfo*)imageInfo 
+{
     if ([self getImageInfo]) {
-        [[self getImageInfo] removeObserver:self forKeyPath:@"image"];
-        NSLog(@"removeOvserver");
-    } else {
-        NSLog(@"one download");
-    }
-    [self setImageInfo:imageInfo];
-    [imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
+        @try{
+            [[self getImageInfo] removeObserver:self forKeyPath:@"image"];
+        }@catch(id anException){
+            NSLog(@"Cannot remove observer");
+        }
+    } 
+    //[self setImageInfo:imageInfo];
+    //[imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
 }
 
 // Methods to load and cache an image from a URL on a separate thread
@@ -52,55 +55,42 @@ static char const * const ObjectTagKey = "ObjectTag";
 {
     if (url) {
         self.image = nil;
-        [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
         ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURL:url]);
 
-        [self checkPreviousDownload:imageInfo];
+        [self canclePreviousDownload];
         
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
         } else {
-            UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-            //activityIndicator.backgroundColor = [UIColor blackColor];
-            activityIndicator.frame = CGRectMake((self.frame.size.width - activityIndicator.frame.size.width) / 2, (self.frame.size.height - activityIndicator.frame.size.height) / 2, activityIndicator.frame.size.width, activityIndicator.frame.size.height);
-            [activityIndicator startAnimating];
-            activityIndicator.tag = TAG_INDICATOR_VIEW;
-            [self addSubview:activityIndicator];
-            [activityIndicator release];
-            NSLog(@"Start indicator");
+            [self setImageInfo:imageInfo];
+            [imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
         }
     } else {
-        ImageInfo *_imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
-        [self checkPreviousDownload:_imageInfo];
+        [self canclePreviousDownload];
     }
 }
 
 -(void)setImageForUrlIfAvailable:(NSURL *)url
 {
-    [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
+    //[[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
     self.image = nil;
     if (url) {
         ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
         }
-        [self checkPreviousDownload:imageInfo];
+        [self canclePreviousDownload];
     }
 }
 
--(void)loadFromURL:(NSURL*)url afterDelay:(float)delay
-{
-	[self performSelector:@selector(loadFromURL:) withObject:url afterDelay:delay];
-}
-
 -(void)dealloc
-{
+{/*
     @try{
         [[self getImageInfo] removeObserver:self forKeyPath:@"image"];
     }@catch(id anException){
         NSLog(@"Cannot remove an observer");
-    }
-    
+    }*/
+    [self canclePreviousDownload];
     [super dealloc];
 }
 

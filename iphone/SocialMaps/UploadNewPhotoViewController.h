@@ -16,9 +16,7 @@
 #import "PhotoPickerOriginalImage.h"
 #import "Photo.h"
 
-@interface UploadNewPhotoViewController : UIViewController<CustomRadioButtonDelegate,UIPickerViewDataSource, 
-UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerOriginalImageDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate>
+@interface UploadNewPhotoViewController : UIViewController<CustomRadioButtonDelegate, UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerOriginalImageDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate>
 {
     IBOutlet UIImageView *photoImageView;
     IBOutlet UIScrollView *mainScrollView;

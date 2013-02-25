@@ -138,6 +138,7 @@
     UIImageView *sepImageView = [[UIImageView alloc] initWithFrame:sepFrame];
     sepImageView.image = [UIImage imageNamed:@"sp.png"];
     [self addSubview:sepImageView];
+    [sepImageView release];
 
     // Save button
     UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -244,7 +245,9 @@
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(newLocationCreated:sender:)]) {
         [self.delegate  newLocationCreated:newLoc sender:self];
     }
+
     [self removeFromSuperview];
+    [newLoc release];
 }
 
 @end

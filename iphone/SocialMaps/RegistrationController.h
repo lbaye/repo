@@ -16,9 +16,7 @@
 #import "User.h"
 #import "PhotoPicker.h"
 
-@interface RegistrationController : UIViewController<UIPickerViewDataSource, 
-UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+@interface RegistrationController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,
 PhotoPickerDelegate> {
     NSMutableArray *arrayGender;
     User           *userInfo;
@@ -47,7 +45,6 @@ PhotoPickerDelegate> {
 @property (nonatomic, retain) PhotoPicker *photoPicker;
 @property (nonatomic,retain)  IBOutlet IBOutlet UIView *basicInfoView;
 @property (nonatomic,retain)  IBOutlet UIView *moreInfoView;
-@property (retain, nonatomic) IBOutlet UIPickerView *selMaleFemale;
 @property (retain, nonatomic) IBOutlet UITextField *regGender;
 @property (retain, nonatomic) IBOutlet UITextField *regEmail;
 @property (retain, nonatomic) IBOutlet UITextField *regPassword;

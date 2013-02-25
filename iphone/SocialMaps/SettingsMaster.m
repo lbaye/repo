@@ -61,6 +61,7 @@
         bgImageView.image = [UIImage imageNamed:bgImageName];
         bgImageView.tag   = btnTag + 100000;
         [self addSubview:bgImageView];
+        [bgImageView release];
     }
     
     CGSize titleStringSize = [titleString sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:14.0]];

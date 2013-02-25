@@ -196,6 +196,7 @@
     
     [scrollViewFriendList addSubview:thumbView];
     [thumbView release];
+
 }
 
 -(void) handleTapGesture:(UIGestureRecognizer *)sender 
@@ -210,11 +211,13 @@
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
+        [controller release];
     } else {
         FriendsProfileViewController *controllerFriend = [[FriendsProfileViewController alloc] init];
         controllerFriend.friendsId = friendId;
         controllerFriend.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controllerFriend animated:YES];
+        [controllerFriend release];
     }
     
 }
@@ -405,7 +408,6 @@
     } 
     else
     {
-        searchText = @"";
         [filteredList removeAllObjects];
         
         if (searchBarFriendList.selectedScopeButtonIndex == 2) 
@@ -502,8 +504,17 @@
 
 //searchbar delegate method end
 
-- (void)dealloc {
+- (void)didReceiveMemoryWarning
+{
     [CachedImages removeAllCache];
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)dealloc {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_LIST_DONE object:nil];
     [circleList release];
     [scrollViewFriendList release];

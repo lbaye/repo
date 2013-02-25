@@ -32,6 +32,7 @@
         UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"radius_field.png"]];
         [img setContentMode:UIViewContentModeScaleAspectFill];
         [self addSubview:img];
+        [img release];
         
         CGRect btnFrame = CGRectMake(0, 0, self.frame.size.width/4, self.frame.size.height);
         UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];

@@ -32,6 +32,7 @@
 #import "NotifMessage.h"
 #import "MessageListViewController.h"
 #import "UserBasicProfileViewController.h"
+#import "NSData+Base64.h"
 
 @interface FriendsProfileViewController ()
 
@@ -101,11 +102,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [addressOrvenueLabel.layer setCornerRadius:3.0f];
     [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
-    self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;
+    photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
+    photoPicker.delegate = self;
+    picSel = [[UIImagePickerController alloc] init];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;
     
     nameLabl.layer.shadowRadius = 5.0f;
     nameLabl.layer.shadowOpacity = .9;
@@ -125,7 +126,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:profileScrollView] autorelease];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
@@ -194,6 +195,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [profileScrollView addSubview:indicator];
     [profileScrollView addSubview:profileView];
     [self reloadScrolview];
+    [indicator release];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -266,12 +268,9 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 
 - (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
-    NSString *fragment, *scheme;
     
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         [webView stopLoading];
-        fragment = [[request URL] fragment];
-        scheme = [[request URL] scheme];
         NSString *dataStr=[[request URL] absoluteString];
         NSLog(@"Data String: %@",dataStr);
         NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
@@ -301,6 +300,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
+                [controller release];
 
             }
             else if([userId isEqualToString:userInfo.userId])
@@ -313,7 +313,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 controller.friendsId=userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                
+                [controller release];
             }
         }
         else if ([tagStr isEqualToString:@"geotag"])
@@ -361,7 +361,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"newsfeed image url: %@",imageUrlStr);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
         if (img)
@@ -373,9 +372,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         {
             newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
         }
-        
+        [img release];
         NSLog(@"image setted after download newsfeed image. %@",img);
-        [pl drain];
     }
 }
 
@@ -671,7 +669,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     
     NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-    
+        [geoLocation release];
     if ((!userInfo.address.city) || ([userInfo.address.city isEqualToString:@""]))
     {
         annotation.title =[NSString stringWithFormat:@"Address not found"];
@@ -740,6 +738,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                                           cancelButtonTitle:@"Yes"
                                           otherButtonTitles:@"No", nil];
     [alert show];
+    [alert release];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -816,7 +815,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
     }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2dm",userInfo.distance];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
     
@@ -894,7 +893,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
         if (img)
@@ -911,7 +909,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         }
         
         NSLog(@"image setted after download1. %@",img);
-        [pl drain];
+        [img release];
     }
 }
 
@@ -924,8 +922,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
         //temp use
         UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
@@ -942,8 +938,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
         }
         
-        NSLog(@"image setted after download2. %@",img2);    
-        [pl drain];
+        NSLog(@"image setted after download2. %@",img2);
+        [img2 release];
     }
 }
 
@@ -1046,7 +1042,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
                 tapGesture.numberOfTapsRequired = 1;
                 [aView addGestureRecognizer:tapGesture];
-                [tapGesture release];  
+                [tapGesture release];
+                [aView release];
+                [name release];
+                [iconview release];
+                [imgView release];
             }       
             x+=65;   
         }
@@ -1067,6 +1067,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
+        [img release];
     }
 }
 
@@ -1259,6 +1260,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         [msgView resignFirstResponder];
         [textViewNewMsg resignFirstResponder];
         [msgView removeFromSuperview];
+        [userIDs release];
     }
 }
 

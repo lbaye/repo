@@ -103,7 +103,7 @@ int renameCircleOndex;
     // Add a pinch gesture recognizer to the table view.
 	UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
 	[self.circleTableView addGestureRecognizer:pinchRecognizer];
-    
+    [pinchRecognizer release];
     // Set up default values.
     self.circleTableView.sectionHeaderHeight = HEADER_HEIGHT;
 	/*
@@ -113,7 +113,7 @@ int renameCircleOndex;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
-    RestClient *rc=[[RestClient alloc] init];
+    RestClient *rc=[[[RestClient alloc] init] autorelease];
     [rc getAllCircles:@"Auth-Token" :smAppDelegate.authToken];
     rowHeight_ = DEFAULT_ROW_HEIGHT;
     openSectionIndex_ = NSNotFound;
@@ -161,9 +161,11 @@ int renameCircleOndex;
 			}
 			NSLog(@"circle.name %@ circle.friends %@",userCircle.circleName,userCircle.friends);
 			[infoArray addObject:sectionInfo];
+            [sectionInfo release];
 		}
 		
 		self.sectionInfoArray = infoArray;
+        [infoArray release];
 	}
 	smAppDelegate.currentModelViewController = self;
 }
@@ -172,6 +174,7 @@ int renameCircleOndex;
 {
     UIView *renameView = [[UIView alloc] initWithFrame:CGRectMake(0, 45, 320, 96)];
     [self.view addSubview:renameView];
+    [renameView release];
 }
 
 -(IBAction)addCircleAction:(id)sender
@@ -188,6 +191,7 @@ int renameCircleOndex;
         [rc createCircle:@"Auth-Token" :smAppDelegate.authToken :userCircle];
         circleNameTextField.text=@"";
         [circleCreateView removeFromSuperview];
+        [userCircle release];
     }
 }
 
@@ -282,6 +286,7 @@ int renameCircleOndex;
                                           otherButtonTitles:@"No", nil];
     [alert show];
     alert.tag=index;
+    [alert release];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -301,8 +306,8 @@ int renameCircleOndex;
     circleID= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleID;
     [rc deleteCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circleID];
     [circleListDetailGlobalArray removeObjectAtIndex:index];
-    self.userCircle=[circleListDetailGlobalArray mutableCopy];
-    NSLog(@"delete index %d %@",index,circleID);    
+    self.userCircle=circleListDetailGlobalArray;
+    NSLog(@"delete index %d %@",index,circleID);
 }
 
 -(UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -324,14 +329,14 @@ int renameCircleOndex;
             if ([MFMailComposeViewController canSendMail]) {
                 UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
                 [cell addGestureRecognizer:longPressRecognizer];
+                [longPressRecognizer release];
             }
             else {
                 NSLog(@"Mail not available");
             }
         }
         
-        SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:indexPath.section];
-        UserFriends *userFrnd=[sectionInfo.userCircle.friends objectAtIndex:indexPath.row];
+        UserFriends *userFrnd;
         UserCircle *circle=[circleListDetailGlobalArray objectAtIndex:indexPath.section];
         userFrnd=[circle.friends objectAtIndex:indexPath.row];
         NSLog(@"userFrnd %@",userFrnd);
@@ -351,10 +356,11 @@ int renameCircleOndex;
         geoLocation.latitude=userFrnd.curlocLat;
         geoLocation.longitude=userFrnd.curlocLng;
         cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+        [geoLocation release];
         [cell.inviteButton addTarget:self action:@selector(addToCircle:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         cell.showOnMapButton.hidden=YES;
-        cell.profilePicImgView.image=[self getImageFromPeopleListByuserId:userFrnd.userId];
+        [cell.profilePicImgView setImageForUrlIfAvailable:[NSURL URLWithString:userFrnd.imageUrl]];
         NSLog(@"userFrnd.userId %@",userFrnd.userId);
         cell.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell.profilePicImgView.userInteractionEnabled=YES;
@@ -365,9 +371,10 @@ int renameCircleOndex;
         [cell.inviteButton.layer setMasksToBounds:YES];
         [cell.messageButton.layer setCornerRadius:6.0f];
         [cell.messageButton.layer setMasksToBounds:YES];
-        cell.coverPicImgView.image=[UIImage imageNamed:@"cover_pic_default.png"];
+        
         [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:userFrnd.coverImageUrl]];
-        if ([userFrnd.regMedia isEqualToString:@"fb"]) 
+        
+        if ([userFrnd.regMedia isEqualToString:@"fb"])
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
         }
@@ -382,12 +389,7 @@ int renameCircleOndex;
         static NSString *CellIdentifier = @"circleTableCell";
         SelectCircleTableCell *cell2 = [self.circleSelectTableView
                                         dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (!cell2)
-        {
-            cell2 = [[SelectCircleTableCell alloc]
-                     initWithStyle:UITableViewCellStyleDefault
-                     reuseIdentifier:CellIdentifier];
-        }
+        
         NSString *circleName;
         if (((UserCircle *)[circleListDetailGlobalArray objectAtIndex:indexPath.row]).circleName !=NULL)
         {
@@ -475,6 +477,7 @@ int renameCircleOndex;
     controller.friendsId=userFrnd.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+    [controller release];
     NSLog(@"indexPath %@",indexPath);
 }
 
@@ -531,7 +534,8 @@ int renameCircleOndex;
     [self.circleTableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:deleteAnimation];
     [self.circleTableView endUpdates];
     self.openSectionIndex = sectionOpened;
-    
+    [indexPathsToInsert release];
+    [indexPathsToDelete release];
 }
 
 
@@ -547,10 +551,12 @@ int renameCircleOndex;
     
     if (countOfRowsToDelete > 0) {
         NSMutableArray *indexPathsToDelete = [[NSMutableArray alloc] init];
-        for (NSInteger i = 0; i < countOfRowsToDelete; i++) {
+        for (NSInteger i = 0; i < countOfRowsToDelete; i++)
+        {
             [indexPathsToDelete addObject:[NSIndexPath indexPathForRow:i inSection:sectionClosed]];
         }
         [self.circleTableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationTop];
+        [indexPathsToDelete release];
     }
     self.openSectionIndex = NSNotFound;
 }
@@ -634,6 +640,7 @@ int renameCircleOndex;
             menuController.menuItems = [NSArray arrayWithObject:menuItem];
             [menuController setTargetRect:[self.circleTableView rectForRowAtIndexPath:pressedIndexPath] inView:self.circleTableView];
             [menuController setMenuVisible:YES animated:YES];
+            [menuItem release];
         }
     }
 }
@@ -707,8 +714,7 @@ int renameCircleOndex;
     NSMutableArray *circleList=[[NSMutableArray alloc] init];
     for(int i=0;i<[circleListDetailGlobalArray count];i++)
     {
-        UserCircle *circle=[[UserCircle alloc] init];
-        circle=[circleListDetailGlobalArray objectAtIndex:i];
+        UserCircle *circle=[circleListDetailGlobalArray objectAtIndex:i];
         for (int j=0; j<[((UserCircle *)[circleListDetailGlobalArray objectAtIndex:i]).friends count]; j++)
         {
             UserFriends *userFrnd=[((UserCircle *)[circleListDetailGlobalArray objectAtIndex:i]).friends objectAtIndex:j];
@@ -783,6 +789,7 @@ int renameCircleOndex;
         circle.friends=circleDetail.friends;
         [circleListGlobalArray addObject:circle];
         NSLog(@"circle.circleID: %@",circle.circleID);
+        [circle release];
     }
 }
 
@@ -805,7 +812,7 @@ int renameCircleOndex;
         circle.circleName= renameCircleName;
         [rc renameCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circle.circleID:renameCircleName];
         [circleListDetailGlobalArray replaceObjectAtIndex:renameCircleOndex withObject:circle];
-        self.userCircle=[circleListDetailGlobalArray mutableCopy];
+        self.userCircle=circleListDetailGlobalArray;
         [self initData];
         [renameTextField setText:@""];
     }
@@ -955,6 +962,7 @@ int renameCircleOndex;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [userIDs release];
     }
 }
 

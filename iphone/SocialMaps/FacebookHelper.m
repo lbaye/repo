@@ -158,9 +158,7 @@ UserDefault *userDefault;
 
 -(void)getUserFriendListFromFB:(id)result
 {
-    NSArray * items=[[NSArray alloc] init];
-    
-    items= [[(NSDictionary *)result objectForKey:@"data"]retain];
+    NSArray *items= [[(NSDictionary *)result objectForKey:@"data"]retain];
     NSLog(@"getUserFriendListFromFB items %d",[items count]);
 
     for (int i=0; i<[items count]; i++) 
@@ -244,7 +242,7 @@ UserDefault *userDefault;
         [aUser setFacebookId:fbId];
         [aUser setGender:gender];
         [aUser setDateOfBirth:dob];
-        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=normal", userName]]; 
+        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=normal", fbId]];
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];

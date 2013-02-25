@@ -33,8 +33,7 @@
         
         int prefCount = 0;
         CGRect rowFrame;
-        UIView *sep;
-        
+                
         if ((prefs & LocationSharingPrefTypeTime) != 0) {
             // 
             rowFrame = CGRectMake(self.frame.origin.x+level*10, ROW_HEIGHT*prefCount++, self.frame.size.width-level*10, ROW_HEIGHT);
@@ -61,9 +60,10 @@
         
         // Dividers
         for (int i=1; i<prefCount; i++) {
-            sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+level*10, ROW_HEIGHT*i, self.frame.size.width-level*10, 1)];
+            UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+level*10, ROW_HEIGHT*i, self.frame.size.width-level*10, 1)];
             sep.backgroundColor = [UIColor lightGrayColor];
             [self addSubview:sep];
+            [sep release];
         }
         
         CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, ROW_HEIGHT*prefCount);

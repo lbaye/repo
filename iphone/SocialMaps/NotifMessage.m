@@ -97,6 +97,10 @@
         
         timeStr = [dateFormatter stringFromDate:notifUpdateTime];
     }
+    [dateFormatter release];
+    [today release];
+    [yesterdayDate release];
+    [gregorian release];
     return timeStr;
 }
 

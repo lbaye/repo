@@ -95,3 +95,6 @@ extern float const kSmallLabelFontSize;
 extern float const kNumberRGBRed;
 extern float const kNumberRGBGreen;
 extern float const kNumberRGBBlue;
+
+// Maximum number of visible annotation
+extern int const MAX_VISIBLE_ANNO;

@@ -18,9 +18,7 @@
 #import "Geolocation.h"
 #import "CustomRadioButton.h"
 
-@interface CreateEventViewController : UIViewController<UIPickerViewDataSource, 
-UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate,CustomRadioButtonDelegate>
+@interface CreateEventViewController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UILabel *createLabel;
     IBOutlet UIButton *createButton;

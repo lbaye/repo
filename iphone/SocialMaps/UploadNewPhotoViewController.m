@@ -19,6 +19,7 @@
 #import "UserFriends.h"
 #import "SelectCircleTableCell.h"
 #import "Globals.h"
+#import "NSData+Base64.h"
 
 @interface UploadNewPhotoViewController ()
 -(void)searchResult;
@@ -58,7 +59,6 @@ int uploadPhotoCounter=0;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.presentingViewController retain];
     isBgTaskRunning=true;
     [self loadDummydata];    
     [self reloadScrollview];
@@ -92,7 +92,7 @@ int uploadPhotoCounter=0;
     photoImageView.layer.borderWidth=5.0;
     photoImageView.layer.cornerRadius=5.0;
     photoImageView.layer.borderColor = [[UIColor colorWithCGColor:colorCMYK] CGColor];
-    
+    CGColorRelease(colorCMYK);
     CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 77, 280, 21) numButtons:3 labels:[NSArray arrayWithObjects:@"Current location",@"Places near to me",@"Checked in venue",nil]  default:0 sender:self tag:2000];
     radio.delegate = self;
 
@@ -116,9 +116,9 @@ int uploadPhotoCounter=0;
     
     self.photoPicker = [[[PhotoPickerOriginalImage alloc] init] autorelease];
     self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;
+    picSel = [[UIImagePickerController alloc] initWithNibName:nil bundle:nil];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;
     
     [commentView.layer setCornerRadius:8.0f];
     [commentView.layer setBorderWidth:0.5];
@@ -190,8 +190,6 @@ int uploadPhotoCounter=0;
         UserCircle *circle=[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row];
         NSString *circleId=circle.circleID;
         [photo.permittedCircles addObject:circleId];
-        [circle release];
-        [circleId release];
     }
     NSLog(@"photo.permittedUsers: %@,photo.permittedCircles: %@",photo.permittedUsers,photo.permittedCircles);
     
@@ -204,6 +202,7 @@ int uploadPhotoCounter=0;
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:NO];
     }
+    [msg release];
 }
 
 -(IBAction)cancel:(id)sender
@@ -432,8 +431,7 @@ int uploadPhotoCounter=0;
         {
             if(i< [FriendList count]) 
             { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[FriendList objectAtIndex:i];
+                UserFriends *userFrnd=[FriendList objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
@@ -497,6 +495,9 @@ int uploadPhotoCounter=0;
                 [aView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [frndsScrollView addSubview:aView];
+                [aView release];
+                [imgView release];
+                [name release];
             }        
             x+=80;
         }
@@ -508,8 +509,7 @@ int uploadPhotoCounter=0;
     if (isBgTaskRunning==true)
     {
         int index = [path intValue];
-        UserFriends *userFrnd=[[UserFriends alloc] init];
-        userFrnd=[FriendList objectAtIndex:index];
+        UserFriends *userFrnd=[FriendList objectAtIndex:index];
         
         NSString *Link = userFrnd.imageUrl;
         //Start download image from url
@@ -520,6 +520,7 @@ int uploadPhotoCounter=0;
             [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
             [self reloadScrollview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -536,8 +537,7 @@ int uploadPhotoCounter=0;
     {
         [selectedFriends addObject:[FriendList objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[FriendList objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[FriendList objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriends : %@ %@",selectedFriends,frndsScrollView);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -579,14 +579,6 @@ int uploadPhotoCounter=0;
     SelectCircleTableCell *cell = [circleTableView
                                    dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    
-    if (cell == nil)
-    {
-        cell = [[SelectCircleTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CellIdentifier];
-        
-    }
     
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
@@ -640,13 +632,13 @@ int uploadPhotoCounter=0;
 {
     circleList=[[NSMutableArray alloc] init];
     [circleList removeAllObjects];
-    UserCircle *circle=[[UserCircle alloc]init];
+    UserCircle *circle;
     for (int i=0; i<[circleListGlobalArray count]; i++)
     {
         circle=[circleListGlobalArray objectAtIndex:i];
         [circleList addObject:circle.circleName];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
+    UserFriends *frnds;
     ImgesName = [[NSMutableArray alloc] init];    
     searchTexts=[[NSString alloc] initWithString:@""];
     friendsNameArr=[[NSMutableArray alloc] init];
@@ -656,7 +648,6 @@ int uploadPhotoCounter=0;
 
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
-        frnds=[[UserFriends alloc] init];
         frnds=[friendListGlobalArray objectAtIndex:i];
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
         {
@@ -692,7 +683,7 @@ int uploadPhotoCounter=0;
         }
         else
         {
-            searchText=@"";
+            searchTexts=@"";
             [FriendList removeAllObjects];
             FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrollview];
@@ -713,7 +704,7 @@ int uploadPhotoCounter=0;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [FriendList removeAllObjects];
         FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrollview];
@@ -821,6 +812,7 @@ int uploadPhotoCounter=0;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [picSel release];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
     // Release any retained subviews of the main view.
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];

@@ -154,11 +154,13 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [locSharing release];
     [self setNeedsLayout];
 }
 
@@ -175,11 +177,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [locSharing release];
+    
     [self setNeedsLayout];
 }
 
@@ -196,6 +201,7 @@
     [newLocation addSubview:aline];
     [aline release];
     [aview addSubview:newLocation];
+    [newLocation release];
     
     LocationSharingPlaces *locSharing = [[LocationSharingPlaces alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+selFrame.size.height, aview.frame.size.width, ROW_HEIGHT-7) sender:self tag:tag+1000];
     
@@ -205,12 +211,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     NSLog(@"LocationSharing:addLocSharingPlaceView locSharing=%f", locSharing.frame.size.height);
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7+selFrame.size.height];
+    [locSharing release];
     [self setNeedsLayout];
 }
 - (void) removeLocSharingPlaceView:(int)tag {
@@ -245,9 +253,11 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
+    [locSharing release];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
     [self setNeedsLayout];
@@ -278,6 +288,7 @@
     CGRect selFrame = CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT);
     SettingsMaster * selectFriends = [[SettingsMaster alloc] initWithFrame:selFrame title:@"Select subgroup of friends" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002 level:1];
     [aview addSubview:selectFriends];
+    [selectFriends release];
     
     // Draw a line
     UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(10, aview.frame.size.height+7+ROW_HEIGHT-1, 
@@ -285,6 +296,7 @@
     aline.backgroundColor = [UIColor lightGrayColor];
     aline.tag   = tag+1003;
     [aview addSubview:aline];
+    [aline release];
     
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
                                                 aview.frame.size.height+7+selFrame.size.height, 
@@ -299,11 +311,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
+    lineImage = nil;
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7+selFrame.size.height];
+    [locSharing release];
     [self setNeedsLayout];
 }
 
@@ -394,6 +409,7 @@
                     [circles addObject:aCircle];
             }
             SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:smAppDelegate.friendList circles:circles];
+            
             selFriends.delegate = self;
             selFriends.tag = 420;
             selFriends.backgroundColor = [UIColor colorWithRed:247.0/255.0 
@@ -402,6 +418,7 @@
                                                          alpha:1.0];
             [[self superview]  addSubview:selFriends];
             [selFriends release];
+            [circles release];
             
         } else if (parent.tag == 3007) {
             // Show New Location view
@@ -544,10 +561,8 @@
     NSLog(@"LocationSharing: buttonSelected index=%d", indx);
     if (indx == 1) {
         self.locSharingStatus = [NSString stringWithFormat:@"On"];
-        smAppDelegate.shareLocationOption = 1;
     } else {
         self.locSharingStatus = [NSString stringWithFormat:@"Off"];
-        smAppDelegate.shareLocationOption = 2;
     }
     [self setNeedsDisplay];
 }

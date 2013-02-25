@@ -125,7 +125,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     {
 
         NSLog(@"");
-        RestClient *rc=[[RestClient alloc] init];
+        RestClient *rc=[[[RestClient alloc] init] autorelease];
         [smAppDelegate showActivityViewer:self.view];
         NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
         [fbHelper inviteFriends:nil];
@@ -251,6 +251,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = 1002;  
     [rowView addSubview:lineImage];
+    [lineImage release];
     
     UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonInviteFBFriend.frame = chkboxFrame;
@@ -400,6 +401,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = 1004;  
     [rowView addSubview:lineImage];
+    [lineImage release];
     
     NSArray *layers = [NSArray arrayWithObjects:@"Wikipedia", @"Tripadvisor", @"Foodspotting", nil];
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool: smAppDelegate.layerPrefs.wikipedia], 
@@ -439,7 +441,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     scrollView.tag = 4001;
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
-
+    [scrollView release];
 }
 
 - (IBAction)setAccountSettings:(id)sender 
@@ -460,6 +462,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 3001;
     [self.view addSubview:scrollView];
+    [scrollView release];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
 
@@ -504,6 +507,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 5001;
     [self.view addSubview:scrollView];
+    [scrollView release];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
 

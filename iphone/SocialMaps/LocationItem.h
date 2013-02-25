@@ -51,6 +51,7 @@ typedef enum _LOCATION_ACTION_TYPE {
     id<LocationItemDelegate> delegate;
     NSString *typeName;
     NSURL   *itemCoverPhotoUrl;
+    NSString    *itemAvaterURL;
 }
 
 @property (copy) NSString *itemName;
@@ -66,6 +67,7 @@ typedef enum _LOCATION_ACTION_TYPE {
 @property (assign) id<LocationItemDelegate> delegate;
 @property (nonatomic,retain)    NSString *typeName;
 @property (nonatomic, retain) NSURL *itemCoverPhotoUrl;
+@property (nonatomic, retain) NSString *itemAvaterURL;
 
 /**
  * @brief Initialize location item object
@@ -89,7 +91,7 @@ typedef enum _LOCATION_ACTION_TYPE {
  * @retval (NSComparisonResult) - Comparison result
  */
 - (NSComparisonResult) compareDistance:(LocationItem*) other;
-
+- (void) updateDistance:(CLLocationCoordinate2D)coord ;
 /**
  * @brief Get location item table cell
  * @param (UITableView) - Parent trable view for table cell

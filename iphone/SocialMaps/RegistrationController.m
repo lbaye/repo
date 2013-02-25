@@ -23,7 +23,6 @@
 @synthesize regFirstName;
 @synthesize picSelButton;
 @synthesize regGender;
-@synthesize selMaleFemale;
 @synthesize arrayGender;
 @synthesize userInfo;
 @synthesize picSel;
@@ -87,18 +86,17 @@
     [registrationScrollView addSubview:basicInfoView];
     [registrationScrollView addSubview:moreInfoView];
     
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
-    self.photoPicker.delegate = self;
+    photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
+    photoPicker.delegate = self;
     
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;	
+    picSel = [[UIImagePickerController alloc] init];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;
 }
 
 
 - (void)viewDidUnload
 {
-    [self setSelMaleFemale:nil];
     [self setRegGender:nil];
     [self setRegEmail:nil];
     [self setRegPassword:nil];
@@ -122,7 +120,7 @@
 }
 
 - (void)dealloc {
-    [selMaleFemale release];
+    [photoPicker release];
     [regGender release];
     [regEmail release];
     [regPassword release];
@@ -276,7 +274,7 @@
                                    otherButtonTitles:nil];
         
         [loginAlert show];
-        [loginAlert autorelease];
+        [loginAlert release];
     } else {
         NSData *imgdata = UIImagePNGRepresentation(regPhoto);
         NSString *imgBase64Data = [imgdata base64EncodedString];

@@ -44,7 +44,7 @@
     
     bgImageView.image = [UIImage imageNamed:@"img_settings_list_bg.png"];
     [self addSubview:bgImageView];
-        
+    [bgImageView release];
     CGSize titleStringSize = [titleString sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:14.0]];
 
     CGRect titleFrame = CGRectMake(10, (self.frame.size.height-titleStringSize.height)/2, titleStringSize.width, titleStringSize.height);

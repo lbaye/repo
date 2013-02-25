@@ -36,8 +36,9 @@ typedef enum _SHARING_TYPES {
 @interface MapViewController : UIViewController<MKMapViewDelegate,CLLocationManagerDelegate,
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
-                                MapAnnotationDelegate, IconDownloaderDelegate,
-                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
+                                MapAnnotationDelegate,
+                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate>
+{
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -73,6 +74,8 @@ typedef enum _SHARING_TYPES {
     BOOL shouldTimerStop;
     IBOutlet UIImageView *mapViewImg;
     IBOutlet UIImageView *listViewImg;
+                                    
+    NSMutableArray *displayListForMap;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -252,27 +255,6 @@ typedef enum _SHARING_TYPES {
 - (IBAction)closePullupMenu:(id)sender;
 
 /**
- * @brief Close invite friends
- * @param (id) - Action sender
- * @retval action
- */
-- (IBAction)closeInviteFrnds:(id)sender;
-
-/**
- * @brief Invite all facebook friends to social map
- * @param (id) - Action sender
- * @retval action
- */
-- (IBAction)inviteAllUsers:(id)sender;
-
-/**
- * @brief Invite selected facebook friends to social map
- * @param (id) - Action sender
- * @retval action
- */
-- (IBAction)inviteSelectedUsers:(id)sender;
-
-/**
  * @brief Navigate user to profile screen
  * @param (id) - Action sender
  * @retval action
@@ -299,13 +281,6 @@ typedef enum _SHARING_TYPES {
  * @retval none
  */
 - (void) resetShareButton:(SHARING_TYPES)newSel;
-
-/**
- * @brief Invite selected user
- * @param (NSMutableArray) - Selected rows
- * @retval none
- */
-- (void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows;
 
 /**
  * @brief Changes an annotation

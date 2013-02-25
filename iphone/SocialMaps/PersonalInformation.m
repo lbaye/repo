@@ -74,13 +74,13 @@
                                       self.frame.size.width, PIC_HEIGHT + 15 +  BUTTON_HEIGHT + 13*(5+TEXT_HEIGHT));
         self.frame = viewFrame;
         
-        self.selGender = [[UIPickerView alloc] init];
+        selGender = [[UIPickerView alloc] init];
         
-        self.photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
-        self.photoPicker.delegate = self;
+        photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
+        photoPicker.delegate = self;
         
-        self.picSel = [[UIImagePickerController alloc] init];
-        self.picSel.allowsEditing = YES;
+        picSel = [[UIImagePickerController alloc] init];
+        picSel.allowsEditing = YES;
         
         arrayGender = [[NSMutableArray alloc] init];
         [arrayGender addObject:@"Female"];
@@ -93,7 +93,7 @@
 
 - (UITextField*) getTextField:(CGRect)frame text:(NSString*)txt
                           tag:(int)tag {
-    UITextField *txtField = [[UITextField alloc] initWithFrame:frame];
+    UITextField *txtField = [[[UITextField alloc] initWithFrame:frame] autorelease];
     txtField.placeholder = txt;
     txtField.backgroundColor = [UIColor clearColor];
     txtField.textColor = [UIColor blackColor];
@@ -138,7 +138,7 @@
     UIImageView *lineSep = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sp.png"]];
     lineSep.frame = itemFrame;
     [self addSubview:lineSep];
-
+    [lineSep release];
     itemFrame = CGRectMake(10+PIC_WIDTH+20+20, 5+(PIC_HEIGHT-TEXT_HEIGHT)/2, TEXT_WIDTH, TEXT_HEIGHT);
     UILabel *lbl = [[UILabel alloc] initWithFrame:itemFrame];
     lbl.backgroundColor = [UIColor clearColor];
@@ -434,7 +434,7 @@
         smAppDelegate.userAccountPrefs.avatar = imgBase64Data;
     }
     
-    RestClient *restClient = [[RestClient alloc] init];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient setAccountSettings:smAppDelegate.userAccountPrefs :@"Auth-Token" :smAppDelegate.authToken];
     [self endEditing:TRUE];
 }

@@ -12,6 +12,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 #import "FBConnect.h"
 #import "ViewController.h"
@@ -70,6 +71,7 @@
     NotificationPref    *notifPrefs;
     Geolocation         *currPosition;
     Geolocation         *lastPosition;
+    Geolocation         *screenCenterPosition;
     bool            showPeople;
     bool            showPlaces;
     bool            showDeals;
@@ -80,7 +82,10 @@
     bool            deviceTokenChanged;
     bool            facebookLogin;
     bool            smLogin;
+    bool            resetZoom;
     NSTimer         *timerGotListing;
+    MKCoordinateSpan    currZoom;
+    bool            mapDrawnFirstTime;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -122,6 +127,7 @@
 @property (nonatomic, retain)NotificationPref    *notifPrefs;
 @property (nonatomic, retain) Geolocation        *currPosition;
 @property (nonatomic, retain) Geolocation        *lastPosition;
+@property (nonatomic, retain) Geolocation        *screenCenterPosition;
 @property (nonatomic, retain) NSMutableArray    *meetUpRequests;
 @property (atomic) bool showPeople;
 @property (atomic) bool showPlaces;
@@ -133,8 +139,10 @@
 @property (atomic) bool deviceTokenChanged;
 @property (atomic) bool facebookLogin;
 @property (atomic) bool smLogin;
+@property (atomic) bool resetZoom;
 @property (nonatomic, assign) int shareLocationOption;
 @property (nonatomic, retain) NSTimer *timerGotListing;
+@property (atomic) bool mapDrawnFirstTime;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
@@ -142,6 +150,7 @@
 @property (nonatomic, retain) UIViewController *currentModelViewController;
 @property (nonatomic,retain)  NSMutableArray *myPhotoList;
 @property (nonatomic, assign) BOOL isAppInBackgound;
+@property (nonatomic, assign) MKCoordinateSpan currZoom;
 
 /**
  * @brief Get shared instance of a object
@@ -177,5 +186,12 @@
  * @retval action
  */
 - (void) getUserInformation:(NSString*) token ;
+
+/**
+ * @brief Initialize data
+ * @param none
+ * @retval none
+ */
+-(void)initData;
 
 @end

@@ -280,6 +280,7 @@ int createCounter=0, updateCounter=0;
     {
         [UtilityClass showAlert:@"" :validation];
     }
+    [validation release];
 }
 
 -(IBAction)cancelPlan:(id)sender
@@ -408,8 +409,7 @@ int createCounter=0, updateCounter=0;
 {
     NSString *dateString;
     NSDate *date =selectedDate;
-    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm Z"];    
@@ -418,6 +418,7 @@ int createCounter=0, updateCounter=0;
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm"];    
     dateString = [dateFormatter stringFromDate:date];            
     dateLabel.text=dateString;
+    [dateFormatter release];
 }
 
 // NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
@@ -613,8 +614,7 @@ int createCounter=0, updateCounter=0;
         {
             if(i< [FriendList count]) 
             { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[FriendList objectAtIndex:i];
+                UserFriends *userFrnd=[FriendList objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
@@ -678,6 +678,9 @@ int createCounter=0, updateCounter=0;
                 [aView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [frndsScrollView addSubview:aView];
+                [aView release];
+                [imgView release];
+                [name release];
             }        
             x+=80;
         }
@@ -689,8 +692,7 @@ int createCounter=0, updateCounter=0;
     if (isBgDlRunning==TRUE)
     {
         int index = [path intValue];
-        UserFriends *userFrnd=[[UserFriends alloc] init];
-        userFrnd=[FriendList objectAtIndex:index];
+        UserFriends *userFrnd=[FriendList objectAtIndex:index];
         
         NSString *Link = userFrnd.imageUrl;
         //Start download image from url
@@ -701,6 +703,7 @@ int createCounter=0, updateCounter=0;
             [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
             [self reloadScrollview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -717,8 +720,7 @@ int createCounter=0, updateCounter=0;
     {
         [selectedFriends addObject:[FriendList objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[FriendList objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[FriendList objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriends : %@ %@",selectedFriends,frndsScrollView);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -759,16 +761,6 @@ int createCounter=0, updateCounter=0;
     
     SelectCircleTableCell *cell = [circleTableView
                                    dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    
-    if (cell == nil)
-    {
-        cell = [[SelectCircleTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CellIdentifier];
-        
-    }
-    
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
     {
@@ -822,13 +814,13 @@ int createCounter=0, updateCounter=0;
     isBgDlRunning=TRUE;
     circleList=[[NSMutableArray alloc] init];
     [circleList removeAllObjects];
-    UserCircle *circle=[[UserCircle alloc]init];
+    UserCircle *circle;
     for (int i=0; i<[circleListGlobalArray count]; i++)
     {
         circle=[circleListGlobalArray objectAtIndex:i];
         [circleList addObject:circle.circleName];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
+    UserFriends *frnds;
     ImgesName = [[NSMutableArray alloc] init];    
     searchTexts=[[NSString alloc] initWithString:@""];
     friendsNameArr=[[NSMutableArray alloc] init];
@@ -838,7 +830,6 @@ int createCounter=0, updateCounter=0;
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
-        frnds=[[UserFriends alloc] init];
         frnds=[friendListGlobalArray objectAtIndex:i];
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
         {
@@ -875,7 +866,7 @@ int createCounter=0, updateCounter=0;
         }
         else
         {
-            searchText=@"";
+            searchTexts=@"";
             [FriendList removeAllObjects];
             FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrollview];
@@ -896,7 +887,7 @@ int createCounter=0, updateCounter=0;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [FriendList removeAllObjects];
         FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrollview];

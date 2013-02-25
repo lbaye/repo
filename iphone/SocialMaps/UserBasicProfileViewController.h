@@ -16,9 +16,7 @@
 #import "PhotoPicker.h"
 #import "Plan.h"
 
-@interface UserBasicProfileViewController : UIViewController<UIPickerViewDataSource, 
-UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
+@interface UserBasicProfileViewController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
 {
     IBOutlet UIImageView *coverImageView;
     IBOutlet UIImageView *profileImageView;

@@ -65,6 +65,7 @@
     UIImageView *rectView = [[UIImageView alloc] initWithFrame:rectFrame];
     rectView.backgroundColor = [UIColor colorWithRed:102.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
     [self addSubview:rectView];
+    [rectView release];
     int offset = 0;
     if (numRadio == 1)
         offset = (self.frame.size.width-CELL_PADDING*2-radioSize.width)/2;

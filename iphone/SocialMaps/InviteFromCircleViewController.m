@@ -107,7 +107,7 @@ bool searchFlag4=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    NSMutableArray *peopleList=[[NSMutableArray alloc] init];
+    NSMutableArray *peopleList=[[[NSMutableArray alloc] init] autorelease];
     
     for (int i=0; i<[smAppDelegate.peopleList count]; i++)
     {
@@ -182,12 +182,6 @@ bool searchFlag4=true;
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
     CircleListCheckBoxTableCell *cell1= [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
-    if (cell1 == nil)
-    {
-        cell1 = [[CircleListCheckBoxTableCell alloc]
-                 initWithStyle:UITableViewCellStyleDefault
-                 reuseIdentifier:CellIdentifier1];
-    }
     
     // Configure the cell...    
     cell1.checkBoxButton.tag=indexPath.row;
@@ -210,7 +204,7 @@ bool searchFlag4=true;
         geoLocation.latitude=people.userInfo.currentLocationLat;
         geoLocation.longitude=people.userInfo.currentLocationLng;
         cell1.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-        
+        [geoLocation release];
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
         
@@ -260,7 +254,7 @@ bool searchFlag4=true;
             [cell1.checkBoxButton setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
         }
         
-        cell1.profilePicImgView.image=people.itemIcon;
+        [cell1.profilePicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.itemAvaterURL]];
         cell1.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell1.profilePicImgView.userInteractionEnabled=YES;
         cell1.profilePicImgView.layer.borderWidth=1.0;
@@ -276,8 +270,6 @@ bool searchFlag4=true;
         [cell1.messageButton.layer setCornerRadius:6.0f];
         [cell1.messageButton.layer setMasksToBounds:YES];
         
- 	    UIImageView *imageView = cell1.coverPicImgView;
-        [imageView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
         [cell1.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
         [self showIsOnlineImage:cell1.profilePicImgView :people];
     }
@@ -345,10 +337,11 @@ bool searchFlag4=true;
             
             LocationItemPeople *anItem = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
             
-            if (anItem.userInfo.coverPhotoUrl) 
-            {
+            if (anItem.userInfo.coverPhotoUrl)
                 [imgCover loadFromURL:[NSURL URLWithString:anItem.userInfo.coverPhotoUrl]];
-            }
+            
+            if (anItem.itemAvaterURL)
+                [cell.profilePicImgView loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
         }
     }
 }
@@ -388,6 +381,8 @@ bool searchFlag4=true;
             }
             FacebookHelper *fbHelper=[[FacebookHelper alloc] init];
             [fbHelper inviteFriends:idArr];
+            [idArr release];
+            [fbHelper release];
         }
     }
 }

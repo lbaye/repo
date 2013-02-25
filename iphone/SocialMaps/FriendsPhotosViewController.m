@@ -196,7 +196,7 @@ AppDelegate *smAppdelegate;
             {
             }
         }
-        NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
+        NSArray* subviews1 = [NSArray arrayWithArray: customScrollView.subviews];
         for (UIView* view in subviews1) 
         {
             if([view isKindOfClass :[UIView class]])
@@ -216,8 +216,7 @@ AppDelegate *smAppdelegate;
         {
             if(i< [filteredList3 count])
             { 
-                Photo *photo=[[Photo alloc] init];
-                photo=[filteredList3 objectAtIndex:i];
+                Photo *photo=[filteredList3 objectAtIndex:i];
                 if ([photo isKindOfClass:[Photo class]]) {
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
@@ -301,8 +300,7 @@ AppDelegate *smAppdelegate;
         {
             if(i< [filteredList4 count])
             { 
-                Photo *photo=[[Photo alloc] init];
-                photo=[filteredList4 objectAtIndex:i];
+                Photo *photo=[filteredList4 objectAtIndex:i];
                 if ([photo isKindOfClass:[Photo class]]) {
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
                 if (photo.imageUrl == nil) 
@@ -362,6 +360,9 @@ AppDelegate *smAppdelegate;
                 }
                 [aView addSubview:imgView];
                 [customScrollView addSubview:aView];
+                    [aView release];
+                    [name release];
+                    [imgView release];
                 }
             }
             x2+=320;
@@ -379,7 +380,6 @@ AppDelegate *smAppdelegate;
 
 -(void)loadData:(NSMutableArray *)photoListArr
 {
-    Photo *photo=[[Photo alloc] init];
     filteredList3=[[NSMutableArray alloc] init];
     filteredList3=[photoListArr mutableCopy];
     filteredList4=[photoListArr mutableCopy];
@@ -391,8 +391,7 @@ AppDelegate *smAppdelegate;
     if (isBackgroundTaskRunning==true)
     {
         int index = [path intValue];
-        UserFriends *userFrnd=[[UserFriends alloc] init];
-        userFrnd=[filteredList3 objectAtIndex:index];
+        UserFriends *userFrnd=[filteredList3 objectAtIndex:index];
         
         NSString *Link = userFrnd.imageUrl;
         //Start download image from url
@@ -403,6 +402,7 @@ AppDelegate *smAppdelegate;
             [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
             [self reloadScrolview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -412,8 +412,7 @@ AppDelegate *smAppdelegate;
     if (isBackgroundTaskRunning==true)
     {
         int index = [path intValue];
-        Photo *photo=[[Photo alloc] init];
-        photo=[filteredList3 objectAtIndex:index];
+        Photo *photo=[filteredList3 objectAtIndex:index];
         
         NSString *Link = photo.photoThum;
         //Start download image from url
@@ -424,6 +423,7 @@ AppDelegate *smAppdelegate;
             [dicImages_msg setObject:img forKey:photo.photoThum];
             [self reloadScrolview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -441,8 +441,7 @@ AppDelegate *smAppdelegate;
         [selectedFriendsIndex removeAllObjects];
         [selectedFriendsIndex addObject:[filteredList3 objectAtIndex:[sender.view tag]]];
     }
-    Photo *photo=[[Photo alloc] init];
-    photo=[filteredList3 objectAtIndex:[sender.view tag]];
+    Photo *photo=[filteredList3 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -474,8 +473,7 @@ AppDelegate *smAppdelegate;
     {
         [customSelectedFriendsIndex addObject:[filteredList4 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList4 objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[filteredList4 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {

@@ -10,6 +10,7 @@
 #import "LocationItem.h"
 #import "Constants.h"
 #import "UIImageView+roundedCorner.h"
+#import "UIImageView+Cached.h"
 #import "UtilityClass.h"
 
 @implementation LocationItem
@@ -26,6 +27,7 @@
 @synthesize delegate;
 @synthesize typeName;
 @synthesize itemCoverPhotoUrl;
+@synthesize itemAvaterURL;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
 category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl {
@@ -36,8 +38,8 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         itemCategory = category;
         coordinate = coord;
         itemDistance = dist;
-        itemIcon = icon;
-        itemBg = bg;
+        self.itemIcon = icon;
+        self.itemBg = bg;
         currDisplayState = MapAnnotationStateNormal;
         itemCoverPhotoUrl = [_coverPhotoUrl copy];
     }
@@ -53,6 +55,11 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         return NSOrderedSame;
 }
 
+- (void) updateDistance:(CLLocationCoordinate2D)coord {
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+    CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:coord.latitude longitude:coord.longitude];
+    self.itemDistance = [myLoc distanceFromLocation:userLoc];
+}
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(ListViewController*)controller {
     CGSize nameStringSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize addressStringSize = [itemAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
@@ -76,16 +83,12 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
     tv.backgroundColor = [UIColor clearColor];
 	tv.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	
-	//UILabel *lblCust;
 	UILabel *lblName;
 	UILabel *lblAddress;
-    UIScrollView *scrollAddress;
     UILabel *lblDist;
     UIView  *footerView;
     UIImageView *imgIcon;
     UIButton    *btnMap;
-    UIImageView *mapIcon;
-    UIView      *line;
     
     NSLog(@"LocationItem: cellIdent=%@", cellIdent);
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:cellIdent];
@@ -125,7 +128,7 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         [cell.contentView addSubview:footerView];
         
 		// Address
-        scrollAddress = [[UIScrollView alloc] initWithFrame:scrollFrame];
+        UIScrollView *scrollAddress = [[UIScrollView alloc] initWithFrame:scrollFrame];
         CGSize addrContentsize = CGSizeMake(addressStringSize.width, scrollAddress.frame.size.height);
         scrollAddress.contentSize = addrContentsize;
         scrollAddress.tag=20031;
@@ -160,18 +163,19 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
 		        
         // Line
         CGRect lineFrame = CGRectMake(0, CellFrame.size.height-3, CellFrame.size.width, 2);
-        line = [[UIView alloc] initWithFrame:lineFrame];
+        UIView *line = [[UIView alloc] initWithFrame:lineFrame];
         line.tag = 2005;
         line.backgroundColor = [UIColor grayColor];
         [cell.contentView addSubview:line];
-		
+        [footerView release];
+		[line release];
+        [scrollAddress release];
+        scrollAddress = nil;
     } else {
 		lblAddress  = (UILabel*) [cell viewWithTag:2002];
         lblName     = (UILabel*) [cell viewWithTag:2003];
 		lblDist     = (UILabel*) [cell viewWithTag:2004];
-        line        = (UIView*) [cell viewWithTag:2005];
         imgIcon     = (UIImageView*) [cell viewWithTag:2010];
-        mapIcon     = (UIImageView*) [cell viewWithTag:2011];
 	}
     
     // Name
@@ -203,7 +207,8 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         lblDist.text = [NSString stringWithFormat:@"%dm", (int)itemDistance];
                     
     // Icon
-    imgIcon.image = itemIcon;
+    //imgIcon.image = itemIcon;
+    [imgIcon setImageForUrlIfAvailable:[NSURL URLWithString:itemAvaterURL]];
     
 	return cell;
 

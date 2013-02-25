@@ -10,6 +10,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
+#import "UIImageView+Cached.h"
 #import "AppDelegate.h"
 #import "MapAnnotationEvent.h"
 
@@ -53,10 +54,6 @@
         [annoView.layer setCornerRadius:5.0f];
         [annoView.layer setMasksToBounds:YES];
         [annoView addSubview:locImage];
-        [locImage release];
-        
-        
-
         
         return annoView;
     }
@@ -85,7 +82,9 @@
     locImage.tag = 11000;
     
     [locImage addSubview:locImageSquare];
-    locImageSquare.image = locItem.itemIcon;
+    //locImageSquare.image = locItem.itemIcon;
+    ///////[locImageSquare loadFromURL:[NSURL URLWithString:locItem.itemAvaterURL]];
+    [locImageSquare setImageForUrlIfAvailable:[NSURL URLWithString:locItem.itemAvaterURL]];
     [locImageSquare.layer setCornerRadius:4.0f];
     [locImageSquare.layer setMasksToBounds:YES];
     locImageSquare.tag = 110001;
@@ -143,11 +142,11 @@
     [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     button.tag=1234321;
     [annoView addSubview:button];
-
+    [button release];
     
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];
-    
+    [infoView release];
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
     btn.frame = CGRectMake(annoFrame.size.width-26, 21, 26, 26);
     
@@ -218,6 +217,7 @@
     [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     button.tag=1234321;
     button.frame=[annoView frame];
+    [button release];
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];

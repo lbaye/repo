@@ -44,6 +44,8 @@ typedef enum _NOTIFY_TYPES {
 @property (nonatomic,retain) IBOutlet UIButton *reqButton;
 @property (nonatomic,retain) IBOutlet UIWebView *webView;
 
+@property (nonatomic, retain) NSMutableArray *unreadMesg;
+
 /**
  * @brief Make selection type message and display unread message
  * @param (id) - Action sender

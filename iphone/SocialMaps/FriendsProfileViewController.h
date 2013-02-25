@@ -17,9 +17,7 @@
 #import <MapKit/MapKit.h>
 #import "PhotoPicker.h"
 
-@interface FriendsProfileViewController : UIViewController<UIPickerViewDataSource, 
-UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
+@interface FriendsProfileViewController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
 {
     IBOutlet UIImageView *coverImageView;
     IBOutlet UIImageView *profileImageView;

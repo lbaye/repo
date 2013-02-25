@@ -22,7 +22,7 @@
 -(void)writeToUserDefaults:(NSString *)keyName withString:(NSString *)myString;
 -(void)writeArrayToUserDefaults:(NSString *)keyName withArray:(NSMutableArray *)myArray;
 -(void)removeFromDefault:(NSString *)keyName;
--(NSMutableArray *)readDataFromUserDefaults:(NSString*)keyName;
+-(NSArray *)readDataFromUserDefaults:(NSString*)keyName;
 -(void)writeDataToUserDefaults:(NSString *)keyName withArray:(NSMutableArray *)myArray;
 
 @end

@@ -64,13 +64,6 @@
 - (void) register:(User*) userInfo;
 
 /**
- * @brief Register with user facebook information
- * @param (User) - User information
- * @retval none
- */
-- (void) registerFB:(User*) userInfo;
-
-/**
  * @brief Forgot password
  * @param (NSString) - Email address
  * @retval none
@@ -652,15 +645,6 @@
  * @retval none
  */
 - (void) deletePlaceByPlaceId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)placeId;
-
-/**
- * @brief Get photos for geotag with user id
- * @param (NSString) - Auth Token
- * @param (NSString) - Auth Token Value
- * @param (NSString) - User id
- * @retval none
- */
--(void) getGeotagPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
 
 /**
  * @brief Creates a geotag

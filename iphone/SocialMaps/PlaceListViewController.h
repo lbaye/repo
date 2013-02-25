@@ -35,7 +35,6 @@ typedef enum _PLACE_TYPES {
     IBOutlet    UIImageView *imageViewDivider;
     IBOutlet    UIView      *viewTabContainer;
     
-    NSMutableArray      *placeList;
     AppDelegate         *smAppDelegate;
     
     BOOL						searching;
@@ -46,7 +45,7 @@ typedef enum _PLACE_TYPES {
 @property (atomic) PLACE_TYPES placeType;
 @property (nonatomic, retain) NSString *otherUserId;
 @property (nonatomic, retain) NSString *userName;
-
+@property (nonatomic, retain) NSMutableArray *placeList;
 
 /**
  * @brief Navigate user to previous screen

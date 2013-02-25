@@ -99,6 +99,7 @@
         UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
         sourceIcon.image=[UIImage imageNamed:@"fbCheckinIcon.png"];
         [msgView addSubview:sourceIcon];
+        [sourceIcon release];
         lblMsg.text = [NSString stringWithFormat:@"     at %@",[[locItemPeople.userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0]];
     }
     else 
@@ -116,7 +117,7 @@
     geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
     geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
     NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-
+    [geoLocation release];
     
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
@@ -186,6 +187,7 @@
     geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
     geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
     NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+    [geoLocation release];
     CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-15, annoView.frame.size.height-42);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
     UIView *sudoView=[[UIView alloc] initWithFrame:detFrame];
@@ -236,6 +238,7 @@
         UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(65,87,20,20)];
         sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
         [infoView addSubview:sourceIcon];
+        [sourceIcon release];
 
     }
     else {
@@ -324,6 +327,7 @@
     [sudoView setFrame:CGRectMake(detFrame.origin.x, detFrame.origin.y, detFrame.size.width, infoView.frame.size.height-10-27)];
     [sudoView setBackgroundColor:[UIColor clearColor]];
     [annoView insertSubview:sudoView belowSubview:[annoView viewWithTag:11001]];
+    [sudoView release];
     return annoView;
 }
 

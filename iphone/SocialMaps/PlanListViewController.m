@@ -89,12 +89,6 @@ int planListCounter=0;
                                    dequeueReusableCellWithIdentifier:CellIdentifier];
     
     int nodeCount = [planListArr count];
-    if (cell == nil)
-    {
-        cell = [[PlanListTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CellIdentifier];
-    }
     Plan *plan=[planListArr objectAtIndex:indexPath.row];
     cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",smAppDelegate.userAccountPrefs.firstName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
     cell.addressLabel.text=plan.planAddress;

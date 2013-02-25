@@ -43,13 +43,19 @@ ViewCircleWisePeopleViewController *circleView;
         label.textColor = [UIColor darkGrayColor];
         label.backgroundColor = [UIColor clearColor];
         [self addSubview:label];
+        
         UIView *view=[[UIView alloc] initWithFrame:self.frame];
         [view setBackgroundColor:[UIColor clearColor]];
-        [self addSubview:view];
-        _titleLabel = label;
         
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleOpen:)];
         [view addGestureRecognizer:tapGesture];
+        [tapGesture release];
+        
+        [self addSubview:view];
+        [view release];
+        _titleLabel = label;
+        
+       
         
         // Create and configure the disclosure button.
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];

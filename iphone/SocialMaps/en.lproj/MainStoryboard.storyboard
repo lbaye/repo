@@ -1728,7 +1728,6 @@
                                         </state>
                                         <connections>
                                             <action selector="backToMapview:" destination="fgr-fq-SqM" eventType="touchUpInside" id="9oi-ez-NdY"/>
-                                            <segue destination="wC3-So-nVM" kind="modal" identifier="goToMapView" modalTransitionStyle="crossDissolve" id="AQm-b1-ECC"/>
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jBS-qp-zOM" userLabel="monocleView">
@@ -1823,7 +1822,7 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="SWz-zr-1uz">
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="listViewTableCell" id="SWz-zr-1uz">
                                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -2178,7 +2177,7 @@
                                 <color key="backgroundColor" red="0.94117653369903564" green="0.94117653369903564" blue="0.94117653369903564" alpha="0.0" colorSpace="deviceRGB"/>
                                 <color key="separatorColor" red="0.91372555494308472" green="0.91372555494308472" blue="0.91372555494308472" alpha="1" colorSpace="deviceRGB"/>
                                 <prototypes>
-                                    <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="DvH-TV-9R5">
+                                    <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NotificationControllerCell" id="DvH-TV-9R5">
                                         <rect key="frame" x="0.0" y="22" width="294" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -2762,7 +2761,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="KWk-dn-Pkv" userLabel="platformSettings">
+                                    <view hidden="YES" contentMode="scaleToFill" id="KWk-dn-Pkv" userLabel="platformSettings">
                                         <rect key="frame" x="0.0" y="128" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -5544,7 +5543,6 @@
                 <relationship kind="action" name="addCircleView:"/>
                 <relationship kind="action" name="applyFilter:"/>
                 <relationship kind="action" name="closeConnectWithFB:"/>
-                <relationship kind="action" name="closeInviteFrnds:"/>
                 <relationship kind="action" name="closePullupMenu:"/>
                 <relationship kind="action" name="connectWithFB:"/>
                 <relationship kind="action" name="dealsClicked:"/>
@@ -5564,8 +5562,6 @@
                 <relationship kind="action" name="gotonDeals:"/>
                 <relationship kind="action" name="gotonNewsFeed:"/>
                 <relationship kind="action" name="hidePulldown:"/>
-                <relationship kind="action" name="inviteAllUsers:"/>
-                <relationship kind="action" name="inviteSelectedUsers:"/>
                 <relationship kind="action" name="peopleClicked:"/>
                 <relationship kind="action" name="placesClicked:"/>
                 <relationship kind="action" name="removeCircleView:"/>
@@ -5693,7 +5689,6 @@
                 <relationship kind="outlet" name="regPassword" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="registrationScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="relatioshipStatusTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="selMaleFemale" candidateClass="UIPickerView"/>
                 <relationship kind="outlet" name="serviceTxtField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="streetAdressTxtField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="userNameTextField" candidateClass="UITextField"/>
@@ -5815,7 +5810,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="AQm-b1-ECC"/>
-        <segue reference="iBt-8B-WyX"/>
+        <segue reference="qvJ-bu-e6k"/>
+        <segue reference="r7Q-WQ-M5h"/>
     </inferredMetricsTieBreakers>
 </document>

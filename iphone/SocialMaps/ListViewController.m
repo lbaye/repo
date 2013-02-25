@@ -56,6 +56,7 @@ PullableView *pullUpView;
 
 - (void)didReceiveMemoryWarning
 {
+    [CachedImages removeAllCache];
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
@@ -75,7 +76,7 @@ PullableView *pullUpView;
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    NSString *lblStr = [NSString stringWithString:@"Show in list:"];
+    NSString *lblStr = @"Show in list:";
     CGSize   strSize = [lblStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14.0f]];
     
     CGRect labelFrame = CGRectMake(2, (listViewfilter.frame.size.height-strSize.height)/2, strSize.width, strSize.height);
@@ -85,6 +86,7 @@ PullableView *pullUpView;
     label.textColor = [UIColor blackColor];
     label.backgroundColor = [UIColor clearColor];
     [listViewfilter addSubview:label];
+    [label release];
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
     CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
@@ -114,6 +116,7 @@ PullableView *pullUpView;
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.itemList];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
+    [refreshControl release];
 }
 
 - (void) viewDidAppear:(BOOL)animated
@@ -128,12 +131,6 @@ PullableView *pullUpView;
     
     smAppDelegate.currentModelViewController = self;
     [self displayNotificationCount];
-}
-
-- (void) viewDidDisappear:(BOOL)animated
-{
-    [CachedImages removeAllCache];
-    [super viewDidDisappear:animated];
 }
 
 - (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
@@ -205,19 +202,14 @@ PullableView *pullUpView;
     
 }
 
-- (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
-    if (opened)
-    {
-        NSLog(@"Now I'm open!");
+- (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened 
+{
+    if (opened) {
         ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_close.png"];
         ((UIImageView*)[pView.handleView viewWithTag:840]).image = nil;
-    }
-    else
-    {
+    } else {
         ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
         ((UIImageView*)[pView.handleView viewWithTag:840]).image = [UIImage imageNamed:@"slide_close_bar.png"];
-        
-        NSLog(@"Now I'm closed, pull me up again!");
     }
 }
 
@@ -234,8 +226,7 @@ PullableView *pullUpView;
         {
             if ([[smAppDelegate.geotagList objectAtIndex:i] isKindOfClass:[Geotag class]])
             {
-                Geotag *aGeotag=[[Geotag alloc] init];
-                aGeotag=[smAppDelegate.geotagList objectAtIndex:i];
+                Geotag *aGeotag=[smAppDelegate.geotagList objectAtIndex:i];
                 LocationItem *item=[[LocationItem alloc] init];
                 item.itemName=aGeotag.geoTagTitle;
                 item.itemType=4;
@@ -247,6 +238,7 @@ PullableView *pullUpView;
                 item.itemCategory=[NSString stringWithFormat:@"%@ %@",aGeotag.ownerLastName,aGeotag.ownerFirstName];;
                 item.itemAddress=[NSString stringWithFormat:@"at %@",aGeotag.geoTagAddress] ;
                 [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];
+                [item release];
             }
         }
         [tempList addObjectsFromArray:smAppDelegate.geotagList];
@@ -258,8 +250,7 @@ PullableView *pullUpView;
         {
             if ([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[Event class]])
             {
-                Event *aEvent=[[Event alloc] init];
-                aEvent=[smAppDelegate.eventList objectAtIndex:i];
+                Event *aEvent=[smAppDelegate.eventList objectAtIndex:i];
                 LocationItem *item=[[LocationItem alloc] init];
                 item.itemName=aEvent.eventName;
                 item.itemAddress=aEvent.eventDate.date;
@@ -272,6 +263,7 @@ PullableView *pullUpView;
                 item.currDisplayState=0;
                 item.itemCoverPhotoUrl=[NSURL URLWithString:aEvent.eventImageUrl];
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
+                [item release];
             }
         }
 
@@ -281,7 +273,7 @@ PullableView *pullUpView;
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [copyDisplayListArray addObjectsFromArray:sortedArray];
     [smAppDelegate.displayList addObjectsFromArray:copyDisplayListArray];
-    
+    [tempList release];
 }
 
 - (void)viewDidUnload
@@ -327,6 +319,8 @@ PullableView *pullUpView;
 - (IBAction)backToMapview:(id)sender {
     [mapViewImg setImage:[UIImage imageNamed:@"map_view_icon.png"]];
     [self performSelector:@selector(loadPrevImage) withObject:nil afterDelay:0.2];
+    [self dismissModalViewControllerAnimated:YES];
+    
 }
 
 - (IBAction)closePullup:(id)sender {
@@ -394,6 +388,7 @@ PullableView *pullUpView;
     UserBasicProfileViewController *prof=[[UserBasicProfileViewController alloc] init];
     prof.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:prof animated:YES];
+    [prof release];
 }
 
 -(IBAction)gotoSettings:(id)sender
@@ -468,7 +463,8 @@ PullableView *pullUpView;
 {
     NewsFeedViewController *controller =[[NewsFeedViewController alloc] init];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];    
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 -(IBAction)gotonDeals:(id)sender
@@ -562,6 +558,7 @@ PullableView *pullUpView;
             controller.friendsId=((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.userId;
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             [self presentModalViewController:controller animated:YES];
+                [controller release];
             }
         }        
     }
@@ -643,7 +640,9 @@ PullableView *pullUpView;
             if(searching)
                 locItem = (LocationItem*)[copyListOfItems objectAtIndex:row];
             smAppDelegate.needToCenterMap = FALSE;
-            [self performSegueWithIdentifier:@"segueShowDetailAnno" sender:locItem];
+            
+            [self.presentingViewController performSelector:@selector(showAnnotationDetailView:) withObject:locItem];
+            [self dismissModalViewControllerAnimated:YES];
             
             break;
             
@@ -795,6 +794,7 @@ PullableView *pullUpView;
             //get the imageView on cell
             
             UIImageView *imgCover = (UIImageView*) [cell viewWithTag:123456789];
+            UIImageView *imgIcon = (UIImageView*) [cell viewWithTag:2010];
             
             LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
             
@@ -803,6 +803,9 @@ PullableView *pullUpView;
             
             if (anItem.itemCoverPhotoUrl) 
                 [imgCover loadFromURL:anItem.itemCoverPhotoUrl];
+            
+            if (anItem.itemAvaterURL)
+                 [imgIcon loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
             
         }
     }
