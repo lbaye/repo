@@ -19,13 +19,13 @@
 #import "UserCircle.h"
 #import "LocationItemPlace.h"
 #import "SelectCircleTableCell.h"
-#import <Foundation/Foundation.h> 
+#import <Foundation/Foundation.h>
 #import "NotificationController.h"
 #import "NSData+Base64.h"
+#import "UIImageView+Cached.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
--(void)DownLoad:(NSNumber *)path;
 @end
 
 @implementation CreateEventViewController
@@ -1162,7 +1162,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 -(void) reloadScrolview
 {
-    NSLog(@"event create scroll init %@",dicImages_msg);
     if (isBackgroundTaskRunning==true)
     {
         int x=0; //declared for imageview x-axis point    
@@ -1201,33 +1200,9 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
                 UserFriends *userFrnd=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
-                if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-                } 
-                else 
-                { 
-                    NSLog(@"[dicImages_msg objectForKey:userFrnd.imageUrl] %@",[dicImages_msg objectForKey:userFrnd.imageUrl]);
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==NULL))
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];             
-                        NSLog(@"create downloading called");
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }               
-                }
+                 if(!isDragging_msg && !isDecliring_msg)
+                     [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+                
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
@@ -1275,31 +1250,10 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             { 
                 UserFriends *userFrnd=[filteredList2 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-                if (userFrnd.imageUrl == nil) 
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil)) 
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }               
-                }
+                
+                if(!isDragging_msg && !isDecliring_msg)
+                    [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
@@ -1342,27 +1296,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             }        
             x2+=65;
         }
-    }
-}
-
--(void)DownLoad:(NSNumber *)path
-{
-    if (isBackgroundTaskRunning==true)
-    {
-    int index = [path intValue];
-    UserFriends *userFrnd=[filteredList1 objectAtIndex:index];
-
-    NSString *Link = userFrnd.imageUrl;
-    //Start download image from url
-    UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if([img isKindOfClass:[UIImage class]])
-    {
-        //If download complete, set that image to dictionary
-        [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
-        [self reloadScrolview];
-    }
-        [img release];
-    // Now, we need to reload scroll view to load downloaded image
     }
 }
 
@@ -1590,8 +1523,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     [self loadDummydata];
     searchTexts = friendSearchbar.text;
-    NSLog(@"in search method..");
-    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
 
     [filteredList1 removeAllObjects];
     
@@ -1603,8 +1534,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
-
         for (UserFriends *sTemp in friendListArr)
         {
             NSRange titleResultsRange = [sTemp.userName rangeOfString:searchTexts options:NSCaseInsensitiveSearch];		
@@ -1621,7 +1550,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     }
     searchFlag=false;    
     
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
     [self reloadScrolview];
 }
 
@@ -1629,8 +1557,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     [self loadDummydata];
     searchTexts = customSearchBar.text;
-    NSLog(@"in search method..");
-    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
     
     [filteredList2 removeAllObjects];
     
@@ -1642,8 +1568,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
-        
         for (UserFriends *sTemp in friendListArr)
         {
             NSRange titleResultsRange = [sTemp.userName rangeOfString:searchTexts options:NSCaseInsensitiveSearch];		
@@ -1659,8 +1583,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         }
     }
     searchFlag=false;    
-    
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
+
     [self reloadScrolview];
 }
 
