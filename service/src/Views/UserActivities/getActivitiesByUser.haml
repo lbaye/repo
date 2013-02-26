@@ -105,7 +105,7 @@
                           %strong= stripcslashes($activity->getTitle())
                         - if ($geotag->getPhoto())
                           - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
-                          %img.lazy(src=$geoPhotoFullPath)
+                          %img.geoTagImg(src=$geoPhotoFullPath)
 
                     - if ($activity->getObjectType() === 'friend')
                       - $friend = $userRepo->find($activity->getObjectId())
@@ -278,7 +278,7 @@
                   %strong= stripcslashes($activity->getTitle())
                 - if ($geotag->getPhoto())
                   - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
-                  %img.lazy(src=$geoPhotoFullPath)
+                  %img.geoTagImg(src=$geoPhotoFullPath)
 
 
 
