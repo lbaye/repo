@@ -25,6 +25,7 @@
 @synthesize userName,userId,nextButton,prevButton;
 
 NSMutableArray *selectedFriendsIndex, *filteredList3, *filteredList4, *customSelectedFriendsIndex;
+NSMutableDictionary *photoDic;
 
 BOOL isBackgroundTaskRunning,isDragging_msg,isDecliring_msg;
 int zoomIndex, friendsAllPhotoCounter=0;;
@@ -44,6 +45,7 @@ AppDelegate *smAppdelegate;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    photoDic = [[NSMutableDictionary alloc] init];
     selectedFriendsIndex=[[NSMutableArray alloc] init];
     filteredList3=[[NSMutableArray alloc] init];
     filteredList4=[[NSMutableArray alloc] init];
@@ -93,6 +95,7 @@ AppDelegate *smAppdelegate;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [photoDic release];
     // Release any retained subviews of the main view.
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
 }
@@ -224,18 +227,18 @@ AppDelegate *smAppdelegate;
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
-                else if([dicImages_msg valueForKey:photo.photoThum]) 
+                else if([photoDic valueForKey:photo.photoThum]) 
                 { 
                     //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:photo.photoThum]; 
+                    imgView.image = [photoDic valueForKey:photo.photoThum]; 
                 } 
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.photoThum]==nil))
+                    if((!isDragging_msg && !isDecliring_msg)&&([photoDic objectForKey:photo.photoThum]==nil))
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.photoThum]; 
+                        [photoDic setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.photoThum];
                         [self performSelectorInBackground:@selector(DownLoadThum:) withObject:[NSNumber numberWithInt:i]];  
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
@@ -307,18 +310,18 @@ AppDelegate *smAppdelegate;
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
-                else if([dicImages_msg valueForKey:photo.imageUrl]) 
+                else if([photoDic valueForKey:photo.imageUrl]) 
                 { 
                     //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:photo.imageUrl]; 
+                    imgView.image = [photoDic valueForKey:photo.imageUrl];
                 } 
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.imageUrl]==nil)) 
+                    if((!isDragging_msg && !isDecliring_msg)&&([photoDic objectForKey:photo.imageUrl]==nil)) 
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
+                        [photoDic setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl];
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
@@ -399,7 +402,7 @@ AppDelegate *smAppdelegate;
         if(img)
         {
             //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
+            [photoDic setObject:img forKey:userFrnd.imageUrl];
             [self reloadScrolview];
         }
         [img release];
@@ -420,7 +423,7 @@ AppDelegate *smAppdelegate;
         if(img)
         {
             //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:photo.photoThum];
+            [photoDic setObject:img forKey:photo.photoThum];
             [self reloadScrolview];
         }
         [img release];
@@ -576,6 +579,12 @@ AppDelegate *smAppdelegate;
     // A possible optimization would be to unload the views+controllers which are no longer visible
 }
 //lazy load method ends
+
+-(void) dealloc
+{
+    [super dealloc];
+    photoDic = nil;
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

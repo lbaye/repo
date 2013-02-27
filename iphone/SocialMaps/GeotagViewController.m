@@ -180,7 +180,6 @@ int geoCounter=0;
     [super viewDidLoad];
     
     rc=[[RestClient alloc] init];
-    [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
     isBackgroundTaskRunning=true;
 	// Do any additional setup after loading the view.
     photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
@@ -268,8 +267,6 @@ int geoCounter=0;
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];    
     [self hidePhotoScroller:YES];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getPhotoForGeoTagDone:) name:NOTIF_GET_PHOTO_FOR_GEOTAG object:nil];  
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createGeoTagDone:) name:NOTIF_CREATE_GEOTAG_DONE object:nil];  
     [commentsView.layer setCornerRadius:8.0f];
     [commentsView.layer setBorderWidth:0.5];
     [commentsView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
@@ -393,7 +390,6 @@ int geoCounter=0;
 	[super viewWillAppear:animated];
     [customSelectionView removeFromSuperview];
 	[circleView removeFromSuperview];
-    
     if (editFlag==true)
     {
         [createButton setTitle:@"Update" forState:UIControlStateNormal];
@@ -407,12 +403,20 @@ int geoCounter=0;
     }
     
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
-
     [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
     
     smAppDelegate.currentModelViewController = self;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    geoCounter = 0;
+    [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createGeoTagDone:) name:NOTIF_CREATE_GEOTAG_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    
 }
 
 -(void)getCurrentAddress
@@ -443,15 +447,19 @@ int geoCounter=0;
 	
 	[super viewWillDisappear:animated];
 	isBackgroundTaskRunning=false;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
-	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
     editFlag=false;
     ImgesName=nil;
     frndListScrollView=nil;
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CREATE_GEOTAG_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+}
 
 - (void) photoPickerDone:(bool)status image:(UIImage*)img
 {
@@ -723,7 +731,7 @@ int geoCounter=0;
         NSString *circleId=circle.circleID;
         [geotag.circleList addObject:circleId];
     }
-    
+    geotag.geoTagTitle=titleTextField.text;
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     [rc createGeotag:geotag :@"Auth-Token" :smAppDelegate.authToken];
