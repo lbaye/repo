@@ -76,6 +76,7 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIImageView *listViewImg;
                                     
     NSMutableArray *displayListForMap;
+    BOOL shouldMainDisplayListChange;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;

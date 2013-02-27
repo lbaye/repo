@@ -121,7 +121,7 @@ CGFloat animatedDistance;
     NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv",pdblLatitude, pdblLongitude];
     
     NSError* error;
-    NSString *locationString = [NSString stringWithContentsOfURL:[NSURL URLWithString:urlString] encoding:NSASCIIStringEncoding error:&error];
+    NSString *locationString = [NSString stringWithContentsOfURL:[NSURL URLWithString:urlString] encoding:NSUTF8StringEncoding error:&error];
     
     locationString = [locationString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
     

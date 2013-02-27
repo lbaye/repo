@@ -1066,10 +1066,15 @@ ButtonClickCallbackData callBackData;
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 [self getSortedDisplayList];
+                
+                if (smAppDelegate.showPlaces)
+                    [displayListForMap addObjectsFromArray:smAppDelegate.geotagList];
+                
                 [self loadAnnotations:TRUE];
+                
                 [_mapView setNeedsDisplay];
                 
-                
+            
                 for (id<MKAnnotation> annotation in _mapView.annotations) {
                     if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(self.mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
                     {
@@ -1764,6 +1769,7 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.showPeople = true;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
+    shouldMainDisplayListChange = YES;
     [self getSortedDisplayList];
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
@@ -1783,6 +1789,7 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.showPlaces = true;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
+    shouldMainDisplayListChange = YES;
     [self getSortedDisplayList];
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];   
@@ -2051,15 +2058,20 @@ ButtonClickCallbackData callBackData;
         [tempList addObjectsFromArray:smAppDelegate.placeList];
     if (smAppDelegate.showEvents == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.eventList];
+    
         // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     int maxAnno = sortedArray.count > MAX_VISIBLE_ANNO ? MAX_VISIBLE_ANNO : sortedArray.count;
-
-    if ([smAppDelegate.displayList count] == 0)
+    
+    if (shouldMainDisplayListChange) {
+        [smAppDelegate.displayList removeAllObjects];
         [smAppDelegate.displayList addObjectsFromArray:sortedArray];
+        shouldMainDisplayListChange = NO;
+    }
     
     [displayListForMap removeAllObjects];
     [displayListForMap addObjectsFromArray:[sortedArray subarrayWithRange:NSMakeRange(0, maxAnno)]];
+    
     NSLog(@"displayList for map count = %d", [displayListForMap count]);
     
     [tempList release];
@@ -2315,6 +2327,7 @@ ButtonClickCallbackData callBackData;
                     [smAppDelegate.window setUserInteractionEnabled:YES];
                     [smAppDelegate hideActivityViewer];
                 }
+                shouldMainDisplayListChange = YES;
                 [self getSortedDisplayList];
                 
                 
