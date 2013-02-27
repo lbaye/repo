@@ -358,7 +358,7 @@ ButtonClickCallbackData callBackData;
 
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
-    selectedAnno = anno;
+    self.selectedAnno = anno;
     LocationItem *selLocation = (LocationItem*) anno;
     [self mapAnnotationChanged:selLocation];
     [mapAnno changeStateToSummary:selLocation];
@@ -456,7 +456,7 @@ ButtonClickCallbackData callBackData;
     }
     
     [self mapAnnotationInfoUpdated:anno];
-    selectedAnno = anno;
+    self.selectedAnno = anno;
     
     [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:anno afterDelay:.5];
 }
@@ -979,7 +979,7 @@ ButtonClickCallbackData callBackData;
         [self mapAnnotationChanged:selLocation];
     }
     
-    selectedAnno = nil;
+    self.selectedAnno = nil;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {

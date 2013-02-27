@@ -84,7 +84,13 @@
     [locImage addSubview:locImageSquare];
     //locImageSquare.image = locItem.itemIcon;
     ///////[locImageSquare loadFromURL:[NSURL URLWithString:locItem.itemAvaterURL]];
-    [locImageSquare setImageForUrlIfAvailable:[NSURL URLWithString:locItem.itemAvaterURL]];
+    
+    if (locItem.itemAvaterURL && [locItem.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
+        [locImageSquare loadFromURL:[NSURL fileURLWithPath:locItem.itemAvaterURL isDirectory:NO]];
+    } else {
+        [locImageSquare setImageForUrlIfAvailable:[NSURL URLWithString:locItem.itemAvaterURL]];
+    }
+    
     [locImageSquare.layer setCornerRadius:4.0f];
     [locImageSquare.layer setMasksToBounds:YES];
     locImageSquare.tag = 110001;
