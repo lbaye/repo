@@ -447,7 +447,8 @@ class Settings extends Base {
                                         'timestamp' => time(),
                                         'validity' => 7200, // 2 hours
                                         'oldLoc' => $oldLocation,
-                                        'newLoc' => $newLocation
+                                        'newLoc' => $newLocation,
+                                        'receiverId' => $user->getId()
                                    )));
     }
 
