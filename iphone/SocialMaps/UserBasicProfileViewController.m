@@ -85,7 +85,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
-    photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
+    photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
     photoPicker.delegate = self;
     picSel = [[UIImagePickerController alloc] init];
 	picSel.allowsEditing = YES;

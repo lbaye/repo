@@ -261,7 +261,7 @@
         }
         if ([userInfo.userName isEqualToString:@""] || userInfo.userName == nil)
         {
-            [message appendString:@"user name, "];
+            [message appendString:@"username, "];
         }
         
         [CustomAlert setBackgroundColor:[UIColor redColor]

@@ -133,13 +133,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     NSLog(@"friendsId: %@",friendsId);
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
-    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
+    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places", nil];
     [ImgesName addObject:@"photos_icon"];
     [ImgesName addObject:@"friends_icon"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
-    [ImgesName addObject:@"meet_up_icon"];
-    [ImgesName addObject:@"sm_icon@2x"];
     
     iconArray=[[NSMutableArray alloc] initWithObjects:@"photos_icon_small.png",@"friends_icon_small.png",@"events_icon_small.png",@"icon_48x48.png",@"icon_meetup_new.png",@"photos_icon_small.png", nil];
     
