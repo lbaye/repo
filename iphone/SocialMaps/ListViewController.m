@@ -114,6 +114,8 @@ PullableView *pullUpView;
     
     copyDisplayListArray = [[NSMutableArray alloc] init];
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
+    [self getSortedDisplayList];
+    
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.itemList];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     [refreshControl release];

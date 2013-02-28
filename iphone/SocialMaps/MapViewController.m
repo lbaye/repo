@@ -1067,8 +1067,8 @@ ButtonClickCallbackData callBackData;
                 
                 [self getSortedDisplayList];
                 
-                if (smAppDelegate.showPlaces)
-                    [displayListForMap addObjectsFromArray:smAppDelegate.geotagList];
+                //if (smAppDelegate.showPlaces)
+                    //[displayListForMap addObjectsFromArray:smAppDelegate.geotagList];
                 
                 [self loadAnnotations:TRUE];
                 
@@ -1301,6 +1301,7 @@ ButtonClickCallbackData callBackData;
     
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
+    [self getSortedDisplayList];
     [self loadAnnotations:YES];
 
     pointOnMapFlag = FALSE;
@@ -1770,10 +1771,11 @@ ButtonClickCallbackData callBackData;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     shouldMainDisplayListChange = YES;
-    [self getSortedDisplayList];
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
+    [self getSortedDisplayList];
     [self loadAnnotations:YES];
+    
     [self.view setNeedsDisplay];
 }
 
@@ -1790,10 +1792,11 @@ ButtonClickCallbackData callBackData;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     shouldMainDisplayListChange = YES;
-    [self getSortedDisplayList];
     [self loadAnnotationForEvents];
-    [self loadAnnotationForGeotag];   
+    [self loadAnnotationForGeotag];
+    [self getSortedDisplayList];
     [self loadAnnotations:YES];
+    
     [self.view setNeedsDisplay];
 }
 
@@ -1805,9 +1808,13 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.showEvents = true;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
+    
+    shouldMainDisplayListChange = YES;
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
+    [self getSortedDisplayList];
     [self loadAnnotations:YES];
+    
     [self.view setNeedsDisplay];
 }
 
@@ -2059,7 +2066,11 @@ ButtonClickCallbackData callBackData;
     if (smAppDelegate.showEvents == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.eventList];
     
-        // Sort by distance
+    if (smAppDelegate.showPlaces)
+        [tempList addObjectsFromArray:smAppDelegate.geotagList];
+    
+    
+    // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     int maxAnno = sortedArray.count > MAX_VISIBLE_ANNO ? MAX_VISIBLE_ANNO : sortedArray.count;
     
@@ -2336,6 +2347,7 @@ ButtonClickCallbackData callBackData;
                     //for first time
                     [self loadAnnotationForEvents];
                     [self loadAnnotationForGeotag];
+                    [self getSortedDisplayList];
                     [self loadAnnotations:YES];
                     [self.view setNeedsDisplay];
                     isFirstTimeDownloading = YES;
@@ -2396,6 +2408,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"got all events for map %@",smAppDelegate.eventList);
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
+    [self getSortedDisplayList];
     [self loadAnnotations:NO];
 }
 
