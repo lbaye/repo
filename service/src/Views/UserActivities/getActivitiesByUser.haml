@@ -101,8 +101,7 @@
                         at
                         %small= $geotag->getLocation()->getAddress()
                         = ' - '
-                        %a(href= $geotagLink)
-                          %strong= stripcslashes($activity->getTitle())
+                        %strong= stripcslashes($activity->getTitle())
                         - if ($geotag->getPhoto())
                           - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
                           %img.geoTagImg(src=$geoPhotoFullPath)
@@ -274,8 +273,7 @@
                 at
                 %small= $geotag->getLocation()->getAddress()
                 = ' - '
-                %a(href= $geotagLink)
-                  %strong= stripcslashes($activity->getTitle())
+                %strong= stripcslashes($activity->getTitle())
                 - if ($geotag->getPhoto())
                   - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
                   %img.geoTagImg(src=$geoPhotoFullPath)
