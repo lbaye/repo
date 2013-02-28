@@ -1,5 +1,5 @@
 web:
-  root: http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest
+  root: http://services.socialmapsapp.com/prodtest
 
 mongodb:
   host: '10.239.65.85'
