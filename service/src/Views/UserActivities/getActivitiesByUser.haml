@@ -44,7 +44,7 @@
                       = $activity->toHumanizeDate()
 
 
-                  .row(style='height:100px; margin-top: 5px;')
+                  .row(style='margin-top: 5px;')
 
                     - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
                     .image(style=$imagePathCss)
@@ -101,8 +101,10 @@
                         at
                         %small= $geotag->getLocation()->getAddress()
                         = ' - '
-                        %a(href= $geotagLink)
-                          %strong= stripcslashes($activity->getTitle())
+                        %strong= stripcslashes($activity->getTitle())
+                        - if ($geotag->getPhoto())
+                          - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                          %img.geoTagImg(src=$geoPhotoFullPath)
 
                     - if ($activity->getObjectType() === 'friend')
                       - $friend = $userRepo->find($activity->getObjectId())
@@ -212,7 +214,7 @@
               = $activity->toHumanizeDate()
 
 
-          .row(style='height:100px; margin-top: 5px;')
+          .row(style='margin-top: 5px;')
 
             - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
             .image(style=$imagePathCss)
@@ -241,7 +243,7 @@
                 - else
                   Like
 
-             
+
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
@@ -267,12 +269,16 @@
               - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
               .comment
-                was geo-tagged 
+                was geo-tagged
                 at
                 %small= $geotag->getLocation()->getAddress()
                 = ' - '
-                %a(href= $geotagLink)
-                  %strong= stripcslashes($activity->getTitle())
+                %strong= stripcslashes($activity->getTitle())
+                - if ($geotag->getPhoto())
+                  - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                  %img.geoTagImg(src=$geoPhotoFullPath)
+
+
 
             - if ($activity->getObjectType() === 'friend')
               - $friend = $userRepo->find($activity->getObjectId())
@@ -281,7 +287,7 @@
                 is now friend with
                 %a(href=$friendLink)
                   = $friend->getName()
-                    
+
           %div.clearfix
 
           .row
@@ -302,7 +308,7 @@
                   Likes
                 - else
                   Like
-                  
+
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 

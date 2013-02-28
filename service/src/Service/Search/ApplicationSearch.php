@@ -11,6 +11,7 @@ class ApplicationSearch implements ApplicationSearchInterface
     private $dm;
     private $config;
     private $user;
+    const MAX_ALLOWED_OLDER_CHECKINS = '168 hours ago';
 
     public function __construct(\Document\User $user, \Doctrine\ODM\MongoDB\DocumentManager &$dm, array &$config)
     {
@@ -45,14 +46,25 @@ class ApplicationSearch implements ApplicationSearchInterface
                 'sw' => explode(',', $params['sw-position'])
             );
 
+        if (isset($params['hour'])) {
+            $hour = (int)$params['hour'];
+        } else {
+            $hour = null;
+        }
+        if (isset($params['minute'])) {
+            $minute = (int)$params['minute'];
+        } else {
+            $minute = null;
+        }
+
         if (isset($params['lat']) && isset($params['lng']))
             $location = array_merge(
                 $location, array('lat' => (float)$params['lat'],
-                                'lng' => (float) $params['lng']));
+                'lng' => (float)$params['lng']));
 
         $keywords = isset($params['keyword']) ? $params['keyword'] : null;
         $key = $this->config['googlePlace']['apiKey'];
-        return $this->userRepository->searchWithPrivacyPreference($keywords, $location, $limit, $key);
+        return $this->userRepository->searchWithPrivacyPreference($keywords, $location, $limit, $key, $hour, $minute);
     }
 
     public function searchPlaces(array $params, $options = array())
@@ -75,7 +87,7 @@ class ApplicationSearch implements ApplicationSearchInterface
         $users = array_values(
             $this->dm->createQueryBuilder('Document\ExternalUser')
                 ->field('smFriends')->equals($this->user->getId())
-            #->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
+                ->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
                 ->hydrate(false)
                 ->skip(0)
                 ->limit(200)

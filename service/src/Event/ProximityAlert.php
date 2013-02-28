@@ -236,7 +236,8 @@ class ProximityAlert extends Base
             'photoUrl' => $user->getAvatar(),
             'objectId' => $user->getId(),
             'objectType' => 'proximity_alert',
-            'message' => $message
+            'message' => $message,
+            'receiverId' => $friend->getId()
         );
     }
 
