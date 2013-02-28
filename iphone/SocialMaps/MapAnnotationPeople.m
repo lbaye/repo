@@ -192,7 +192,7 @@
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
     UIView *sudoView=[[UIView alloc] initWithFrame:detFrame];
     [sudoView setBackgroundColor:[UIColor clearColor]];
-    [sudoView setTag:12321123];
+    [detailView.window setTag:12321123];
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
     detailView.userInteractionEnabled=YES;
@@ -226,7 +226,7 @@
     [detailView loadHTMLString:detailInfoHtml baseURL:nil];
     detailView.delegate = self;
     [infoView addSubview:detailView];
-    
+    [detailView setUserInteractionEnabled:YES];
     // Buttons
     UIView *profilePicture = [annoView viewWithTag:11000];
     [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
@@ -326,7 +326,6 @@
     }
     [sudoView setFrame:CGRectMake(detFrame.origin.x, detFrame.origin.y, detFrame.size.width, infoView.frame.size.height-10-27)];
     [sudoView setBackgroundColor:[UIColor clearColor]];
-    [annoView insertSubview:sudoView belowSubview:[annoView viewWithTag:11001]];
     [sudoView release];
     return annoView;
 }
