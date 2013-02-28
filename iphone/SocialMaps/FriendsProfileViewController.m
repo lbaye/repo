@@ -984,7 +984,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     if (isBackgroundTaskRunning==TRUE) 
     {
         NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
-        int x=0; //declared for imageview x-axis point    
+        int x = 28; //declared for imageview x-axis point
         
         NSArray* subviews = [NSArray arrayWithArray: userItemScrollView.subviews];
         for (UIView* view in subviews) 
