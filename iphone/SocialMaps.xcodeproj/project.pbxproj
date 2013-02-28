@@ -436,6 +436,7 @@
 		4FF1E8BC160C6808004A63D3 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F03B64E1609D6E2002C1636 /* PushNotification.m */; };
 		4FF81C6C15D6C7260097759A /* cal-48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF81C6B15D6C7250097759A /* cal-48x48.png */; };
 		B0044AB716B7A6B8004C6A57 /* CustomSaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0044AB616B7A6B8004C6A57 /* CustomSaveView.m */; };
+		B01C860416DE37E000438C0E /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = B01C860316DE37E000438C0E /* icon_event.png */; };
 		B01DFC4615F5E61000020D49 /* MessageReply.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4515F5E61000020D49 /* MessageReply.m */; };
 		B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4915F5E61F00020D49 /* MessageListViewController.m */; };
 		B01DFC5315F5E74300020D49 /* btn_new_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC4B15F5E74300020D49 /* btn_new_message.png */; };
@@ -1127,6 +1128,7 @@
 		4FF81C6B15D6C7250097759A /* cal-48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cal-48x48.png"; path = "Images/cal-48x48.png"; sourceTree = SOURCE_ROOT; };
 		B0044AB516B7A6B8004C6A57 /* CustomSaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSaveView.h; sourceTree = "<group>"; };
 		B0044AB616B7A6B8004C6A57 /* CustomSaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSaveView.m; sourceTree = "<group>"; };
+		B01C860316DE37E000438C0E /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		B01DFC4415F5E61000020D49 /* MessageReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageReply.h; sourceTree = "<group>"; };
 		B01DFC4515F5E61000020D49 /* MessageReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageReply.m; sourceTree = "<group>"; };
 		B01DFC4815F5E61F00020D49 /* MessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListViewController.h; sourceTree = "<group>"; };
@@ -1213,7 +1215,6 @@
 		B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequestController.h; sourceTree = "<group>"; };
 		B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequestController.m; sourceTree = "<group>"; };
 		B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestController.xib; sourceTree = "<group>"; };
-		B0DB870D16D1FDFD0022AC01 /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpListButtonsView.h; sourceTree = "<group>"; };
 		B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpListButtonsView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1663,7 +1664,7 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				B0DB870D16D1FDFD0022AC01 /* icon_event.png */,
+				B01C860316DE37E000438C0E /* icon_event.png */,
 				2041AC1D168360DE002BDCB0 /* lock.png */,
 				B0851550162E919D003347CB /* blank.png */,
 				B08B3D1C1670830A004F2EAF /* online_dot.png */,
@@ -2414,6 +2415,7 @@
 				208CED6216B510D100434D49 /* icon_myplaces.png in Resources */,
 				B06FA5C316DB79DB00872578 /* sm_icon.png in Resources */,
 				B06FA5C416DB79DB00872578 /* sm_icon@2x.png in Resources */,
+				B01C860416DE37E000438C0E /* icon_event.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2695,8 +2697,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2722,8 +2724,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
