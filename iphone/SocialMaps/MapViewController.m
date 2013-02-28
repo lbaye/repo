@@ -988,6 +988,14 @@ ButtonClickCallbackData callBackData;
     {
         return NO; // ignore the touch
     }
+//    for (UIView * WVSubview in [touch.view subviews])
+    {
+        if ([NSStringFromClass([touch.view class]) isEqualToString:@"UIWebBrowserView"])
+        {
+            NSLog(@"holy sheet !!");
+            return NO;
+        }
+    }
     return YES; // handle the touch
 }
 		
