@@ -77,7 +77,8 @@ class SendPushNotification extends Base
         $hash = array(
             'title' => $notification->title,
             'objectId' => $notification->objectId,
-            'objectType' => $notification->objectType
+            'objectType' => $notification->objectType,
+            'receiverId' => $userHash['_id']
         );
 
         $notificationCountHash = $this->userRepository->generateNotificationCount($userHash['_id']);
