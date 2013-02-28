@@ -271,3 +271,6 @@ ul li .tiny .name {
 .geoTagImg {
     width: 100%;
 }
+.comment strong{
+    color: #67B000;
+}
