@@ -283,8 +283,8 @@ class Gathering extends Base
             'objectType' => $pushMessageType,
         );
 
-        $this->debug(sprintf('Sending push notification with - %s', json_encode($notificationData)));
-        $this->debug(sprintf('Sending push notification: %s', $pushNotificationText));
+        $this->debug(sprintf('Sending push 111 notification with - %s', json_encode($notificationData)));
+        $this->debug(sprintf('Sending push 111 notification: %s', $pushNotificationText));
 
         # Send in app push notification
         \Helper\Notification::send($notificationData, $eventGuests);
