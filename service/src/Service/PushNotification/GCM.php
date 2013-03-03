@@ -34,8 +34,7 @@ class GCM extends Notifier
             'badge'      => $data['badge'],
             'tabCounts'  => $data['tabCounts'],
             'objectType' => $data['objectType'],
-            'objectId'   => isset($data['objectId']) ? $data['objectId'] : null,
-            'receiverId' => "34535345"
+            'objectId'   => isset($data['objectId']) ? $data['objectId'] : null
         );
 
         return $pushData;
