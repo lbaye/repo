@@ -59,7 +59,6 @@ class IOS extends Notifier
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
                     'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
-                    'receiverId' => "34535345",
                 )
             )
         );
