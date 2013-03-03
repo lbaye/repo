@@ -79,7 +79,7 @@
     if (sharingEnabled == 1) {
 
         rowNum = 5;
-        SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0,(rowNum++ - 4)*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:2005];
+        SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0,(rowNum++ - 4)*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Set invisibility around locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:2005];
         [self addSubview:locSharingView];
         [locSharingView release];
     }
