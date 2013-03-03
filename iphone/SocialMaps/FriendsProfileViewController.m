@@ -587,6 +587,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
         
         if (userInfo) {
+            
+            if (![userInfo.friendshipStatus isEqualToString:@"friend"])
+            {
+                meetUpButton.hidden = YES;
+                meetUpImageView.hidden = YES;
+            }
+            
             for (LocationItemPeople *locationItemPeople in smAppDelegate.peopleList)
             {
                 if ([locationItemPeople.userInfo.userId isEqualToString:userInfo.userId] && !locationItemPeople.userInfo.external) {
@@ -1090,6 +1097,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 {
     [buttonZoomView release];
     buttonZoomView = nil;
+    [meetUpImageView release];
+    meetUpImageView = nil;
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
@@ -1289,6 +1298,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 - (void)dealloc {
     [buttonZoomView release];
+    [meetUpImageView release];
     [super dealloc];
 }
 @end

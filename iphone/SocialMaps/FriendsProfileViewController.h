@@ -37,6 +37,7 @@
     IBOutlet UITextField *entityTextField;
     PhotoPicker *photoPicker;
     IBOutlet UIButton *buttonZoomView;
+    IBOutlet UIImageView *meetUpImageView;
     
     
     BOOL isDragging_msg,isDecliring_msg;
