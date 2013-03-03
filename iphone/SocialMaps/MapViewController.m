@@ -1318,6 +1318,7 @@ ButtonClickCallbackData callBackData;
     
     [self displayNotificationCount];
     
+    [dicImages_msg removeAllObjects];
 }
 
 -(void)viewDidAppear:(BOOL)animated
