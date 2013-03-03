@@ -49,9 +49,10 @@
                     - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
                     .image(style=$imagePathCss)
                       - $photoFullPath = $baseUrl . $photo->getUriMedium();
+                      -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
                       - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
                       %a(href=$photoPath)
-                        %img.lazy(src=$photoFullPath)
+                        %img.lazy(src=$photoFullPath style='max-height: '.$imageWidth[1].'px')
                     .icon.icon_zoom
 
                   .row
@@ -219,9 +220,10 @@
             - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
             .image(style=$imagePathCss)
               - $photoFullPath = $baseUrl . $photo->getUriMedium();
+              -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
               - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
               %a(href=$photoPath)
-                %img.lazy(src=$photoFullPath)
+                %img.lazy(src=$photoFullPath style='max-height: '.$imageWidth[1].'px')
             .icon.icon_zoom
 
           .row
