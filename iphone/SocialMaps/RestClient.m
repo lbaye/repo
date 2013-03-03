@@ -5023,6 +5023,9 @@ AppDelegate *smAppDelegate;
             NSMutableArray *circleList=[[NSMutableArray alloc] init];
             for (NSDictionary *item in jsonObjects) 
             {
+                if ([[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil] caseInsensitiveCompare:@"second_degree"] == NSOrderedSame)
+                    continue;
+                    
                 UserCircle *circle=[[UserCircle alloc] init];
                 circle.circleID=[self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 circle.circleName=[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
