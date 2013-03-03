@@ -88,9 +88,11 @@ class SendPushNotification extends Base
 
         if (isset($pushSettings['device_id']) && !empty($pushSettings['device_id'])) {
             $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
-
+            var_dump($pushNotifier);
+            echo "+++";
             if ($pushNotifier) {
                 $this->info("Sending push notification for {$pushSettings['device_type']} with id ({$pushSettings['device_id']})");
+                var_dump($notificationHash);
                 echo $pushNotifier->send($notificationHash, array($pushSettings['device_id'])) . PHP_EOL;
             }
 
