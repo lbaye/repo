@@ -52,7 +52,7 @@
                       -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
                       - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
                       %a(href=$photoPath)
-                        %img.lazy(src=$photoFullPath style='max-height: '.$imageWidth[1].'px')
+                        %img.lazy(src=$photoFullPath style='height:auto;')
                     .icon.icon_zoom
 
                   .row

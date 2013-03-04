@@ -86,7 +86,7 @@ class SendPushNotification extends Base
         $notificationHash = array_merge($hash, $notificationCountHash);
         $this->debug("Sending push notification XYXYXYX to user - {$userHash['firstName']} ({$userHash['_id']})");
         $pushSettings = $userHash['pushSettings'];
-        $this->debug("+++++++".$notificationHash);
+
         if (isset($pushSettings['device_id']) && !empty($pushSettings['device_id'])) {
             $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
 
