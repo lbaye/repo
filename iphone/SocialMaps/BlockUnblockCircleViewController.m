@@ -92,8 +92,7 @@ bool searchFlag3=true;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockUsresDone:) name:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
 
     // Do any additional setup after loading the view.
-    
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -117,6 +116,16 @@ bool searchFlag3=true;
 -(void)viewDidDisappear:(BOOL)animated
 {
     [self.blockSearchBar resignFirstResponder];
+}
+
+- (void)displayNotificationCount
+{
+    int totalNotif= [UtilityClass getNotificationCount];
+    
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(NSMutableArray *)loadDummyData
@@ -267,7 +276,6 @@ bool searchFlag3=true;
 
 - (void)viewDidUnload
 {
-    [labelNotifCount release];
     labelNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.

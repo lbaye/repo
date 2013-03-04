@@ -77,7 +77,7 @@ bool searchFlag4=true;
     UIButton *cancelButton = [subviews objectAtIndex:3];
     cancelButton.tintColor = [UIColor darkGrayColor];
     // Do any additional setup after loading the view.
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -103,6 +103,16 @@ bool searchFlag4=true;
 -(void)viewDidDisappear:(BOOL)animated
 {
     [self.inviteSearchBar resignFirstResponder];
+}
+
+- (void)displayNotificationCount
+{
+    int totalNotif= [UtilityClass getNotificationCount];
+    
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(NSMutableArray *)loadDummyData
@@ -152,7 +162,6 @@ bool searchFlag4=true;
 
 - (void)viewDidUnload
 {
-    [labelNotifCount release];
     labelNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.

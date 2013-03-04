@@ -96,8 +96,7 @@ bool showSM=true;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
-    
+    [self displayNotificationCount];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -125,6 +124,16 @@ bool showSM=true;
 -(void)viewDidDisappear:(BOOL)animated
 {
     [self.circleSearchBar resignFirstResponder];
+}
+
+- (void)displayNotificationCount
+{
+    int totalNotif= [UtilityClass getNotificationCount];
+    
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(NSMutableArray *)loadDummyData
@@ -296,7 +305,6 @@ bool showSM=true;
 
 - (void)viewDidUnload
 {
-    [labelNotifCount release];
     labelNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -550,9 +558,14 @@ bool showSM=true;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{    
+{
+    LocationItemPeople *locationItemPeople = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+
+    if ([locationItemPeople.userInfo.source isEqualToString:@"facebook"])
+        return;
+    
     FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
-    controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
+    controller.friendsId=locationItemPeople.userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];
