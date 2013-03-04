@@ -459,6 +459,8 @@ bool showSM=true;
         //cell.regStsImgView.layer.borderWidth=1.0;
         cell.regStsImgView.layer.masksToBounds = YES;
         [cell.regStsImgView.layer setCornerRadius:5.0];
+        cell.checkInImgView.hidden = YES;
+        
         if ([people.userInfo.regMedia isEqualToString:@"fb"]) 
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
@@ -466,12 +468,16 @@ bool showSM=true;
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
-            cell.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell.regStsImgView.image = [UIImage imageNamed:@"icon_facebook.png"];
             cell.regStsImgView.userInteractionEnabled=YES;
             cell.regStsImgView.layer.masksToBounds = YES;
             [cell.regStsImgView.layer setCornerRadius:5.0];
             [cell.friendShipStatus setTitle:@"FB friend" forState:UIControlStateNormal];
             cell.friendShipStatus.hidden=NO;
+            cell.checkInImgView.hidden = NO;
+            cell.checkInImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell.checkInImgView.layer.masksToBounds = YES;
+            [cell.checkInImgView.layer setCornerRadius:5.0];
         }
         else
         {

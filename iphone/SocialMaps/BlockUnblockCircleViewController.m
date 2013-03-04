@@ -380,16 +380,22 @@ bool searchFlag3=true;
         //cell1.regStsImgView.layer.borderWidth=1.0;
         cell1.regStsImgView.layer.masksToBounds = YES;
         [cell1.regStsImgView.layer setCornerRadius:5.0];
+        cell1.checkInImgView.hidden = YES;
+        
         if ([people.userInfo.regMedia isEqualToString:@"fb"]) 
         {
             cell1.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
-            cell1.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell1.regStsImgView.image = [UIImage imageNamed:@"icon_facebook.png"];
             cell1.regStsImgView.userInteractionEnabled=YES;
             cell1.regStsImgView.layer.masksToBounds = YES;
             [cell1.regStsImgView.layer setCornerRadius:5.0];
+            cell1.checkInImgView.hidden = NO;
+            cell1.checkInImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell1.checkInImgView.layer.masksToBounds = YES;
+            [cell1.checkInImgView.layer setCornerRadius:5.0];
         }
         else
         {
