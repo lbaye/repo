@@ -88,7 +88,7 @@ bool showSM=true;
     cancelButton.titleLabel.text=@"   OK";
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:showFB],[NSNumber numberWithInt:showSM], nil] labels:[NSArray arrayWithObjects:@"Facebook",@"Social Maps", nil]];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:showFB],[NSNumber numberWithInt:showSM], nil] labels:[NSArray arrayWithObjects:@"Facebook",@"Socialmaps", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
@@ -225,7 +225,7 @@ bool showSM=true;
     {
         for (int i=0; i<[smAppDelegate.peopleList count]; i++)
         {
-            if([((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.regMedia isEqualToString:@"fb"])
+            if([((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.source isEqualToString:@"facebook"])
             {
                 [tempList addObject:[smAppDelegate.peopleList objectAtIndex:i]];
             }
@@ -235,7 +235,7 @@ bool showSM=true;
     {
         for (int i=0; i<[smAppDelegate.peopleList count]; i++)
         {
-            if(![((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.regMedia isEqualToString:@"fb"])
+            if([((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.regMedia isEqualToString:@"fb"] || [((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.regMedia isEqualToString:@"sm"])
             {
                 [tempList addObject:[smAppDelegate.peopleList objectAtIndex:i]];
             }
