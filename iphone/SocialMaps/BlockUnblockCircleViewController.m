@@ -489,8 +489,13 @@ bool searchFlag3=true;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    LocationItemPeople *locationItemPeople = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+    
+    if ([locationItemPeople.userInfo.source isEqualToString:@"facebook"])
+        return;
+
     FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
-    controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
+    controller.friendsId = locationItemPeople.userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];
