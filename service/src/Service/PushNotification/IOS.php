@@ -50,8 +50,6 @@ class IOS extends Notifier
 
     private function _createPayload($data)
     {
-        var_dump($data);
-        exit;
         $load = array(
             'aps' => array(
                 'alert' => $data['title'],
@@ -61,6 +59,7 @@ class IOS extends Notifier
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
                     'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
+                    'receiverId' => $data['receiverId'],
                 )
             )
         );
