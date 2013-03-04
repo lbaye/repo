@@ -376,11 +376,11 @@ int renameCircleOndex;
         
         if ([userFrnd.regMedia isEqualToString:@"fb"])
         {
-            cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
+            cell.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
         }
         else
         {
-            cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            cell.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
         }
         return cell;
     }

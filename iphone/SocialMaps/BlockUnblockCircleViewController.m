@@ -369,13 +369,12 @@ bool searchFlag3=true;
         
         cell1.regStsImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell1.regStsImgView.userInteractionEnabled=YES;
-        cell1.regStsImgView.layer.borderWidth=1.0;
+        //cell1.regStsImgView.layer.borderWidth=1.0;
         cell1.regStsImgView.layer.masksToBounds = YES;
         [cell1.regStsImgView.layer setCornerRadius:5.0];
         if ([people.userInfo.regMedia isEqualToString:@"fb"]) 
         {
-            NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
-            cell1.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
+            cell1.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
@@ -386,7 +385,7 @@ bool searchFlag3=true;
         }
         else
         {
-            cell1.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            cell1.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
         }
         
         if ([people.userInfo.friendshipStatus isEqualToString:@"friend"]) 

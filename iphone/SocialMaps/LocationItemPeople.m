@@ -116,7 +116,7 @@
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        regMedia.image = [UIImage imageNamed:@"blank.png"];
+        regMedia.image = [UIImage imageNamed:@"transparent_icon.png"];
         checkinImage.image = [UIImage imageNamed:@"blank.png"];
     }
     else if ([userInfo.source isEqualToString:@"facebook"])
@@ -129,7 +129,7 @@
     }
     else
     {
-        regMedia.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        regMedia.image=[UIImage imageNamed:@"transparent_icon.png"];
         checkinImage.image = [UIImage imageNamed:@"blank.png"];
     }
     

@@ -448,13 +448,12 @@ bool showSM=true;
         cell.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",people.itemDistance];
         cell.regStsImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell.regStsImgView.userInteractionEnabled=YES;
-        cell.regStsImgView.layer.borderWidth=1.0;
+        //cell.regStsImgView.layer.borderWidth=1.0;
         cell.regStsImgView.layer.masksToBounds = YES;
         [cell.regStsImgView.layer setCornerRadius:5.0];
         if ([people.userInfo.regMedia isEqualToString:@"fb"]) 
         {
-            NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
-            cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
+            cell.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
             cell.inviteButton.hidden=NO;
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
@@ -468,7 +467,7 @@ bool showSM=true;
         }
         else
         {
-            cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            cell.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
             cell.inviteButton.hidden=YES;
             [cell.friendShipStatus setTitle:@"Friend" forState:UIControlStateNormal];
         }

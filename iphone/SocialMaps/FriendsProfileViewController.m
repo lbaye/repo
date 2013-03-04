@@ -642,11 +642,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        [regStatus setImage:[UIImage imageNamed:@"icon_facebook.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"transparent_icon.png"] forState:UIControlStateNormal];
     }
     else
     {
-        [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"transparent_icon.png"] forState:UIControlStateNormal];
     }
     regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
     regStatus.userInteractionEnabled=YES;
@@ -785,11 +785,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"transparent_icon.png"] forState:UIControlStateNormal];
     }
     else
     {
-        [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"transparent_icon.png"] forState:UIControlStateNormal];
     }
     regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
     regStatus.userInteractionEnabled=YES;
