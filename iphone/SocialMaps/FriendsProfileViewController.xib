@@ -141,6 +141,7 @@
 						<string key="NSFrame">{{0, 465}, {320, 128}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor" id="263139807">
 							<int key="NSColorSpace">3</int>
@@ -810,7 +811,7 @@
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUITitleEdgeInsets.top">0.0</double>
 								<double key="IBUITitleEdgeInsets.bottom">0.0</double>
-								<double key="IBUITitleEdgeInsets.left">12</double>
+								<double key="IBUITitleEdgeInsets.left">8</double>
 								<double key="IBUITitleEdgeInsets.right">0.0</double>
 								<string key="IBUINormalTitle">Add friend</string>
 								<reference key="IBUIHighlightedTitleColor" ref="44308526"/>
@@ -834,7 +835,7 @@
 							<object class="IBUIImageView" id="543680544">
 								<reference key="NSNextResponder" ref="913850919"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{83, 367}, {17, 20}}</string>
+								<string key="NSFrame">{{78, 367}, {17, 20}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="790035673"/>
@@ -859,7 +860,7 @@
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUITitleEdgeInsets.top">0.0</double>
 								<double key="IBUITitleEdgeInsets.bottom">0.0</double>
-								<double key="IBUITitleEdgeInsets.left">12</double>
+								<double key="IBUITitleEdgeInsets.left">8</double>
 								<double key="IBUITitleEdgeInsets.right">0.0</double>
 								<string key="IBUINormalTitle">Meet-up</string>
 								<reference key="IBUIHighlightedTitleColor" ref="44308526"/>
@@ -872,7 +873,7 @@
 							<object class="IBUIImageView" id="416509314">
 								<reference key="NSNextResponder" ref="913850919"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{83, 366}, {17, 20}}</string>
+								<string key="NSFrame">{{78, 367}, {17, 20}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="543680544"/>
@@ -897,7 +898,7 @@
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUITitleEdgeInsets.top">0.0</double>
 								<double key="IBUITitleEdgeInsets.bottom">0.0</double>
-								<double key="IBUITitleEdgeInsets.left">12</double>
+								<double key="IBUITitleEdgeInsets.left">8</double>
 								<double key="IBUITitleEdgeInsets.right">0.0</double>
 								<string key="IBUINormalTitle">Message</string>
 								<reference key="IBUIHighlightedTitleColor" ref="44308526"/>
@@ -910,7 +911,7 @@
 							<object class="IBUIImageView" id="842855203">
 								<reference key="NSNextResponder" ref="913850919"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{181, 369}, {22, 17}}</string>
+								<string key="NSFrame">{{176, 368}, {22, 17}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="403847428"/>
@@ -1046,7 +1047,7 @@
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUITitleEdgeInsets.top">0.0</double>
 								<double key="IBUITitleEdgeInsets.bottom">0.0</double>
-								<double key="IBUITitleEdgeInsets.left">12</double>
+								<double key="IBUITitleEdgeInsets.left">8</double>
 								<double key="IBUITitleEdgeInsets.right">0.0</double>
 								<string key="IBUINormalTitle">Directions</string>
 								<reference key="IBUIHighlightedTitleColor" ref="44308526"/>
@@ -1059,7 +1060,7 @@
 							<object class="IBUIImageView" id="427743998">
 								<reference key="NSNextResponder" ref="913850919"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{293, 369}, {10, 17}}</string>
+								<string key="NSFrame">{{291, 368}, {10, 17}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1042283280"/>
