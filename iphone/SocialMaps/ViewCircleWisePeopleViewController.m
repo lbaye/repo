@@ -123,7 +123,7 @@ int renameCircleOndex;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteCircleDone:) name:NOTIF_DELETE_USER_CIRCLE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renameCircleDone:) name:NOTIF_RENAME_USER_CIRCLE_DONE object:nil];
 
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
 }
 
 
@@ -134,6 +134,16 @@ int renameCircleOndex;
     [circleCreateView removeFromSuperview];
     [msgView removeFromSuperview];
     [self initData];
+}
+
+- (void)displayNotificationCount
+{
+    int totalNotif= [UtilityClass getNotificationCount];
+    
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(void)initData
@@ -230,9 +240,8 @@ int renameCircleOndex;
     [self presentModalViewController:controller animated:YES];
 }
 
-- (void)viewDidUnload {
-    
-    [labelNotifCount release];
+- (void)viewDidUnload
+{
     labelNotifCount = nil;
     [super viewDidUnload];
     

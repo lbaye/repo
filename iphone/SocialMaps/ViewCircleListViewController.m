@@ -96,8 +96,7 @@ bool showSM=true;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
-    
+    [self displayNotificationCount];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -125,6 +124,16 @@ bool showSM=true;
 -(void)viewDidDisappear:(BOOL)animated
 {
     [self.circleSearchBar resignFirstResponder];
+}
+
+- (void)displayNotificationCount
+{
+    int totalNotif= [UtilityClass getNotificationCount];
+    
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(NSMutableArray *)loadDummyData
@@ -296,7 +305,6 @@ bool showSM=true;
 
 - (void)viewDidUnload
 {
-    [labelNotifCount release];
     labelNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -451,6 +459,8 @@ bool showSM=true;
         //cell.regStsImgView.layer.borderWidth=1.0;
         cell.regStsImgView.layer.masksToBounds = YES;
         [cell.regStsImgView.layer setCornerRadius:5.0];
+        cell.checkInImgView.hidden = YES;
+        
         if ([people.userInfo.regMedia isEqualToString:@"fb"]) 
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"transparent_icon.png"];
@@ -458,12 +468,16 @@ bool showSM=true;
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
-            cell.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell.regStsImgView.image = [UIImage imageNamed:@"icon_facebook.png"];
             cell.regStsImgView.userInteractionEnabled=YES;
             cell.regStsImgView.layer.masksToBounds = YES;
             [cell.regStsImgView.layer setCornerRadius:5.0];
             [cell.friendShipStatus setTitle:@"FB friend" forState:UIControlStateNormal];
             cell.friendShipStatus.hidden=NO;
+            cell.checkInImgView.hidden = NO;
+            cell.checkInImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell.checkInImgView.layer.masksToBounds = YES;
+            [cell.checkInImgView.layer setCornerRadius:5.0];
         }
         else
         {
@@ -550,9 +564,14 @@ bool showSM=true;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{    
+{
+    LocationItemPeople *locationItemPeople = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+
+    if ([locationItemPeople.userInfo.source isEqualToString:@"facebook"])
+        return;
+    
     FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
-    controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
+    controller.friendsId=locationItemPeople.userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];

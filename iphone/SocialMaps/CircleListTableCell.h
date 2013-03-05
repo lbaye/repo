@@ -24,6 +24,7 @@
     IBOutlet UIImageView *profilePicImgView;
     IBOutlet UIImageView *coverPicImgView;
     IBOutlet UIImageView *regStsImgView;
+    IBOutlet UIImageView *checkInImgView;
     IBOutlet UIButton *friendShipStatus;
     IBOutlet UIView *footerView;
     IBOutlet UIImageView *fbFrndView;
@@ -38,6 +39,7 @@
 @property(nonatomic,retain) IBOutlet UIImageView *profilePicImgView;
 @property(nonatomic,retain) IBOutlet UIImageView *coverPicImgView;    
 @property(nonatomic,retain) IBOutlet UIImageView *regStsImgView;
+@property(nonatomic,retain) IBOutlet UIImageView *checkInImgView;
 @property(nonatomic,retain) IBOutlet UIButton *friendShipStatus;
 @property(nonatomic,retain) IBOutlet UIView *footerView;
 @property(nonatomic,retain) IBOutlet UIImageView *fbFrndView;
