@@ -509,8 +509,8 @@ bool searchFlags=true;
         }
     }
     
-    cell.eventImage.contentMode = UIViewContentModeScaleAspectFit;
-    cell1.eventImage.contentMode = UIViewContentModeScaleAspectFit;
+    cell.eventImage.contentMode = UIViewContentModeScaleToFill;
+    cell1.eventImage.contentMode = UIViewContentModeScaleToFill;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell1.selectionStyle = UITableViewCellSelectionStyleNone;
     NSLog(@"dicImages_msg c: %@ %d",dicImages_msg,[dicImages_msg count]);

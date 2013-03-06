@@ -100,7 +100,7 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
         imageView.tag = 123456789;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.contentMode = UIViewContentModeScaleToFill;
         [cell.contentView addSubview:imageView];
         [imageView release];
         

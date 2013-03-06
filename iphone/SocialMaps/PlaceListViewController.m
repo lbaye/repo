@@ -189,7 +189,7 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT)];
         imageView.tag = 3001;
         imageView.backgroundColor = [UIColor blackColor];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.contentMode = UIViewContentModeScaleToFill;
         [cell.contentView addSubview:imageView];
         [imageView release];
         
