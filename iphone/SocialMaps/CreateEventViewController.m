@@ -862,10 +862,16 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         if (editFlag==true)
         {
             [event.guestList addObjectsFromArray:guestListIdArr];
+            
+            
+
             [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
         }
         else
         {
+            if (!event.permission)
+                event.permission = @"private";
+            
             [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
         }
         NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);

@@ -198,6 +198,8 @@ int uploadPhotoCounter=0;
         [UtilityClass showAlert:@"Social Maps" :msg];
     }
     else {
+        if (!photo.permission)
+            photo.permission=@"private";
         [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:NO];
