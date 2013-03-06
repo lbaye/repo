@@ -2091,7 +2091,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="izl-oE-oDl" userLabel="notifMessages">
-                                        <rect key="frame" x="24" y="15" width="60" height="37"/>
+                                        <rect key="frame" x="38" y="15" width="60" height="37"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="message_notify_icon.png">
@@ -2106,18 +2106,18 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="999" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="i3V-tt-ZcX" userLabel="msgCount">
-                                        <rect key="frame" x="57" y="30" width="28" height="18"/>
+                                        <rect key="frame" x="71" y="30" width="28" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="11"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="zRG-Ka-GSX">
-                                        <rect key="frame" x="106" y="4" width="1" height="60"/>
+                                        <rect key="frame" x="124" y="4" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tua-eR-v16" userLabel="notifFriendReq">
-                                        <rect key="frame" x="130" y="15" width="60" height="37"/>
+                                        <rect key="frame" x="137" y="15" width="60" height="37"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="friends_rqst_icon.png">
@@ -2132,18 +2132,18 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="999" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="MvU-Or-hjk" userLabel="reqCount">
-                                        <rect key="frame" x="163" y="30" width="28" height="18"/>
+                                        <rect key="frame" x="170" y="30" width="28" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="11"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="z02-W5-TF6">
-                                        <rect key="frame" x="212" y="4" width="1" height="60"/>
+                                        <rect key="frame" x="213" y="4" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jPc-fq-n40" userLabel="notifNotifications">
-                                        <rect key="frame" x="227" y="15" width="60" height="37"/>
+                                        <rect key="frame" x="231" y="15" width="60" height="37"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="notify_icon.png">
@@ -2158,7 +2158,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="999" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="guZ-oT-ZOZ" userLabel="alertCount">
-                                        <rect key="frame" x="261" y="30" width="28" height="18"/>
+                                        <rect key="frame" x="265" y="30" width="28" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="11"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
@@ -2201,6 +2201,10 @@
                                     <outlet property="delegate" destination="xAh-9q-Sej" id="uYb-LD-OWA"/>
                                 </connections>
                             </webView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="tab_arrow_gray_left.png" id="vix-1d-mAj">
+                                <rect key="frame" x="10" y="97" width="300" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.95294123888015747" green="0.95294123888015747" blue="0.95294123888015747" alpha="1" colorSpace="deviceRGB"/>
                     </view>
@@ -2214,6 +2218,7 @@
                         <outlet property="notificationItems" destination="2OU-er-a2F" id="Mk5-vi-ZsV"/>
                         <outlet property="reqButton" destination="tua-eR-v16" id="3bt-Sq-X9d"/>
                         <outlet property="reqCount" destination="MvU-Or-hjk" id="0RI-gI-ldy"/>
+                        <outlet property="tabArrowImageView" destination="vix-1d-mAj" id="R8R-po-oI2"/>
                         <outlet property="webView" destination="jAL-eU-MsK" id="GXZ-da-aNO"/>
                     </connections>
                 </viewController>
@@ -5362,6 +5367,7 @@
         <image name="sp2.png" width="1" height="59"/>
         <image name="splash.png" width="640" height="920"/>
         <image name="tab_arrow.png" width="600" height="93"/>
+        <image name="tab_arrow_gray_left.png" width="600" height="93"/>
         <image name="tab_icon_meetup.png" width="271" height="43"/>
         <image name="tab_icon_meetup_selected.png" width="306" height="43"/>
         <image name="tab_icon_message.png" width="183" height="39"/>
@@ -5374,436 +5380,6 @@
         <image name="xlose_icon.png" width="15" height="15"/>
         <image name="zoom_icon.png" width="54" height="54"/>
     </resources>
-    <classes>
-        <class className="CreateEventViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEventViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addAll:"/>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="cancelCircle:"/>
-                <relationship kind="action" name="cancelCustom:"/>
-                <relationship kind="action" name="cancelEntity:"/>
-                <relationship kind="action" name="cancelEvent:"/>
-                <relationship kind="action" name="cancelMapLoc:"/>
-                <relationship kind="action" name="createEvent:"/>
-                <relationship kind="action" name="customSegment:"/>
-                <relationship kind="action" name="dateButtonAction:"/>
-                <relationship kind="action" name="deleteButtonAction"/>
-                <relationship kind="action" name="descriptionButtonAction"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="guestCanInvite:"/>
-                <relationship kind="action" name="nameButtonAction"/>
-                <relationship kind="action" name="photoButtonAction"/>
-                <relationship kind="action" name="saveCircle:"/>
-                <relationship kind="action" name="saveCustom:"/>
-                <relationship kind="action" name="saveEntity:"/>
-                <relationship kind="action" name="saveMapLoc:"/>
-                <relationship kind="action" name="showCircle:"/>
-                <relationship kind="action" name="summaryButtonAction"/>
-                <relationship kind="action" name="unSelectAll:"/>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="createButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="createLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="createView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="curLoc" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="custom" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="customScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="customSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="customSelectionView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="customTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="dateButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="degreeFriends" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="deleteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="descriptionButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="entryTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="eventImagview" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="friends" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="frndListScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="guestCanInviteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="lowerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapContainerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="myPlace" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="nameButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="neamePlace" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="people" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="photoButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="pointOnMap" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="private" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="summaryButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="upperView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewContainerScrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="EventListRsvpTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EventListRsvpTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventAddressScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDetail" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventNameScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="maybesButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="noButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="viewEventOnMap" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="yesButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="EventListTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EventListTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventAddressScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDetail" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventNameScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewEventOnMap" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="ListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionSearchButton:"/>
-                <relationship kind="action" name="actionSearchOkButton:"/>
-                <relationship kind="action" name="backToMapview:"/>
-                <relationship kind="action" name="closePulldown:"/>
-                <relationship kind="action" name="closePullup:"/>
-                <relationship kind="action" name="goToNotifications:"/>
-                <relationship kind="action" name="gotoCircles:"/>
-                <relationship kind="action" name="gotoEvents:"/>
-                <relationship kind="action" name="gotoFriends:"/>
-                <relationship kind="action" name="gotoMeetupReq:"/>
-                <relationship kind="action" name="gotoMessages:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="gotoPlace:"/>
-                <relationship kind="action" name="gotoProfile:"/>
-                <relationship kind="action" name="gotoSettings:"/>
-                <relationship kind="action" name="gotoUserBasicProfile:"/>
-                <relationship kind="action" name="gotonDeals:"/>
-                <relationship kind="action" name="gotonNewsFeed:"/>
-                <relationship kind="action" name="removeCircleView:"/>
-                <relationship kind="action" name="selectListView:"/>
-                <relationship kind="action" name="showPullUpMenu:"/>
-                <relationship kind="action" name="showPulldownMenu:"/>
-                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="itemList" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="listNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="listPulldownMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listPullupMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listViewImg" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="listViewfilter" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapViewImg" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="viewNotification" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="LoginController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelReset:"/>
-                <relationship kind="action" name="doConnectFB:"/>
-                <relationship kind="action" name="doForgotPassword:"/>
-                <relationship kind="action" name="doLogin:"/>
-                <relationship kind="action" name="doRememberMe:"/>
-                <relationship kind="action" name="removeKeyboard:"/>
-                <relationship kind="action" name="sendReset:"/>
-                <relationship kind="outlet" name="bgImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="dialogView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="forgotPWView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="forgotPassword" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="profileImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="rememberMeSel" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="tapview" candidateClass="UIView"/>
-                <relationship kind="outlet" name="txtEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="txtForgotPWEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="txtPassword" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="MapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionShowHideSearchBtn:"/>
-                <relationship kind="action" name="addCircleView:"/>
-                <relationship kind="action" name="applyFilter:"/>
-                <relationship kind="action" name="closeConnectWithFB:"/>
-                <relationship kind="action" name="closePullupMenu:"/>
-                <relationship kind="action" name="connectWithFB:"/>
-                <relationship kind="action" name="dealsClicked:"/>
-                <relationship kind="action" name="gotoBasicProfile:"/>
-                <relationship kind="action" name="gotoBreadcrumbs:"/>
-                <relationship kind="action" name="gotoCheckins:"/>
-                <relationship kind="action" name="gotoCircle:"/>
-                <relationship kind="action" name="gotoDirections:"/>
-                <relationship kind="action" name="gotoEditFilters:"/>
-                <relationship kind="action" name="gotoFriends:"/>
-                <relationship kind="action" name="gotoMapix:"/>
-                <relationship kind="action" name="gotoMeetupReq:"/>
-                <relationship kind="action" name="gotoMyPlaces:"/>
-                <relationship kind="action" name="gotoPlace:"/>
-                <relationship kind="action" name="gotoProfile:"/>
-                <relationship kind="action" name="gotoSettings:"/>
-                <relationship kind="action" name="gotonDeals:"/>
-                <relationship kind="action" name="gotonNewsFeed:"/>
-                <relationship kind="action" name="hidePulldown:"/>
-                <relationship kind="action" name="peopleClicked:"/>
-                <relationship kind="action" name="placesClicked:"/>
-                <relationship kind="action" name="removeCircleView:"/>
-                <relationship kind="action" name="selectListView:"/>
-                <relationship kind="action" name="selectMapView:"/>
-                <relationship kind="action" name="shareWithAll:"/>
-                <relationship kind="action" name="shareWithCircles:"/>
-                <relationship kind="action" name="shareWithCustom:"/>
-                <relationship kind="action" name="shareWithFriends:"/>
-                <relationship kind="action" name="shareWithNone:"/>
-                <relationship kind="action" name="showPullDown:"/>
-                <relationship kind="action" name="showPullupMenu:"/>
-                <relationship kind="outlet" name="buttonListView" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonMapView" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonProfileView" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="connectToFBView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="friendSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="imageViewSliderOpenClose" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="inviteFriendView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="inviteFrndTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="listViewImg" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="mapNotifBubble" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="mapPulldown" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapPullupMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="mapViewImg" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="selSavedFilter" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="selectedFilter" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="shareAllButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareCircleButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareCustomButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareFriendsButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareNoneButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="showDealsButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="showPeopleButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="showPlacesButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="viewNotification" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSharingPrefMapPullDown" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="MessageListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionAddMoreButton:"/>
-                <relationship kind="action" name="actionBackBtn:"/>
-                <relationship kind="action" name="actionCancelAddPplButton:"/>
-                <relationship kind="action" name="actionCancelBtn:"/>
-                <relationship kind="action" name="actionCancelCircleButton:"/>
-                <relationship kind="action" name="actionMeetUpBtn:"/>
-                <relationship kind="action" name="actionMessageBtn:"/>
-                <relationship kind="action" name="actionNewMessageBtn:"/>
-                <relationship kind="action" name="actionRefreshBtn:"/>
-                <relationship kind="action" name="actionSaveAddPplButton:"/>
-                <relationship kind="action" name="actionSaveCircleButton:"/>
-                <relationship kind="action" name="actionSendBtn:"/>
-                <relationship kind="action" name="actionSendReplyBtn:"/>
-                <relationship kind="action" name="actionShowCircleListButton:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="outlet" name="buttonMeetUp" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonMessage" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="frndListScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="messageCreationView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="messageRepiesView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="messageReplyTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgReplyCreationView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="msgWritingView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="tableViewCircle" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="textFieldUserID1" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldUserID2" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldUserID3" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="textViewReplyMsg" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="viewCircleList" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="NotificationController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionBackMe:"/>
-                <relationship kind="action" name="showFriendRequests:"/>
-                <relationship kind="action" name="showMessages:"/>
-                <relationship kind="action" name="showNotifications:"/>
-                <relationship kind="outlet" name="alertCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="msgButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="msgCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="notifButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="notifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="notifTabArrow" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="notificationItems" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="reqButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="reqCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
-            </relationships>
-        </class>
-        <class className="RegistrationController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RegistrationController.h"/>
-            <relationships>
-                <relationship kind="action" name="createAccount:"/>
-                <relationship kind="action" name="hideKeyboard:"/>
-                <relationship kind="action" name="selPicOption:"/>
-                <relationship kind="action" name="selectCountryAction:"/>
-                <relationship kind="action" name="selectDateOfBirthAction:"/>
-                <relationship kind="action" name="selectGender:"/>
-                <relationship kind="action" name="selectRelStatus:"/>
-                <relationship kind="outlet" name="basicInfoView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="biographyTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="cityTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="countryTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="dateOfBirthTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="interestsTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="moreInfoView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="picSelButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="regEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regFirstName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regGender" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regPassword" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="registrationScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="relatioshipStatusTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="serviceTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="streetAdressTxtField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="userNameTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="zipCodeTxtField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="SettingsController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsController.h"/>
-            <relationships>
-                <relationship kind="action" name="expandLayersSettings:"/>
-                <relationship kind="action" name="expandPlatformSettings:"/>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="setAccountSettings:"/>
-                <relationship kind="action" name="setInfoSharing:"/>
-                <relationship kind="action" name="setLocationSharing:"/>
-                <relationship kind="action" name="setNotifSettings:"/>
-                <relationship kind="outlet" name="backButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="layersView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="notifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="platformView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="settingsHeader" candidateClass="UIView"/>
-                <relationship kind="outlet" name="settingsMainHeader" candidateClass="UIView"/>
-                <relationship kind="outlet" name="settingsScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="discoverApp:"/>
-                <relationship kind="action" name="requestPassword:"/>
-                <relationship kind="action" name="textFieldEntryDone:"/>
-                <relationship kind="outlet" name="betaPassWord" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="privateBetaView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-            </relationships>
-        </class>
-        <class className="ViewEventDetailViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewEventDetailViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="cancelCustom:"/>
-                <relationship kind="action" name="closeMap:"/>
-                <relationship kind="action" name="deleteEvent:"/>
-                <relationship kind="action" name="editEvent:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="guestList:"/>
-                <relationship kind="action" name="invitePeople:"/>
-                <relationship kind="action" name="saveCustom:"/>
-                <relationship kind="action" name="segmentChanged:"/>
-                <relationship kind="action" name="viewMapButton:"/>
-                <relationship kind="outlet" name="addressScollview" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="customView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="deleteEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="descriptionView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="detailView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="editEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventShortDetail" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="frndsScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="guestScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="inviteEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="maybeButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="noButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="rsvpView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="yesButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="ViewEventListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewEventListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="closeMapView:"/>
-                <relationship kind="action" name="dateAction:"/>
-                <relationship kind="action" name="distanceAction:"/>
-                <relationship kind="action" name="friendsEventAction:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="myEventAction:"/>
-                <relationship kind="action" name="newEventAction:"/>
-                <relationship kind="action" name="publicEventAction:"/>
-                <relationship kind="action" name="viewLocationButton:"/>
-                <relationship kind="outlet" name="dateButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="dicIcondownloaderEvents" candidateClass="NSMutableDictionary"/>
-                <relationship kind="outlet" name="distanceButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="downloadedImageDict" candidateClass="NSDictionary"/>
-                <relationship kind="outlet" name="eventListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="eventSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="friendsEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="myEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="newEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="publicEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

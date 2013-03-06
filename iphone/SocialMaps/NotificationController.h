@@ -26,6 +26,7 @@ typedef enum _NOTIFY_TYPES {
     NOTIFY_TYPES selectedType;
     AppDelegate     *smAppDelegate;
     IBOutlet UIWebView *webView;
+    IBOutlet UIImageView *tabArrowImageView;
 }
 
 @property (nonatomic) int selectedItemIndex;

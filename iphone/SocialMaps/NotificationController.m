@@ -184,6 +184,8 @@
     [self setReqCount:nil];
     [self setAlertCount:nil];
     [self setNotificationItems:nil];
+    [tabArrowImageView release];
+    tabArrowImageView = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -210,6 +212,8 @@
     [self displayNotificationCount];
     [notificationItems reloadData];
     [self setNotificationImage];
+    
+    tabArrowImageView.image = [UIImage imageNamed:@"tab_arrow_gray_left.png"];
 }
 
 - (IBAction)showFriendRequests:(id)sender {
@@ -220,6 +224,8 @@
     selectedType = Request;
     [notificationItems reloadData];
     [self setNotificationImage];
+    
+    tabArrowImageView.image = [UIImage imageNamed:@"tab_arrow_gray_center.png"];
 }
 
 - (IBAction)showNotifications:(id)sender 
@@ -232,7 +238,9 @@
     alertCount.text   = @"";
     [self displayNotificationCount];
     [notificationItems reloadData];
-    [self setNotificationImage];    
+    [self setNotificationImage];
+    
+    tabArrowImageView.image = [UIImage imageNamed:@"tab_arrow_gray_right.png"];
 }
 
 - (void)dealloc {
@@ -243,6 +251,7 @@
     [reqCount release];
     [alertCount release];
     [notificationItems release];
+    [tabArrowImageView release];
     [super dealloc];
 }
 
@@ -374,7 +383,7 @@
 	
 	UIView *header = [[UIView alloc] initWithFrame:CellFrame];
 
-	header.backgroundColor = [UIColor lightTextColor];
+	header.backgroundColor = [UIColor colorWithRed:240.0/255.0 green:240.0/255.0 blue:240.0/255.0 alpha:.8];
     UILabel *tempLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0,
                                                                 tableView.frame.size.width,
                                                                 SECTION_HEADER_HEIGHT)];
