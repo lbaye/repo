@@ -279,7 +279,6 @@ abstract class Base {
                                                 'objectId' => $objectId,
                                                 'objectType' => $objectType,
                                                 'receiverId' => $userId,
-                                                'testReceive' => '1111111',
                                             ),
                                             'timestamp' => time(),
                                             'validity' => $validity,
