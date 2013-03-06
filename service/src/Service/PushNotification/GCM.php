@@ -36,7 +36,7 @@ class GCM extends Notifier
             'objectType' => $data['objectType'],
             'objectId'   => isset($data['objectId']) ? $data['objectId'] : null,
             'receiverId' => $data['receiverId'],
-            'testReceive' => "131313"
+            'testReceive' => "1111"
         );
 
         return $pushData;
