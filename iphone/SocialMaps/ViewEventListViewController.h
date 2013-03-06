@@ -16,6 +16,8 @@
 #import "EventImageDownloader.h"
 #import "CustomRadioButton.h"
 
+@class UserInfo;
+
 @interface ViewEventListViewController : UIViewController<EventImageDownloaderDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UITableView *eventListTableView;
@@ -49,6 +51,9 @@
 @property(nonatomic,retain) IBOutlet UIButton *myEventButton;
 @property(nonatomic,retain) IBOutlet UIButton *publicEventButton;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+
+@property (nonatomic, retain) NSMutableArray *userEventList;
+@property (nonatomic, retain) UserInfo *userInfo;
 
 /**
  * @brief sort event list according to date

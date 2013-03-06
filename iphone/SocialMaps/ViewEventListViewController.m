@@ -22,6 +22,7 @@
 #import "UtilityClass.h"
 #import "CreateEventViewController.h"
 #import "NotificationController.h"
+#import "UserInfo.h"
 
 @interface ViewEventListViewController ()
 
@@ -30,7 +31,9 @@
 @end
 
 @implementation ViewEventListViewController
-@synthesize eventListTableView,eventSearchBar,downloadedImageDict,mapView,mapContainer,newEventButton;
+
+@synthesize userInfo;
+@synthesize eventListTableView, eventSearchBar, downloadedImageDict, mapView,mapContainer, newEventButton;
  
 @synthesize dateButton;
 @synthesize distanceButton;
@@ -64,8 +67,8 @@ bool searchFlags=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventListIndex=[[NSMutableDictionary alloc] init];
     
-    filteredList=[[self loadDummyData] mutableCopy]; 
-    eventListArray=[[self loadDummyData] mutableCopy];
+    //filteredList=[[self loadDummyData] mutableCopy];
+    //eventListArray=[[self loadDummyData] mutableCopy];
     
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     dicIcondownloaderEvents = [[NSMutableDictionary alloc] init];
@@ -74,6 +77,29 @@ bool searchFlags=true;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 
+    if (showFrndsEvents)
+    {
+        CGRect tableFrame = self.eventListTableView.frame;
+        tableFrame.origin.y = 97;
+        tableFrame.size.height = 338 + 123 - 97;
+        self.eventListTableView.frame = tableFrame;
+        [self.view bringSubviewToFront:self.eventListTableView];
+        
+        UIImageView *topCurveImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 45, 320, 70)];
+        topCurveImageView.image = [UIImage imageNamed:@"top_curve_bg.png"];
+        [self.view addSubview:topCurveImageView];
+        topCurveImageView.userInteractionEnabled = YES;
+        [topCurveImageView release];
+        
+        UILabel *userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 60, 300, 21)];
+        userNameLabel.text = [NSString stringWithFormat:@"%@'s events", userInfo.firstName];
+        userNameLabel.textColor = [UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.00 alpha:1];
+        userNameLabel.font = [UIFont fontWithName:@"Helvetica" size:17.0];
+        userNameLabel.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:userNameLabel];
+        [userNameLabel release];
+    }
+    
 	// Do any additional setup after loading the view.
 }
 
@@ -92,27 +118,40 @@ bool searchFlags=true;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventsByUserIdDone:) name:NOTIF_GET_EVENTS_BY_USERID_DONE object:nil];
+    
+    [smAppDelegate showActivityViewer:self.view];
+    
+    RestClient *rc=[[RestClient alloc] init];
+    
+    if (showFrndsEvents)
+    {
+        showFrndsEvents=false;
+        [rc getEventsByUserId:self.userInfo.userId authToken:@"Auth-Token" authTokenValue:smAppDelegate.authToken];
+        [rc release];
+        return;
+    }
+    
     [dateButton setBackgroundColor:[UIColor lightGrayColor]];
     [distanceButton setBackgroundColor:[UIColor clearColor]];
     [friendsEventButton setBackgroundColor:[UIColor clearColor]];
     [myEventButton setBackgroundColor:[UIColor clearColor]];
     [publicEventButton setBackgroundColor:[UIColor clearColor]];
     
-    RestClient *rc=[[RestClient alloc] init];
+    
     [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];
     [rc release];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [filteredList removeAllObjects];
     [eventListArray removeAllObjects];
-    filteredList=[[self loadDummyData] mutableCopy]; 
-    eventListArray=[[self loadDummyData] mutableCopy];
-    [self.eventListTableView reloadData];
-    
-    [smAppDelegate showActivityViewer:self.view];
+    //filteredList=[[self loadDummyData] mutableCopy];
+    //eventListArray=[[self loadDummyData] mutableCopy];
+    //[self.eventListTableView reloadData];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_EVENTS_BY_USERID_DONE object:nil];
     [self.eventSearchBar resignFirstResponder];
 }
 
@@ -128,6 +167,27 @@ bool searchFlags=true;
         NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
     }
     return eventListGlobalArray;
+}
+
+- (void)getEventsByUserIdDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    
+    self.userEventList = [[notif object] mutableCopy];
+    
+    if (!self.userEventList)
+    {
+        [UtilityClass showAlert:@"" :@"Unknown error"];
+        return;
+    }
+    
+    if ([self.userEventList count] == 0)
+    {
+        [UtilityClass showAlert:@"" : [NSString stringWithFormat:@"%@ has no event", userInfo.firstName]];
+        return;
+    }
+    
+    [self.eventListTableView reloadData];
 }
 
 - (void)getAllEventsDone:(NSNotification *)notif
@@ -328,7 +388,7 @@ bool searchFlags=true;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [filteredList count];
+    return (self.userEventList) ? [self.userEventList count] : [filteredList count];
 }
 
 
@@ -337,9 +397,9 @@ bool searchFlags=true;
 {
     static NSString *CellIdentifier = @"eventListCell";
     static NSString *CellIdentifier1 = @"eventListCellRsvp";
-    int nodeCount = [filteredList count];
+    int nodeCount = (self.userEventList) ? [self.userEventList count] : [filteredList count];
    
-    Event *event = [filteredList objectAtIndex:indexPath.row];
+    Event *event = (self.userEventList) ? [self.userEventList objectAtIndex:indexPath.row] : [filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
     EventListTableCell *cell = (EventListTableCell *)[tableView
@@ -527,7 +587,8 @@ bool searchFlags=true;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Event *aEvent=[filteredList objectAtIndex:indexPath.row];
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:indexPath.row] : [filteredList objectAtIndex:indexPath.row];
+    
     if (aEvent.isInvited==false)
     {
         return 122;
@@ -544,7 +605,8 @@ bool searchFlags=true;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     
-    Event *aEvent=[filteredList objectAtIndex:indexPath.row];
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:indexPath.row] : [filteredList objectAtIndex:indexPath.row];
+    
     globalEvent=[[Event alloc] init];
     globalEvent=aEvent;
     NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
@@ -579,12 +641,14 @@ bool searchFlags=true;
 // this method is used in case the user scrolled into a set of cells that don't have their app icons yet
 - (void)loadImagesForOnscreenRows
 {
-    if ([filteredList count] > 0)
+    NSMutableArray *eventList = (self.userEventList) ? self.userEventList : filteredList;
+    
+    if ([eventList count] > 0)
     {
         NSArray *visiblePaths = [self.eventListTableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths)
         {
-            Event *event = [filteredList objectAtIndex:indexPath.row];
+            Event *event = [eventList objectAtIndex:indexPath.row];
             
             if (!event.eventImage) // avoid the app icon download if the app already has an icon
             {
@@ -600,7 +664,9 @@ bool searchFlags=true;
     EventImageDownloader *iconDownloader = [dicIcondownloaderEvents objectForKey:eventID];
     if (iconDownloader != nil)
     {
-        Event *event = [eventListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
+        NSMutableArray *eventList = (self.userEventList) ? self.userEventList : eventListArray;
+        
+        Event *event = [eventList objectAtIndex:iconDownloader.indexPathInTableView.row];
         event.eventImage = iconDownloader.event.eventImage;
         
         EventListTableCell *cell = (EventListTableCell *)[self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
@@ -763,7 +829,8 @@ bool searchFlags=true;
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
     NSLog(@"clickedButtonPath %@",clickedButtonPath);
     
-    Event *aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:clickedButtonPath.row] : [filteredList objectAtIndex:clickedButtonPath.row];
+    
     RestClient *rc=[[[RestClient alloc] init] autorelease];
     
     [rc setEventRsvp:aEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
@@ -780,7 +847,7 @@ bool searchFlags=true;
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
     
-    Event *aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:clickedButtonPath.row] : [filteredList objectAtIndex:clickedButtonPath.row];
 
     RestClient *rc=[[[RestClient alloc] init] autorelease];
     [rc setEventRsvp:aEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
@@ -800,9 +867,9 @@ bool searchFlags=true;
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
     NSLog(@"clickedButtonPath %@",clickedButtonPath);
-   
-    Event *aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
 
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:clickedButtonPath.row] : [filteredList objectAtIndex:clickedButtonPath.row];
+    
     RestClient *rc=[[[RestClient alloc] init] autorelease];
     [rc setEventRsvp:aEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
@@ -813,7 +880,9 @@ bool searchFlags=true;
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d %d", indx,[[[sender superview] superview] tag]);
     
-    Event *aEvent=[filteredList objectAtIndex:[[[sender superview] superview] tag]];
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:[[[sender superview] superview] tag]] : [filteredList objectAtIndex:[[[sender superview] superview] tag]];
+    //Event *aEvent=[filteredList objectAtIndex:[[[sender superview] superview] tag]];
+    
     RestClient *rc=[[[RestClient alloc] init] autorelease];
     
     [smAppDelegate hideActivityViewer];
@@ -863,8 +932,8 @@ bool searchFlags=true;
     NSIndexPath *clickedButtonPath = [self.eventListTableView indexPathForCell:clickedCell];
     [self.view addSubview:self.mapContainer];
     NSLog(@"clickedButtonPath %@",clickedButtonPath); 
-    
-    Event *aEvent=[filteredList objectAtIndex:[sender tag]];
+    Event *aEvent = (self.userEventList) ? [self.userEventList objectAtIndex:[sender tag]] : [filteredList objectAtIndex:[sender tag]];
+    //Event *aEvent=[filteredList objectAtIndex:[sender tag]];
     [self.mapView removeAnnotations:[self.mapView annotations]];
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];

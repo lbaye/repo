@@ -29,6 +29,7 @@ NSString * const NOTIF_GET_REPLIES_DONE= @"com.genweb2.socialmaps.getrepliesdone
 NSString * const NOTIF_GET_NOTIFICATIONS_DONE= @"com.genweb2.socialmaps.getnotificationsdone";
 NSString * const NOTIF_FBFRIENDLIST_DONE= @"com.genweb2.socialmaps.fbfriendlistdone";
 NSString * const NOTIF_GET_ALL_EVENTS_DONE= @"com.genweb2.socialmaps.getalleventsdone";
+NSString * const NOTIF_GET_EVENTS_BY_USERID_DONE= @"com.genweb2.socialmaps.geteventsbyuserid";
 NSString * const NOTIF_GET_EVENT_DETAIL_DONE= @"com.genweb2.socialmaps.geteventdetaildone";
 NSString * const NOTIF_DELETE_EVENT_DONE= @"com.genweb2.socialmaps.deleteeventdone";
 NSString * const NOTIF_CREATE_EVENT_DONE= @"com.genweb2.socialmaps.createeventdone";

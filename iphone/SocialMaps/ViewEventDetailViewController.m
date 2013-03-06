@@ -17,6 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "NotificationController.h"
 #import "SelectCircleTableCell.h"
+#import "UIImageView+Cached.h"
 
 @implementation ViewEventDetailViewController
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
@@ -373,31 +374,9 @@ NSString *searchText;
                 UserFriends *userFrnd=[FriendList objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
-                if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil))
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoadFriends:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }               
-                }
+                if(!isDragging_msg && !isDecliring_msg)
+                    [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+                
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
@@ -765,30 +744,13 @@ NSString *searchText;
     for(int i=0; i<[imagesName count];i++)       
         
     {
-        if(i< [imagesName count]) 
+        if(i< [imagesName count])
         { 
             UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg objectForKey:[imagesName objectAtIndex:i]]) 
-            { 
-                //If image available in dictionary, set it to imageview 
-                imgView.image = [dicImages_msg objectForKey:[imagesName objectAtIndex:i]]; 
-            } 
-            else 
-            { 
-                if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[imagesName objectAtIndex:i]]==nil))
-                    
-                {
-                    NSLog(@"downloading called");
-                    //If scroll view moves set a placeholder image and start download image. 
-                    [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@""];
-                }
-                else 
-                { 
-                    // Image is not available, so set a placeholder image                    
-                    imgView.image = [UIImage imageNamed:@""];                   
-                }               
-            }
+            
+            if(!isDragging_msg && !isDecliring_msg)
+                [imgView loadFromURL:[NSURL URLWithString:[imagesName objectAtIndex:i]]];
+            
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
             [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];

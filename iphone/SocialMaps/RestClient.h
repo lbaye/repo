@@ -773,4 +773,12 @@
  */
 - (void)getThread:(NSString*)recipientId authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 
+/**
+ * @brief Get events by user id
+ * @param (NSString) - Auth Token
+ * @param (NSString) - Auth Token Value
+ * @retval none
+ */
+-(void)getEventsByUserId:(NSString*)userId authToken:(NSString *)authToken authTokenValue:(NSString *)authTokenValue;
+
 @end

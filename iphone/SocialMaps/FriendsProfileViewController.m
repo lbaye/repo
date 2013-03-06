@@ -1160,16 +1160,17 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else if (imageIndex==2)
     {
-        if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        /*if (![userInfo.friendshipStatus isEqualToString:@"friend"])
         {
             [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
         }
-        else 
+        else*/ 
         {
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             showFrndsEvents=true;
+            controller.userInfo = userInfo;
             [self presentModalViewController:controller animated:YES];            
         }
     }
