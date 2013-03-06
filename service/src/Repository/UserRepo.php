@@ -1260,8 +1260,7 @@ class UserRepo extends Base
         return array(
             "badge" => $pending_friend_requests_count + $unread_messages_count,
             "tabCounts" => "{$unread_messages_count}|{$pending_friend_requests_count}|0",
-            "sound" => "default",
-            'receiverId' => $user_id
+            "sound" => "default"
         );
     }
 
