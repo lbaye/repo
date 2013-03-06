@@ -469,8 +469,6 @@
 		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
 		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
 		B04EFA3116591358002C2D6B /* EachFriendInList.m in Sources */ = {isa = PBXBuildFile; fileRef = B04EFA3016591358002C2D6B /* EachFriendInList.m */; };
-		B06FA5C316DB79DB00872578 /* sm_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B06FA5C116DB79DB00872578 /* sm_icon.png */; };
-		B06FA5C416DB79DB00872578 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B06FA5C216DB79DB00872578 /* sm_icon@2x.png */; };
 		B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07777CC163E3A0A00969699 /* DirectionViewController.xib */; };
 		B07777D4163E6D9900969699 /* transport1.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D0163E6D9800969699 /* transport1.png */; };
 		B07777D5163E6D9900969699 /* transport2.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D1163E6D9800969699 /* transport2.png */; };
@@ -504,6 +502,8 @@
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
 		B0D648E915FC4F460006DF0E /* MeetUpRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */; };
 		B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */; };
+		B0FE822C16E7069200BEEDD8 /* sm_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B0FE822A16E7069200BEEDD8 /* sm_icon.png */; };
+		B0FE822D16E7069200BEEDD8 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B0FE822B16E7069200BEEDD8 /* sm_icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1165,8 +1165,6 @@
 		B032F99B162C52C1002AFCDB /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = Images/icon_57x57.png; sourceTree = SOURCE_ROOT; };
 		B04EFA2F16591358002C2D6B /* EachFriendInList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EachFriendInList.h; sourceTree = "<group>"; };
 		B04EFA3016591358002C2D6B /* EachFriendInList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EachFriendInList.m; sourceTree = "<group>"; };
-		B06FA5C116DB79DB00872578 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
-		B06FA5C216DB79DB00872578 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sm_icon@2x.png"; sourceTree = "<group>"; };
 		B07777CA163E3A0A00969699 /* DirectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionViewController.h; sourceTree = "<group>"; };
 		B07777CB163E3A0A00969699 /* DirectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionViewController.m; sourceTree = "<group>"; };
 		B07777CC163E3A0A00969699 /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
@@ -1219,6 +1217,8 @@
 		B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestController.xib; sourceTree = "<group>"; };
 		B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpListButtonsView.h; sourceTree = "<group>"; };
 		B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpListButtonsView.m; sourceTree = "<group>"; };
+		B0FE822A16E7069200BEEDD8 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
+		B0FE822B16E7069200BEEDD8 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sm_icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1491,8 +1491,8 @@
 		4F98A2BC15BB387D000B3124 = {
 			isa = PBXGroup;
 			children = (
-				B06FA5C116DB79DB00872578 /* sm_icon.png */,
-				B06FA5C216DB79DB00872578 /* sm_icon@2x.png */,
+				B0FE822A16E7069200BEEDD8 /* sm_icon.png */,
+				B0FE822B16E7069200BEEDD8 /* sm_icon@2x.png */,
 				4F469CD115FD1CC4008341C2 /* Default@2x.png */,
 				4F469CCF15FD1CB5008341C2 /* Default.png */,
 				4FE4253B15C0699F00A6B6A3 /* FB */,
@@ -2416,10 +2416,10 @@
 				208CED6016B510D100434D49 /* icon_directions_new.png in Resources */,
 				208CED6116B510D100434D49 /* icon_meet_up_new.png in Resources */,
 				208CED6216B510D100434D49 /* icon_myplaces.png in Resources */,
-				B06FA5C316DB79DB00872578 /* sm_icon.png in Resources */,
-				B06FA5C416DB79DB00872578 /* sm_icon@2x.png in Resources */,
 				B01C860416DE37E000438C0E /* icon_event.png in Resources */,
 				B003243316E4D1580070F83F /* transparent_icon.png in Resources */,
+				B0FE822C16E7069200BEEDD8 /* sm_icon.png in Resources */,
+				B0FE822D16E7069200BEEDD8 /* sm_icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
