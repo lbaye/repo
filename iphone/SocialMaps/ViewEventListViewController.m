@@ -173,8 +173,35 @@ bool searchFlags=true;
 {
     [smAppDelegate hideActivityViewer];
     
-    self.userEventList = [[notif object] mutableCopy];
+    NSMutableArray *allEventList = [[notif object] mutableCopy];
     
+    NSMutableArray *onlyPermitedEventList = [[NSMutableArray alloc] init];
+    
+    for (Event *event in allEventList) {
+        if ([event.permission isEqualToString:@"public"]) {
+            [onlyPermitedEventList addObject:event];
+        } else if ([event.permission isEqualToString:@"friends"]) {
+            for (UserFriends *frnd in friendListGlobalArray) {
+                if ([userInfo.userId isEqualToString:frnd.userId]) {
+                    [onlyPermitedEventList addObject:event];
+                    break;
+                }
+            }
+        } else if ([event.permission isEqualToString:@"custom"]) {
+            for (NSString *userId in event.permittedUsers) {
+                NSLog(@"userid = %@", userId);
+                if ([userId isEqualToString:smAppDelegate.userId]) {
+                    [onlyPermitedEventList addObject:event];
+                    break;
+                }
+            }
+        }
+    }
+    
+    self.userEventList = onlyPermitedEventList;
+    [onlyPermitedEventList release];
+    
+    //self.userEventList = allEventList;
     if (!self.userEventList)
     {
         [UtilityClass showAlert:@"" :@"Unknown error"];

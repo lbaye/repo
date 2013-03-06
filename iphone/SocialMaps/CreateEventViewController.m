@@ -863,8 +863,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         {
             [event.guestList addObjectsFromArray:guestListIdArr];
             
-            
-
             [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
         }
         else

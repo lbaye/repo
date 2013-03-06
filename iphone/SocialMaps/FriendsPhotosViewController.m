@@ -512,7 +512,33 @@ AppDelegate *smAppdelegate;
             }
             else
             {
-                [self loadData:[notif object]];
+                NSMutableArray *allPhotoList = [[notif object] mutableCopy];
+                
+                NSMutableArray *onlyPermitedPhotoList = [[NSMutableArray alloc] init];
+                //UserFriends *userFrnd
+                for (Photo *photo in allPhotoList) {
+                    if ([photo.permission isEqualToString:@"public"]) {
+                        [onlyPermitedPhotoList addObject:photo];
+                    } else if ([photo.permission isEqualToString:@"friends"]) {
+                        for (UserFriends *frnd in friendListGlobalArray) {
+                            if ([self.userId isEqualToString:frnd.userId]) {
+                                [onlyPermitedPhotoList addObject:photo];
+                                break;
+                            }
+                        }
+                    } else if ([photo.permission isEqualToString:@"custom"]) {
+                        for (NSString *permittedUserId in photo.permittedUsers) {
+                            NSLog(@"userid = %@", permittedUserId);
+                            if ([permittedUserId isEqualToString:smAppdelegate.userId]) {
+                                [onlyPermitedPhotoList addObject:photo];
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                [self loadData:onlyPermitedPhotoList];
+                [onlyPermitedPhotoList release];
                 [self reloadScrolview];
             }
         }

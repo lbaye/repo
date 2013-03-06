@@ -2017,6 +2017,9 @@ AppDelegate *smAppDelegate;
                 [aEvent setEventType:[self getNestedKeyVal:item key1:@"event_type" key2:nil key3:nil]];
                 [aEvent setPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
                 
+                aEvent.permittedUsers = [[NSMutableArray alloc] init];
+                aEvent.permittedUsers = [self getNestedKeyVal:item key1:@"permittedUsers" key2:nil key3:nil];
+                
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
                 
                 if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
@@ -6522,6 +6525,12 @@ AppDelegate *smAppDelegate;
                 photo.location.longitude=[self getNestedKeyVal:photoDic key1:@"lng" key2:nil key3:nil];
                 photo.address=[self getNestedKeyVal:photoDic key1:@"address" key2:nil key3:nil];
                 photo.photoThum=[self getNestedKeyVal:photoDic key1:@"imageThumb" key2:nil key3:nil];
+                photo.permission = [self getNestedKeyVal:photoDic key1:@"permission" key2:nil key3:nil];
+                
+                photo.permittedUsers = [[NSMutableArray alloc] init];
+                photo.permittedUsers = [self getNestedKeyVal:photoDic key1:@"permittedUsers" key2:nil key3:nil];
+                
+                
                 [photoList addObject:photo];
                 NSLog(@"photo.imageUrl %@",photo.imageUrl);
                 [photo release];
