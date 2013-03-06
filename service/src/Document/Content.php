@@ -122,21 +122,29 @@ abstract class Content
 
     public function isPermittedFor(\Document\User $user)
     {
-        if($this->getPermission() == 'public' || $this->getOwner() == $user) {
+        if ($this->getPermission() == 'public' || $this->getOwner() == $user) {
             return true;
-        } else if($this->getPermission() == 'private') {
+        } else if ($this->getPermission() == 'private') {
             return false;
-        } else if($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
+        } else if ($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
             return true;
-        } else if($permittedCircles = $this->getPermittedCircles()) {
+        } else if ($permittedCircles = $this->getPermittedCircles()) {
             $circleUsers = array();
 
-            foreach($this->getOwner()->getCircles() as $circle) {
-                if(in_array($circle->getId(), $permittedCircles)){
+            foreach ($this->getOwner()->getCircles() as $circle) {
+                if (in_array($circle->getId(), $permittedCircles)) {
                     $circleUsers = array_merge($circleUsers, $circle->getFriends());
                 }
             }
             return in_array($user->getId(), $circleUsers);
+        } else {
+            foreach ($this->getOwner()->getCircles() as $circle) {
+                if ($circle->getName() == "friends") {
+                    if (in_array($user->getId(), $circle->getFriends())) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;
@@ -145,12 +153,16 @@ abstract class Content
     public function share($type, array $users = null, array $circles = null)
     {
         $this->setPermission($type);
-        if($type == 'private' || $type == 'public') {
+        if ($type == 'private' || $type == 'public') {
             $this->permittedUsers = array();
             $this->permittedCircles = array();
         } else {
-            if(is_array($users))   { $this->setPermittedUsers($users); }
-            if(is_array($circles)) { $this->setPermittedCircles($circles); }
+            if (is_array($users)) {
+                $this->setPermittedUsers($users);
+            }
+            if (is_array($circles)) {
+                $this->setPermittedCircles($circles);
+            }
         }
 
         return true;
