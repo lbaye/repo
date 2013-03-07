@@ -684,6 +684,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     [selectedCustomCircleCheckArr removeAllObjects];
     [customSelectedFriendsIndex removeAllObjects];
     [customSelectionView removeFromSuperview];
+    [customTableView reloadData];
 }
 
 -(IBAction)customSegment:(id)sender
