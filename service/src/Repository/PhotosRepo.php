@@ -15,13 +15,16 @@ use Repository\Likable;
 /**
  * Data access functionality for photo model
  */
-class PhotosRepo extends Base implements Likable {
+class PhotosRepo extends Base implements Likable
+{
 
-    protected function bindObservers() {
+    protected function bindObservers()
+    {
         $this->addObserver(new \Document\PhotosObserver($this->dm));
     }
 
-    public function map(array $data, UserDocument $owner, Photo $photo = null) {
+    public function map(array $data, UserDocument $owner, Photo $photo = null)
+    {
         if (is_null($photo)) $photo = new Photo();
 
         $setIfExistFields = array('title', 'description', 'uriThumb', 'uriMedium', 'uriLarge');
@@ -46,29 +49,41 @@ class PhotosRepo extends Base implements Likable {
         return $photo;
     }
 
-    public function getByUser(UserDocument $user) {
+    public function getByUser(UserDocument $user)
+    {
         return $this->dm->createQueryBuilder()
-                ->find('Document\Photo')
-                ->field('owner')
-                ->equals($user->getId())
-                ->sort('createDate', 'desc')
-                ->getQuery()
-                ->execute();
+            ->find('Document\Photo')
+            ->field('owner')
+            ->equals($user->getId())
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
     }
 
-    public function getByPhotoId(UserDocument $user, $photoId) {
+    public function getByPermittedUser(UserDocument $user)
+    {
         return $this->dm->createQueryBuilder()
-                ->find('Document\Photo')
-                ->field('_id')
-                ->equals($photoId)
-                ->field('owner')
-                ->equals($user->getId())
-                ->sort('createDate', 'desc')
-                ->getQuery()
-                ->execute();
+            ->find('Document\Photo')
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
     }
 
-    public function update($data, $id) {
+    public function getByPhotoId(UserDocument $user, $photoId)
+    {
+        return $this->dm->createQueryBuilder()
+            ->find('Document\Photo')
+            ->field('_id')
+            ->equals($photoId)
+            ->field('owner')
+            ->equals($user->getId())
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function update($data, $id)
+    {
         $photo = $this->find($id);
         if (false === $photo) throw new \Exception\ResourceNotFoundException();
 
@@ -76,7 +91,8 @@ class PhotosRepo extends Base implements Likable {
         return $this->updateObject($photo);
     }
 
-    public function addComments($photoId, array $data) {
+    public function addComments($photoId, array $data)
+    {
         $photo = $this->find($photoId);
 
         if (is_null($photo)) {
@@ -94,36 +110,41 @@ class PhotosRepo extends Base implements Likable {
         return $comment;
     }
 
-    public function getAllByUser(UserDocument $user, $limit = 20, $offset = 0) {
+    public function getAllByUser(UserDocument $user, $limit = 20, $offset = 0)
+    {
         return $this->findBy(array('owner' => $user->getId()), array('_id' => 'DESC'));
     }
 
-    public function like($photo, $user) {
+    public function like($photo, $user)
+    {
         return $this->dm->createQueryBuilder('Document\Photo')
-                ->update()
-                ->field('likes')->addToSet($user->getId())
-                ->field('id')->equals($photo->getId())
-                ->getQuery()
-                ->execute();
+            ->update()
+            ->field('likes')->addToSet($user->getId())
+            ->field('id')->equals($photo->getId())
+            ->getQuery()
+            ->execute();
     }
 
-    public function unlike($photo, $user) {
+    public function unlike($photo, $user)
+    {
         return $this->dm->createQueryBuilder('Document\Photo')
-                ->update()
-                ->field('likes')->pull($user->getId())
-                ->field('id')->equals($photo->getId())
-                ->getQuery()
-                ->execute();
+            ->update()
+            ->field('likes')->pull($user->getId())
+            ->field('id')->equals($photo->getId())
+            ->getQuery()
+            ->execute();
     }
 
-    public function hasLiked($photo, $user) {
+    public function hasLiked($photo, $user)
+    {
         if ($photo->getLikesCount() > 0)
             return in_array($user->getId(), $photo->getLikes());
 
         return false;
     }
 
-    public function getLikes($photo) {
+    public function getLikes($photo)
+    {
         return $photo->getLikes();
     }
 }

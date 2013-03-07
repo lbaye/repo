@@ -15,7 +15,7 @@ get_photos_by_user:
 
 get_photos_by_user_id:
     pattern: /photos/users/{id}
-    defaults: { _controller: Controller\Photos::getByUserId }
+    defaults: { _controller: Controller\Photos::getPermittedPhotos }
     requirements: { _method: GET }
 
 get_photo:

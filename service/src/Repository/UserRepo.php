@@ -78,6 +78,12 @@ class UserRepo extends Base
         return is_null($user) ? false : $user;
     }
 
+    public function getByUserId($id)
+    {
+        $user = $this->findOneBy(array('id' => $id));
+        return is_null($user) ? false : $user;
+    }
+
     public function getAll($start, $limit)
     {
         $results = $this->createQueryBuilder('Document\User')->limit($limit)->skip($start)->getQuery()->execute();
