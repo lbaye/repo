@@ -669,5 +669,31 @@ class Gathering extends Base
 
         return $this->_generateResponse($data);
     }
+
+    /**
+     * GET //users/{user}/events
+     *
+     * Retrieve all active gatherings
+     * @param $user  String|Object
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getPermittedEvents($user, $type)
+    {
+        $getUserObjs = $this->userRepository->getByUserId($user);
+
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 20);
+        $this->_initRepository($type);
+        $gatheringObjs = $this->gatheringRepository->getAllPermittedEvent($limit, $start);
+
+        if (!empty($gatheringObjs)) {
+            $permittedDocs = $this->_filterByPermissionForBothUsers($gatheringObjs,$getUserObjs);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+        } else {
+            return $this->_generateResponse(array('message' => 'No active Events found'), Status::NO_CONTENT);
+        }
+    }
 }
 

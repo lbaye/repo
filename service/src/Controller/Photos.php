@@ -115,8 +115,7 @@ class Photos extends Base
                 $thumbWidth, $thumbHeight,
                 $mediumWidth, $mediumHeight,
                 $largeWidth, $largeHeight);
-            if (!$created)
-            {
+            if (!$created) {
                 $this->response->setContent(json_encode(array('message' => 'Problem occured while creating the image(Possibly Invalid format).')));
                 $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
                 return $this->response;
@@ -186,6 +185,33 @@ class Photos extends Base
 
         if (count($photos) > 0) {
             return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+    /**
+     * GET /photos/users/{id}
+     *
+     * Retrieve list of photos by the specified user
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getPermittedPhotos($id)
+    {
+//        $getUserObjs = $this->userRepository->getByUserId($user);
+        $user = $this->userRepository->find($id);
+
+        if (empty($user))
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+
+        $photos = $this->photoRepo->getByPermittedUser($user);
+
+        if (count($photos) > 0) {
+            $permittedDocs = $this->_filterByPermissionForBothUsers($photos, $user);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+//            return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
         } else {
             return $this->_generateResponse(null, Status::NO_CONTENT);
         }

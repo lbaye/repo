@@ -45,6 +45,17 @@ class GatheringRepo extends Base implements Likable
         return $events;
     }
 
+    public function getAllPermittedEvent($limit = 20, $offset = 0)
+    {
+        $events = $this->createQueryBuilder()
+            ->sort(array('createDate' => 'DESC'))
+            ->limit($limit)
+            ->getQuery()
+            ->execute();
+
+        return $events;
+    }
+
     public function insert($gatheringObj)
     {
         $valid = $gatheringObj->isValid();
