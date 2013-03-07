@@ -13,19 +13,30 @@
 
 #import <UIKit/UIKit.h>
 
+@class RestClient;
+@class AppDelegate;
+
 @interface MyPhotosViewController : UIViewController
 {
     IBOutlet UIScrollView *photoScrollView;
-    IBOutlet UIScrollView *customScrollView;
+    IBOutlet UIScrollView *zoomScrollView;
     IBOutlet UIView *zoomView;
     IBOutlet UILabel *labelNotifCount;
     IBOutlet UIButton *nextButton;
-    IBOutlet UIButton *prevButton;    
+    IBOutlet UIButton *prevButton;
+    
+    NSMutableArray *selectedFriendsIndex, *thumbList, *bigPhotoList, *customSelectedFriendsIndex;
+    
+    BOOL isDragging_msg, isDecliring_msg;
+    int zoomIndex, getAllPhotoCounter;
+    RestClient *restClient;
+    AppDelegate *smAppdelegate;
+    //NSMutableDictionary *photoDic;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *labelNotifCount;
 @property(nonatomic,retain) IBOutlet UIScrollView *photoScrollView;
-@property(nonatomic,retain) IBOutlet UIScrollView *customScrollView;
+@property(nonatomic,retain) IBOutlet UIScrollView *zoomScrollView;
 @property(nonatomic,retain) IBOutlet UIView *zoomView;
 @property(nonatomic,retain) IBOutlet UIButton *nextButton;
 @property(nonatomic,retain) IBOutlet UIButton *prevButton;    

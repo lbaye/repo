@@ -6428,10 +6428,71 @@ AppDelegate *smAppDelegate;
 {
     NSString *route = [NSString stringWithFormat:@"%@/photos/%@",WS_URL,photoId];
     NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"DELETE"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204)
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSString *msg=[jsonObjects objectForKey:@"message"];
+            NSLog(@"msg %@",msg);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_PHOTO_DONE object:msg];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
+        }
+        [jsonParser release];
+        jsonParser = nil;
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
+    }];
+    
+    NSLog(@"asyn srt upload photo");
+    [request startAsynchronous];
+}
+
+-(void) deletePhotosByPhotoIds:(NSMutableArray*)photoIds withAuthToken:(NSString *)authToken andAuthTokenValue:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/photos/deletephotos", WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
         
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"DELETE"];
     [request addRequestHeader:authToken value:authTokenValue];
+    
+    for (int i=0; i<[photoIds count]; i++)
+    {
+        [request addPostValue:[photoIds objectAtIndex:i] forKey:@"photoIds[]"];
+    }
     
     // Handle successful REST call
     [request setCompletionBlock:^{
@@ -6448,17 +6509,6 @@ AppDelegate *smAppDelegate;
         
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
         {
-            if ([jsonObjects isKindOfClass:[NSDictionary class]])
-            {
-                // treat as a dictionary, or reassign to a dictionary ivar
-                NSLog(@"dict");
-            }
-            else if ([jsonObjects isKindOfClass:[NSArray class]])
-            {
-                // treat as an array or reassign to an array ivar.
-                NSLog(@"Arr");
-            }
-            
             NSString *msg=[jsonObjects objectForKey:@"message"];
             NSLog(@"msg %@",msg);
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_PHOTO_DONE object:msg];

@@ -594,6 +594,15 @@
 -(void) deletePhotoByPhotoId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)photoId;
 
 /**
+ * @brief Delete photos by photo ids
+ * @param (NSString) - Auth Token
+ * @param (NSString) - Auth Token Value
+ * @param (NSMutableArray) - Photo ids
+ * @retval none
+ */
+-(void) deletePhotosByPhotoIds:(NSMutableArray*)photoIds withAuthToken:(NSString *)authToken andAuthTokenValue:(NSString *)authTokenValue;
+
+/**
  * @brief Get friends photo from service
  * @param (NSString) - Auth Token
  * @param (NSString) - Auth Token Value
