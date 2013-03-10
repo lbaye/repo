@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Helper for URL related utility methods
+ */
 class Url
 {
     public static function getSlug($str, $replace = array(), $delimiter = '-')
@@ -53,28 +56,34 @@ class Url
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['photo']);
     }
 
+    public static function buildPlaceIconUrl($data)
+    {
+        return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['icon']);
+    }
+
     public static function buildPhotoUrl($data)
     {
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['photo']);
     }
 
-    public static function buildStreetViewImage($key, array $position, $size = "320x130") {
+    public static function buildStreetViewImage($key, array $position, $size = "320x130")
+    {
         $lat = $position['lat'];
         $lng = $position['lng'];
         return "http://maps.googleapis.com/maps/api/streetview?size=" .
-               $size .  "&location=" . $lat . "," .$lng .
-               "&fov=90&heading=235&pitch=10&sensor=false&key=". $key;
+            $size . "&location=" . $lat . "," . $lng .
+            "&fov=90&heading=235&pitch=10&sensor=false&key=" . $key;
     }
 
-    public static function getStreetViewImageOrReturnEmpty($config, array $location, $size = "320x130") {
-
+    public static function getStreetViewImageOrReturnEmpty($config, array $location, $size = "320x130")
+    {
         $key = $config['googlePlace']['apiKey'];
         $baseUrl = $config['web']['root'];
 
         $lat = $location['lat'];
         $lng = $location['lng'];
         $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng .
-                    "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
+            "&radius=50&cb_client=maps_sv&v=4&key=" . $key;
 
         $handler = curl_init();
         curl_setopt($handler, CURLOPT_HEADER, 0);
@@ -89,10 +98,12 @@ class Url
         // if data value is an empty json document ('{}') , the panorama is not available for that point
         if ($data === '{}' || $http_status != 200) {
             return $baseUrl . '/assets/images/default-cover-photo.png';
-        }
-        else {
+        } else {
             return self::buildStreetViewImage($key, $location, $size);
         }
+    }
 
+    public static function buildFacebookAvatar($fbId) {
+        return 'https://graph.facebook.com/' . $fbId . '/picture?type=normal';
     }
 }

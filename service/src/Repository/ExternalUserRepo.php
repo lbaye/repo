@@ -4,6 +4,9 @@ namespace Repository;
 
 use Document\ExternalUser as ExtUser;
 
+/**
+ * Data access functionality for external user model
+ */
 class ExternalUserRepo extends Base {
 
     public function exists($fbId) {

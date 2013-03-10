@@ -49,6 +49,12 @@ like_a_feed:
   defaults: { _controller: Controller\UserActivities::likeById, type: json }
   requirements: { _method: PUT }
 
+unlike_a_feed:
+  pattern: /newsfeed/{id}/unlike
+  defaults: { _controller: Controller\UserActivities::unlikeById, type: json }
+  requirements: { _method: PUT }
+
+
 feed_likes_html:
   pattern: /newsfeed/{id}/likes.html
   defaults: { _controller: Controller\UserActivities::getLikesById, type: html }

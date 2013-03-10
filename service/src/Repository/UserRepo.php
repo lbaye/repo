@@ -11,21 +11,27 @@ use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
 use Helper\Util as Util;
 
-class UserRepo extends Base {
+/**
+ * Data access functionality for user model
+ */
+class UserRepo extends Base
+{
     const MAX_NOTIFICATIONS = 20;
     const EVENT_ADDED_FRIEND = 'added_friend';
     static $DEFAULT_USER_FIELDS = array('_id', 'firstName', 'lastName', 'currentLocation', 'email',
-                                        'status', 'avatar', 'coverPhoto', 'distance',
-                                        'age', 'gender', 'lastSeenAt', 'relationshipStatus',
-                                        'workStatus', 'dateOfBirth', 'regMedia', 'address', 'lastPulse');
+        'status', 'avatar', 'coverPhoto', 'distance',
+        'age', 'gender', 'lastSeenAt', 'relationshipStatus', 'username',
+        'workStatus', 'dateOfBirth', 'regMedia', 'address', 'lastPulse');
 
     protected $loggerName = 'Repository::UserRepo';
 
-    public function bindObservers() {
+    public function bindObservers()
+    {
         $this->addObserver(new \Document\UsersObserver($this->dm, $this));
     }
 
-    public function validateLogin($data) {
+    public function validateLogin($data)
+    {
         if (empty($data)) {
             return false;
         }
@@ -33,9 +39,10 @@ class UserRepo extends Base {
         $user = $this->map($data);
 
         $user = $this->findOneBy(array(
-                                      'email' => $data['email'],
-                                      'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
-                                 ));
+            'email' => $data['email'],
+            'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt()),
+            'enabled' => true
+        ));
 
         if (!is_null($user)) {
             return $user;
@@ -44,12 +51,13 @@ class UserRepo extends Base {
         return false;
     }
 
-    public function validateFbLogin($data) {
+    public function validateFbLogin($data)
+    {
         if (empty($data)) {
             return false;
         }
 
-        $user = $this->findOneBy(array('facebookId' => $data['facebookId']));
+        $user = $this->findOneBy(array('facebookId' => $data['facebookId'], 'enabled' => true));
 
         if (!is_null($user)) {
             return $user;
@@ -58,17 +66,26 @@ class UserRepo extends Base {
         return false;
     }
 
-    public function getByEmail($email) {
+    public function getByEmail($email)
+    {
         $user = $this->findOneBy(array('email' => $email));
         return is_null($user) ? false : $user;
     }
 
-    public function getByAuthToken($authToken) {
+    public function getByAuthToken($authToken)
+    {
         $user = $this->findOneBy(array('authToken' => $authToken));
         return is_null($user) ? false : $user;
     }
 
-    public function getAll($start, $limit) {
+    public function getByUserId($id)
+    {
+        $user = $this->findOneBy(array('id' => $id));
+        return is_null($user) ? false : $user;
+    }
+
+    public function getAll($start, $limit)
+    {
         $results = $this->createQueryBuilder('Document\User')->limit($limit)->skip($start)->getQuery()->execute();
 
         if (count($results) == 0) {
@@ -83,24 +100,27 @@ class UserRepo extends Base {
         return $users;
     }
 
-    public function getNearBy($lat, $lng, $limit = 20) {
+    public function getNearBy($lat, $lng, $limit = 20)
+    {
         $users = $this->createQueryBuilder()
-                ->field('currentLocation')->near($lat, $lng)
-                ->field('id')->notIn($this->currentUser->getblockedBy())
-                ->field('visible')->equals(true)
-                ->limit($limit)
-                ->getQuery()
-                ->execute();
+            ->field('currentLocation')->near($lat, $lng)
+            ->field('id')->notIn($this->currentUser->getblockedBy())
+            ->field('visible')->equals(true)
+            ->limit($limit)
+            ->getQuery()
+            ->execute();
 
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
-    public function getAllByIds(array $ids, $asArray = true) {
+    public function getAllByIds(array $ids, $asArray = true)
+    {
         $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
         return $asArray ? $this->_toArrayAll($users) : $users;
     }
 
-    public function insert($data) {
+    public function insert($data)
+    {
         $user = $this->map($data);
 
         $isFacebookRegistration = !empty($data['facebookAuthToken']) AND (!empty($data['facebookId']));
@@ -117,7 +137,7 @@ class UserRepo extends Base {
 
         if ($this->exists($data)) {
             throw new \Exception\ResourceAlreadyExistsException(($isFacebookRegistration) ? $data['facebookId']
-                        : $data['email']);
+                : $data['email']);
         }
 
         if ($isFacebookRegistration) {
@@ -156,7 +176,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function exists($data) {
+    public function exists($data)
+    {
         $qb = $this->createQueryBuilder('Document\User');
 
         if (isset($data['facebookId'])) {
@@ -175,7 +196,8 @@ class UserRepo extends Base {
         return false;
     }
 
-    public function checkFbUser($data) {
+    public function checkFbUser($data)
+    {
         if (isset($data['facebookId'])) {
             $existFacebookId = $this->findOneBy(array('facebookId' => $data['facebookId']));
             return is_null($existFacebookId) ? false : true;
@@ -183,7 +205,8 @@ class UserRepo extends Base {
 
     }
 
-    public function update($data, $id) {
+    public function update($data, $id)
+    {
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
             if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
@@ -217,7 +240,8 @@ class UserRepo extends Base {
         return $this->updateObject($user);
     }
 
-    public function addCircle(array $data) {
+    public function addCircle(array $data)
+    {
         $circle = new \Document\Circle($data);
 
         if (!empty($data['friends'])) {
@@ -242,7 +266,8 @@ class UserRepo extends Base {
         return $circle;
     }
 
-    public function updateCircle($id, array $data) {
+    public function updateCircle($id, array $data)
+    {
         $circles = $this->currentUser->getCircles();
 
 
@@ -277,7 +302,8 @@ class UserRepo extends Base {
 
     }
 
-    public function sendFriendRequests($data, $friendId) {
+    public function sendFriendRequests($data, $friendId)
+    {
         $friend = $this->find($friendId);
         if (is_null($friend)) throw new \Exception\ResourceNotFoundException($friendId);
 
@@ -309,7 +335,8 @@ class UserRepo extends Base {
         return $friendRequest;
     }
 
-    public function map(array $data, UserDocument $user = null) {
+    public function map(array $data, UserDocument $user = null)
+    {
         if (is_null($user)) {
             $user = new UserDocument();
         }
@@ -364,7 +391,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function settingsMap(array $data, UserDocument $user = null) {
+    public function settingsMap(array $data, UserDocument $user = null)
+    {
         $setIfExistFields = array(
             'id',
             'firstName',
@@ -463,7 +491,8 @@ class UserRepo extends Base {
         }
     }
 
-    public function addDefaultCircles($id) {
+    public function addDefaultCircles($id)
+    {
         $user = $this->find($id);
 
         if (is_null($user)) {
@@ -490,7 +519,8 @@ class UserRepo extends Base {
         $this->dm->flush();
     }
 
-    public function updateNotification($notificationId) {
+    public function updateNotification($notificationId)
+    {
         $notifications = $this->currentUser->getNotification();
 
         foreach ($notifications as &$notification) {
@@ -507,7 +537,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function updateAccountSettings($data) {
+    public function updateAccountSettings($data)
+    {
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
             if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
@@ -707,7 +738,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function insertFacebookAuthInfo($id, $facebookAuthId, $facebookAuthToken) {
+    public function insertFacebookAuthInfo($id, $facebookAuthId, $facebookAuthToken)
+    {
         $user = $this->find($id);
 
         if (is_null($user)) {
@@ -724,7 +756,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function saveAvatarImage($id, $avatar) {
+    public function saveAvatarImage($id, $avatar)
+    {
         $user = $this->find($id);
 
         if (false === $user) {
@@ -743,12 +776,15 @@ class UserRepo extends Base {
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
         if ($avatarUrl !== false) {
+            $avatarUrl = preg_replace("/\&type=normal/i", "?type=normal", $avatarUrl);
             $user->setAvatar($avatarUrl);
         } else {
-            @ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
+            $thumbPath = $this->findOrCreateAvatarThumbnailPath();
+            ImageHelper::saveResizeAvatarFromBase64(
+                $avatar, ROOTDIR . $filePath,
+                $thumbPath . DIRECTORY_SEPARATOR . $user->getId());
             $user->setAvatar($filePath . "?" . $timeStamp);
         }
-
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -756,7 +792,20 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function saveCoverPhoto($id, $coverPhoto) {
+    public function findOrCreateAvatarThumbnailPath()
+    {
+        $fullThumbPath = ROOTDIR . '/images/avatar/thumb';
+
+        if (!file_exists($fullThumbPath)) {
+            mkdir($fullThumbPath, 0777, true);
+            return $fullThumbPath;
+        }
+
+        return $fullThumbPath;
+    }
+
+    public function saveCoverPhoto($id, $coverPhoto)
+    {
         $user = $this->find($id);
 
         if (false === $user) {
@@ -782,7 +831,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function updateForgetPasswordToken($userId, $passwordToken) {
+    public function updateForgetPasswordToken($userId, $passwordToken)
+    {
         $userDetail = $this->find($userId);
         $data = array();
         $user = $this->map($data, $userDetail);
@@ -801,14 +851,15 @@ class UserRepo extends Base {
     }
 
     public function search($keyword = null, $location = array(),
-        $limit = Constants::PEOPLE_LIMIT, $key = null) {
+                           $limit = Constants::PEOPLE_LIMIT, $key = null, $hour = null, $minute = null)
+    {
 
-        $users = $this->searchNearByPeople($keyword, $location, array('limit' => $limit, 'offset' => 0));
+        $users = $this->searchNearByPeople($keyword, $location, array('limit' => $limit, 'offset' => 0), $hour, $minute);
         $filteredUsers = array();
 
         if (!empty($users)) {
             foreach ($users as $userHash) {
-                $this->prepareUserData($userHash, $location, $key);
+                $this->prepareUserData($userHash, $location, $key, 1);
                 $filteredUsers[] = $userHash;
             }
 
@@ -818,7 +869,8 @@ class UserRepo extends Base {
         return array();
     }
 
-    public function searchNearByPeople($keywords, array $location, array $options = array()) {
+    public function searchNearByPeople($keywords, array $location, array $options = array(), $hour = null, $minute = null)
+    {
         // Set all required parameters
         $limit = $options['limit'];
         $offset = $options['offset'];
@@ -837,17 +889,45 @@ class UserRepo extends Base {
         $query = $this->createQueryBuilder('Document\User');
         call_user_func_array(array($query, 'select'), $selectableFields);
 
-        $query->field('id')->notIn($excludedUserIds)
+//        $hour = date('H');
+//        $minute = date('i');
+        if (isset($hour) || isset($minute))
+            $_dateTime = new \DateTime($hour . 'hours ' . $minute . ' minutes ago');
+//         ->field('updateDate')->gte($_dateTime)
+        if (!isset($_dateTime)) {
+            $query->field('id')->notIn($excludedUserIds)
                 ->field('visible')->equals(true)
+                ->field('enabled')->equals(true)
+                ->field('currentLocation.lat')->notEqual(0)
+                ->field('currentLocation.lng')->notEqual(0)
                 ->hydrate(false)
                 ->limit($limit);
+        } else {
+            $query->field('id')->notIn($excludedUserIds)
+                ->field('visible')->equals(true)
+                ->field('enabled')->equals(true)
+                ->field('currentLocation.lat')->notEqual(0)
+                ->field('currentLocation.lng')->notEqual(0)
+                ->field('updateDate')->gte($_dateTime)
+                ->hydrate(false)
+                ->limit($limit);
+        }
 
         //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+
+        if (isset($location['sw']) && isset($location['ne'])) {
+            $query->field('currentLocation');
+            $locationParams = array();
+            foreach (array_merge($location['ne'], $location['sw']) as $position)
+                $locationParams[] = (float)$position;
+            call_user_func_array(array($query, 'withinBox'), $locationParams);
+        }
 
         return $query->getQuery()->execute();
     }
 
-    private function prepareUserData(&$userHash, &$location, &$key) {
+    private function prepareUserData(&$userHash, &$location, &$key, $getAvatarForSearch = null)
+    {
         # Set user database id to "id" field
         $id = $userHash['_id']->__toString();
         $userHash['id'] = &$id;
@@ -861,6 +941,10 @@ class UserRepo extends Base {
                 $userHash['address'] = null;
         }
 
+        # Ensure null is set if no user name is set
+        if (isset($userHash['username']) && empty($userHash['username']))
+            $userHash['username'] = null;
+
         # Retrieve user object
         $userObj = $this->find($userHash['id']);
 
@@ -869,6 +953,11 @@ class UserRepo extends Base {
 
         # Setting up absolute urls for user avatar and cover photo
         $userHash['avatar'] = $this->_buildAvatarUrl($userHash);
+        $isFbAvatar = preg_match("/graph.facebook.com/i", $userHash['avatar']);
+
+        if (($getAvatarForSearch) && empty($isFbAvatar)) {
+            $userHash['avatar'] = preg_replace("/avatar/", "avatar/thumb", $userHash['avatar']);
+        }
         $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
 
         # Set Online/offline status
@@ -877,14 +966,14 @@ class UserRepo extends Base {
         # Set street view image if no cover photo is set
         $noCoverPhotoSet = !isset($userHash['coverPhoto']) || empty($userHash['coverPhoto']);
         $currentLocationFound = isset($userHash['currentLocation']) &&
-                                !empty($userHash['currentLocation']['lat']) &&
-                                !empty($userHash['currentLocation']['lng']) &&
-                                0 != $userHash['currentLocation']['lat'] &&
-                                0 != $userHash['currentLocation']['lng'];
+            !empty($userHash['currentLocation']['lat']) &&
+            !empty($userHash['currentLocation']['lng']) &&
+            0 != $userHash['currentLocation']['lat'] &&
+            0 != $userHash['currentLocation']['lng'];
 
         if ($currentLocationFound && $noCoverPhotoSet)
             $userHash['coverPhoto'] =
-                    \Helper\Url::buildStreetViewImage($key, $userHash['currentLocation']);
+                \Helper\Url::buildStreetViewImage($key, $userHash['currentLocation']);
 
 
         # Calculate distance if current location is set
@@ -911,15 +1000,17 @@ class UserRepo extends Base {
         }
     }
 
-    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null) {
-        $people_around = $this->search($keyword, $location, $limit, $key);
+    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null, $hour, $minute)
+    {
+
+        $people_around = $this->search($keyword, $location, $limit, $key, $hour, $minute);
         $visible_people = array();
 
         # TODO: How to fix less than $limit items
         foreach ($people_around as $target_user_hash) {
-            if (isset($target_user_hash['lastSeenAt']) && !empty($target_user_hash['lastSeenAt'])){
+            if (isset($target_user_hash['lastSeenAt']) && !empty($target_user_hash['lastSeenAt'])) {
                 $target_user_hash['lastSeenAt'] = "Last seen at " . \Helper\Util::formatAddress($target_user_hash['lastSeenAt']);
-                if(!$target_user_hash['online'] && !empty($target_user_hash['lastPulse'])){
+                if (!$target_user_hash['online'] && !empty($target_user_hash['lastPulse'])) {
 
                     $time = ((array)time());
                     $now = $time[0];
@@ -927,7 +1018,7 @@ class UserRepo extends Base {
                     $then = (int)($then['sec']);
                     $diff = $now - $then;
 
-                    $target_user_hash['lastSeenAt'] =  $target_user_hash['lastSeenAt'] . " about " . Util::humanizeTimeDiff($diff);
+                    $target_user_hash['lastSeenAt'] .= " about " . Util::humanizeTimeDiff($diff);
                 }
             }
 
@@ -940,16 +1031,18 @@ class UserRepo extends Base {
         return $visible_people;
     }
 
-    public function getFbConnectedUsers($start = 0, $limit = 50) {
+    public function getFbConnectedUsers($start = 0, $limit = 50)
+    {
         $query = $this->createQueryBuilder()
-                ->field('facebookAuthToken')->exists(true)
-                ->hydrate(false);
+            ->field('facebookAuthToken')->exists(true)
+            ->hydrate(false);
 
         $users = $query->getQuery()->execute();
         return (!empty($users)) ? $users : array();
     }
 
-    public function removeFriendFromCircle($id, array $data) {
+    public function removeFriendFromCircle($id, array $data)
+    {
         $circles = $this->currentUser->getCircles();
         $friends = $this->_trimInvalidUsers($data['friends']);
 
@@ -969,7 +1062,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function addFriendToMultipleCircle($id, array $data) {
+    public function addFriendToMultipleCircle($id, array $data)
+    {
         $circles = $this->currentUser->getCircles();
 
         $user = $this->_trimInvalidUsers(array($id));
@@ -1101,7 +1195,8 @@ class UserRepo extends Base {
 
     }
 
-    public function renameCustomCircle($id, $data) {
+    public function renameCustomCircle($id, $data)
+    {
         $circles = $this->currentUser->getCircles();
 
         foreach ($circles as $circle) {
@@ -1119,7 +1214,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function removeOldNotifications(UserDocument $user) {
+    public function removeOldNotifications(UserDocument $user)
+    {
         $notifications = $user->getNotification();
 
         if (count($notifications) > 0) {
@@ -1131,7 +1227,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function removeFriendFromMyCircle($id) {
+    public function removeFriendFromMyCircle($id)
+    {
         $circles = $this->currentUser->getCircles();
         $friendId = $this->_trimInvalidUsers($id);
 
@@ -1149,7 +1246,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function generateNotificationCount($user_id) {
+    public function generateNotificationCount($user_id)
+    {
 
         $user = $this->find($user_id);
         $messageRepo = $this->dm->getRepository('Document\Message');
@@ -1172,11 +1270,22 @@ class UserRepo extends Base {
         );
     }
 
-    public function updateUserPulse(\Document\User $user) {
+    public function updateUserPulse(\Document\User $user)
+    {
         if (!$user->isOnlineUser()) {
             $this->debug('Updating user pulse');
             $user->setLastPulse(new \DateTime());
             $this->updateObject($user);
         }
+    }
+
+    public function resetDuplicateDeviceId($deviceId)
+    {
+        $this->createQueryBuilder('Document\User')
+            ->update()
+            ->field('pushSettings.device_id')->equals($deviceId)
+            ->field('pushSettings.device_id')->set(null)
+            ->getQuery()->execute();
+        $this->dm->flush();
     }
 }

@@ -8,13 +8,13 @@ use Helper\Location;
 use Helper\Status;
 use Helper\ShareConstant;
 
+/**
+ * Manage user related settings
+ */
 class Settings extends Base {
 
     const ALLOWED_DISTANCE = 100; # Meters
 
-    /**
-     * Initialize the controller.
-     */
     public function init() {
         parent::init();
 
@@ -30,6 +30,8 @@ class Settings extends Base {
     /**
      * PUT /settings/share/location
      * GET /settings/share/location
+     *
+     * Store location sharing related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -60,6 +62,8 @@ class Settings extends Base {
      * PUT /settings/geo_fence
      * PUT /settings/geo_fence
      *
+     * Store geo fence related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function geoFence() {
@@ -87,6 +91,8 @@ class Settings extends Base {
     /**
      * PUT /settings/notifications
      * GET /settings/notifications
+     *
+     * Store notification related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -125,6 +131,8 @@ class Settings extends Base {
      * PUT /settings/platforms
      * GET /settings/platforms
      *
+     * Store platforms related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function platforms() {
@@ -148,6 +156,8 @@ class Settings extends Base {
     /**
      * PUT /settings/layers
      * GET /settings/layers
+     *
+     * Store layers related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -173,11 +183,14 @@ class Settings extends Base {
      * GET /settings/push
      * PUT /settings/push
      *
+     * Store push notification related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function push() {
         $data = $this->request->request->all();
         $settings = $this->user->getPushSettings();
+        $oldDeviceId = $settings['device_id'];
 
         if ($this->request->getMethod() == 'GET') {
             return $this->_generateResponse(array('result' => $settings));
@@ -189,6 +202,8 @@ class Settings extends Base {
                 $settings[$opt] = $data[$opt];
         }
 
+        $this->userRepository->resetDuplicateDeviceId($oldDeviceId);
+
         $this->user->setPushSettings($settings);
         return $this->persistAndReturn($settings);
     }
@@ -196,6 +211,8 @@ class Settings extends Base {
     /**
      * PUT /settings/account_settings
      * GET /settings/account_settings
+     *
+     * Store account settings related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -247,6 +264,8 @@ class Settings extends Base {
     /**
      * PUT /settings/sharing_preference_settings
      *
+     * Store location sharing related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sharingPreference() {
@@ -265,6 +284,8 @@ class Settings extends Base {
 
     /**
      * PUT /settings/sharing_privacy_mode
+     *
+     * Store location sharing privacy mode
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -308,6 +329,8 @@ class Settings extends Base {
     /**
      * PUT /current-location
      *
+     * Store user's current location
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function currentLocation() {
@@ -328,7 +351,6 @@ class Settings extends Base {
             $this->debug('Updating current location');
             $this->user->setCurrentLocation($newLocation);
             $this->_updateVisibility($this->user);
-            $this->persistOnly();
 
             // Update additional information
             try {
@@ -336,8 +358,9 @@ class Settings extends Base {
 
                 if ($this->hasMovedAway($oldLocation, $newLocation)) {
                     $this->debug('User has moved far away');
-                    $this->_sendProximityAlerts($this->user);
-                    $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
+                    $this->persistOnly();
+                    $this->_sendProximityAlerts($this->user, $oldLocation, $newLocation);
+//                    $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
                 } else {
                     $this->debug('User has not moved 100m away');
                 }
@@ -359,18 +382,24 @@ class Settings extends Base {
     }
 
     private function hasMovedAway($oldLocation, $newLocation) {
-        $distance = \Helper\Location::distance(
-            $oldLocation['lat'], $oldLocation['lng'],
-            $newLocation['lat'], $newLocation['lng']); # Meter
+        $this->debug('Old location - ' . json_encode($oldLocation));
+        $this->debug('New location - ' . json_encode($newLocation));
 
-        return $distance > self::ALLOWED_DISTANCE;
+        if ($oldLocation['lat'] == 0 && $oldLocation['lng'] == 0) {
+            return true;
+        } else {
+            $distance = \Helper\Location::distance(
+                $oldLocation['lat'], $oldLocation['lng'],
+                $newLocation['lat'], $newLocation['lng']); # Meter
+
+            $this->debug('Distance - ' . $distance);
+
+            return $distance > self::ALLOWED_DISTANCE;
+        }
     }
 
-    /**
+    /*
      * Update users visibility based on geo-fence settings and current location
-     *
-     * @param \Document\User $user
-     *
      */
     private function _updateVisibility(\Document\User $user) {
         $fnc = $user->getGeoFence();
@@ -384,11 +413,8 @@ class Settings extends Base {
 
     }
 
-    /**
+    /*
      * Update the address user currently at
-     *
-     * @param \Document\User $user
-     *
      */
     private function _updateLastSeenAt(\Document\User $user) {
         $this->debug('Requesting for address update');
@@ -412,7 +438,7 @@ class Settings extends Base {
         $this->dm->flush();
     }
 
-    private function _sendProximityAlerts(\Document\User $user) {
+    private function _sendProximityAlerts(\Document\User $user, array $oldLocation, array $newLocation) {
         $this->debug('Sending proximity alert');
         $this->addTask(\Helper\Constants::APN_PROXIMITY_ALERT,
                        json_encode(array(
@@ -420,6 +446,9 @@ class Settings extends Base {
                                         'user_id' => $user->getId(),
                                         'timestamp' => time(),
                                         'validity' => 7200, // 2 hours
+                                        'oldLoc' => $oldLocation,
+                                        'newLoc' => $newLocation,
+                                        'receiverId' => $user->getId()
                                    )));
     }
 
@@ -429,6 +458,8 @@ class Settings extends Base {
 
     /**
      * GET /settings/all
+     *
+     * Retrieve user's all preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

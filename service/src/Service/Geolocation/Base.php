@@ -2,6 +2,9 @@
 
 namespace Service\Geolocation;
 
+/**
+ * @ignore
+ */
 abstract class Base
 {
     protected $apiKey;

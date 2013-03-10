@@ -10,7 +10,7 @@ a_event:
 
 events_of_user:
   pattern:  /users/{user}/events
-  defaults: { _controller: Controller\Gathering::getByUser, type: event }
+  defaults: { _controller: Controller\Gathering::getPermittedEvents, type: event }
   requirements: { _method: GET }
 
 my_events:

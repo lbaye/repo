@@ -3,10 +3,8 @@
 namespace Service\Cache;
 
 /**
- * Find search results from cached google places record.
+ * API for storing, retrieving and invalidating cache data
  */
-
-
 class CacheAPI implements \Service\Cache\ICacheService
 {
 

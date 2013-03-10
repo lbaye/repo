@@ -7,10 +7,13 @@
 {% block content %}
 <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberpagerfanta/css/pagerfantaDefault.css') }}" type="text/css"
       media="all"/>
-<a href="{{ path('admin_user_logoutpage') }}">Logout</a> <br/>
+
 <a href="{{ path('manage_event_paging', {'page': 1}) }}"><< Back To Event List</a>
 <table class="user_list" align="right">
     <tr>
+        <td width="550" align="center">
+            <strong>Search Result: Event List</strong>
+        </td>
         <td>
             <form action="{{ path('event_search_result', {'page': 1}) }}" method="POST" id="search_keyword">
                 {{ form_rest(form) }}
@@ -25,7 +28,7 @@
             <th>Title</th>
             <th>Short Description</th>
             <th>Description</th>
-            <th class="actionHeader">Actions</th>
+            <th class="actionHeader">Action</th>
         </tr>
         </thead>
 

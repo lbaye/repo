@@ -11,6 +11,9 @@ use Helper\Email as EmailHelper;
 use Helper\Status;
 use \Helper\Dependencies as Dependencies;
 
+/**
+ * Manage user activities related logs
+ */
 class UserActivities extends Base {
 
     private $userActivitiesRepo;
@@ -30,21 +33,62 @@ class UserActivities extends Base {
         $this->userRepository->setConfig($this->config);
     }
 
+    /**
+     * GET /me/newsfeed
+     * GET /me/newsfeed.html
+     *
+     * Generate current user's activities as newsfeed for the current user.
+     *
+     * @param  $type JSON or HTML
+     * @param bool $networkFeed Set true if you want to include all friend's activities
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getActivities($type, $networkFeed = false) {
         $this->_ensureLoggedIn();
         return $this->getActivitiesByUser($this->user, $type, $networkFeed);
     }
 
+    /**
+     * GET /me/minifeed
+     * GET /me/minifeed.html
+     *
+     * Generate current user's activities as newsfeed for the current user. This version of newsfeed is compact
+     * and suitable for small view area.
+     *
+     * @param  $type JSON or HTML
+     * @param bool $networkFeed Set true if you want to include all friend's activities
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getMiniFeed($type, $networkFeed = false){
         $this->_ensureLoggedIn();
         return $this->getMiniFeedByUser($this->user, $type, $networkFeed);
     }
 
+    /**
+     * GET /{userId}/minifeed
+     * GET /{userId}/minifeed.html
+     *
+     * Generate specific user's activities as newsfeed for the current user. This version of newsfeed is compact
+     * and suitable for small view area.
+     *
+     * @param  $type JSON or HTML
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getMiniFeedByUserId($type) {
         $userId = $this->request->get('userId');
         return $this->getMiniFeedByUser($this->userRepository->find($userId), $type);
     }
 
+    /**
+     * GET /{userId}/newsfeed
+     * GET /{userId}/newsfeed.html
+     *
+     * Generate specific user's activities as newsfeed for the current user.
+     *
+     * @param  $type JSON or HTML
+     * @param bool $networkFeed Set true if you want to include all friend's activities
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getActivitiesByUserId($type, $networkFeed = false) {
         $userId = $this->request->get('userId');
         return $this->getActivitiesByUser($this->userRepository->find($userId), $type, $networkFeed);
@@ -119,6 +163,15 @@ class UserActivities extends Base {
         }
     }
 
+    /**
+     * PUT /newsfeed/{id}/like
+     *
+     * Like a specific newsfeed from the stream
+     *
+     * @param  $id
+     * @param string $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function likeById($id, $type = self::DEFAULT_CONTENT_TYPE) {
         $this->_ensureLoggedIn();
 
@@ -133,6 +186,38 @@ class UserActivities extends Base {
                 array('status' => 'false', 'message' => 'You have failed to like it'));
     }
 
+    /**
+     * PUT /newsfeed/{id}/unlike
+     *
+     * Unlike a specific newsfeed from the stream
+     *
+     * @param  $id
+     * @param string $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unlikeById($id, $type = self::DEFAULT_CONTENT_TYPE) {
+        $this->_ensureLoggedIn();
+
+        $activity = $this->userActivitiesRepo->find($id);
+        if (is_null($activity)) return $this->_generate404();
+
+        if ($this->userActivitiesRepo->unlike($activity, $this->user))
+            return $this->_generateResponse(
+                array('status' => 'true', 'message' => 'You have unliked it'));
+        else
+            return $this->_generateResponse(
+                array('status' => 'false', 'message' => 'You have failed to unlike it'));
+    }
+
+    /**
+     * GET /newsfeed/{id}/likes.html
+     *
+     * Retrieve list of likes from a specific newsfeed
+     *
+     * @param  $id
+     * @param string $type HTML or JSON format
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getLikesById($id, $type = self::DEFAULT_CONTENT_TYPE) {
         $this->_ensureLoggedIn();
 

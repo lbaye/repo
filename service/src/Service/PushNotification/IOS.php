@@ -2,6 +2,9 @@
 
 namespace Service\PushNotification;
 
+/**
+ * iOS compatible push notification implementation
+ */
 class IOS extends Notifier
 {
     protected $pemFile = null;
@@ -56,6 +59,7 @@ class IOS extends Notifier
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
                     'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
+                    'receiverId' => $data['receiverId'],
                 )
             )
         );

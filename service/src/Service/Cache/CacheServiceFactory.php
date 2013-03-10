@@ -2,6 +2,9 @@
 
 namespace Service\Cache;
 
+/**
+ * Factory for providing caching implementation
+ */
 abstract class CacheServiceFactory {
 
     const TYPE_MONGO = 'mongo';

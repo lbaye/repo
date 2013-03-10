@@ -2,6 +2,9 @@
 
 namespace Service\Location;
 
+/**
+ * @ignore
+ */
 abstract class Base
 {
     protected $facebookId;

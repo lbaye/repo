@@ -1,6 +1,9 @@
 <?php
 namespace Service\Serializer;
 
+/**
+ * JSON serializer implementation
+ */
 class JSONSerializable implements Serializable
 {
 

@@ -3,7 +3,7 @@
 {% block title "Social Maps - Email Send" %}
 
 {% block content %}
-<a href="{{ path('admin_user_logoutpage') }}">Logout</a> <br/>
+
 <a href="{{ path('adminuser_userlist_paginated', {'page': 1}) }}"><< Back To User List</a>
 <table class="table table-striped table-bordered table-condensed">
 
@@ -15,6 +15,7 @@
 
                 {{ form_rest(form) }}
                 <input type="submit" value="Send Email" class="btn btn-primary"/>
+                <button  onclick="history.go(-1)" class="btn btn-info" type="button" id="commonCancel" name="Cancel">Cancel</button>
             </form>
         </td>
     </tr>

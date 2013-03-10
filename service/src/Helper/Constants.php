@@ -1,6 +1,9 @@
 <?php
 namespace Helper;
 
+/**
+ * Helper for keeping commonly used constants
+ */
 class Constants {
     const CT_SEARCH = 'search';
     const TYPE_PLAN = 'plan';

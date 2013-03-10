@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing direction related data, this model is linked with "directions" collection
+ *
  * @ODM\Document(collection="directions",repositoryClass="Repository\DirectionRepo")
  */
 class Direction extends Content

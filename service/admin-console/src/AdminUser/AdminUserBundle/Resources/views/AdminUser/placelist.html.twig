@@ -5,9 +5,12 @@
 {% block content %}
 <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberpagerfanta/css/pagerfantaDefault.css') }}" type="text/css"
       media="all"/>
-<a href="{{ path('admin_user_logoutpage') }}">Logout</a>
+
 <table class="user_list" align="right">
     <tr>
+        <td width="550" align="center">
+            <strong>Place List</strong>
+        </td>
         <td>
             <form action="{{ path('place_search_result', {'page': 1}) }}" method="POST" id="search_keyword">
                 {{ form_rest(form) }}
@@ -26,7 +29,7 @@
         <th>Description</th>
         <th>Location</th>
         <th>Popular</th>
-        <th class="actionHeader">Actions</th>
+        <th class="actionHeader">Action</th>
     </tr>
     </thead>
 
@@ -35,7 +38,7 @@
     <tbody>
     {% for place in entities %}
     <tr>
-        <td><a href="{{ path('admin_user_updatepage', {'id': place.id}) }}">{{ place.id }}</a></td>
+        <td><a href="{{ path('manage_place_edit', {'id': place.id}) }}">{{ place.id }}</a></td>
         <td>{{ place.category }}</td>
         <td>{{ place.title }}</td>
         <td>{{ place.description }}</td>

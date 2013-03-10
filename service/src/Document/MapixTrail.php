@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing mapix related data. this model is linked with "mapixTrails" collection
+ *
  * @ODM\Document(collection="mapixTrails",repositoryClass="Repository\TrailRepo")
  */
 class MapixTrail extends Trail

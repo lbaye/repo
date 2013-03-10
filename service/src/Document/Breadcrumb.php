@@ -9,6 +9,8 @@ use Document\Position;
 
 
 /**
+ * Domain model for storing breadcrumb related data, this model is connected with "breadcrumbs" collection
+ * @ignore
  * @ODM\Document(collection="breadcrumbs",repositoryClass="Repository\BreadcrumbRepo")
  */
 class Breadcrumb extends Content

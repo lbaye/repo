@@ -9,6 +9,9 @@ use Document\ExternalUser as ExtUser;
 use Service\Location\Facebook as FB;
 use \Doctrine\ODM\MongoDB\DocumentManager as DM;
 
+/**
+ * Background job for retrieving facebook friends from a facebook connected user.
+ */
 class FetchFacebookLocation extends Base {
 
     /**

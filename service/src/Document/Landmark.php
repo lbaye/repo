@@ -9,11 +9,14 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Base abstract class for storing location related data.
+ *
  * @abstract
  * @ODM\Document(collection="places",repositoryClass="Repository\Place")
  * @ODM\InheritanceType("SINGLE_COLLECTION")
  * @ODM\DiscriminatorField(fieldName="type")
  * @ODM\DiscriminatorMap({"place"="Document\Place", "geotag"="Document\Geotag"})
+ * @ODM\DiscriminatorMap({"custom_place"="Document\CustomPlace", "geotag"="Document\Geotag"})
  */
 class Landmark extends Content implements ParticipativeDoc
 {

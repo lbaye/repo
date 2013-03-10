@@ -18,11 +18,6 @@ user_by_email:
   defaults: { _controller: Controller\User::getByEmail }
   requirements: { _method: GET }
 
-new_user:
-  pattern:  /users
-  defaults: { _controller: Controller\User::create }
-  requirements: { _method: POST }
-
 edit_user:
   pattern:  /users/{id}
   defaults: { _controller: Controller\User::update }

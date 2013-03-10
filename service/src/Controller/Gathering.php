@@ -9,6 +9,9 @@ use Repository\GatheringRepo as gatheringRepository;
 use Helper\Status;
 use Helper\ShareConstant;
 
+/**
+ * Base class for 'meetup', 'event' and 'place' resources.
+ */
 class Gathering extends Base
 {
 
@@ -21,9 +24,6 @@ class Gathering extends Base
      */
     private $gatheringRepository;
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         parent::init();
@@ -41,6 +41,8 @@ class Gathering extends Base
      * GET /meetups
      * GET /events
      * GET /plans
+     *
+     * Retrieve all objects
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -73,6 +75,8 @@ class Gathering extends Base
     /**
      * GET /meetups
      *
+     * Retrieve all active gatherings
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -96,6 +100,8 @@ class Gathering extends Base
      * GET /meetups/{id}
      * GET /events/{id}
      * GET /plans/{id}
+     *
+     * Retrieve gathering by the specific id
      *
      * @param $id
      * @param $type
@@ -145,6 +151,8 @@ class Gathering extends Base
      * GET /me/meetups
      * GET /me/events
      *
+     * Retrieve gatherings from the current user
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -154,7 +162,9 @@ class Gathering extends Base
     }
 
     /**
-     * GET /user/{userId}/places
+     * GET /user/{userId}/meetups
+     *
+     * Retrieve gatherings by specific user
      *
      * @param $user  String|Object
      * @param $type
@@ -197,6 +207,8 @@ class Gathering extends Base
     /**
      * POST /events
      * POST /meetups
+     *
+     * Create new gathering
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -271,8 +283,8 @@ class Gathering extends Base
             'objectType' => $pushMessageType,
         );
 
-        $this->debug(sprintf('Sending push notification with - %s', json_encode($notificationData)));
-        $this->debug(sprintf('Sending push notification: %s', $pushNotificationText));
+        $this->debug(sprintf('Sending push 111 notification with - %s', json_encode($notificationData)));
+        $this->debug(sprintf('Sending push 111 notification: %s', $pushNotificationText));
 
         # Send in app push notification
         \Helper\Notification::send($notificationData, $eventGuests);
@@ -293,7 +305,10 @@ class Gathering extends Base
     }
 
     /**
-     * PUT /places/{id}
+     * PUT /events/{id}
+     * PUT /meetups/{id}
+     *
+     * Update an existing gathering object
      *
      * @param $id
      *
@@ -393,7 +408,10 @@ class Gathering extends Base
     }
 
     /**
-     * DELETE /places/{id}
+     * DELETE /events/{id}
+     * DELETE /meetups/{id}
+     *
+     * Delete an existing gathering object
      *
      * @param $id
      *
@@ -439,6 +457,8 @@ class Gathering extends Base
      * PUT /events/{id}/rsvp
      * PUT /meetups/{id}/rsvp
      *
+     * Store user's RSVP for the specific gathering
+     *
      * @param $id
      * @param $type
      *
@@ -473,6 +493,8 @@ class Gathering extends Base
      * POST /events/{id}/share
      * POST /meetups/{id}/share
      * POST /plans/{id}/share
+     *
+     * Share gathering with the specific friends
      *
      * @param $id
      * @param $type
@@ -549,6 +571,8 @@ class Gathering extends Base
     /**
      * GET /meetups/invited
      *
+     * Retrieve list of invited members from the specific gathering
+     *
      * @param $type
      * @internal param $response
      * @return \Symfony\Component\HttpFoundation\Response
@@ -594,6 +618,8 @@ class Gathering extends Base
 
     /**
      * PUT /events/{id}/guests/
+     *
+     * Add new guest to the gathering
      *
      * @param $id
      *
@@ -642,6 +668,32 @@ class Gathering extends Base
         }
 
         return $this->_generateResponse($data);
+    }
+
+    /**
+     * GET //users/{user}/events
+     *
+     * Retrieve all active gatherings
+     * @param $user  String|Object
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getPermittedEvents($user, $type)
+    {
+        $getUserObjs = $this->userRepository->getByUserId($user);
+
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 20);
+        $this->_initRepository($type);
+        $gatheringObjs = $this->gatheringRepository->getAllPermittedEvent($limit, $start);
+
+        if (!empty($gatheringObjs)) {
+            $permittedDocs = $this->_filterByPermissionForBothUsers($gatheringObjs,$getUserObjs);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+        } else {
+            return $this->_generateResponse(array('message' => 'No active Events found'), Status::NO_CONTENT);
+        }
     }
 }
 

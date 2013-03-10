@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing message related data, this model is linked to "messages" collection
+ *
  * @ODM\Document(collection="messages",repositoryClass="Repository\MessageRepo")
  */
 class Message
@@ -29,6 +31,9 @@ class Message
 
     /** @ODM\ReferenceOne(targetDocument="User", simple=true) */
     protected $sender;
+
+    /** @ODM\ReferenceOne(targetDocument="User", simple=true) */
+    protected $lastSender;
 
     /** @ODM\ReferenceOne(targetDocument="Message", simple=true) */
     protected $thread;
@@ -66,9 +71,24 @@ class Message
         'lat' => 0
     );
 
+    /** @ODM\String */
+    protected $lastMessage;
+
+    private $runValidation = true;
+
+    public function setRunValidation($state) {
+        $this->runValidation = $state;
+    }
+
+    public function hasContent() {
+        return !empty($this->content);
+    }
 
     public function isValid()
     {
+        if (!$this->runValidation)
+            return true;
+
         try {
             if (empty($this->thread)) {
                 Validator::create()->notEmpty()->assert($this->getRecipients());
@@ -133,6 +153,16 @@ class Message
         return $this->sender;
     }
 
+    public function setLastSender($lastSender)
+    {
+        $this->lastSender = $lastSender;
+    }
+
+    public function getLastSender()
+    {
+        return $this->lastSender;
+    }
+
     public function setSubject($subject)
     {
         $this->subject = $subject;
@@ -188,7 +218,11 @@ class Message
         $items = $this->buildSerializableFields();
 
         # Add sender information
-        $items['sender'] = $this->getSender()->toArray(false);
+        if ($this->getSender() != null)
+            $items['sender'] = $this->getSender()->toArray(false);
+        # Add last sender information
+        if ($this->getLastSender() != null)
+            $items['lastSender'] = $this->getLastSender()->toArray(false);
 
         # Add recipients
         $items['recipients'] = $this->toArrayOfUsers($this->getRecipients());
@@ -254,7 +288,7 @@ class Message
     {
         $serializableFields = array(
             'id', 'subject', 'content', 'metaType', 'metaContent', 'createDate',
-            'updateDate', 'status', 'readBy'
+            'updateDate', 'status', 'readBy', 'lastMessage'
         );
 
         $result = array();
@@ -317,6 +351,14 @@ class Message
     public function getMetaType()
     {
         return $this->metaType;
+    }
+
+    public function setLastMessage($lastMessage) {
+        $this->lastMessage = $lastMessage;
+    }
+
+    public function getLastMessage() {
+        return $this->lastMessage;
     }
 
 }

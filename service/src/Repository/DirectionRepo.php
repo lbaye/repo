@@ -7,6 +7,9 @@ use Document\Direction as DirectionDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
+/**
+ * Data access functionality for direction model
+ */
 class DirectionRepo extends Base
 {
     public function update($data,$id)

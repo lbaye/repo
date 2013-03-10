@@ -44,6 +44,9 @@ class AdminUserController extends Controller
         $form = $this->get('form.factory')->create(new LoginType());
 
         $request = $this->get('request');
+        if ($this->get('session')->get('user')) {
+            return $this->redirect('userlist/1');
+        }
 
         if ('POST' == $request->getMethod()) {
             $form->bindRequest($request);
@@ -142,7 +145,7 @@ class AdminUserController extends Controller
                 $dm->persist($entity);
                 $dm->flush();
 
-                return $this->redirect('../userlist');
+                return $this->redirect('../userlist/1');
             }
 
 //        $dm->refresh($user); // Add this line
@@ -220,7 +223,7 @@ class AdminUserController extends Controller
                     $dm->flush();
 
                     $this->get('session')->setFlash('notice', 'User added successfully!');
-                    return $this->redirect('../userlist');
+                    return $this->redirect('../userlist/1');
                 } else {
                     $this->get('session')->setFlash('notice', 'Already registered With this email!');
                 }
@@ -306,14 +309,20 @@ class AdminUserController extends Controller
             if (!empty($postData['message'])) {
                 $messageData = $postData['message'];
             }
-            $message = \Swift_Message::newInstance()
+            $transport = \Swift_SmtpTransport::newInstance('smtp.googlemail.com', 465, "ssl")
+                ->setUsername('islam.rafiqul@genweb2.com')
+                ->setPassword('*rafiq123');
+            $mailer = \Swift_Mailer::newInstance($transport);
+            $message = \Swift_Message::newInstance($subject)
                 ->setSubject($subject)
                 ->setFrom($this->container->getParameter('sender_email'))
                 ->setTo($entity->getEmail())
                 ->setBody($this->renderView('AdminUserBundle:AdminUser:user.email.txt.twig',
                 array('entity' => $entity, 'postData' => $messageData)));
-            $this->get('mailer')->send($message);
-            $this->get('session')->setFlash('notice', 'Message sent successfully!');
+            $sent = $mailer->send($message);
+            if ($sent) {
+                $this->get('session')->setFlash('notice', 'Message sent successfully!');
+            }
         }
         return $this->render('AdminUserBundle:AdminUser:email.html.twig', array('form' => $form->createView()));
     }
@@ -369,6 +378,11 @@ class AdminUserController extends Controller
                 $form->bindRequest($request);
                 $postData = $form->getData();
                 if ($form->isValid()) {
+
+                    if (empty($postData['title']) || empty($postData['icon']) || empty($postData['photo']) || empty($postData['lat']) || empty($postData['lng']) || empty($postData['address'])) {
+                        $this->get('session')->setFlash('notice', 'Required field can not be empty!');
+                        return $this->redirect('customplacelist/1');
+                    }
                     $postData['createDate'] = date('Y-m-d h:i:s a', time());
                     $postData['owner'] = $this->getUser();
                     $newLocation['lat'] = floatval($postData['lat']);
@@ -382,16 +396,12 @@ class AdminUserController extends Controller
                     $dm->persist($this->document);
                     $dm->flush();
 
-                    if (!empty($postData['icon'])) {
-                        $placeIcon = $postData['icon'];
-                    }
-
-                    if (!empty($postData['photo'])) {
-                        $this->savePlacePhoto($this->document->getId(), $postData['photo'], $postData['createDate'], $placeIcon);
+                    if (!empty($postData['photo']) && !empty($postData['icon'])) {
+                        $this->savePlacePhoto($this->document->getId(), $postData['photo'], $postData['createDate'], $postData['icon']);
                     }
 
                     $this->get('session')->setFlash('notice', 'Place added successfully!');
-                    return $this->redirect('placelist');
+                    return $this->redirect('customplacelist/1');
                 }
 
             }
@@ -416,35 +426,74 @@ class AdminUserController extends Controller
             $request = $this->get('request');
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
             $entity = $dm->getRepository('AdminUserBundle:Place')->findOneBy(array('_id' => $id));
-            $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\UpdatePlaceType(), $entity);
+            if (!empty($entity)) {
+                $location = $entity->getLocation();
+                if (!empty($location['lat']))
+                    $entity->setLat($location['lat']);
+                if (!empty($location['lng']))
+                    $entity->setLng($location['lng']);
+                if (!empty($location['address']))
+                    $entity->setAddress($location['address']);
+            }
+            $prevPhoto = $entity->getPhoto();
+            $prevIcon = $entity->getIcon();
+
+            $form = $this->get('form.factory')
+                ->create(new \AdminUser\AdminUserBundle\Form\UpdatePlaceType(), $entity);
 
             if ($request->getMethod() === 'POST') {
                 $form->bindRequest($request);
                 $postData = $form->getData();
 
                 if ($form->isValid()) {
+                    $title = $postData->getTitle();
+                    $lat = $postData->getLat();
+                    $lng = $postData->getLng();
+                    $address = $postData->getAddress();
+
+                    if (empty($title) || empty($lat) || empty($lng) || empty($address)) {
+                        $this->get('session')->setFlash('notice', 'Required field can not be empty!');
+                        return $this->redirect('customplacelist/1');
+                    }
 
                     $newLocation['lat'] = floatval($postData->getLat());
                     $newLocation['lng'] = floatval($postData->getLng());
                     $newLocation['address'] = $postData->getAddress();
                     $postData->setLocation($newLocation);
+                    $isUploadedPhoto = 1;
+                    $isUploadedIcon = 1;
+                    if (is_null($postData->getPhoto())) {
+                        $postData->setPhoto($prevPhoto);
+                        $isUploadedPhoto = null;
+                    }
+
+                    if (is_null($postData->getIcon())) {
+                        $postData->setIcon($prevIcon);
+                        $isUploadedIcon = null;
+                    }
 
                     $dm->persist($postData);
                     $dm->flush();
 
-                    $existPlaceIcon = $postData->getIcon();
-                    $existPlacePhoto = $postData->getPhoto();
+                    if ($isUploadedPhoto || $isUploadedIcon) {
 
-                    if (!empty($existPlaceIcon)) {
-                        $placeIcon = $postData->getIcon();
-                    }
+                        if ($isUploadedPhoto) {
+                            $placePhoto = $postData->getPhoto();
+                        } else {
+                            $placePhoto = null;
+                        }
 
-                    if (!empty($existPlacePhoto)) {
-                        $this->updatePlacePhoto($id, $postData->getPhoto(), date('Y-m-d h:i:s a', time()), $placeIcon);
+                        if ($isUploadedIcon) {
+                            $placeIcon = $postData->getIcon();
+                        } else {
+                            $placeIcon = null;
+                        }
+                        $this->updatePlacePhoto($id, $placePhoto, date('Y-m-d h:i:s a', time()), $placeIcon);
+
                     }
 
                     $this->get('session')->setFlash('notice', 'Place updated successfully!');
-                    return $this->redirect('placelist');
+                    return $this->redirect('../customplacelist/1');
                 }
 
             }
@@ -481,16 +530,19 @@ class AdminUserController extends Controller
 
         $dirPath = "/images/place-photo/";
         $iconDirPath = "/images/place-icon/";
-        $rootDir = __DIR__ . '/../../../../../web';
-        $destination = $rootDir . "/" . $dirPath;
-        $iconDestination = $rootDir . "/" . $iconDirPath;
+        $twig = $this->container->get('twig');
+        $globals = $twig->getGlobals();
+
+        $rootDir = $globals['image_real_path'];
+        $destination = $rootDir . $dirPath;
+        $iconDestination = $rootDir . $iconDirPath;
 
         $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
 
         if ($photoUrl !== false) {
             $place->setPhoto($photoUrl);
         } else {
-            if (!file_exists($rootDir . "/" . $dirPath)) {
+            if (!file_exists($rootDir . $dirPath)) {
                 mkdir($destination, 0777, true);
             }
 
@@ -498,7 +550,8 @@ class AdminUserController extends Controller
                 $ext = explode('.', $_FILES['addplace']['name']['photo']);
                 $ext = end($ext);
                 $filePath = $destination . $place->getId() . "." . $ext;
-                move_uploaded_file($_FILES['addplace']['tmp_name']['photo'], $filePath);
+//                move_uploaded_file($_FILES['addplace']['tmp_name']['photo'], $filePath);
+                $this->imageResize(320, 130, $_FILES['addplace']['tmp_name']['photo'], $filePath);
             }
 
             $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -509,7 +562,7 @@ class AdminUserController extends Controller
             if ($iconUrl !== false) {
                 $place->setIcon($iconUrl);
             } else {
-                if (!file_exists($rootDir . "/" . $iconDirPath)) {
+                if (!file_exists($rootDir . $iconDirPath)) {
                     mkdir($iconDestination, 0777, true);
                 }
 
@@ -517,7 +570,8 @@ class AdminUserController extends Controller
                     $ext = explode('.', $_FILES['addplace']['name']['icon']);
                     $ext = end($ext);
                     $filePath = $iconDestination . $place->getId() . "." . $ext;
-                    move_uploaded_file($_FILES['addplace']['tmp_name']['icon'], $filePath);
+//                    move_uploaded_file($_FILES['addplace']['tmp_name']['icon'], $filePath);
+                    $this->imageResize(71, 71, $_FILES['addplace']['tmp_name']['icon'], $filePath);
                 }
 
                 $place->setIcon($iconDirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -552,27 +606,33 @@ class AdminUserController extends Controller
 
         $dirPath = "/images/place-photo/";
         $iconDirPath = "/images/place-icon/";
-        $rootDir = __DIR__ . '/../../../../../web';
-        $destination = $rootDir . "/" . $dirPath;
-        $iconDestination = $rootDir . "/" . $iconDirPath;
+        $twig = $this->container->get('twig');
+        $globals = $twig->getGlobals();
 
-        $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
+        $rootDir = $globals['image_real_path'];
+        $destination = $rootDir . $dirPath;
+        $iconDestination = $rootDir . $iconDirPath;
 
-        if ($photoUrl !== false) {
-            $place->setPhoto($photoUrl);
-        } else {
-            if (!file_exists($rootDir . "/" . $dirPath)) {
-                mkdir($destination, 0777, true);
+        if (!is_null($placePhoto)) {
+            $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
+
+            if ($photoUrl !== false) {
+                $place->setPhoto($photoUrl);
+            } else {
+                if (!file_exists($rootDir . $dirPath)) {
+                    mkdir($destination, 0777, true);
+                }
+
+                if (in_array($_FILES['updateplace']['type']['photo'], $valid_mime_types)) {
+                    $ext = explode('.', $_FILES['updateplace']['name']['photo']);
+                    $ext = end($ext);
+                    $filePath = $destination . $place->getId() . "." . $ext;
+//                    move_uploaded_file($_FILES['updateplace']['tmp_name']['photo'], $filePath);
+                    $this->imageResize(320, 130, $_FILES['updateplace']['tmp_name']['photo'], $filePath);
+                }
+
+                $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
             }
-
-            if (in_array($_FILES['updateplace']['type']['photo'], $valid_mime_types)) {
-                $ext = explode('.', $_FILES['updateplace']['name']['photo']);
-                $ext = end($ext);
-                $filePath = $destination . $place->getId() . "." . $ext;
-                move_uploaded_file($_FILES['updateplace']['tmp_name']['photo'], $filePath);
-            }
-
-            $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
         }
         if (!is_null($placeIcon)) {
             $iconUrl = filter_var($placeIcon, FILTER_VALIDATE_URL);
@@ -580,7 +640,7 @@ class AdminUserController extends Controller
             if ($iconUrl !== false) {
                 $place->setIcon($iconUrl);
             } else {
-                if (!file_exists($rootDir . "/" . $iconDirPath)) {
+                if (!file_exists($rootDir . $iconDirPath)) {
                     mkdir($iconDestination, 0777, true);
                 }
 
@@ -588,7 +648,8 @@ class AdminUserController extends Controller
                     $ext = explode('.', $_FILES['updateplace']['name']['icon']);
                     $ext = end($ext);
                     $filePath = $iconDestination . $place->getId() . "." . $ext;
-                    move_uploaded_file($_FILES['updateplace']['tmp_name']['icon'], $filePath);
+//                    move_uploaded_file($_FILES['updateplace']['tmp_name']['icon'], $filePath);
+                    $this->imageResize(71, 71, $_FILES['updateplace']['tmp_name']['icon'], $filePath);
                 }
 
                 $place->setIcon($iconDirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -953,5 +1014,130 @@ class AdminUserController extends Controller
                 'pager' => $pagerfanta,
             ));
         }
+    }
+
+    /**
+     * @Route("/customplacelist/1", defaults={"page" = 1}, name="manage_custom_place")
+     * @Route("/customplacelist/{page}", name="manage_custom_place")
+     * @param $page
+     * @Template()
+     */
+    public function customPlaceListAction($page = 1)
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
+
+        if ($this->get('session')->get('user')) {
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+            $qb = $dm->createQueryBuilder('AdminUserBundle:Place');
+            $qb->addOr($qb->expr()->field('type')->equals('custom_place'));
+
+            $adapter = new DoctrineODMMongoDBAdapter($qb);
+
+            $pagerfanta = new Pagerfanta($adapter);
+            $pagerfanta->setMaxPerPage(20);
+
+            $pagerfanta->setCurrentPage($page);
+            $entities = $pagerfanta->getCurrentPageResults();
+
+            return $this->render('AdminUserBundle:AdminUser:customplacelist.html.twig', array(
+                'form' => $form->createView(),
+                'entities' => $entities,
+                'pager' => $pagerfanta,
+            ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
+        }
+    }
+
+    /**
+     * @Route("/customplacesearchresult/1", defaults={"page" = 1}, name="manage_custom_place_paginated")
+     * @Route("/customplacesearchresult/{page}", name="manage_custom_place_paginated")
+     * @param $page
+     * @Template()
+     */
+    public function searchCustomPlaceAction($page = 1)
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
+
+        if ($this->get('session')->get('user')) {
+
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+            if ('POST' == $request->getMethod()) {
+                $form->bindRequest($request);
+                $postData = $form->getData();
+                if (!empty($postData['keyword'])) {
+                    $postData['keyword'] = strtolower($postData['keyword']);
+                }
+                $filterBy = $postData['keyword'];
+                $this->get('session')->set('filterBy', $filterBy);
+
+            } else {
+                $filterBy = $this->get('session')->get('filterBy');
+            }
+            $qb = $dm->createQueryBuilder('AdminUserBundle:Place');
+            $qb->addOr($qb->expr()->field('type')->equals('custom_place'));
+            $qb->addOr($qb->expr()->field('category')->equals(new \MongoRegex("/{$filterBy}/i")))
+                ->addOr($qb->expr()->field('title')->equals(new \MongoRegex("/{$filterBy}/i")))
+                ->addOr($qb->expr()->field('description')->equals(new \MongoRegex("/{$filterBy}/i")));
+            $adapter = new DoctrineODMMongoDBAdapter($qb);
+
+            $pagerfanta = new Pagerfanta($adapter);
+            $pagerfanta->setMaxPerPage(20);
+
+            $pagerfanta->setCurrentPage($page);
+            $entities = $pagerfanta->getCurrentPageResults();
+            return $this->render('AdminUserBundle:AdminUser:customplacesearchresult.html.twig', array(
+                'form' => $form->createView(),
+                'entities' => $entities,
+                'pager' => $pagerfanta,
+            ));
+        }
+    }
+
+    public function imageResize($maxWidth, $maxHeight, $image, $filePath, $original = null)
+    {
+        $image_info = getimagesize($image);
+        $image_type = $image_info[2];
+        if ($image_type == IMAGETYPE_JPEG) {
+
+            $image = imagecreatefromjpeg($image);
+        } elseif ($image_type == IMAGETYPE_GIF) {
+
+            $image = imagecreatefromgif($image);
+        } elseif ($image_type == IMAGETYPE_PNG) {
+
+            $image = imagecreatefrompng($image);
+        }
+        // Get current dimensions
+        $oldWidth = imagesx($image);
+        $oldHeight = imagesy($image);
+
+        // Calculate the scaling we need to do to fit the image inside our frame
+        $scale = min($maxWidth / $oldWidth, $maxHeight / $oldHeight);
+
+        // Get the new dimensions
+        $newWidth = ceil($scale * $oldWidth);
+        $newHeight = ceil($scale * $oldHeight);
+
+        // Create new empty image
+        $new = imagecreatetruecolor($newWidth, $newHeight);
+
+        // Resize old image into new
+        imagecopyresampled($new, $image,
+            0, 0, 0, 0,
+            $newWidth, $newHeight, $oldWidth, $oldHeight);
+
+        // Catch the imagedata
+        imagejpeg($new, $filePath, 100);
+
+        // Destroy resources
+        if ($original == 1)
+            imagedestroy($image);
+        imagedestroy($new);
     }
 }

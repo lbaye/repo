@@ -65,6 +65,7 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
     db.getCollection("users").ensureIndex({"currentLocation":"2d"});
     db.getCollection("external_locations").ensureIndex({"coords":"2d"});
     db.getCollection("external_locations").ensureIndex({"refId":1, "source":1},{"unique": true});
+    db.users.ensureIndex({facebookId: 1},{unique: true, sparse: true, dropDups: true});
     ```
 9. Additional requirements:
 

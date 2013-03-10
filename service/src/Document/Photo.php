@@ -8,6 +8,8 @@ use Respect\Validation\Validator;
 use Document\User as User;
 
 /**
+ * Domain model for storing photo related data. This model is linked with "photos" collection
+ *
  * @ODM\Document(collection="photos",repositoryClass="Repository\PhotosRepo")
  */
 class Photo extends Content implements ParticipativeDoc {
@@ -124,10 +126,14 @@ class Photo extends Content implements ParticipativeDoc {
             $hash['location'] = $location->toArray();
 
         $owner = $this->getOwner();
+        $username = $owner->getUsername();
+        if (empty($username)) $username = null;
+
         $hash['owner'] = array(
             'id' => $owner->getId(),
             'firstName' => $owner->getFirstName(),
             'lastName' => $owner->getLastName(),
+            'username' => $username,
             'avatar' => \Helper\Url::buildAvatarUrl(array('avatar' => $owner->getAvatar()))
         );
 

@@ -9,7 +9,9 @@ use Document\Direction as DirectionDocument;
 
 use Helper\Status;
 
-
+/**
+ * Manage user direction sharing related resources
+ */
 class Direction extends Base
 {
     /**
@@ -18,9 +20,6 @@ class Direction extends Base
 
     private $directionRepository;
 
-     /**
-     * Initialize the controller.
-     */
     public function init()
     {
         parent::init();
@@ -38,9 +37,10 @@ class Direction extends Base
 
      * GET /direction/share/
      *
+     * Share direction with the selected friends
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function index()
     {
         $this->_initRepository('direction');
@@ -69,7 +69,7 @@ class Direction extends Base
 
     private function _createPushMessage()
     {
-        return $this->user->getFirstName() . " has shared a direction with you.";
+        return $this->user->getUsernameOrFirstName() . " has shared a direction with you.";
     }
 
     private function _initRepository($type)

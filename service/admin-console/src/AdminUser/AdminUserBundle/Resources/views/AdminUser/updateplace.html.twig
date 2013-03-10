@@ -9,11 +9,21 @@
         <td>
             <form action="" method="POST" id="update_form" enctype="multipart/form-data">
                 <h2 class="form-signin-heading">Update Place</h2>
+                {% if entity.photo | length > 0 %}
+
+                Place Photo: <img src="{{ image_path }}{{ entity.photo }}" class="img-polaroid" >
+                {% endif %}
+
+                {% if entity.icon | length > 0 %}
+                Place Icon: <img src="{{ image_path }}{{ entity.icon }}" class="img-polaroid"  >
+                {% endif %}
+
                 {{ form_errors(form) }}
 
                 {{ form_rest(form) }}
                 <input type="button" value="Get Address" id="get_location" class="btn btn-primary"/>
-                <input type="submit" value="Add Place" class="btn btn-primary"/>
+                <input type="submit" value="Update Place" class="btn btn-primary"/>
+                <button data-href="{{ path('manage_place_paginated', {'page': 1}) }}" onclick="history.go(-1)" class="btn btn-info" type="button" id="commonCancel" name="Cancel">Cancel</button>
             </form>
         </td>
     </tr>

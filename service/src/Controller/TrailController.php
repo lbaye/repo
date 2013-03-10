@@ -8,7 +8,7 @@ use Repository\TrailRepo;
 
 
 /**
- *
+ * Manage breadcrumbs and mapix related resources
  */
 class TrailController extends \Controller\Base
 {
@@ -18,9 +18,6 @@ class TrailController extends \Controller\Base
     private $trailRepository;
 
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         $this->response = new Response();
@@ -34,9 +31,6 @@ class TrailController extends \Controller\Base
         $this->_ensureLoggedIn();
     }
 
-    /**
-     * @param $type
-     */
     private function _initRepository($type)
     {
         if ($type == 'mapix') {
@@ -48,6 +42,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * GET /mapixTrails/{id}
+     * GET /breadcrumbs/{id}
+     *
+     * Retrieve trail by a specific id
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -70,6 +69,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * POST /breadcrumbs
+     * POST /mapixTrails
+     *
+     * Create new trail
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -95,6 +99,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * PUT /mapixTrails
+     * PUT /breadcrumbs
+     *
+     * Update an existing trail
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -120,6 +129,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * DELETE /mapixTrails/{id}
+     * DELETE /breadcrumbs/{id}
+     *
+     * Delete an existing trail
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -157,6 +171,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * GET /mapixTrails
+     * GET /breadcrumbs
+     *
+     * Retrieve all breadcrumbs
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -181,6 +200,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * GET /mapixTrails
+     * GET /breadcrumbs
+     *
+     * Retrieve all trails by current user
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -201,6 +225,11 @@ class TrailController extends \Controller\Base
     }
 
     /**
+     * GET /mapixTrails
+     * GET /breadcrumbs
+     *
+     * Retrieve all trails by the specific user
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -215,6 +244,11 @@ class TrailController extends \Controller\Base
 
 
     /**
+     * POST /mapixTrails/share/{id}
+     * POST /breadcrumbs/share/{id}
+     *
+     * Share a specific trail with friends and circles
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -242,6 +276,11 @@ class TrailController extends \Controller\Base
     }
 
     /**
+     * PUT /breadcrumbs/marker/{id}
+     * PUT /mapixTrails/marker/{id}
+     *
+     * Add new marker to an existing trail
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -266,6 +305,11 @@ class TrailController extends \Controller\Base
     }
 
     /**
+     * DELETE /breadcrumbs/marker/delete/{id}
+     * DELETE /mapixTrails/marker/delete/{id}
+     *
+     * Delete an existing marker from a specific trail
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -289,6 +333,11 @@ class TrailController extends \Controller\Base
     }
 
     /**
+     * PUT /breadcrumbs/photo/{id}
+     * PUT /mapixTrails/photo/{id}
+     *
+     * Add new photo to a specific marker
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -311,6 +360,11 @@ class TrailController extends \Controller\Base
     }
 
     /**
+     * PUT /breadcrumbs/photo/delete/{id}
+     * PUT /mapixTrails/photo/delete/{id}
+     *
+     * Delete a specific photo from a specific marker
+     *
      * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response

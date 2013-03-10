@@ -13,30 +13,6 @@
       .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl)
         %ul
           - $userProfileLink =  "self::profile:" . $contextUser->getId()
-          %li
-            .activity.tiny
-              .row
-                .avatar
-                  - $avatarPath = $contextUser->getAvatar()
-                  - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-
-                  %a(href= $userProfileLink)
-                    %img.lazy(src=$avatarPath)
-                .name
-                  %div
-                    .left
-                      %a(href= $userProfileLink)
-                        %h4
-                          = $contextUser->getName()
-                      %span
-                        joined
-                        %strong SocialMaps
-                        on
-                      - $date = (array)$contextUser->getCreateDate()
-                      = date('F Y',strtotime($date['date']))
-                      .
-
-            %div.clearfix
 
           - foreach($activities as $activity)
             - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
@@ -63,19 +39,20 @@
                             %h4
                               = $photo->getOwner()->getName()
                           %span
-                            has uploaded a new picture.
+                            uploaded a new picture.
                     .time
                       = $activity->toHumanizeDate()
 
 
-                  .row(style='height:100px; margin-top: 5px;')
+                  .row(style='margin-top: 5px;')
 
                     - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
                     .image(style=$imagePathCss)
                       - $photoFullPath = $baseUrl . $photo->getUriMedium();
+                      -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
                       - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
                       %a(href=$photoPath)
-                        %img.lazy(src=$photoFullPath)
+                        %img.lazy(src=$photoFullPath style='height:auto;')
                     .icon.icon_zoom
 
                   .row
@@ -115,27 +92,30 @@
                       - if ($activity->getCreatedAt() != null)
                         = $activity->toHumanizeDate()
 
-                    - if ($activity->getOwner()->getId() == $currentUser->getId())
-                      - if ($activity->getObjectType() === 'geotag')
-                        - $geotag = $geotagRepo->find($activity->getObjectId())
-                        - $geoLocation = $geotag->getLocation()->toArray()
-                        - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+                    - if ($activity->getObjectType() === 'geotag')
+                      - $geotag = $geotagRepo->find($activity->getObjectId())
+                      - $geoLocation = $geotag->getLocation()->toArray()
+                      - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
-                        .comment
-                          has tagged "
-                          %a(href= $geotagLink)
-                            %strong= stripcslashes($activity->getTitle())
-                          "
-                          at
-                          %small= $geotag->getLocation()->getAddress()
+                      .comment
+                        was geo-tagged
+                        at
+                        %small= $geotag->getLocation()->getAddress()
+                        = ' - '
+                        %strong= stripcslashes($activity->getTitle())
+                        - if ($geotag->getPhoto())
+                          - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                          %img.geoTagImg(src=$geoPhotoFullPath)
 
-                      - if ($activity->getObjectType() === 'friend')
-                        - $friend = $userRepo->find($activity->getObjectId())
-                        - $friendLink = "self::profile:" . $friend->getId()
-                        .comment
-                          is now friend with
-                          %a(href=$friendLink)
-                            = $friend->getName()
+                    - if ($activity->getObjectType() === 'friend')
+                      - $friend = $userRepo->find($activity->getObjectId())
+                      - $friendLink = "self::profile:" . $friend->getId()
+                      .comment
+                        is now friend with
+                        %a(href=$friendLink)
+                          = $friend->getName()
+
+
                   %div.clearfix
 
                   .row
@@ -158,11 +138,38 @@
                           Like
 
                   .row.list_of_likes(id=$rowLikesId style='display:none')
-        .more
-          %span
-            Load more...
-          - $loadingImage = $baseUrl . '/assets/images/loading.gif?'
-          %img(src=$loadingImage)
+
+          %li.joinDate
+            .activity.tiny
+              .row
+                .avatar
+                  - $avatarPath = $contextUser->getAvatar()
+                  - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                  %a(href= $userProfileLink)
+                    %img.lazy(src=$avatarPath)
+                .name
+                  %div
+                    .left
+                      %a(href= $userProfileLink)
+                        %h4
+                          = $contextUser->getName()
+                      %span
+                        joined
+                        %strong SocialMaps
+                        on
+                      - $date = (array)$contextUser->getCreateDate()
+                      = date('F Y',strtotime($date['date']))
+                      .
+
+            %div.clearfix
+
+          %li
+            .more
+              %span
+                Load more...
+              - $loadingImage = $baseUrl . '/assets/images/loading.gif?'
+              %img(src=$loadingImage)
 
       - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
       - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js?' . $jsUpdateTime
@@ -203,19 +210,20 @@
                     %h4
                       = $photo->getOwner()->getName()
                   %span
-                    has uploaded a new picture.
+                    uploaded a new picture.
             .time
               = $activity->toHumanizeDate()
 
 
-          .row(style='height:100px; margin-top: 5px;')
+          .row(style='margin-top: 5px;')
 
             - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
             .image(style=$imagePathCss)
               - $photoFullPath = $baseUrl . $photo->getUriMedium();
+              -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
               - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
               %a(href=$photoPath)
-                %img.lazy(src=$photoFullPath)
+                %img.lazy(src=$photoFullPath style='max-height: '.$imageWidth[1].'px')
             .icon.icon_zoom
 
           .row
@@ -237,7 +245,7 @@
                 - else
                   Like
 
-             
+
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
@@ -257,28 +265,31 @@
               - if ($activity->getCreatedAt() != null)
                 = $activity->toHumanizeDate()
 
-            - if ($activity->getOwner()->getId() == $currentUser->getId())
-              - if ($activity->getObjectType() === 'geotag')
-                - $geotag = $geotagRepo->find($activity->getObjectId())
-                - $geoLocation = $geotag->getLocation()->toArray()
-                - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+            - if ($activity->getObjectType() === 'geotag')
+              - $geotag = $geotagRepo->find($activity->getObjectId())
+              - $geoLocation = $geotag->getLocation()->toArray()
+              - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
-                .comment
-                  has tagged "
-                  %a(href= $geotagLink)
-                    %strong= stripcslashes($activity->getTitle())
-                  "
-                  at
-                  %small= $geotag->getLocation()->getAddress()
+              .comment
+                was geo-tagged
+                at
+                %small= $geotag->getLocation()->getAddress()
+                = ' - '
+                %strong= stripcslashes($activity->getTitle())
+                - if ($geotag->getPhoto())
+                  - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                  %img.geoTagImg(src=$geoPhotoFullPath)
 
-              - if ($activity->getObjectType() === 'friend')
-                - $friend = $userRepo->find($activity->getObjectId())
-                - $friendLink = "self::profile:" . $friend->getId()
-                .comment
-                  is now friend with
-                  %a(href=$friendLink)
-                    = $friend->getName()
-                    
+
+
+            - if ($activity->getObjectType() === 'friend')
+              - $friend = $userRepo->find($activity->getObjectId())
+              - $friendLink = "self::profile:" . $friend->getId()
+              .comment
+                is now friend with
+                %a(href=$friendLink)
+                  = $friend->getName()
+
           %div.clearfix
 
           .row
@@ -299,7 +310,7 @@
                   Likes
                 - else
                   Like
-                  
+
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 

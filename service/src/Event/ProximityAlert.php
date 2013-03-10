@@ -4,6 +4,9 @@ namespace Event;
 
 use Repository\UserRepo as UserRepository;
 
+/**
+ * Background job for sending out proximity alert based on user's current location
+ */
 class ProximityAlert extends Base
 {
     /**
@@ -35,9 +38,9 @@ class ProximityAlert extends Base
                 $user = $this->userRepository->find($workload->user_id);
 
                 if (!empty($user)) {
-                    $this->debug('Searching nearby friends for user - ' . $user->getFirstName());
+                    $this->debug('Searching nearby friends for user - ' . $user->getUsernameOrFirstName());
                     $this->services['dm']->refresh($user);
-                    $this->notifyNearbyFriends($user);
+                    $this->notifyNearbyFriends($user, $workload->newLoc, $workload->oldLoc);
                 } else {
                     $this->debug("No such user found for id - " . $workload->user_id);
                 }
@@ -59,20 +62,16 @@ class ProximityAlert extends Base
         return !empty($workload->user_id);
     }
 
-    private function notifyNearbyFriends(\Document\User $user)
+    private function notifyNearbyFriends(\Document\User $user, $newLoc = null, $oldLoc = null)
     {
-        if (empty($user))
-            return;
+        if (empty($user)) return;
 
-        $this->debug("Sending notification to {$user->getFirstName()}'s nearby friends");
+        $this->debug("Sending notification to {$user->getUsernameOrFirstName()}'s nearby friends");
         $this->logCurrentLocation($user);
 
-        # If current location is not 100 meters far from last location
-        # Do nothing
-
         # Find friends from the nearby radius
-        $friends = $this->findNearbyFriends($user);
-        $this->debug('Found ' . count($friends) . ' friends from - ' . $user->getFirstName());
+        $friends = $this->findClosebyFriends($user, $newLoc, $oldLoc);
+        $this->debug('Found ' . count($friends) . ' friends from - ' . $user->getUsernameOrFirstName());
 
         if (count($friends) > 0) {
             # Inform friends about user's presence (one to one notification)
@@ -86,10 +85,36 @@ class ProximityAlert extends Base
         }
     }
 
+    private function findClosebyFriends(\Document\User $user, $newLoc, $oldLoc) {
+        $this->debug('Finding closeby friends comparing users last location');
+        $this->debug('Old location - ' . json_encode($oldLoc));
+        $this->debug('New location - ' . json_encode($newLoc));
 
-    private function findNearbyFriends(\Document\User $user)
+        $friendsSetNew = $this->findNearbyFriends($user, (array) $newLoc);
+        $friendsSetOld = $this->findNearbyFriends($user, (array) $oldLoc);
+
+        $this->debug('Friends from New SET - ' . json_encode($friendsSetNew));
+        $this->debug('Friends from Old SET - ' . json_encode($friendsSetOld));
+
+        // Get friends who has just in new radius
+        $friends = array_diff($friendsSetNew, $friendsSetOld);
+
+        $this->debug('Friends from difference - ' . json_encode($friends));
+
+        return $friends;
+    }
+
+    private function mapWithId(array &$users) {
+        $this->debug('Map with id');
+        var_dump($users);
+        $items = array();
+        foreach ($users as $k => $user) $items[$user['_id']] = $user;
+        return $items;
+    }
+
+    private function findNearbyFriends(\Document\User &$user, array $location = null)
     {
-        $from = $user->getCurrentLocation();
+        $from = empty($location) ? $user->getCurrentLocation() : $location;
 
         $friendIds = array();
         $friends = $user->getFriends();
@@ -97,7 +122,7 @@ class ProximityAlert extends Base
 
         $friends = $this->services['dm']
             ->createQueryBuilder('Document\User')
-            ->select('firstName', 'currentLocation', 'pushSettings')
+            ->select('_id', 'firstName', 'lastName', 'currentLocation', 'pushSettings', 'username')
             ->field('id')->in($friendIds)
             ->hydrate(false);
 
@@ -108,7 +133,7 @@ class ProximityAlert extends Base
             if (isset($friendHash['currentLocation'])) {
                 $to = $friendHash['currentLocation'];
                 $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
-                $this->debug($friendHash['firstName'] . ' is about - ' . $distance . ' m away');
+                $this->debug($this->getUsername($friendHash) . ' is about - ' . $distance . ' m away');
 
                 if ($distance <= self::ACCEPTABLE_DISTANCE_IN_METERS)
                     $friendsList[] = $friendHash;
@@ -120,7 +145,7 @@ class ProximityAlert extends Base
 
     private function logCurrentLocation($user)
     {
-        $this->debug($user->getFirstName() . '\'s current location - ' .
+        $this->debug($user->getUsernameOrFirstName() . '\'s current location - ' .
             json_encode($user->getCurrentLocation()));
     }
 
@@ -146,7 +171,7 @@ class ProximityAlert extends Base
 
     private function informFriends(\Document\User &$user, &$friends)
     {
-        $this->debug('Informing friends about - ' . $user->getFirstName() . ' presence.');
+        $this->debug('Informing friends about - ' . $user->getUsernameOrFirstName() . ' presence.');
 
         # Iterate through each friend
         foreach ($friends as $friendHash) {
@@ -204,32 +229,29 @@ class ProximityAlert extends Base
             $from['lat'], $from['lng'],
             $to['lat'], $to['lng']); // In METER
 
-        $message = $user->getFirstName() . ' is ' . ceil($distance) . 'm away';
+        $message = $user->getUsernameOrFirstName() . ' is ' . ceil($distance) . 'm away';
 
         return array(
             'title' => $message,
             'photoUrl' => $user->getAvatar(),
             'objectId' => $user->getId(),
             'objectType' => 'proximity_alert',
-            'message' => $message
+            'message' => $message,
+            'receiverId' => $friend->getId()
         );
     }
 
     private function createGroupNotificationMessage(&$friends)
     {
-
         if (count($friends) > 2) {
-            $message = $friends[0]['firstName'] . ', ' .
-                $friends[1]['firstName'] . ' and ' .
+            $message = $this->getUsername($friends[0]) . ', ' .
+                $this->getUsername($friends[1]) . ' and ' .
                 (count($friends) - 2) . ' others are';
         } else if (count($friends) == 2) {
-            $message = $friends[0]['firstName'] . ' and ' .
-                $friends[1]['firstName'] . ' are';
+            $message = $this->getUsername($friends[0]) . ' and ' .
+                $this->getUsername($friends[1]) . ' are';
         } else {
-            $name = implode(" ", array_filter(
-                array($friends[0]['firstName'],
-                    $friends[0]['lastName'])));
-            $message = $name . ' is';
+            $message = $this->getUsername($friends[0], true) . ' is';
         }
 
         $message .= ' near you!';
@@ -252,5 +274,19 @@ class ProximityAlert extends Base
 
         if ($pushNotifier)
             echo $pushNotifier->send($notification, array($pushSettings['device_id']));
+    }
+
+    private function getUsername(array &$userHash, $fullName = false) {
+        if (!empty($userHash)) {
+            if (isset($userHash['username']) && !$fullName)
+                return $userHash['username'];
+            else if ($fullName && !isset($userHash['username']))
+                return implode(" ", array_filter(
+                       array($userHash['firstName'], $userHash['lastName'])));
+            else
+                return $userHash['firstName'];
+        } else {
+            return null;
+        }
     }
 }

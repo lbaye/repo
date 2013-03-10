@@ -5,6 +5,9 @@ namespace Event;
 use Repository\UserRepo as UserRepository;
 use Repository\MessageRepo as MessageRepository;
 
+/**
+ * Background job for sending push notification to a specific user
+ */
 class SendPushNotification extends Base
 {
     /**
@@ -43,8 +46,9 @@ class SendPushNotification extends Base
 
             if (!empty($users)) {
                 $userHash = $users[$workload->user_id];
-                $this->_sendPushNotification($userHash, $workload->notification);
-                $this->debug("Push notification sent to user - {$userHash['firstName']}");
+                $succeed = $this->_sendPushNotification($userHash, $workload->notification);
+                if ($succeed)
+                    $this->debug("Push notification sent to user - {$userHash['firstName']}");
             } else {
                 $this->debug("No valid user for id - {$workload->user_id} found");
             }
@@ -73,19 +77,31 @@ class SendPushNotification extends Base
         $hash = array(
             'title' => $notification->title,
             'objectId' => $notification->objectId,
-            'objectType' => $notification->objectType
+            'objectType' => $notification->objectType,
+            'receiverId' => $userHash['_id']
         );
 
         $notificationCountHash = $this->userRepository->generateNotificationCount($userHash['_id']);
+
         $notificationHash = array_merge($hash, $notificationCountHash);
-        $this->debug("Sending push notification to user - {$userHash['firstName']} ({$userHash['_id']})");
+        $notificationHash['targetUid'] = $userHash['_id'];
+        $this->debug("testing receiver ID... ".$notificationHash['receiverId']);
+        $this->debug("Sending push notification XYXYXYX to user - {$userHash['firstName']} ({$userHash['_id']})");
         $pushSettings = $userHash['pushSettings'];
 
-        $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+        if (isset($pushSettings['device_id']) && !empty($pushSettings['device_id'])) {
+            $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
 
-        if ($pushNotifier) {
-            $this->info("Sending push notification for {$pushSettings['device_type']}");
-            echo $pushNotifier->send($notificationHash, array($pushSettings['device_id'])) . PHP_EOL;
+            if ($pushNotifier) {
+                $this->info("Sending push ========== notification for {$pushSettings['device_type']} with id ({$pushSettings['device_id']})");
+                echo $pushNotifier->send($notificationHash, array($pushSettings['device_id'])) . PHP_EOL;
+            }
+
+            return true;
+        } else {
+            $this->info("Device id not found.");
+
+            return false;
         }
     }
 }

@@ -5,6 +5,9 @@ namespace Repository;
 use Repository\Base as BaseRepository;
 use Document\ExternalLocation as ExternalLocationDocument;
 
+/**
+ * Data access functionality for external location model
+ */
 class ExternalLocation extends BaseRepository
 {
     public function exists($refId)

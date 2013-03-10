@@ -107,6 +107,10 @@ user_block_list:
     pattern:  /blockuserlist
     defaults: { _controller: AdminUserBundle:AdminUser:userBlockList }
 
+user_block_list_paging:
+    pattern:  /blockuserlist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:userBlockList }
+
 place_search_result:
     pattern:  /placesearchresult/{page}
     defaults: { _controller: AdminUserBundle:AdminUser:searchPlace }
@@ -118,3 +122,19 @@ place_search_result_paginated:
 event_search_result:
     pattern:  /eventsearchresult/{page}
     defaults: { _controller: AdminUserBundle:AdminUser:searchEvent }
+
+manage_custom_place:
+    pattern:  /customplacelist
+    defaults: { _controller: AdminUserBundle:AdminUser:customPlaceList }
+
+manage_custom_place_paginated:
+    pattern:  /customplacelist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:customPlaceList }
+
+custom_place_search_result:
+    pattern:  /customplacesearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchCustomPlace }
+
+custom_place_search_result_paginated:
+    pattern:  /customplacesearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchCustomPlace }

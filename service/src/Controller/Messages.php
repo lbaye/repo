@@ -5,6 +5,9 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Helper\Status;
 
+/**
+ * Manage user's generated messages
+ */
 class Messages extends Base {
     /**
      * @var \Repository\MessageRepo
@@ -25,6 +28,14 @@ class Messages extends Base {
         $this->_ensureLoggedIn();
     }
 
+    /**
+     * GET /messages/{id}
+     *
+     * Retrieve message by the specific id
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getById($id) {
         $message = $this->messageRepository->find($id);
         if (empty($message)) {
@@ -61,6 +72,13 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * POST /messages
+     *
+     * Create new message with required paramters
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function create() {
         $postData = $this->request->request->all();
 
@@ -73,8 +91,44 @@ class Messages extends Base {
             $message->setStatus('read');
             $this->_sendNotification($postData, $message);
 
-            $this->response->setContent(json_encode($message->toArray(true)));
+            $messageOrThread = $message->getThread() != null ? $message->getThread() : $message;
+            $this->messageRepository->refresh($messageOrThread);
+
+            $this->response->setContent(json_encode($messageOrThread->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
+
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
+    /**
+     * Retrieve an existing thread for the given recipients list.
+     * If not found an existing thread create new one.
+     *
+     * @return void
+     */
+    public function createOrGetMessageThread() {
+        $postData = $this->request->request->all();
+
+        if (!isset($postData['recipients']))
+            return $this->_generateErrorResponse('"recipients[]" is required parameter');
+
+        try {
+            # Find or create new message thread
+            $message = $this->messageRepository->findOrCreateMessageThread($this->user, $postData);
+
+            if ($message->hasContent()) {
+                # Send notification if content is set
+                $this->_sendNotification($postData, $message);
+            }
+
+            $this->messageRepository->refresh($message);
+
+            $this->response->setContent(json_encode($message->toArray(true)));
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception $e) {
             $this->_generate500($e->getMessage());
@@ -100,7 +154,7 @@ class Messages extends Base {
         if (!empty($recipients)) {
             $this->_sendPushNotification(
                 $recipients,
-                \Helper\AppMessage::getMessage(\Helper\AppMessage::REPLY_MESSAGE, $this->user->getFirstName()),
+                \Helper\AppMessage::getMessage(\Helper\AppMessage::REPLY_MESSAGE, $this->user->getUsernameOrFirstName()),
                 \Helper\AppMessage::REPLY_MESSAGE,
                 $thread->getId());
         }
@@ -113,17 +167,31 @@ class Messages extends Base {
         if (!empty($filteredRecipientsIds)) {
             $this->_sendPushNotification(
                 $filteredRecipientsIds,
-                \Helper\AppMessage::getMessage(\Helper\AppMessage::NEW_MESSAGE, $this->user->getFirstName()),
+                \Helper\AppMessage::getMessage(\Helper\AppMessage::NEW_MESSAGE, $this->user->getUsernameOrFirstName()),
                 \Helper\AppMessage::NEW_MESSAGE,
                 $message->getId());
         }
     }
 
+    /**
+     * GET /messages/sent
+     *
+     * Retrieve messages by current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getByCurrentUser() {
         return $this->_generateResponse(
             $this->messageRepository->getByUser($this->user));
     }
 
+    /**
+     * GET /messages/inbox
+     *
+     * Retrieve message inbox by current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getInbox() {
         $showLastReply = (boolean)$this->request->get('show_last_reply');
 
@@ -131,34 +199,36 @@ class Messages extends Base {
 
         $docsAsArr = array();
         foreach ($messages as $message) {
-            $messageArr = $message->toArray(true);
+            if (count($message->getReplies()) > 0 || $message->hasContent()) {
+                $messageArr = $message->toArray(true);
 
-            $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
+                $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
-            foreach ($messageArr['recipients'] AS &$recipient) {
-                $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
-            }
-
-            if ($showLastReply == true) {
-
-                if (!empty($messageArr['replies'])) {
-
-                    $messageArr['replies'] = array(end($messageArr['replies']));
-                    $messageArr['replies'][0]['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies'][0]['sender']);
-                } else {
-                    $messageArr['replies'] = null;
+                foreach ($messageArr['recipients'] AS &$recipient) {
+                    $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
                 }
-            } else {
-                unset($messageArr['replies']);
-            }
 
-            if (!in_array($this->user->getId(), $messageArr['readBy'])) {
-                $messageArr['status'] = 'unread';
-            } else {
-                $messageArr['status'] = 'read';
-            }
+                if ($showLastReply == true) {
 
-            $docsAsArr[] = $messageArr;
+                    if (!empty($messageArr['replies'])) {
+
+                        $messageArr['replies'] = array(end($messageArr['replies']));
+                        $messageArr['replies'][0]['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies'][0]['sender']);
+                    } else {
+                        $messageArr['replies'] = null;
+                    }
+                } else {
+                    unset($messageArr['replies']);
+                }
+
+                if (!in_array($this->user->getId(), $messageArr['readBy'])) {
+                    $messageArr['status'] = 'unread';
+                } else {
+                    $messageArr['status'] = 'read';
+                }
+
+                $docsAsArr[] = $messageArr;
+            }
         }
 
         $this->_generateResponse($docsAsArr);
@@ -167,8 +237,12 @@ class Messages extends Base {
     }
 
     /**
-     * Flag a message as READ or UNREAD
+     * PUT /messages/{id}/status/{status}
+     *
+     * Flag a specific message as READ or UNREAD
+     *
      * @param $status Accepts only READ or UNREAD
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateStatus($id, $status) {
         try {
@@ -188,6 +262,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * PUT /messages/{id}/recipients
+     *
+     * Modify recipients list from the specific message
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateRecipients($id) {
         # Find existing object
         $message = $this->messageRepository->find($id);
@@ -218,6 +300,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * GET /messages/{id}/replies
+     *
+     * Retrieve replies which were created after a specific timestamp from a specific message.
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getRepliesByLastVisitedSince($id) {
         try {
             $message = $this->messageRepository->find($id);
@@ -260,6 +350,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * DELETE /messsages/{id}
+     *
+     * Delete a specific message
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function delete($id) {
         try {
             $this->messageRepository->delete($id);
@@ -275,9 +373,17 @@ class Messages extends Base {
     }
 
     private function _createPushMessage($msgText) {
-        return $this->user->getFirstName() . $msgText;
+        return $this->user->getUsernameOrFirstName() . $msgText;
     }
 
+    /**
+     * PUT /messages/{id}/recipients/add
+     *
+     * Add new recipient to a specific message
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function addRecipients($id) {
         # Find existing object
         $message = $this->messageRepository->find($id);
@@ -315,6 +421,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * GET /messages/{id}/unread
+     *
+     * Retrieve a specific messages and keep it's status "unread"
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getUnreadMessagesById($id) {
         $message = $this->messageRepository->find($id);
         if (empty($message)) {

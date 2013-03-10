@@ -8,10 +8,9 @@ use Helper\Status;
 use Repository\UserRepo as userRepository;
 use Helper\Location;
 
-//use Repository\resource as resourceRepository;
-
 /**
- * Template class for all content serving controllers
+ * Manage user generated venues
+ * @ignore
  */
 class Venue extends Base
 {

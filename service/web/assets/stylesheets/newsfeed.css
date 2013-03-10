@@ -1,215 +1,276 @@
 body {
-  background: transparent;
-  margin: 0px;
-  padding: 0px;
-  font-family: helvetica;
-  font-size: 12px;
-  margin-top: 10px;
+    background: transparent;
+    margin: 0px;
+    padding: 0px;
+    font-family: helvetica;
+    font-size: 12px;
+    margin-top: 10px;
 }
+
 body .more {
-  color: #67b000;
-  text-align: center;
-  cursor: pointer;
-  padding-bottom: 20px;
+    clear: both;
+    color: #67b000;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
 }
+
 body .more a {
-  text-decoration: none;
-  color: #67b000;
+    text-decoration: none;
+    color: #67b000;
 }
+
 body .more img {
-  display: none;
+    display: none;
 }
+
 .clearfix {
-  clear: both;
+    clear: both;
 }
+
 ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 97%;
 }
+
 ul li {
-  clear: both;
-  margin: 10px;
-  padding: 0;
-  /*margin-bottom: 15px;*/
+    clear: both;
+    margin: 10px;
+    padding: 0;
+    /*margin-bottom: 15px;*/
 
-  /*min-height: 80px;*/
+    /*min-height: 80px;*/
 
-  background: #fff;
-  box-shadow: 0px 0px 6px #888;
-  border-radius: 4px;
-  width: 90%;
+    background: #fff;
+    box-shadow: 0px 0px 6px #888;
+    border-radius: 4px;
+    /*width: 90%;*/
+
 }
+
 ul li .row {
-  clear: both;
-  display: block;
+    clear: both;
+    display: block;
 }
-ul li .row .avatar {
-  float: left;
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 5px;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ccc;
-  background: #000;
-  position: relative;
-  z-index: 300;
-}
-ul li .row .avatar img {
-  width: 40px;
-  height: 40px;
-}
-ul li .row .name {
-  max-width: 80%;
-  float: left;
-  margin-top: 10px;
-}
-ul li .row .name .right {
-  float: left;
-  margin-top: 3px;
-}
-ul li .row .name .left {
-  margin-right: 5px;
-  float: left;
-}
-ul li .row .name .left h4 {
-  display: inline;
-}
-ul li .row .name a {
-  text-decoration: none;
-  color: #67b000;
-}
-ul li .row .name h4 {
-  padding: 2px;
-  margin: 0px;
-  font-size: 110%;
-}
-ul li .row .time {
-  float: right;
-  margin-right: 10px;
-  margin-top: 10px;
-  color: #888;
-}
-ul li .row .comment {
-  clear: both;
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 5px;
-  margin-left: 60px;
-  margin-right: 5px;
-  margin-top: 30px;
-  position: absolute;
-  width: auto;
-  z-index: 200;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-ul li .row .comment a {
-  text-decoration: none;
-  color: #67b000;
-}
-ul li .row-float {
-  clear: both;
-}
-ul li .tools {
-  clear: both;
-  text-align: left;
-  cursor: pointer;
-  list-style-type: none;
-  display: block;
-  height: 25px;
-  background: #f0f0f0;
-  padding: 10px;
-}
-ul li .tools a {
-  width: 70px;
-  height: 25px;
-  text-decoration: none;
-  padding: 3px 5px 3px 5px;
-  color: #67b000;
-  font-size: 110%;
-  font-weight: bold;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  z-index: 400;
-  line-height: 25px;
-}
-ul li .tools .link_likes {
-  float: right;
-  width: auto;
-}
-ul li .tools .disabled {
-  color: #888;
-}
-ul li .activity .row .comment {
-  width: auto;
-  /*max-width: 230px;*/
 
-  max-height: 27px;
-  overflow: hidden;
+ul li .row .avatar {
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 5px;
+    width: 40px;
+    /*height: 40px;*/
+    height: 20px;
+    border: 1px solid #ccc;
+    background: #000;
+    position: relative;
+    z-index: 300;
 }
+
+ul li .row .avatar img {
+    width: 40px;
+    height: 40px;
+}
+
+ul li .row .name {
+    max-width: 60%;
+    float: left;
+    margin-top: 10px;
+    position: absolute;
+    z-index: 1000;
+    left: 65px;
+    text-shadow: 1px 0 0 #fff;
+}
+
+ul li .row .name .right {
+    float: left;
+    margin-top: 3px;
+}
+
+ul li .row .name .left {
+    margin-right: 5px;
+    float: left;
+}
+
+ul li .row .name .left h4 {
+    display: inline;
+}
+
+ul li .row .name a {
+    text-decoration: none;
+    color: #67b000;
+}
+
+ul li .row .name h4 {
+    padding: 2px;
+    margin: 0px;
+    font-size: 110%;
+}
+
+ul li .row .time {
+    float: right;
+    margin-right: 10px;
+    /*margin-top: 10px;*/
+    margin-top: 0;
+    color: #888;
+}
+
+ul li .row .comment {
+    clear: both;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-left: 60px;
+    margin-right: 5px;
+    margin-top: 30px;
+    /*position: absolute;*/
+    width: 60%;
+    z-index: 200;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+ul li .row .comment a {
+    text-decoration: none;
+    color: #67b000;
+}
+
+ul li .row-float {
+    clear: both;
+}
+
+ul li .tools {
+    clear: both;
+    text-align: left;
+    cursor: pointer;
+    list-style-type: none;
+    display: block;
+    height: 25px;
+    background: #f0f0f0;
+    padding: 10px;
+}
+
+ul li .tools a {
+    width: 70px;
+    height: 25px;
+    text-decoration: none;
+    padding: 3px 5px 3px 5px;
+    color: #67b000;
+    font-size: 110%;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    z-index: 400;
+    line-height: 25px;
+}
+
+ul li .tools .link_likes {
+    float: right;
+    width: auto;
+}
+
+ul li .tools .disabled {
+    color: #888;
+}
+
+ul li .activity .row .comment {
+    width: 60%;
+    /*max-width: 230px;*/
+
+    /*max-height: 27px;*/
+    overflow: hidden;
+}
+
 ul li .activity .row .tools {
-  margin-top: 30px;
+    margin-top: 30px;
 }
+
 ul li .photo .row .image {
-  position: absolute;
-  margin-top: -20px;
-  z-index: 100;
-  overflow: hidden;
-  height: 120px;
-  width: 100%;
+    /*position: absolute;*/
+    margin-top: -20px;
+    z-index: 100;
+    overflow: hidden;
+    /*height: 120px;*/
+    /*width: 100%;*/
 }
+
 ul li .photo .row .image img {
-  width: 100%;
+    margin-top: 12px;
+    width: 100%;
+    height: 100%;
 }
+
 ul li .list_of_likes {
-  border-top: 1px solid #ccc;
+    border-top: 1px solid #ccc;
 }
+
 ul li .list_of_likes h4 {
-  padding: 5px;
-  background: #f0f0f0;
-  margin: 0;
+    padding: 5px;
+    background: #f0f0f0;
+    margin: 0;
 }
+
 ul li .list_of_likes table {
-  width: 100%;
+    width: 100%;
 }
+
 ul li .list_of_likes table tr td h5 {
-  margin: 0;
-  margin-bottom: 5px;
-  font-size: 110%;
-  font-weight: bold;
+    margin: 0;
+    margin-bottom: 5px;
+    font-size: 110%;
+    font-weight: bold;
 }
+
 ul li .list_of_likes table tr td p {
-  margin: 0;
-  color: #888;
+    margin: 0;
+    color: #888;
 }
+
 ul li .list_of_likes table tr td img {
-  height: 25px;
-  width: 25px;
+    height: 25px;
+    width: 25px;
 }
+
 ul li .list_of_likes table tr td a {
-  color: #888;
-  font-weight: bold;
+    color: #888;
+    font-weight: bold;
 }
+
 ul li .tiny {
-  height: 60px;
+    height: 75px;
 }
+
 ul li .tiny .name {
-  margin-top: 20px;
+    margin-top: 20px;
 }
+
 .notice-panel {
-  padding: 5px;
-  position: fixed;
-  opacity: 0.8;
-  bottom: 0;
-  left: 0;
-  background: #ffffe0;
-  border: 1px solid orange;
-  width: 99%;
-  z-index: 1111;
-  font-size: 120%;
-  font-weight: bold;
+    padding: 5px;
+    position: fixed;
+    opacity: 0.8;
+    bottom: 0;
+    left: 0;
+    background: #ffffe0;
+    border: 1px solid orange;
+    width: 99%;
+    z-index: 1111;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.joinDate {
+    display: none;
+}
+
+.geoTagImg {
+    width: 100%;
+}
+.comment strong{
+    color: #67B000;
 }

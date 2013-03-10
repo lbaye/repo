@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing plan related data. this model is linked with "plans" collection
+ *
  * @ODM\Document(collection="plans",repositoryClass="Repository\GatheringRepo")
  */
 class Plan extends Gathering

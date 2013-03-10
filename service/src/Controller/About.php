@@ -6,12 +6,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Parser;
 use Helper\Status;
 
+/**
+ * Describe API's current version and compatibility level
+ */
 class About extends Base
 {
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         parent::init();
@@ -21,6 +21,8 @@ class About extends Base
 
     /**
      * GET /about
+     *
+     * Read 'config/version.yml' file for current API status.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

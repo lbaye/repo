@@ -3,9 +3,15 @@ create_message:
   defaults: { _controller: Controller\Messages::create }
   requirements: { _method: POST }
 
-create_message2:
+create_message_2:
   pattern: /messages
   defaults: { _controller: Controller\Messages::create }
+  requirements: { _method: POST }
+
+
+create_message_thread:
+  pattern: /messages/thread
+  defaults: { _controller: Controller\Messages::createOrGetMessageThread }
   requirements: { _method: POST }
 
 sent_messages:

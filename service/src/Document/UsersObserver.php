@@ -3,7 +3,10 @@
 namespace Document;
 
 use Repository\UserActivityRepo as ActivityRepo;
- 
+
+/**
+ * Observer for creating user activity based on friend request accepted
+ */
 class UsersObserver extends AbstractObserver {
 
     private $activityRepo;
