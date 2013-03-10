@@ -32,9 +32,9 @@
     [super viewDidLoad];
 	
     selectedFriendsIndex = [[NSMutableArray alloc] init];
-    thumbList = [[NSMutableArray alloc] init];
-    bigPhotoList = [[NSMutableArray alloc] init];
-    customSelectedFriendsIndex = [[NSMutableArray alloc] init];
+    photoList = [[NSMutableArray alloc] init];
+    //bigPhotoList = [[NSMutableArray alloc] init];
+    //customSelectedFriendsIndex = [[NSMutableArray alloc] init];
     [prevButton setHidden:YES];
     
     restClient = [[RestClient alloc] init];
@@ -99,6 +99,8 @@
 
 -(void) dealloc
 {
+    [selectedFriendsIndex release];
+    [photoList release];
     [super dealloc];
 }
 
@@ -164,7 +166,7 @@
         
         [restClient deletePhotosByPhotoIds:photoIds withAuthToken:@"Auth-Token" andAuthTokenValue:smAppdelegate.authToken];
     }
-    else if ([thumbList count]==0)
+    else if ([photoList count]==0)
         [UtilityClass showAlert:@"" :@"You have no photo"];
     else
         [UtilityClass showAlert:@"" :@"Please select a photo"];
@@ -188,7 +190,7 @@
 {
     NSLog(@"event create scroll init");
     //if (isBackgroundTaskRunning==true)
-    {
+    //{
         int x = 0; //declared for imageview x-axis point
         int y = 0;
         
@@ -210,15 +212,15 @@
             }
         }   
         */
-        photoScrollView.contentSize=CGSizeMake(320,(ceilf([thumbList count]/4.0))*90);
-        zoomScrollView.contentSize=CGSizeMake([bigPhotoList count]*320, 460);
+        photoScrollView.contentSize=CGSizeMake(320,(ceilf([photoList count]/4.0))*90);
+        zoomScrollView.contentSize=CGSizeMake([photoList count]*320, 460);
         
        
-        for(int i=0; i<[thumbList count];i++)               
+        for(int i=0; i<[photoList count];i++)               
         {
-            if(i< [thumbList count]) 
+            if(i< [photoList count]) 
             { 
-                Photo *photo = [thumbList objectAtIndex:i];
+                Photo *photo = [photoList objectAtIndex:i];
                 UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if(!isDragging_msg && !isDecliring_msg)
@@ -277,89 +279,108 @@
                 [name release];
                 [imgView release];
                 [aView release];
+                
+                //Big image
+                UIImageView *bigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+                UIView *viewForBigImage = [[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
+                
+                bigImageView.userInteractionEnabled = YES;
+                bigImageView.tag = i;
+                viewForBigImage.tag = i;
+                bigImageView.exclusiveTouch = YES;
+                bigImageView.clipsToBounds = NO;
+                bigImageView.opaque = YES;
+                bigImageView.layer.borderColor = [[UIColor clearColor] CGColor];
+                bigImageView.userInteractionEnabled = YES;
+                bigImageView.layer.borderWidth = 2.0;
+                bigImageView.contentMode = UIViewContentModeScaleAspectFit;
+                bigImageView.layer.masksToBounds = YES;
+                bigImageView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+                [viewForBigImage addSubview:bigImageView];
+                [zoomScrollView addSubview:viewForBigImage];
+                [viewForBigImage release];
+                [bigImageView release];
+                
                 }
+            
+             x2 += 320;
             }
         //}
         
-        //handling zoom scroller
-        for(int i=0; i<[bigPhotoList count];i++)
-        {
-            if(i< [bigPhotoList count])
-            { 
-                Photo *photo=[bigPhotoList objectAtIndex:i];
-                if ([photo isKindOfClass:[Photo class]]) {
-                UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
-                    /*
-                if (photo.imageUrl == nil) 
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([photoDic valueForKey:photo.imageUrl])
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [photoDic valueForKey:photo.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([photoDic objectForKey:photo.imageUrl]==nil))
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [photoDic setObject:[photoDic valueForKey:photo.photoThum] forKey:photo.imageUrl];
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [photoDic valueForKey:photo.photoThum];
-                        NSLog(@"scroll if %@",[photoDic valueForKey:photo.photoThum]);
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image =[photoDic valueForKey:photo.photoThum];
-                        NSLog(@"scroll else");
-                    }               
-                }*/
-                    
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
-                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
-                [name setNumberOfLines:0];
-                [name setText:photo.description];
-                [name setBackgroundColor:[UIColor clearColor]];
-                imgView.userInteractionEnabled = YES;
-                imgView.tag = i;
-                aView.tag=i;
-                imgView.exclusiveTouch = YES;
-                imgView.clipsToBounds = NO;
-                imgView.opaque = YES;
-                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-                imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=2.0;
-                imgView.contentMode=UIViewContentModeScaleAspectFit;
-                imgView.layer.masksToBounds = YES;
-                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
-                    
-                    /*
-                for (int c=0; c<[customSelectedFriendsIndex count]; c++)
-                {
-                    if ([[filteredList2 objectAtIndex:i] isEqual:[customSelectedFriendsIndex objectAtIndex:c]]) 
-                    {
-                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                        NSLog(@"found selected: %@",[customSelectedFriendsIndex objectAtIndex:c]);
-                    }
-                    else
-                    {
-                    }
-                }*/
-                [aView addSubview:imgView];
-                [zoomScrollView addSubview:aView];
-                [aView release];
-                [name release];
-                [imgView release];
-                }
-            }
-            
-            x2 += 320;
-        }
-    }
+//        //handling zoom scroller
+//        for(int i=0; i < [photoList count];i++)
+//        {
+//            if(i < [photoList count])
+//            { 
+//                Photo *photo=[photoList objectAtIndex:i];
+//                if ([photo isKindOfClass:[Photo class]]) {
+//                UIImageView *bigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+//                    /*
+//                if (photo.imageUrl == nil) 
+//                {
+//                    imgView.image = [UIImage imageNamed:@"blank.png"];
+//                } 
+//                else if([photoDic valueForKey:photo.imageUrl])
+//                { 
+//                    //If image available in dictionary, set it to imageview 
+//                    imgView.image = [photoDic valueForKey:photo.imageUrl]; 
+//                } 
+//                else 
+//                { 
+//                    if((!isDragging_msg && !isDecliring_msg)&&([photoDic objectForKey:photo.imageUrl]==nil))
+//                        
+//                    {
+//                        //If scroll view moves set a placeholder image and start download image. 
+//                        [photoDic setObject:[photoDic valueForKey:photo.photoThum] forKey:photo.imageUrl];
+//                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+//                        imgView.image = [photoDic valueForKey:photo.photoThum];
+//                        NSLog(@"scroll if %@",[photoDic valueForKey:photo.photoThum]);
+//                    }
+//                    else 
+//                    { 
+//                        // Image is not available, so set a placeholder image
+//                        imgView.image =[photoDic valueForKey:photo.photoThum];
+//                        NSLog(@"scroll else");
+//                    }               
+//                }*/
+//                    
+//                UIView *viewForBigImage = [[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
+//                
+//                bigImageView.userInteractionEnabled = YES;
+//                bigImageView.tag = i;
+//                viewForBigImage.tag = i;
+//                bigImageView.exclusiveTouch = YES;
+//                bigImageView.clipsToBounds = NO;
+//                bigImageView.opaque = YES;
+//                bigImageView.layer.borderColor = [[UIColor clearColor] CGColor];
+//                bigImageView.userInteractionEnabled = YES;
+//                bigImageView.layer.borderWidth = 2.0;
+//                bigImageView.contentMode = UIViewContentModeScaleAspectFit;
+//                bigImageView.layer.masksToBounds = YES;
+//                bigImageView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+//                    
+//                    /*
+//                for (int c=0; c<[customSelectedFriendsIndex count]; c++)
+//                {
+//                    if ([[filteredList2 objectAtIndex:i] isEqual:[customSelectedFriendsIndex objectAtIndex:c]]) 
+//                    {
+//                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+//                        NSLog(@"found selected: %@",[customSelectedFriendsIndex objectAtIndex:c]);
+//                    }
+//                    else
+//                    {
+//                    }
+//                }*/
+//                [viewForBigImage addSubview:bigImageView];
+//                [zoomScrollView addSubview:viewForBigImage];
+//                [viewForBigImage release];
+//                [bigImageView release];
+//                }
+//            }
+//            
+//            x2 += 320;
+//        }
+    //}
 }
 
 - (void)downloadImageAtIndex:(int)page
@@ -381,7 +402,7 @@
         }
     }
     
-    [imgView loadFromURL:[NSURL URLWithString:[(Photo*)[thumbList objectAtIndex:page] imageUrl]]];
+    [imgView loadFromURL:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
     
 }
 
@@ -397,13 +418,13 @@
 
 -(void)loadData:(NSMutableArray *)photoListArr
 {
-    smAppdelegate.myPhotoList=photoListArr;
-    thumbList = [photoListArr mutableCopy];
-    bigPhotoList=[photoListArr mutableCopy];
-    [thumbList retain];
-    [bigPhotoList retain];
-    [selectedFriendsIndex retain];
-    NSLog(@"filtered count: %d",[thumbList count]);
+    smAppdelegate.myPhotoList = photoListArr;
+    photoList = photoListArr;
+    //bigPhotoList=[photoListArr mutableCopy];
+    //[thumbList retain];
+    //[bigPhotoList retain];
+    //[selectedFriendsIndex retain];
+    //NSLog(@"filtered count: %d",[thumbList count]);
 }
 
 /*
@@ -455,12 +476,12 @@
 {
     int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     
-    if ([selectedFriendsIndex containsObject:[thumbList objectAtIndex:imageIndex]]) {
-        [selectedFriendsIndex removeObject:[thumbList objectAtIndex:imageIndex]];
+    if ([selectedFriendsIndex containsObject:[photoList objectAtIndex:imageIndex]]) {
+        [selectedFriendsIndex removeObject:[photoList objectAtIndex:imageIndex]];
         [[sender.view viewWithTag:imageIndex].layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
     }
     else {
-        [selectedFriendsIndex addObject:[thumbList objectAtIndex:imageIndex]];
+        [selectedFriendsIndex addObject:[photoList objectAtIndex:imageIndex]];
         [[sender.view viewWithTag:imageIndex].layer setBorderColor:[[UIColor greenColor] CGColor]];
     }
 }
@@ -528,8 +549,8 @@
     //willLoadPhotoData = FALSE;
     //[smAppdelegate.window setUserInteractionEnabled:YES];
     [smAppdelegate hideActivityViewer];
-    [thumbList removeObjectsInArray:selectedFriendsIndex];
-    [bigPhotoList removeObjectsInArray:selectedFriendsIndex];
+    [photoList removeObjectsInArray:selectedFriendsIndex];
+    //[bigPhotoList removeObjectsInArray:selectedFriendsIndex];
     [smAppdelegate.myPhotoList removeObjectsInArray:selectedFriendsIndex];
     //[thumbList removeObject:[selectedFriendsIndex objectAtIndex:0]];
     //[bigPhotoList removeObject:[selectedFriendsIndex objectAtIndex:0]];
@@ -547,6 +568,13 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     isDecliring_msg = FALSE;
+    
+    if (scrollView == zoomScrollView)
+    {
+        CGFloat pageWidth = zoomScrollView.frame.size.width;
+        int page = floor((zoomScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        [self downloadImageAtIndex:page];
+    }
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
@@ -556,13 +584,14 @@
 {
     isDecliring_msg = TRUE;
 }
+
 - (void)scrollViewDidScroll:(UIScrollView *)sender 
 {
     if (sender==zoomScrollView) {
         CGFloat pageWidth = zoomScrollView.frame.size.width;
         int page = floor((zoomScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
         
-        [self downloadImageAtIndex:page];
+        //[self downloadImageAtIndex:page];
         
         zoomIndex=page;
         if (page==0) 
@@ -570,7 +599,7 @@
             [nextButton setHidden:NO];
             [prevButton setHidden:YES];
         }
-        else if (page==[bigPhotoList count]-1) {
+        else if (page==[photoList count]-1) {
             [nextButton setHidden:YES];
             [prevButton setHidden:NO];
         }

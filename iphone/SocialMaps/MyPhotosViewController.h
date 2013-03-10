@@ -25,7 +25,7 @@
     IBOutlet UIButton *nextButton;
     IBOutlet UIButton *prevButton;
     
-    NSMutableArray *selectedFriendsIndex, *thumbList, *bigPhotoList, *customSelectedFriendsIndex;
+    NSMutableArray *selectedFriendsIndex, *photoList /*, *bigPhotoList, *customSelectedFriendsIndex*/;
     
     BOOL isDragging_msg, isDecliring_msg;
     int zoomIndex, getAllPhotoCounter;
