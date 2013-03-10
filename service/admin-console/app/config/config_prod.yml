@@ -12,7 +12,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
-       image_path:      "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6"
+       image_path:      "http://services.socialmapsapp.com/v2_2"
        image_real_path: "/var/sm-data"
 
 monolog:
