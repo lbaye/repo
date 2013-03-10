@@ -172,7 +172,8 @@ bool searchFlags=true;
 - (void)getEventsByUserIdDone:(NSNotification *)notif
 {
     [smAppDelegate hideActivityViewer];
-    
+    self.userEventList = [[notif object] mutableCopy];
+    /*
     NSMutableArray *allEventList = [[notif object] mutableCopy];
     
     NSMutableArray *onlyPermitedEventList = [[NSMutableArray alloc] init];
@@ -200,7 +201,7 @@ bool searchFlags=true;
     
     self.userEventList = onlyPermitedEventList;
     [onlyPermitedEventList release];
-    
+    */
     //self.userEventList = allEventList;
     if (!self.userEventList)
     {

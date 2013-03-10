@@ -39,7 +39,8 @@
 @property(nonatomic,retain) IBOutlet UIScrollView *zoomScrollView;
 @property(nonatomic,retain) IBOutlet UIView *zoomView;
 @property(nonatomic,retain) IBOutlet UIButton *nextButton;
-@property(nonatomic,retain) IBOutlet UIButton *prevButton;    
+@property(nonatomic,retain) IBOutlet UIButton *prevButton;
+@property (nonatomic, retain) NSMutableArray *photoList;
 
 /**
  * @brief navigate user to my photo screen

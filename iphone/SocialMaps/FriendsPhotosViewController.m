@@ -512,6 +512,7 @@ AppDelegate *smAppdelegate;
             }
             else
             {
+                /*
                 NSMutableArray *allPhotoList = [[notif object] mutableCopy];
                 
                 NSMutableArray *onlyPermitedPhotoList = [[NSMutableArray alloc] init];
@@ -539,6 +540,8 @@ AppDelegate *smAppdelegate;
                 
                 [self loadData:onlyPermitedPhotoList];
                 [onlyPermitedPhotoList release];
+                 */
+                [self loadData:[[notif object] mutableCopy]];
                 [self reloadScrolview];
             }
         }

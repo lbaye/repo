@@ -23,6 +23,7 @@
 
 @implementation MyPhotosViewController
 
+@synthesize photoList;
 @synthesize photoScrollView, zoomScrollView, zoomView, labelNotifCount;
 @synthesize prevButton, nextButton;
 
@@ -32,7 +33,7 @@
     [super viewDidLoad];
 	
     selectedFriendsIndex = [[NSMutableArray alloc] init];
-    photoList = [[NSMutableArray alloc] init];
+    //photoList = [[NSMutableArray alloc] init];
     //bigPhotoList = [[NSMutableArray alloc] init];
     //customSelectedFriendsIndex = [[NSMutableArray alloc] init];
     [prevButton setHidden:YES];
@@ -57,6 +58,7 @@
     [zoomView removeFromSuperview];
     //isBackgroundTaskRunning=true;
     getAllPhotoCounter=0;
+    //photoList = smAppdelegate.myPhotoList;
     [self loadData:smAppdelegate.myPhotoList];
     [self reloadScrolview];
     /*
@@ -99,6 +101,7 @@
 
 -(void) dealloc
 {
+    [smAppdelegate.myPhotoList removeAllObjects];
     [selectedFriendsIndex release];
     [photoList release];
     [super dealloc];
@@ -419,7 +422,7 @@
 -(void)loadData:(NSMutableArray *)photoListArr
 {
     smAppdelegate.myPhotoList = photoListArr;
-    photoList = photoListArr;
+    self.photoList = photoListArr;
     //bigPhotoList=[photoListArr mutableCopy];
     //[thumbList retain];
     //[bigPhotoList retain];

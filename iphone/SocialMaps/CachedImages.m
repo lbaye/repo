@@ -10,7 +10,7 @@
 #import "ImageInfo.h"
 
 
-#define MAX_CACHED_IMAGES	80
+#define MAX_CACHED_IMAGES	20
 //NSCache should autometically handle releasing cached objects when a memory warning is received
 
 @implementation CachedImages
@@ -83,8 +83,19 @@
             
             //TODO: SOMETIMES [[self keyArray] objectAtIndex:0] EQUAL NILL CRASH IN SIMULATOR NEVER FOUND IN DEVICE
             
-            [[self cache] removeObjectForKey:[[self keyArray] objectAtIndex:0]];
-            [[self keyArray] removeObjectAtIndex:0];
+            if (![[[(ImageInfo*)[[self cache] objectForKey:[[self keyArray] objectAtIndex:0]] imagePath] absoluteString] isEqualToString:[[self keyArray] objectAtIndex:0]]) {
+                NSLog(@"****real big problem cache url");
+            }
+            
+            if ([[self keyArray] objectAtIndex:0]) {
+                [[self cache] removeObjectForKey:[[self keyArray] objectAtIndex:0]];
+                [[self keyArray] removeObjectAtIndex:0];
+            } else {
+                NSLog(@"****big problem cache url = %@", [(ImageInfo*)[[self cache] objectForKey:[[self keyArray] objectAtIndex:0]] imagePath]);
+                NSLog(@"****big problem cache url = %@", [[self keyArray] objectAtIndex:0]);
+            }
+            
+            
             NSLog(@"Remove cache");
             //[[self cache] removeAllObjects];
             
