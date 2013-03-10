@@ -1,10 +1,10 @@
-SetEnv APPLICATION_ENV stage
+SetEnv APPLICATION_ENV prod
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
     #<IfModule mod_vhost_alias.c>
-    #    RewriteBase /
+    RewriteBase /console/app.php
     #</IfModule>
 
     RewriteCond %{REQUEST_FILENAME} !-f
