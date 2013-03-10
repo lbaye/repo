@@ -64,6 +64,8 @@ class PhotosRepo extends Base implements Likable
     {
         return $this->dm->createQueryBuilder()
             ->find('Document\Photo')
+            ->field('owner')
+            ->equals($user->getId())
             ->sort('createDate', 'desc')
             ->getQuery()
             ->execute();
