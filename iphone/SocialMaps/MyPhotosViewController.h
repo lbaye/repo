@@ -25,13 +25,13 @@
     IBOutlet UIButton *nextButton;
     IBOutlet UIButton *prevButton;
     
-    NSMutableArray *selectedFriendsIndex, *photoList /*, *bigPhotoList, *customSelectedFriendsIndex*/;
+    NSMutableArray *selectedFriendsIndex, *photoList;
     
     BOOL isDragging_msg, isDecliring_msg;
-    int zoomIndex, getAllPhotoCounter;
+    int zoomIndex;
+    
     RestClient *restClient;
     AppDelegate *smAppdelegate;
-    //NSMutableDictionary *photoDic;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *labelNotifCount;

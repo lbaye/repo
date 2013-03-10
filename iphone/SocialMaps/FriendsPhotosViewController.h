@@ -13,29 +13,40 @@
 
 #import <UIKit/UIKit.h>
 
+@class RestClient;
+@class AppDelegate;
+
 @interface FriendsPhotosViewController : UIViewController
 {
     IBOutlet UIScrollView *photoScrollView;
-    IBOutlet UIScrollView *customScrollView;
+    IBOutlet UIScrollView *zoomScrollView;
     IBOutlet UIView *zoomView;
     IBOutlet UILabel *labelNotifCount;
     IBOutlet UIButton *photoLabel;
     NSString *userName;
     NSString *userId;
     IBOutlet UIButton *nextButton;
-    IBOutlet UIButton *prevButton;    
-
+    IBOutlet UIButton *prevButton;
+    
+    NSMutableArray *photoList;
+    
+    BOOL isDragging_msg, isDecliring_msg;
+    int zoomIndex;
+    
+    RestClient *restClient;
+    AppDelegate *smAppdelegate;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *labelNotifCount;
 @property(nonatomic,retain) IBOutlet UIScrollView *photoScrollView;
-@property(nonatomic,retain) IBOutlet UIScrollView *customScrollView;
+@property(nonatomic,retain) IBOutlet UIScrollView *zoomScrollView;
 @property(nonatomic,retain) IBOutlet UIView *zoomView;
 @property(nonatomic,retain) IBOutlet UIButton *photoLabel;
 @property(nonatomic,retain) NSString *userName;
 @property(nonatomic,retain) NSString *userId;
 @property(nonatomic,retain) IBOutlet UIButton *nextButton;
 @property(nonatomic,retain) IBOutlet UIButton *prevButton;    
+@property (nonatomic, retain) NSMutableArray *photoList;
 
 /**
  * @brief Closes full screen view of a photo

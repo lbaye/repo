@@ -126,7 +126,7 @@
                                             <outlet property="delegate" destination="SHD-ec-WVP" id="TVF-60-UfG"/>
                                         </connections>
                                     </scrollView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="q05-fm-en8">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="q05-fm-en8">
                                         <rect key="frame" x="283" y="218" width="17" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -141,7 +141,7 @@
                                             <action selector="viewNextImage:" destination="SHD-ec-WVP" eventType="touchUpInside" id="3WK-ac-aQy"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="OjG-1c-ky0">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="OjG-1c-ky0">
                                         <rect key="frame" x="20" y="218" width="17" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -156,7 +156,7 @@
                                             <action selector="viewPrevImage:" destination="SHD-ec-WVP" eventType="touchUpInside" id="w1H-Ka-D74"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jTs-CJ-gCx">
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jTs-CJ-gCx">
                                         <rect key="frame" x="153" y="425" width="15" height="15"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
@@ -171,6 +171,21 @@
                                             <action selector="closeZoomView:" destination="SHD-ec-WVP" eventType="touchUpInside" id="4OZ-u1-vtv"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="q9z-0a-W4Y">
+                                        <rect key="frame" x="144" y="416" width="32" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closeZoomView:" destination="SHD-ec-WVP" eventType="touchUpInside" id="gLx-bP-cZC"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                             </view>
@@ -178,12 +193,12 @@
                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                     </view>
                     <connections>
-                        <outlet property="customScrollView" destination="dBV-f1-XFW" id="Otr-dm-XB9"/>
                         <outlet property="labelNotifCount" destination="LTf-gZ-MRR" id="zEk-FO-yD5"/>
                         <outlet property="nextButton" destination="q05-fm-en8" id="98a-M3-Ku0"/>
                         <outlet property="photoLabel" destination="Spd-aZ-2OM" id="6er-n0-ARn"/>
                         <outlet property="photoScrollView" destination="xYT-S7-PrF" id="LqM-Yi-xXP"/>
                         <outlet property="prevButton" destination="OjG-1c-ky0" id="38A-E1-11R"/>
+                        <outlet property="zoomScrollView" destination="dBV-f1-XFW" id="2Bx-4o-enP"/>
                         <outlet property="zoomView" destination="nDF-0v-YBC" id="LJf-dh-878"/>
                     </connections>
                 </viewController>
@@ -619,7 +634,7 @@
                                             <outlet property="delegate" destination="Mv0-7P-2pJ" id="BBg-15-Tfy"/>
                                         </connections>
                                     </scrollView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="msd-Xf-4jA">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="msd-Xf-4jA" userLabel="rightImage">
                                         <rect key="frame" x="283" y="218" width="17" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -634,7 +649,7 @@
                                             <action selector="viewNextImage:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="xbM-lT-fgw"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5dI-gk-UtP">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="5dI-gk-UtP" userLabel="leftImage">
                                         <rect key="frame" x="20" y="218" width="17" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -649,7 +664,7 @@
                                             <action selector="viewPrevImage:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="Evh-Bo-kJU"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xwf-5o-qJL">
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xwf-5o-qJL" userLabel="closeImage">
                                         <rect key="frame" x="153" y="425" width="15" height="15"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
@@ -664,9 +679,39 @@
                                             <action selector="closeZoomView:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="hKQ-J7-mG6"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="60M-k7-tER">
+                                        <rect key="frame" x="143.5" y="416" width="32" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closeZoomView:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="nmt-24-fC1"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="hsO-x4-5eP">
+                                <rect key="frame" x="144" y="214" width="32" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeZoomView:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="RNh-ZC-ubZ"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" id="HQd-di-J1u" userLabel="notifHeader">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -839,6 +884,78 @@
         <image name="logo_3.png" width="221" height="41"/>
         <image name="sp2.png" width="1" height="59"/>
     </resources>
+    <classes>
+        <class className="FriendsPhotosViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FriendsPhotosViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="backButtonAction:"/>
+                <relationship kind="action" name="closeZoomView:"/>
+                <relationship kind="action" name="viewNextImage:"/>
+                <relationship kind="action" name="viewPrevImage:"/>
+                <relationship kind="outlet" name="customScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nextButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="photoLabel" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="photoScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="prevButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="zoomView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="MyPhotosViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MyPhotosViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="backButtonAction:"/>
+                <relationship kind="action" name="closeZoomView:"/>
+                <relationship kind="action" name="deleteSelectedPhotosAction:"/>
+                <relationship kind="action" name="myPhotosAction:"/>
+                <relationship kind="action" name="uploadNewPhotoAction:"/>
+                <relationship kind="action" name="viewNextImage:"/>
+                <relationship kind="action" name="viewPrevImage:"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nextButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="photoScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="prevButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="zoomScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="zoomView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="UploadNewPhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UploadNewPhotoViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="addTakePhotos:"/>
+                <relationship kind="action" name="backButtonAction:"/>
+                <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="cancelCustom:"/>
+                <relationship kind="action" name="myPhotos:"/>
+                <relationship kind="action" name="saveCustom:"/>
+                <relationship kind="action" name="segmentChanged:"/>
+                <relationship kind="action" name="uploadPhotos:"/>
+                <relationship kind="outlet" name="addressDetailLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="commentView" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="customView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="frndsScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lowerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="mainScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="photoImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="upperView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
