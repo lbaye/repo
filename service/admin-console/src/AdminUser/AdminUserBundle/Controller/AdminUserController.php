@@ -670,7 +670,8 @@ class AdminUserController extends Controller
         // set your API key here
         $api_key = "AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw";
         // format this string with the appropriate latitude longitude
-        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true_or_false&key=' . $api_key;
+//        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true_or_false&key=' . $api_key;
+        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true';
         // make the HTTP request
         $data = @file_get_contents($url);
         // parse the json response
