@@ -9,8 +9,9 @@
 #import "CachedImages.h"
 #import "ImageInfo.h"
 
+#define MAX_CACHED_IMAGES	200
+#define MAX_TEMPORARY_CACHED_IMAGES 20
 
-#define MAX_CACHED_IMAGES	20
 //NSCache should autometically handle releasing cached objects when a memory warning is received
 
 @implementation CachedImages
@@ -26,6 +27,18 @@
 
 	assert(_cache);
 	return _cache;
+}
+
++ (NSMutableDictionary*)temporaryCache
+{
+    static NSMutableDictionary* _temporaryCache = nil;
+	
+	if( !_temporaryCache ){
+        _temporaryCache = [[NSMutableDictionary alloc] init];
+    }
+    
+	assert(_temporaryCache);
+	return _temporaryCache;
 }
 
 + (NSMutableArray*)keyArray
@@ -54,6 +67,20 @@
     return imageInfo;
 }
 
++ (ImageInfo*)getImageFromURLTemporaryCache:(NSURL*)URL {
+    
+    ImageInfo *imageInfo = [[self temporaryCache] objectForKey:URL.description];
+    
+    if (!imageInfo) {
+        imageInfo = [[[ImageInfo alloc] init] autorelease];
+        imageInfo.imagePath = URL;
+        //[self cacheFromURL:imageInfo]; //If icondonwloader2 used
+        [self performSelectorInBackground:@selector(temporayCacheFromURL:) withObject:imageInfo];
+    }
+    
+    return imageInfo;
+}
+
 + (ImageInfo*)getImageFromURLIfAvailable:(NSURL*)URL {
     
     ImageInfo *imageInfo = [[self cache] objectForKey:URL.description];
@@ -65,8 +92,52 @@
     return imageInfo;
 }
 
++ (void)temporayCacheFromURL:(ImageInfo*)imageInfo
+{
+    NSURL *url = imageInfo.imagePath;
+    
+    UIImage* newImage = imageInfo.image;
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+    if( !newImage ) {
+        
+		NSLog(@"Image From Server TEMPORARY.......");
+        
+        
+        if( [[self temporaryCache] count] >= MAX_TEMPORARY_CACHED_IMAGES) {
+            NSLog(@"Remove TEMPORARY cache");
+            [[self temporaryCache] removeAllObjects];
+            
+        }
+        
+        [[self temporaryCache] setObject:imageInfo forKey:url.description];
+        
+		NSError *err = nil;
+		
+		newImage = [UIImage imageWithData: [NSData dataWithContentsOfURL:url options:0 error:&err]];
+        
+		if(!newImage )
+		{
+            NSLog( @"UIImageView:LoadImage Failed: %@", err );
+		}
+	}
+    
+	if (newImage) {
+        NSLog(@"Image From Cache TEMPORARY.......");
+        ImageInfo *imageInfoValid = [[self temporaryCache] objectForKey:url.description];
+        
+        if (imageInfoValid) {
+            imageInfo.image = newImage;
+        }
+        
+	}
+    
+    [pool drain];
+}
+
 // Loads an image from a URL, caching it for later loads
-+ (void)cacheFromURL:(ImageInfo*)imageInfo;
++ (void)cacheFromURL:(ImageInfo*)imageInfo
 {
     NSURL *url = imageInfo.imagePath;
         
@@ -139,6 +210,12 @@
 {
     [[self cache] removeAllObjects];
     [[self keyArray] removeAllObjects];
+    [[self temporaryCache] removeAllObjects];
+}
+
++ (void) removeTemporaryCache
+{
+    [[self temporaryCache] removeAllObjects];
 }
 
 @end

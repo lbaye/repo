@@ -34,10 +34,24 @@
 + (ImageInfo*)getImageFromURLIfAvailable:(NSURL*)URL;
 
 /**
+ * @brief Get image from a given url. Download image if not present.
+ * @param (NSURL) - URL of an image
+ * @retval (ImageInfo) - ImageInfo contains UIImage and URL
+ */
++ (ImageInfo*)getImageFromURLTemporaryCache:(NSURL*)URL;
+
+/**
  * @brief Remove all cached images
  * @param none
  * @retval none
  */
 + (void) removeAllCache;
+
+/**
+ * @brief Remove all cached images
+ * @param none
+ * @retval none
+ */
++ (void) removeTemporaryCache;
 
 @end

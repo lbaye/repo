@@ -15,7 +15,7 @@
 #import "RestClient.h"
 #import "AppDelegate.h"
 #import "UIImageView+Cached.h"
-
+#import "CachedImages.h"
 
 @interface MyPhotosViewController ()
 -(void)scrollToPage:(int)page:(BOOL)animated;
@@ -66,11 +66,19 @@
         labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [CachedImages removeAllCache];
+    
+    [super didReceiveMemoryWarning];
+}
+
 -(void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_USER_ALL_PHOTO object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
     
+    [CachedImages removeTemporaryCache];
     [smAppdelegate.myPhotoList removeAllObjects];
     [selectedFriendsIndex release];
     [photoList release];
@@ -271,7 +279,7 @@
         }
     }
     
-    [imgView loadFromURL:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
+    [imgView loadFromURLTemporaryCache:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
 }
 
 -(void)scrollToPage:(int)page:(BOOL)animated

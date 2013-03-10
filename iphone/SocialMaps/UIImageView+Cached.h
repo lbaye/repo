@@ -29,6 +29,13 @@
 -(void)loadFromURL:(NSURL*)url;
 
 /**
+ * @brief Set image by downloading from server or from temporary cache if available
+ * @param (NSURL) - URL that contains image
+ * @retval none
+ */
+-(void)loadFromURLTemporaryCache:(NSURL *)url;
+
+/**
  * @brief Set image only if availabel in cache.
  * @param (NSURL) - URL that contains image
  * @retval none

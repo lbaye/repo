@@ -16,6 +16,7 @@
 #import "AppDelegate.h"
 #import "Globals.h"
 #import "UIImageView+Cached.h"
+#import "CachedImages.h"
 
 @interface FriendsPhotosViewController ()
 -(void)scrollToPage:(int)page:(BOOL)animated;
@@ -178,6 +179,7 @@
             UIImageView *bigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
             UIView *viewForBigImage = [[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
             
+            bigImageView.image = nil;
             bigImageView.userInteractionEnabled = YES;
             bigImageView.tag = i;
             viewForBigImage.tag = i;
@@ -219,7 +221,8 @@
         }
     }
     
-    [imgView loadFromURL:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
+    if (!imgView.image)
+        [imgView loadFromURLTemporaryCache:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
 }
 
 -(void)scrollToPage:(int)page:(BOOL)animated
@@ -310,10 +313,18 @@
 }
 //lazy load method ends
 
--(void) dealloc
+- (void)didReceiveMemoryWarning
+{
+    [CachedImages removeAllCache];
+    
+    [super didReceiveMemoryWarning];
+}
+
+- (void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
     [photoList release];
+    [CachedImages removeTemporaryCache];
     
     [super dealloc];
 }

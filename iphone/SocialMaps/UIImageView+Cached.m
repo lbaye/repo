@@ -17,7 +17,7 @@ static char const * const ObjectTagKey = "ObjectTag";
 
 @dynamic imageInfo;
 
-//#define TAG_INDICATOR_VIEW	420
+#define TAG_INDICATOR_VIEW	420
 
 - (ImageInfo*)getImageInfo {
     ImageInfo *imageInfoObj = (ImageInfo*)objc_getAssociatedObject(self, ObjectTagKey);
@@ -32,12 +32,12 @@ static char const * const ObjectTagKey = "ObjectTag";
     if ([keyPath isEqual:@"image"]) {
         [self performSelectorOnMainThread:@selector(setImage:) withObject:((ImageInfo*)object).image waitUntilDone:YES];
         [self canclePreviousDownload];
-        //[[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
+        [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
         //NSLog(@"remove indicator");
     }
 }
 
-- (void)canclePreviousDownload//:(ImageInfo*)imageInfo 
+- (void)canclePreviousDownload 
 {
     if ([self getImageInfo]) {
         @try{
@@ -48,6 +48,28 @@ static char const * const ObjectTagKey = "ObjectTag";
     } 
     //[self setImageInfo:imageInfo];
     //[imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
+}
+
+-(void)loadFromURLTemporaryCache:(NSURL *)url
+{
+    if (url) {
+        self.image = nil;
+        ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURLTemporaryCache:url]);
+        
+        if (imageInfo.image != NULL) {
+            self.image = imageInfo.image;
+        } else {
+            [self setImageInfo:imageInfo];
+            [imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
+            
+            UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            activityIndicator.center = self.center;
+            [activityIndicator startAnimating];
+            activityIndicator.tag = TAG_INDICATOR_VIEW;
+            [self addSubview:activityIndicator];
+            [activityIndicator release];
+        }
+    }
 }
 
 // Methods to load and cache an image from a URL on a separate thread
@@ -84,12 +106,7 @@ static char const * const ObjectTagKey = "ObjectTag";
 }
 
 -(void)dealloc
-{/*
-    @try{
-        [[self getImageInfo] removeObserver:self forKeyPath:@"image"];
-    }@catch(id anException){
-        NSLog(@"Cannot remove an observer");
-    }*/
+{
     [self canclePreviousDownload];
     [super dealloc];
 }
