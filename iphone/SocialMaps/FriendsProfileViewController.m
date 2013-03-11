@@ -128,7 +128,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:profileScrollView] autorelease];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
     NSLog(@"friendsId: %@",friendsId);
     nameArr=[[NSMutableArray alloc] init];
@@ -200,6 +199,15 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 {
     [super viewDidAppear:animated];
     [self displayNotificationCount];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];
+    
+    [super viewDidDisappear:animated];
 }
 
 -(void)reloadProfileScrollView
@@ -1100,8 +1108,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [meetUpImageView release];
     meetUpImageView = nil;
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
+    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
