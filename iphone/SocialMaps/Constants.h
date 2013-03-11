@@ -99,3 +99,15 @@ extern float const kNumberRGBBlue;
 
 // Maximum number of visible annotation
 extern int const MAX_VISIBLE_ANNO;
+
+/**
+ * comment the next line out to disable debug logging
+ * when bundling the Application for Production
+ */
+#define DEBUG_MODE
+
+#ifdef DEBUG_MODE
+#define DebugLog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#else
+#define DebugLog( s, ... )
+#endif
