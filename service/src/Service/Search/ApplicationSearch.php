@@ -11,7 +11,7 @@ class ApplicationSearch implements ApplicationSearchInterface
     private $dm;
     private $config;
     private $user;
-    const MAX_ALLOWED_OLDER_CHECKINS = '168 hours ago';
+    const MAX_ALLOWED_OLDER_CHECKINS = '336 hours ago';
 
     public function __construct(\Document\User $user, \Doctrine\ODM\MongoDB\DocumentManager &$dm, array &$config)
     {
