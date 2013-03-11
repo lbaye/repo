@@ -124,7 +124,7 @@ abstract class Content
     {
         if ($this->getPermission() == 'public' || $this->getOwner() == $user) {
             return true;
-        } else if ($this->getPermission() == 'private') {
+        } else if ($this->getPermission() == 'private' || $this->getPermission() == '') {
             return false;
         } else if ($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
             return true;
