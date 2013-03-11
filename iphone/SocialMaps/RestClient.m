@@ -2424,7 +2424,9 @@ AppDelegate *smAppDelegate;
     [request addPostValue:event.eventLocation.latitude forKey:@"lat"];
     [request addPostValue:event.eventLocation.longitude forKey:@"lng"];
     [request addPostValue:event.eventDate.date forKey:@"time"];
+    [request addPostValue:event.permission forKey:@"permission"];
     [request addPostValue:[NSNumber numberWithBool: event.guestCanInvite] forKey:@"guestsCanInvite"];
+    
     for (int i=0; i<[event.guestList count]; i++)
     {
         [request addPostValue:[event.guestList objectAtIndex:i] forKey:@"guests[]"];

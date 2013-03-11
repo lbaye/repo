@@ -59,7 +59,7 @@
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
 bool searchFlag;
-__strong int checkCount;
+//__strong int checkCount;
 __strong NSString *searchTexts, *dateString;
 int locationFlag=0;
 CustomRadioButton *radio;
@@ -285,7 +285,25 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated 
+- (void)setSharingPreference
+{
+    int gotoRadioButtonNumber = 0;
+    
+    if ([event.permission isEqualToString:@"public"])
+        gotoRadioButtonNumber = 3;
+    else if ([event.permission isEqualToString:@"private"])
+        gotoRadioButtonNumber = 0;
+    else if ([event.permission isEqualToString:@"friends"])
+        gotoRadioButtonNumber = 1;
+    else if ([event.permission isEqualToString:@"circles"])
+        gotoRadioButtonNumber = 2;
+    else if ([event.permission isEqualToString:@"custom"])
+        gotoRadioButtonNumber = 4;
+    
+    [radio gotoButton:gotoRadioButtonNumber];
+}
+
+- (void)viewWillAppear:(BOOL)animated
 {
      createNotf=0;
      updateNotf=0;
@@ -297,6 +315,8 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 	[circleView removeFromSuperview];
     if (editFlag==true)
     {
+        event=globalEditEvent;
+        [self setSharingPreference];
         if (event.guestCanInvite) {
             [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
         }
@@ -304,7 +324,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         {
             [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
         }
-        event=globalEditEvent;
+        
         [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
         [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
         [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
@@ -768,8 +788,9 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 -(IBAction)guestCanInvite:(id)sender
 {
-    checkCount++;
-    if (checkCount%2!=0)
+    //checkCount++;
+    //if (checkCount%2!=0)
+    if (!event.guestCanInvite)
     {
         [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
         event.guestCanInvite=true;

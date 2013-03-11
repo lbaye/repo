@@ -18,6 +18,7 @@
 #import "NotificationController.h"
 #import "SelectCircleTableCell.h"
 #import "UIImageView+Cached.h"
+#import "CreateEventViewController.h"
 
 @implementation ViewEventDetailViewController
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
@@ -635,7 +636,7 @@ NSString *searchText;
     editFlag=true;
     isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    CreateEventViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
 }
