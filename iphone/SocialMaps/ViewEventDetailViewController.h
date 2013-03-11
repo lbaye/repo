@@ -50,6 +50,7 @@
     IBOutlet UISearchBar *friendSearchbar;
     IBOutlet UISegmentedControl *segmentControl;
     IBOutlet UIView *customView;
+    IBOutlet UIImageView *backgroundImageView;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;

@@ -562,6 +562,11 @@ bool searchFlags=true;
         cell1.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
         cell1.eventAddress.text=event.eventAddress;
 
+        [cell1.footerView.layer setCornerRadius:12.0];
+        [cell1.footerView.layer setMasksToBounds:YES];
+        
+        [cell.footerView.layer setCornerRadius:12.0];
+        [cell.footerView.layer setMasksToBounds:YES];
         
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",event.eventImageUrl);

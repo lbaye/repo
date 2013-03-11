@@ -280,6 +280,9 @@ NSString *searchText;
     [circleTableView setHidden:YES];
     [frndsScrollView setHidden:NO];
     [friendSearchbar setHidden:NO];
+    
+    [backgroundImageView.layer setCornerRadius:8.0f];
+    [backgroundImageView.layer setMasksToBounds:YES];
 }
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
@@ -341,6 +344,8 @@ NSString *searchText;
 
 - (void)viewDidUnload
 {
+    [backgroundImageView release];
+    backgroundImageView = nil;
     [super viewDidUnload];
     
     // Release any retained subviews of the main view.
@@ -1199,4 +1204,8 @@ NSString *searchText;
     detNotfCounter=0;
 }
 
+- (void)dealloc {
+    [backgroundImageView release];
+    [super dealloc];
+}
 @end
