@@ -161,7 +161,9 @@ class FetchFacebookLocation extends Base
                         $this->debug("There are unsaved changes, Now performing persist operation");
                         $dm->persist($extUser);
                         $dm->flush();
-                        $this->debug("Successfully inserted into database...".$changedCounts);
+                        $this->debug("Successfully inserted into database...".$changedCounts."refId: ".$checkinWithMeta['refId']);
+                    } else{
+                        $this->debug("Not changed  {$checkinWithMeta['refId']} to smFriends Hash ");
                     }
 
 //                    if ($i % 10){
@@ -225,8 +227,8 @@ class FetchFacebookLocation extends Base
                 $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
                 $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
             } else {
-                $extUser->setSmFriends($smUser->getId());
-                $this->debug("Adding  {$smUser->getId()} to smFriends Hash.");
+//                $extUser->setSmFriends($smUser->getId());
+                $this->debug("Adding  {$smUser->getId()} to smFriends Hash ".var_dump($extUser->getSmFriends()));
             }
         }
 
