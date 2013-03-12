@@ -19,7 +19,7 @@ class ExternalUser {
     protected $id;
 
     /** @ODM\Hash */
-    protected $smFriends;
+    protected $smFriends = array();
 
     /** @ODM\String */
     protected $refId;
