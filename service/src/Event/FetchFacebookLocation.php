@@ -226,7 +226,14 @@ class FetchFacebookLocation extends Base
             $this->debug("in_array check ".var_dump($smUser->getId())." smFriends: ".var_dump($extUser->getSmFriends()));
             if (!in_array($smUser->getId(), $extUser->getSmFriends())) {
                 $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
-                $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
+                if(is_null($extUser->getSmFriends())){
+                    $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
+                    $this->debug("smfriends is not empty!");
+                } else{
+                    $extUser->setSmFriends(array($smUser->getId()));
+                    $this->debug("Existing smfriends is empty!");
+                }
+
             } else {
 //                $extUser->setSmFriends($smUser->getId());
                 $this->debug("Adding  {$smUser->getId()} to smFriends Hash ".var_dump($extUser->getSmFriends()));
