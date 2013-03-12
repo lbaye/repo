@@ -162,8 +162,10 @@ class FetchFacebookLocation extends Base
                         $dm->persist($extUser);
                     }
 
-                    if ($i % 10)
+                    if ($i % 10){
                         $dm->flush();
+                        $this->debug("Successfully added into database...");
+                    }
                 } else {
                     $this->warn("Found inconsistent data - " . json_encode($checkinWithMeta));
                 }
@@ -221,7 +223,8 @@ class FetchFacebookLocation extends Base
                 $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
                 $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
             } else {
-                $extUser->setSmFriends($smUser->getId());
+                $extUser->setSmFriends(array($smUser->getId()));
+                $this->debug("Adding  {$smUser->getId()} to smFriends Hash.");
             }
         }
 
