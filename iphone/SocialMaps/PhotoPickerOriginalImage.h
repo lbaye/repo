@@ -63,13 +63,6 @@ UIActionSheetDelegate> {
  */
 - (void)selectPhoto:(id)sender imgSize:(CGSize)size;
 
-/**
- * @brief Resize image to specific size
- * @param (UIImage) - Image which will be resized
- * @param (CGSize) - Image size in which dimension image will be resized
- * @retval (UIImage) - Resized image
- */
-- (UIImage*) scaleImage:(UIImage*) img toSize:(CGSize)newSize;
 
 /**
  * @brief Resize image proportionally according to height and width

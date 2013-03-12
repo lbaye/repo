@@ -59,12 +59,15 @@ int uploadPhotoCounter=0;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     isBgTaskRunning=true;
     [self loadDummydata];    
     [self reloadScrollview];
     [customView removeFromSuperview];
     smAppDelegate.currentModelViewController = self;
     uploadPhotoCounter=0;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadPhotoDone:) name:NOTIF_DO_UPLOAD_PHOTO object:nil];
 }
 
 - (void)viewDidLoad
@@ -129,7 +132,7 @@ int uploadPhotoCounter=0;
     [customView.layer setBorderWidth:1.0];
     [customView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [customView.layer setMasksToBounds:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadPhotoDone:) name:NOTIF_DO_UPLOAD_PHOTO object:nil];
+    
     curAddress=[[NSString alloc] init];
     [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0];
     
@@ -807,6 +810,8 @@ int uploadPhotoCounter=0;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
+    
     [super viewWillDisappear:animated];
     isBgTaskRunning=false;
 }
@@ -814,10 +819,8 @@ int uploadPhotoCounter=0;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [picSel release];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
-    // Release any retained subviews of the main view.
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
+    //[picSel release];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

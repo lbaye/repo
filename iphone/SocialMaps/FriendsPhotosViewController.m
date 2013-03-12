@@ -139,7 +139,7 @@
             
             UIView *aView = [[UIView alloc] initWithFrame:CGRectMake(x+5, y, 80, 80)];
             
-            UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(-1, 70, 80, 20)];
+            UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 70, 70, 20)];
             name.textAlignment = UITextAlignmentCenter;
             [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
             [name setNumberOfLines:0];

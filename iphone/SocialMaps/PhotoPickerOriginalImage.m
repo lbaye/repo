@@ -10,7 +10,10 @@
 #import "CustomAlert.h"
 #import "AppDelegate.h"
 
+#define MAX_IMAGE_WIDTH 640
+
 @implementation PhotoPickerOriginalImage
+
 @synthesize picSel;
 @synthesize regPhoto;
 @synthesize delegate;
@@ -109,42 +112,33 @@
     }
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)img editingInfo:(NSDictionary *)editInfo {
-    
-    UIImage *scaledImage = img;
-    NSLog(@"selected image %@",img);
-    regPhoto = scaledImage;
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)img editingInfo:(NSDictionary *)editInfo
+{
     NSLog(@"before image selection: width=%f, height=%f",
-          regPhoto.size.width, regPhoto.size.height);
+          img.size.width, img.size.height);
     
-    UIGraphicsBeginImageContext(scaledImage.size);
-    [img drawInRect:CGRectMake(0,0,scaledImage.size.width,scaledImage.size.height)];
-    regPhoto = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    regPhoto=[self imageByScalingProportionallyToSize:regPhoto];
+    regPhoto = [self imageByScalingProportionallyToSize:img];
+    
     NSLog(@"After image selection: width=%f, height=%f",
           regPhoto.size.width, regPhoto.size.height);
     
     [self dismissModalViewControllerAnimated:NO];
-    // Call delegate method photoPickerDone:(bool)status image:(UIImage*)img
+
+    // Call delegate method
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(photoPickerDone:image:)]) {
         [self.delegate photoPickerDone:TRUE  image:regPhoto];
     }
 }
 
-- (UIImage*) scaleImage:(UIImage*) img toSize:(CGSize)newSize {
-    UIGraphicsBeginImageContext(newSize);
-    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return scaledImage;
-}
-
 - (UIImage *)imageByScalingProportionallyToSize:(UIImage *)sourceImage
 {
-    
     UIImage *newImage = nil;
-    CGSize targetSize=CGSizeMake(sourceImage.size.width/2, sourceImage.size.height/2);
+    
+    int w = MAX_IMAGE_WIDTH;
+    int h = (sourceImage.size.height / sourceImage.size.width) * w;
+    
+    //CGSize targetSize=CGSizeMake(sourceImage.size.width/2, sourceImage.size.height/2);
+    CGSize targetSize=CGSizeMake(w, h);
     CGSize imageSize = sourceImage.size;
     CGFloat width = imageSize.width;
     CGFloat height = imageSize.height;
