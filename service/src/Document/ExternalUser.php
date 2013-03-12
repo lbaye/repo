@@ -55,7 +55,7 @@ class ExternalUser {
     protected $lastSeenAt = null;
 
     public function toArray() {
-        $exposed_fields = array('id', 'smUserId', 'refId', 'refType', 'avatar',
+        $exposed_fields = array('id', 'smFriends', 'refId', 'refType', 'avatar',
                                 'firstName', 'lastName', 'currentLocation', 'gender');
         $values = array();
 
