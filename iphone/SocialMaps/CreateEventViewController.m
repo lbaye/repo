@@ -588,6 +588,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     entityFlag=0;
     entryTextField.text=event.eventName;
     entryTextField.placeholder=@"Name...";
+    [entryTextField becomeFirstResponder];
 }
 
 -(IBAction)summaryButtonAction
@@ -596,6 +597,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     entityFlag=1;
     entryTextField.text=event.eventShortSummary;
     entryTextField.placeholder=@"Summary...";
+    [entryTextField becomeFirstResponder];
 }    
 
 -(IBAction)descriptionButtonAction
@@ -604,6 +606,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     entityFlag=2;
     entryTextField.text=event.eventDescription;
     entryTextField.placeholder=@"Description...";
+    [entryTextField becomeFirstResponder];
 }
 
 -(IBAction)dateButtonAction:(id)sender
