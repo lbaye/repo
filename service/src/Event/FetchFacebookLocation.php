@@ -12,18 +12,21 @@ use \Doctrine\ODM\MongoDB\DocumentManager as DM;
 /**
  * Background job for retrieving facebook friends from a facebook connected user.
  */
-class FetchFacebookLocation extends Base {
+class FetchFacebookLocation extends Base
+{
 
     /**
      * Maximum number of users's checkins to show on map
      */
     const MAX_CHECKINS = 50;
 
-    protected function setFunction() {
+    protected function setFunction()
+    {
         $this->function = 'fetch_facebook_location';
     }
 
-    public function run(\GearmanJob $job) {
+    public function run(\GearmanJob $job)
+    {
         $this->logJob('FetchFacebookLocation', $job);
         $this->checkMemoryBefore();
 
@@ -39,7 +42,7 @@ class FetchFacebookLocation extends Base {
         $userId = $workload->userId;
 
         $this->debug("Retrieve Facebook Checkins for FBID - " .
-                     $facebookId . ' and UID - ' . $userId);
+            $facebookId . ' and UID - ' . $userId);
 
         # Load SM user
         $smUser = $userRepo->find($userId);
@@ -48,7 +51,7 @@ class FetchFacebookLocation extends Base {
         $facebook = new FB($facebookId, $facebookAuthToken);
 
         $this->debug('Connecting with facebook with authToken - ' .
-                     $facebookAuthToken);
+            $facebookAuthToken);
 
         if (is_null($smUser)) {
             $this->debug('Invalid user id - ' . $userId);
@@ -60,7 +63,7 @@ class FetchFacebookLocation extends Base {
         $fbCheckIns = $facebook->getFriendsCheckins();
         $totalCheckins = @count($fbCheckIns['data']);
         $this->debug('Found ' . $totalCheckins . ' facebook checkins from ' .
-                     $smUser->getFirstName() . ' checkins');
+            $smUser->getFirstName() . ' checkins');
 
         # Retrieve checkins with meta data
         if (!empty($fbCheckIns)) {
@@ -86,14 +89,16 @@ class FetchFacebookLocation extends Base {
         $this->checkMemoryAfter();
     }
 
-    private function requestForCacheRefresh(User &$smUser) {
+    private function requestForCacheRefresh(User &$smUser)
+    {
         $this->debug('Requesting for cache refresh');
         $this->addTaskBackground(\Helper\Constants::APN_CREATE_SEARCH_CACHE,
-                                 json_encode(array('userId' => $smUser->getId())));
+            json_encode(array('userId' => $smUser->getId())));
         $this->runTasks();
     }
 
-    private function keepSingleCheckinPerUser(&$fbCheckIns) {
+    private function keepSingleCheckinPerUser(&$fbCheckIns)
+    {
         $userCheckinMap = array();
 
         # Iterate through each checkin
@@ -115,7 +120,8 @@ class FetchFacebookLocation extends Base {
     /*
      * Order checkins by their creation date.
      */
-    private function orderCheckinsByTimestamp(array &$fbCheckIns) {
+    private function orderCheckinsByTimestamp(array &$fbCheckIns)
+    {
         $this->debug('Ordering ' . count($fbCheckIns) . ' by timestamp');
         $orderedCheckins = array();
 
@@ -129,10 +135,11 @@ class FetchFacebookLocation extends Base {
     }
 
     private function importExtUsersFromCheckins(
-        DM &$dm, ExtUserRepo &$extUserRepo, User &$smUser, array &$fbCheckIns, FB &$facebook) {
+        DM &$dm, ExtUserRepo &$extUserRepo, User &$smUser, array &$fbCheckIns, FB &$facebook)
+    {
 
         $this->info('Importing external users (' . count($fbCheckIns) .
-                    ') from ' . $smUser->getFirstName() . ' facebook checkins');
+            ') from ' . $smUser->getFirstName() . ' facebook checkins');
 
         $checkinsWithMetaData = $this->getCheckinsWithMetaData($facebook, $fbCheckIns);
         $changed = false;
@@ -178,14 +185,15 @@ class FetchFacebookLocation extends Base {
 
     private function findOrCreateOrUpdateExtUser(
         ExtUserRepo &$extUserRepo,
-        array &$checkinWithMeta, User &$smUser, &$changed) {
+        array &$checkinWithMeta, User &$smUser, &$changed)
+    {
 
         $extUser = $extUserRepo->findOneBy(
             array('refId' => $checkinWithMeta['refId'] . ''));
 
         if ($extUser == null) {
             $this->debug("Create ExtUser since it's not an existing ExtUser - " .
-                         $checkinWithMeta['refId']);
+                $checkinWithMeta['refId']);
 
             $extUser = $extUserRepo->map($checkinWithMeta);
             $extUser->setSmFriends(array($smUser->getId()));
@@ -212,13 +220,16 @@ class FetchFacebookLocation extends Base {
             if (!in_array($smUser->getId(), $extUser->getSmFriends())) {
                 $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
                 $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
+            } else {
+                $extUser->setSmFriends($smUser->getId());
             }
         }
 
         return $extUser;
     }
 
-    private function getCheckinsWithMetaData(FB &$facebook, &$fbCheckIns) {
+    private function getCheckinsWithMetaData(FB &$facebook, &$fbCheckIns)
+    {
         $this->debug("Building checkins with meta data");
 
         $checkinsInfo = array();
@@ -285,7 +296,8 @@ class FetchFacebookLocation extends Base {
         return array_values($fullCheckinsInfo);
     }
 
-    private function buildAddress(array $info) {
+    private function buildAddress(array $info)
+    {
         $location = $info['location'];
         if (!empty($location)) {
             return implode(", ", array_filter(array(@$location['street'], @$location['city'], @$location['country'])));
@@ -294,7 +306,8 @@ class FetchFacebookLocation extends Base {
         return null;
     }
 
-    private function mapByPageId(array &$pagesResult) {
+    private function mapByPageId(array &$pagesResult)
+    {
         $this->debug('Remapping pages with page_id as key and data as value');
 
         if (!empty($pagesResult)) {
