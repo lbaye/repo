@@ -223,6 +223,7 @@ class FetchFacebookLocation extends Base
 
             # TODO: How to handle potentially larger friends list ?
             # If current user is not in SM Friends list add him to the list
+            $this->debug("in_array check ".var_dump($smUser->getId())." smFriends: ".var_dump($extUser->getSmFriends()));
             if (!in_array($smUser->getId(), $extUser->getSmFriends())) {
                 $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
                 $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
