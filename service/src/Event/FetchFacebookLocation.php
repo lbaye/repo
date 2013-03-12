@@ -231,6 +231,7 @@ class FetchFacebookLocation extends Base
 //                $extUser->setSmFriends($smUser->getId());
                 $this->debug("Adding  {$smUser->getId()} to smFriends Hash ".var_dump($extUser->getSmFriends()));
             }
+            $changed = true;
         }
 
         return $extUser;
