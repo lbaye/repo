@@ -318,7 +318,7 @@ class UserRepo extends Base
             }
 
         $data['userId'] = $this->currentUser->getId();
-        if ($this->currentUser->getFirstName() == null || $this->currentUser->getLastName() == null) {
+        if ($this->currentUser->getUsername() != null) {
             $data['friendName'] = $this->currentUser->getUsername();
         } else {
             $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
