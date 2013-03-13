@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2840" systemVersion="11G63b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="kZN-WR-jpz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="kZN-WR-jpz">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
@@ -92,18 +91,24 @@
                                                     <color key="shadowColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                                     <size key="shadowOffset" width="1" height="1"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="kcv-tV-z3t">
-                                                    <rect key="frame" x="83" y="67" width="129" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="fUg-Xs-BNA">
+                                                    <rect key="frame" x="83" y="67" width="151" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="kcv-tV-z3t">
+                                                            <rect key="frame" x="0.0" y="1" width="150" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="distance" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="RRF-CH-H5e">
                                                     <rect key="frame" x="240" y="67" width="71" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                             </subviews>
@@ -171,18 +176,24 @@
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="shadowColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="FSI-Qi-HrR">
-                                                    <rect key="frame" x="95" y="68" width="120" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="E2a-ET-A0d">
+                                                    <rect key="frame" x="95" y="68" width="119" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="FSI-Qi-HrR">
+                                                            <rect key="frame" x="4" y="1" width="150" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="distance" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="rNj-Jk-Er7">
                                                     <rect key="frame" x="240" y="68" width="71" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="j2F-Nk-Trq">
@@ -564,18 +575,24 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="NgY-fM-G9f">
-                                                    <rect key="frame" x="88" y="65" width="147" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="HTa-EE-H7s">
+                                                    <rect key="frame" x="88" y="65" width="147" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="NgY-fM-G9f">
+                                                            <rect key="frame" x="0.0" y="1" width="147" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="0pB-VE-Y68">
                                                     <rect key="frame" x="266" y="65" width="50" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ttD-C0-kVn">
@@ -648,18 +665,24 @@
                                                     <color key="shadowColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                                     <size key="shadowOffset" width="1" height="1"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="YTV-6L-CwP">
-                                                    <rect key="frame" x="103" y="65" width="136" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1032.12 km" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="ob2-Yt-2bj">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="wgs-vT-wRA">
+                                                    <rect key="frame" x="103" y="65" width="128" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VENUE or Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="YTV-6L-CwP">
+                                                            <rect key="frame" x="0.0" y="1" width="128" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1032.12 km" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="ob2-Yt-2bj">
                                                     <rect key="frame" x="239" y="65" width="74" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="EQw-Bc-pLh">
@@ -1763,6 +1786,120 @@
         <image name="sp2.png" width="1" height="59"/>
         <image name="zoom_icon.png" width="54" height="54"/>
     </resources>
+    <classes>
+        <class className="BlockUnblockCircleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BlockUnblockCircleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="selectAllpeople:"/>
+                <relationship kind="action" name="selectedUser:"/>
+                <relationship kind="action" name="viewLocationButton:"/>
+                <relationship kind="outlet" name="blockSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="blockTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="selectAllButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="CircleListCheckBoxTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CircleListCheckBoxTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="checkBoxButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="checkInImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="coverPicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="firstNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="friendShipStatus" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="messageButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="profilePicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="regStsImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="showOnMapButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="CircleListTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CircleListTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="checkInImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="coverPicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="fbFrndView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="firstNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="friendShipStatus" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="messageButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="profilePicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="regStsImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="showOnMapButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="InviteFromCircleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InviteFromCircleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="selectAllpeople:"/>
+                <relationship kind="action" name="selectedUser:"/>
+                <relationship kind="action" name="viewLocationButton:"/>
+                <relationship kind="outlet" name="inviteSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="inviteTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="selectAllButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ViewCircleListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewCircleListViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="showSearch:"/>
+                <relationship kind="outlet" name="circleListTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="circleSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="listPulldownMenu" candidateClass="UIView"/>
+                <relationship kind="outlet" name="listViewfilter" candidateClass="UIView"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="ViewCircleWisePeopleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewCircleWisePeopleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="addCircleAction:"/>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="action" name="cancelRenameCircle:"/>
+                <relationship kind="action" name="okAction:"/>
+                <relationship kind="action" name="saveRenameCircle:"/>
+                <relationship kind="outlet" name="circleCreateView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="circleListTableCell" candidateClass="CircleListTableCell"/>
+                <relationship kind="outlet" name="circleNameTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="circleSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="circleSelectTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="renameTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="renameUIView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
