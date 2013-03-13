@@ -10,7 +10,8 @@
 #import "CustomAlert.h"
 #import "AppDelegate.h"
 
-#define MAX_IMAGE_WIDTH 640
+#define MAX_IMAGE_WIDTH_LANDSCAPE 640
+#define MAX_IMAGE_HEIGHT_PORTRAIT 960
 
 @implementation PhotoPickerOriginalImage
 
@@ -134,8 +135,21 @@
 {
     UIImage *newImage = nil;
     
-    int w = MAX_IMAGE_WIDTH;
-    int h = (sourceImage.size.height / sourceImage.size.width) * w;
+    int w = MAX_IMAGE_WIDTH_LANDSCAPE;
+    int h = MAX_IMAGE_HEIGHT_PORTRAIT;
+    
+    if (sourceImage.size.width > w || sourceImage.size.height > h)
+    {
+        if (sourceImage.size.width > sourceImage.size.height)
+            h = (sourceImage.size.height / sourceImage.size.width) * w;
+        else
+            w = (sourceImage.size.width / sourceImage.size.height) * h;
+    }
+    else
+    {
+        h = sourceImage.size.height;
+        w = sourceImage.size.width;
+    }
     
     //CGSize targetSize=CGSizeMake(sourceImage.size.width/2, sourceImage.size.height/2);
     CGSize targetSize=CGSizeMake(w, h);

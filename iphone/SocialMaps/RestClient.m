@@ -6299,7 +6299,7 @@ AppDelegate *smAppDelegate;
     [request addPostValue:photo.location.longitude forKey:@"lng"];
     [request addPostValue:photo.address forKey:@"address"];
     [request addPostValue:photo.permission forKey:@"permission"];
-    request.timeOutSeconds = 30;
+    request.timeOutSeconds = 40;
     
     if ([photo.permission isEqualToString:@"custom"])
     {

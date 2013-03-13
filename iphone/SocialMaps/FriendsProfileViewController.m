@@ -174,7 +174,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     smAppDelegate.currentModelViewController = self;
     
     [smAppDelegate showActivityViewer:self.view];
-    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
     
     NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&r=%@",WS_URL,friendsId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
@@ -201,6 +200,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [self displayNotificationCount];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];
+    
+    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

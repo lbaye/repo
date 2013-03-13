@@ -70,6 +70,13 @@ int uploadPhotoCounter=0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadPhotoDone:) name:NOTIF_DO_UPLOAD_PHOTO object:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self addTakePhotos:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
