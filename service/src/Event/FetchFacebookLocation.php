@@ -18,7 +18,7 @@ class FetchFacebookLocation extends Base
     /**
      * Maximum number of users's checkins to show on map
      */
-    const MAX_CHECKINS = 250;
+    const MAX_CHECKINS = 100;
 
     protected function setFunction()
     {
@@ -113,7 +113,7 @@ class FetchFacebookLocation extends Base
             # if user is already exists in hash don't add to the hash
         }
 
-        # Keep maximum only 50 users
+        # Keep maximum only 100 users
         return array_values(array_slice($userCheckinMap, 0, self::MAX_CHECKINS));
     }
 
