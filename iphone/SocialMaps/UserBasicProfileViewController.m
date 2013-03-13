@@ -833,7 +833,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [self reloadProfileScrollView];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
-    [smAppDelegate hideActivityViewer];
+    //[smAppDelegate hideActivityViewer];
 }
 //lazy scroller
 
