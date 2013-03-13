@@ -318,7 +318,12 @@ class UserRepo extends Base
             }
 
         $data['userId'] = $this->currentUser->getId();
-        $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
+        if ($this->currentUser->getUsername() != null) {
+            $data['friendName'] = $this->currentUser->getUsername();
+        } else {
+            $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
+        }
+
         $data['recipientId'] = $friendId;
 
         $friendRequest = new FriendRequest($data);

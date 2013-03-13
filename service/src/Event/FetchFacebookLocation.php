@@ -161,7 +161,9 @@ class FetchFacebookLocation extends Base
                         $this->debug("There are unsaved changes, Now performing persist operation");
                         $dm->persist($extUser);
                         $dm->flush();
-                        $this->debug("Successfully inserted into database...".$changedCounts);
+                        $this->debug("Successfully inserted into database..." . $changedCounts . "refId: " . $checkinWithMeta['refId']);
+                    } else {
+                        $this->debug("Not changed  {$checkinWithMeta['refId']} to smFriends Hash ");
                     }
 
 //                    if ($i % 10){
@@ -221,13 +223,26 @@ class FetchFacebookLocation extends Base
 
             # TODO: How to handle potentially larger friends list ?
             # If current user is not in SM Friends list add him to the list
+            $this->debug("in_array check " . var_dump($smUser->getId()) . " smFriends: " . var_dump($extUser->getSmFriends()));
             if (!in_array($smUser->getId(), $extUser->getSmFriends())) {
                 $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
-                $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
+                $smFriendsList = array();
+                $smFriendsList = $extUser->getSmFriends();
+                if (!empty($smFriendsList)) {
+                    $this->debug("Result of array_merge".var_dump(array_merge($extUser->getSmFriends(), (array) $smUser->getId())));
+                    $extUser->setSmFriends(array_merge($extUser->getSmFriends(), (array) $smUser->getId()));
+                    $this->debug("smfriends is not empty!");
+                } else {
+                    $extUser->setSmFriends(array($smUser->getId()));
+                    $this->debug("Existing smfriends is empty!");
+                }
+                $changed = true;
+
             } else {
-                $extUser->setSmFriends($smUser->getId());
-                $this->debug("Adding  {$smUser->getId()} to smFriends Hash.");
+//                $extUser->setSmFriends($smUser->getId());
+                $this->debug("Adding  {$smUser->getId()} to smFriends Hash " . var_dump($extUser->getSmFriends()));
             }
+
         }
 
         return $extUser;
