@@ -340,7 +340,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     reloadFeedCounter=0;
-    [smAppDelegate hideActivityViewer];
+    //[smAppDelegate hideActivityViewer];
     CGRect frame = aWebView.frame;
     frame.size.height = 1;
     aWebView.frame = frame;
