@@ -229,6 +229,7 @@ class FetchFacebookLocation extends Base
                 $smFriendsList = array();
                 $smFriendsList = $extUser->getSmFriends();
                 if (!empty($smFriendsList)) {
+                    $this->debug("Result of array_merge".var_dump(array_merge($extUser->getSmFriends(), $smUser->getId())));
                     $extUser->setSmFriends(array_merge($extUser->getSmFriends(), $smUser->getId()));
                     $this->debug("smfriends is not empty!");
                 } else {
