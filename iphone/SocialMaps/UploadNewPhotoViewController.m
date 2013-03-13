@@ -314,7 +314,8 @@ int uploadPhotoCounter=0;
     if (status == TRUE) 
     {
         [photoImageView setImage:img];
-        NSData *imgdata = UIImagePNGRepresentation(img);
+        //NSData *imgdata = UIImagePNGRepresentation(img);
+        NSData *imgdata = UIImageJPEGRepresentation(img, 0.6);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         photo.image=imgBase64Data;
     } 

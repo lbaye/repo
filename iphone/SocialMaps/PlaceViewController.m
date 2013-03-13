@@ -366,7 +366,8 @@
         imageViewPlace.image = img;
         [buttonAddPhoto setTitle:@"Edit photo..." forState:UIControlStateNormal];
         
-        NSData *imgdata = UIImagePNGRepresentation(img);
+        //NSData *imgdata = UIImagePNGRepresentation(img);
+        NSData *imgdata = UIImageJPEGRepresentation(img, 0.6);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         
         if (self.isEditingMode)

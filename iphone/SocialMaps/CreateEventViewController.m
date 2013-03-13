@@ -573,7 +573,8 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     {
         [eventImagview setImage:img];
         eventImage = img;
-        NSData *imgdata = UIImagePNGRepresentation(eventImage);
+        //NSData *imgdata = UIImagePNGRepresentation(eventImage);
+        NSData *imgdata = UIImageJPEGRepresentation(eventImage, 0.6);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         event.eventImageUrl=imgBase64Data;
     } 

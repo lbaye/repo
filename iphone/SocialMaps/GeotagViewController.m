@@ -468,7 +468,8 @@ int geoCounter=0;
     {
         [eventImagview setImage:img];
         eventImage = img;
-        NSData *imgdata = UIImagePNGRepresentation(eventImage);
+        //NSData *imgdata = UIImagePNGRepresentation(eventImage);
+        NSData *imgdata = UIImageJPEGRepresentation(eventImage, 0.6);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         geotag.geoTagImageUrl=imgBase64Data;
     } 

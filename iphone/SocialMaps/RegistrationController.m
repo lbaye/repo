@@ -276,7 +276,8 @@
         [loginAlert show];
         [loginAlert release];
     } else {
-        NSData *imgdata = UIImagePNGRepresentation(regPhoto);
+        //NSData *imgdata = UIImagePNGRepresentation(regPhoto);
+        NSData *imgdata = UIImageJPEGRepresentation(regPhoto, 0.6);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         userInfo.avatar = imgBase64Data;
         

@@ -429,7 +429,8 @@
     
     // Base64 encode avatar is changed
     if (avatarChanged == TRUE) {
-        NSData *imgdata = UIImagePNGRepresentation(smAppDelegate.userAccountPrefs.icon);
+        //NSData *imgdata = UIImagePNGRepresentation(smAppDelegate.userAccountPrefs.icon);
+        NSData *imgdata = UIImageJPEGRepresentation(smAppDelegate.userAccountPrefs.icon, 0.6);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         smAppDelegate.userAccountPrefs.avatar = imgBase64Data;
     }

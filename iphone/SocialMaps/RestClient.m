@@ -6299,6 +6299,8 @@ AppDelegate *smAppDelegate;
     [request addPostValue:photo.location.longitude forKey:@"lng"];
     [request addPostValue:photo.address forKey:@"address"];
     [request addPostValue:photo.permission forKey:@"permission"];
+    request.timeOutSeconds = 30;
+    
     if ([photo.permission isEqualToString:@"custom"])
     {
         for (int i=0; i<[photo.permittedUsers count]; i++)

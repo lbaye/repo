@@ -534,7 +534,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         if (status == TRUE) 
         {
             [coverImageView setImage:img];
-            NSData *imgdata = UIImagePNGRepresentation(img);
+            //NSData *imgdata = UIImagePNGRepresentation(img);
+            NSData *imgdata = UIImageJPEGRepresentation(img, 0.6);
             NSString *imgBase64Data = [imgdata base64EncodedString];
             userInfo.coverPhoto=imgBase64Data;
         } 
@@ -544,7 +545,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         if (status == TRUE) 
         {
             [profileImageView setImage:img];
-            NSData *imgdata = UIImagePNGRepresentation(img);
+            //NSData *imgdata = UIImagePNGRepresentation(img);
+            NSData *imgdata = UIImageJPEGRepresentation(img, 0.6);
             NSString *imgBase64Data = [imgdata base64EncodedString];
             userInfo.avatar=imgBase64Data;
         } 
