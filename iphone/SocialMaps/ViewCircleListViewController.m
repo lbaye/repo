@@ -453,6 +453,13 @@ bool showSM=true;
         cellValue=people.itemName;
         cell.firstNameLabel.text = cellValue;
         cell.addressLabel.text=people.itemAddress;
+        
+        CGSize   strSize = [cell.addressLabel.text sizeWithFont:[UIFont fontWithName:@"Helvetica" size:13.0f]];
+        ((UIScrollView*)cell.addressLabel.superview).contentSize = strSize;
+        CGRect addressLabelFrame = cell.addressLabel.frame;
+        addressLabelFrame = CGRectMake(addressLabelFrame.origin.x, addressLabelFrame.origin.y, strSize.width, strSize.height);
+        cell.addressLabel.frame = addressLabelFrame;
+        
         cell.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",people.itemDistance];
         cell.regStsImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell.regStsImgView.userInteractionEnabled=YES;

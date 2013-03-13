@@ -365,6 +365,13 @@ bool searchFlag3=true;
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
         cell1.addressLabel.text=people.itemAddress;
+        
+        CGSize   strSize = [cell1.addressLabel.text sizeWithFont:[UIFont fontWithName:@"Helvetica" size:13.0f]];
+        ((UIScrollView*)cell1.addressLabel.superview).contentSize = strSize;
+        CGRect addressLabelFrame = cell1.addressLabel.frame;
+        addressLabelFrame = CGRectMake(addressLabelFrame.origin.x, addressLabelFrame.origin.y, strSize.width, strSize.height);
+        cell1.addressLabel.frame = addressLabelFrame;
+        
         Geolocation *geoLocation=[[Geolocation alloc] init];
         geoLocation.latitude=people.userInfo.currentLocationLat;
         geoLocation.longitude=people.userInfo.currentLocationLng;
