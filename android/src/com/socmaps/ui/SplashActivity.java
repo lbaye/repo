@@ -10,17 +10,17 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
-import com.socmaps.util.Utility; 
+import com.socmaps.util.Utility;
 
 /**
- * SplashActivity class is used to show Splash in a certain amount of period. Each time when the application 
- * is run Splash image will be shown with a progress bar. 
- *
+ * SplashActivity class is used to show Splash in a certain amount of period.
+ * Each time when the application is run Splash image will be shown with a
+ * progress bar.
+ * 
  */
 
 public class SplashActivity extends Activity {
@@ -43,7 +43,7 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_layout);
-		
+
 		initialize();
 
 	}
@@ -234,7 +234,7 @@ public class SplashActivity extends Activity {
 			switch (msg.what) {
 			case 0:
 				finish();
-				
+
 				startActivity(new Intent(SplashActivity.this,
 						LoginActivity.class));
 
@@ -242,12 +242,29 @@ public class SplashActivity extends Activity {
 
 			case 1:
 
+				boolean isValid = false;
 				finish();
 				if (StaticValues.myInfo != null) {
 
+					isValid = true;
+
+					if (StaticValues.myInfo.getRegMedia().equals(
+							Constant.sourceFacebook)
+							&& !Utility
+									.isFacebookSessionValid(SplashActivity.this)) {
+
+						isValid = false;
+
+					}
+
+				}
+
+				if (isValid) {
+					finish();
 					startActivity(new Intent(SplashActivity.this,
 							HomeActivity.class));
 				} else {
+					finish();
 					startActivity(new Intent(SplashActivity.this,
 							LoginActivity.class));
 				}

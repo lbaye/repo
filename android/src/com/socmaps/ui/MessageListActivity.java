@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,16 +23,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.socmaps.entity.MessageEntity;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 
 /**
- * MessageListActivity class for generating message list view and some user interaction.
- *
+ * MessageListActivity class for generating message list view and some user
+ * interaction.
+ * 
  */
-public class MessageListActivity extends Activity {
+public class MessageListActivity extends FragmentActivity {
 
 	ButtonActionListener buttonActionListener;
 	Button btnNewMessage;
@@ -47,7 +48,7 @@ public class MessageListActivity extends Activity {
 	String itemMessageId = "";
 	String itemThreadId = "";
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,11 @@ public class MessageListActivity extends Activity {
 												.getUpdateTimeEntity()));
 							}
 
-							if (messageEntity.getContent() != null) {
+							if (messageEntity.getLastMessage() != null) {
+								String messageText = messageEntity
+										.getLastMessage();
+								senderMessage.setText(messageText);
+							} else if (messageEntity.getContent() != null) {
 								String messageText = messageEntity.getContent();
 
 								senderMessage.setText(messageText);
@@ -126,7 +131,7 @@ public class MessageListActivity extends Activity {
 
 							if (avatarUrl != null && !avatarUrl.equals("")) {
 
-								imageDownloader.download(avatarUrl, profilePic);
+								imageFetcher.loadImage(avatarUrl, profilePic);
 							}
 
 							listItemParent
@@ -159,7 +164,7 @@ public class MessageListActivity extends Activity {
 							if (messageEntity.getStatus().equalsIgnoreCase(
 									"unread")) {
 
-								//senderMessage.setBackgroundColor(Color.GRAY);
+								// senderMessage.setBackgroundColor(Color.GRAY);
 							}
 
 							v.invalidate();
@@ -169,7 +174,7 @@ public class MessageListActivity extends Activity {
 				}
 
 			} catch (Exception e) {
-				Log.e("Parse response", e.getMessage());
+				//Log.e("Parse response", e.getMessage());
 				// TODO: handle exception
 			}
 		}
@@ -189,14 +194,33 @@ public class MessageListActivity extends Activity {
 			// Build message title
 			String id = recipient.get("id");
 			if (!id.equals(userId)) {
-				recipientNames.add(recipient.get("firstName"));
+
+				String name = recipient.get("username");				
+				
+				if(Utility.isValidString(name))
+				{
+					recipientNames.add(name);
+				}
+				else
+				{
+					recipientNames.add(recipient.get("firstName"));
+				}
+				
 				recipientAvatars.add(recipient.get("avatar"));
 			}
 		}
 
 		// Build message title and set it over "title" key
 		if (recipientNames.isEmpty()) {
-			info.put("title", message.getSenderFirstName());
+			if(Utility.isValidString(message.getSenderUserName()))
+			{
+				info.put("title", message.getSenderUserName());
+			}
+			else
+			{
+				info.put("title", message.getSenderFirstName());
+			}
+			
 		} else {
 			info.put("title", Utility.joinString(recipientNames, ", "));
 		}
@@ -215,7 +239,7 @@ public class MessageListActivity extends Activity {
 		context = MessageListActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		btnNewMessage = (Button) findViewById(R.id.btnNewMessage);
 		btnNewMessage.setOnClickListener(buttonActionListener);
@@ -233,11 +257,22 @@ public class MessageListActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		imageFetcher.setExitTasksEarly(false);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
 	}
 
 	@Override

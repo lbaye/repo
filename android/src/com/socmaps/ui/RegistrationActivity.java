@@ -2,7 +2,6 @@ package com.socmaps.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -31,7 +30,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
@@ -40,9 +38,10 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 /**
- * RegistrationActivity is used for registration an user. If an user has no account on SocialMap, he/she has to be 
- * registered, this functionality has done here. 
- *
+ * RegistrationActivity is used for registration an user. If an user has no
+ * account on SocialMap, he/she has to be registered, this functionality has
+ * done here.
+ * 
  */
 
 public class RegistrationActivity extends Activity {
@@ -77,6 +76,9 @@ public class RegistrationActivity extends Activity {
 
 	Context context;
 
+	private final int REQUEST_CODE_CAMERA = 100;
+	private final int REQUEST_CODE_GALLERY = 101;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,8 +112,10 @@ public class RegistrationActivity extends Activity {
 		btnSelectDate.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+				showDatePicker();
 
-				DatePickerDialog datePickerDialog = new DatePickerDialog(
+				/*DatePickerDialog datePickerDialog = new DatePickerDialog(
 						context, new OnDateSetListener() {
 							@Override
 							public void onDateSet(DatePicker arg0, int arg1,
@@ -138,7 +142,7 @@ public class RegistrationActivity extends Activity {
 
 						}, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now
 								.get(Calendar.DATE));
-				datePickerDialog.show();
+				datePickerDialog.show();*/
 			}
 		});
 
@@ -147,7 +151,8 @@ public class RegistrationActivity extends Activity {
 			public void onClick(View v) {
 
 				final CharSequence[] items = { "Gallery", "Camera" };
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						RegistrationActivity.this);
 				builder.setTitle("Select");
 				builder.setItems(items, new DialogInterface.OnClickListener() {
 					@Override
@@ -155,9 +160,9 @@ public class RegistrationActivity extends Activity {
 						Toast.makeText(getApplicationContext(), items[item],
 								Toast.LENGTH_SHORT).show();
 						if (items[item].equals("Gallery")) {
-							requestCode = Constant.REQUEST_CODE_GALLERY;
+							requestCode = REQUEST_CODE_GALLERY;
 						} else {
-							requestCode = Constant.REQUEST_CODE_CAMERA;
+							requestCode = REQUEST_CODE_CAMERA;
 						}
 						onOptionItemSelected(requestCode);
 					}
@@ -191,16 +196,16 @@ public class RegistrationActivity extends Activity {
 				} else if (etPassword.getText().toString().length() == 0) {
 					flag = false;
 					etPassword.setError("Password can not be empty.");
-				} else if (etFirstName.getText().toString().length() == 0) {
+				} else if (etUserName.getText().toString().length() == 0) {
+					flag = false;
+					etUserName.setError("User name can not be empty");
+				} /*else if (etFirstName.getText().toString().length() == 0) {
 					flag = false;
 					etFirstName.setError("First name can not be empty.");
 				} else if (etLastName.getText().toString().length() == 0) {
 					flag = false;
 					etLastName.setError("Last name can not be empty.");
-				} else if (etUserName.getText().toString().length() == 0) {
-					flag = false;
-					etUserName.setError("User name can not be empty");
-				}
+				}*/ 
 
 				if (flag) {
 					locationSharingDisclaimerDialog = new Dialog(context,
@@ -261,6 +266,51 @@ public class RegistrationActivity extends Activity {
 
 			}
 		});
+	}
+
+	private void showDatePicker() {
+		// TODO Auto-generated method stub
+
+		int selectedYear = 0;
+		int selectedMonth = 0;
+		int selectedDay = 0;
+
+		// TODO: handle exception
+		selectedYear = now.get(Calendar.YEAR);
+		selectedMonth = now.get(Calendar.MONTH) + 1;
+		selectedDay = now.get(Calendar.DATE);
+
+		DatePickerDialog datePickerDialog = new DatePickerDialog(
+				RegistrationActivity.this, new OnDateSetListener() {
+					@Override
+					public void onDateSet(DatePicker arg0, int arg1, int arg2,
+							int arg3) {
+						StringBuilder sb = new StringBuilder();
+						String month, day;
+						if (arg2 < 9) {
+							month = "0".concat(Integer.toString(arg2 + 1));
+						} else {
+							month = Integer.toString(arg2 + 1);
+						}
+						if (arg3 < 9) {
+							day = "0".concat(Integer.toString(arg3));
+						} else {
+							day = Integer.toString(arg3);
+						}
+						sb.append(arg1).append("-").append(month).append("-")
+								.append(day);
+						dob = sb.toString();
+
+						Log.d("dob", dob);
+
+						// age = Utility.calculateAge(sb.toString()) + " years";
+						tvShowSelectedDate.setText(dob);
+
+					}
+
+				}, selectedYear, selectedMonth - 1, selectedDay);
+
+		datePickerDialog.show();
 	}
 
 	private Runnable returnRes = new Runnable() {
@@ -326,7 +376,7 @@ public class RegistrationActivity extends Activity {
 		client.AddParam("firstName", etFirstName.getText().toString());
 
 		client.AddParam("lastName", etLastName.getText().toString());
-		client.AddParam("userName", etUserName.getText().toString());
+		client.AddParam("username", etUserName.getText().toString());
 		client.AddParam("avatar", avatarString);
 
 		client.AddParam("street", etStreetAddress.getText().toString());
@@ -394,14 +444,14 @@ public class RegistrationActivity extends Activity {
 
 	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
-		case Constant.REQUEST_CODE_GALLERY:
+		case REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
 					Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
-		case Constant.REQUEST_CODE_CAMERA:
+		case REQUEST_CODE_CAMERA:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
@@ -412,7 +462,7 @@ public class RegistrationActivity extends Activity {
 
 	private void initialize() {
 
-		context = getApplicationContext();
+		context = RegistrationActivity.this;
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		etEmail = (EditText) findViewById(R.id.etEmail);
@@ -440,7 +490,7 @@ public class RegistrationActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
+		if (requestCode == REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
 
 				if (avatar != null) {
@@ -455,7 +505,7 @@ public class RegistrationActivity extends Activity {
 				return;
 			}
 
-		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
+		} else if (requestCode == REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 
 				Uri selectedImage = data.getData();

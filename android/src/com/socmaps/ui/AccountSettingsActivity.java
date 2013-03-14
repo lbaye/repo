@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -19,6 +18,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -36,9 +36,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -51,7 +50,7 @@ import com.socmaps.widget.ExpandablePanel;
  * AccountSettingsActivity class for generating account setting view and some user interaction.
  *
  */
-public class AccountSettingsActivity extends Activity implements
+public class AccountSettingsActivity extends FragmentActivity implements
 		OnClickListener {
 
 	private Context context;
@@ -87,6 +86,9 @@ public class AccountSettingsActivity extends Activity implements
 	Button btnBack, btnNotification;
 
 	Handler mHandler;
+	
+	private final int REQUEST_CODE_CAMERA = 100;
+	private final int REQUEST_CODE_GALLERY = 101;
 
 	@Override
 	public void onAttachedToWindow() {
@@ -117,6 +119,7 @@ public class AccountSettingsActivity extends Activity implements
 			setFieldValue(StaticValues.myInfo);
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 	}
 
 	@Override
@@ -349,6 +352,8 @@ public class AccountSettingsActivity extends Activity implements
 		etNewPassRetype = (EditText) findViewById(R.id.retype_new_pass_edit_text);
 
 		unitRadioGroup = (RadioGroup) findViewById(R.id.rgUnit);
+		
+		
 	}
 
 	private void setRadioGroupValue(RadioGroup rG, String status) {
@@ -425,8 +430,9 @@ public class AccountSettingsActivity extends Activity implements
 			}
 
 			if (myInfo.getAvatar() != null && avatar == null) {
-				ImageDownloader imageLoader = ImageDownloader.getInstance();
-				imageLoader.download(myInfo.getAvatar(), ivProfilePicture);
+				
+				ImageFetcher imageFetcher = new ImageFetcher(context);
+				imageFetcher.loadImage(myInfo.getAvatar(), ivProfilePicture);
 
 			}
 			if (myInfo.getSettings() != null) {
@@ -439,6 +445,11 @@ public class AccountSettingsActivity extends Activity implements
 						.findViewById(R.id.tvConfirmLabel);
 				tvConfirmLabel
 						.setText("Log out " + myInfo.getFirstName() + "?");
+			}
+			
+			if(myInfo.getRegMedia().equalsIgnoreCase(Constant.sourceFacebook))
+			{
+				changePassPanel.setVisibility(View.GONE);
 			}
 
 		}
@@ -559,14 +570,14 @@ public class AccountSettingsActivity extends Activity implements
 
 	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
-		case Constant.REQUEST_CODE_GALLERY:
+		case REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
 					Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
-		case Constant.REQUEST_CODE_CAMERA:
+		case REQUEST_CODE_CAMERA:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
@@ -578,7 +589,7 @@ public class AccountSettingsActivity extends Activity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
+		if (requestCode == REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
 
 				if (avatar != null) {
@@ -592,7 +603,7 @@ public class AccountSettingsActivity extends Activity implements
 			if (resultCode == RESULT_CANCELED) {
 				return;
 			}
-		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
+		} else if (requestCode == REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 
 				Uri selectedImage = data.getData();
@@ -873,9 +884,9 @@ public class AccountSettingsActivity extends Activity implements
 			public void onClick(DialogInterface dialog, int item) {
 
 				if (items[item].equals("Gallery")) {
-					requestCode = Constant.REQUEST_CODE_GALLERY;
+					requestCode = REQUEST_CODE_GALLERY;
 				} else {
-					requestCode = Constant.REQUEST_CODE_CAMERA;
+					requestCode = REQUEST_CODE_CAMERA;
 				}
 				onOptionItemSelected(requestCode);
 			}

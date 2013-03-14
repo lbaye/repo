@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,10 +30,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -44,7 +43,7 @@ import com.socmaps.util.Utility;
  * MessageComposeActivity class for generating message compose view and some user interaction.
  *
  */
-public class MessageComposeActivity extends Activity {
+public class MessageComposeActivity extends FragmentActivity {
 
 	ButtonActionListener buttonActionListener;
 
@@ -65,7 +64,7 @@ public class MessageComposeActivity extends Activity {
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
 
 	@Override
@@ -129,13 +128,13 @@ public class MessageComposeActivity extends Activity {
 		String avatarUrl = fEntity.getAvatar();
 
 		String name = "";
-		name = Utility.getFieldText(fEntity);
+		name = Utility.getItemTitle(fEntity);
 		nameView.setText(name);
 
 		selectedFriends.put(id, false);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-			imageDownloader.download(avatarUrl, profilePic);
+			imageFetcher.loadImage(avatarUrl, profilePic);
 		}
 
 		if (backupSelectedFriends.containsKey(id)) {
@@ -207,7 +206,7 @@ public class MessageComposeActivity extends Activity {
 		context = MessageComposeActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		btnFriendSelect = (Button) findViewById(R.id.btnFriendSelect);
 		btnFriendSelect.setOnClickListener(buttonActionListener);
@@ -225,6 +224,7 @@ public class MessageComposeActivity extends Activity {
 		etNewMessage = (EditText) findViewById(R.id.etNewMessage);
 		etFriendSearch = (EditText) findViewById(R.id.etFriendSearch);
 
+		
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -402,7 +402,7 @@ public class MessageComposeActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -516,11 +516,16 @@ public class MessageComposeActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		imageFetcher.setExitTasksEarly(false);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
 	}
 
 	@Override
@@ -528,6 +533,7 @@ public class MessageComposeActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		hideKeyBoard();
+		imageFetcher.closeCache();
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package com.socmaps.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -28,14 +28,14 @@ import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
  * NewsFeedActivity is used to show the activities of a particular user(user himself or other user).
  */
 
-public class NewsFeedActivity extends Activity implements OnClickListener {
+public class NewsFeedActivity extends FragmentActivity implements OnClickListener {
 
 	private Context context;
 	private WebView webViewNewsFeed;
 	private ProgressBar progressBar;
 	private Button btnBack, btnNotification;
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageFetcher;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +51,33 @@ public class NewsFeedActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onResume();
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
+		imageFetcher.setExitTasksEarly(false);
 	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		imageFetcher.closeCache();
+	}
+	
 
 	private void initUI() {
 		// TODO Auto-generated method stub
 		context = this;
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -83,7 +103,7 @@ public class NewsFeedActivity extends Activity implements OnClickListener {
 		webViewNewsFeed.getSettings().setBuiltInZoomControls(false);
 
 		webViewNewsFeed.loadUrl(Constant.smServerUrl
-				+ "/me/newsfeed.html?authToken="
+				+ "/me/network/newsfeed.html?authToken="
 				+ StaticValues.myInfo.getAuthToken());
 
 		webViewNewsFeed.setWebViewClient(new MyWebViewClient());
@@ -147,7 +167,7 @@ public class NewsFeedActivity extends Activity implements OnClickListener {
 				Log.d("URL", imageURL);
 
 				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
-						context, imageURL, imageDownloader);
+						context, imageURL, imageFetcher);
 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				photoZoomPicker.show();
@@ -165,11 +185,7 @@ public class NewsFeedActivity extends Activity implements OnClickListener {
 		super.onStop();
 	}
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-	}
+	
 
 	@Override
 	public void onClick(View v) {

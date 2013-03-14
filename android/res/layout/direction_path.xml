@@ -165,7 +165,7 @@
                         android:id="@+id/locationRadioGroupContainerRe"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" 
-                        android:visibility="gone">
+                        android:visibility="visible">
                     </LinearLayout>
                     <!-- RadioGroup for location ends -->
 

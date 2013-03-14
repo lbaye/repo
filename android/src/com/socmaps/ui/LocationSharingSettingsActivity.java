@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.LocationSharing;
 import com.socmaps.entity.LsValues;
 import com.socmaps.entity.MyInfo;
@@ -364,8 +363,8 @@ public class LocationSharingSettingsActivity extends Activity implements
 		double currentLng = 0;
 
 		if (StaticValues.myPoint != null) {
-			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+			currentLat = StaticValues.myPoint.latitude;
+			currentLng = StaticValues.myPoint.longitude;
 
 		}
 
@@ -593,7 +592,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -681,7 +680,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 

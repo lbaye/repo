@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
     <RelativeLayout
         android:id="@+id/layoutHeader"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
+        android:layout_alignParentTop="true"
         android:background="@drawable/header"
         android:orientation="horizontal" >
 
@@ -20,99 +20,56 @@
             android:src="@drawable/logo_banner" />
     </RelativeLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/home_container"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" >
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lineView"
+        android:layout_below="@+id/layoutHeader" >
+
+        <fragment
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.MapFragment" />
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:id="@+id/transparent_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="40dip"
+            android:background="@drawable/rounder_border_bg"
+            android:paddingBottom="5dip"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:paddingTop="5dip"
+             >
 
-            <com.google.android.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:apiKey="@string/map_api_key"
-                android:clickable="true" />
-
-            <ImageView
-                android:id="@+id/drag"
+            <TextView
+                android:id="@+id/tvAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/marker"
-                android:visibility="gone" />
+                android:text=""
+                android:textColor="#ffffff" />
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="bottom"
-            android:orientation="vertical"
-            android:paddingLeft="5dip"
-            android:paddingRight="5dip"
-            android:paddingTop="5dip" >
-
-            <com.socmaps.widget.TransparentRelativePanel
-                android:id="@+id/transparent_panel"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip"
-                android:layout_marginRight="5dip"
-                android:paddingBottom="5dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="5dip"
-                android:paddingTop="5dip" >
-
-                <TextView
-                    android:id="@+id/latlong"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#ffffff" />
-            </com.socmaps.widget.TransparentRelativePanel>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="top"
-            android:orientation="vertical"
-            android:paddingLeft="5dip"
-            android:paddingRight="5dip"
-            android:paddingTop="5dip" >
-
-            <com.socmaps.widget.TransparentRelativePanel
-                android:id="@+id/transparent_panel"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip"
-                android:layout_marginRight="5dip"
-                android:paddingBottom="5dip"
-                android:paddingLeft="5dip"
-                android:paddingRight="5dip"
-                android:paddingTop="5dip" >
-
-                <TextView
-                    android:id="@+id/latlong"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/drag_msg"
-                    android:textColor="#ffffff" />
-            </com.socmaps.widget.TransparentRelativePanel>
-        </LinearLayout>
-    </FrameLayout>
+    </RelativeLayout>
 
     <View
+        android:id="@+id/lineView"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
+        android:layout_above="@+id/buttonPanel"
         android:background="@color/gray_dark" />
 
     <LinearLayout
         android:id="@+id/buttonPanel"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dip"
+        android:layout_alignParentBottom="true"
         android:background="@color/gray_light"
         android:gravity="center"
         android:orientation="horizontal"
@@ -141,4 +98,4 @@
             android:textSize="14dip" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

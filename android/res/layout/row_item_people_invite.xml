@@ -74,7 +74,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignParentLeft="true"
-                            android:background="@drawable/icon" />
+                            android:background="@drawable/icon"
+                            android:visibility="gone" />
 
                         <Button
                             android:id="@+id/btnInvitePeople"

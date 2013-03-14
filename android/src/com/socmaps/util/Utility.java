@@ -37,6 +37,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -50,13 +52,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.View.MeasureSpec;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.GeoTag;
@@ -64,12 +75,16 @@ import com.socmaps.entity.MessageEntity;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
+import com.socmaps.entity.Plan;
 import com.socmaps.entity.PushData;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.entity.TimeEntity;
+import com.socmaps.images.ImageFetcher;
+import com.socmaps.ui.R;
+import com.socmaps.widget.ImageDownloadListener;
 
 /**
- * Utility class for providing reusable methods 
+ * Utility class for providing reusable methods
  */
 public class Utility {
 
@@ -86,19 +101,24 @@ public class Utility {
 	 * @return the title text
 	 * @see String
 	 */
-	public static String getFieldText(Object item) {
+	public static String getItemTitle(Object item) {
 		if (item instanceof People) {
 
 			People temp = ((People) item);
 			String name = "";
 
-			if (temp.getFirstName() != null) {
-				name = temp.getFirstName();
+			if (isValidString(temp.getUserName())) {
+				name = temp.getUserName();
+			} else {
+				if (temp.getFirstName() != null) {
+					name = temp.getFirstName();
+				}
+
+				if (temp.getLastName() != null) {
+					name += " " + temp.getLastName();
+				}
 			}
 
-			if (temp.getLastName() != null) {
-				name += " " + temp.getLastName();
-			}
 			return name.trim();
 		} else if (item instanceof SecondDegreePeople) {
 
@@ -141,9 +161,102 @@ public class Utility {
 			return "";
 	}
 
+	public static String getItemAddress(Object item) {
+		String address = "";
+		if (item instanceof People) {
+
+			People people = ((People) item);
+			address = people.getCurrentAddress();
+
+		} else if (item instanceof SecondDegreePeople) {
+
+			SecondDegreePeople secondDegreePeople = (SecondDegreePeople) item;
+			address = secondDegreePeople.getCurrentAddress();
+
+		} else if (item instanceof Place) {
+			Place place = ((Place) item);
+			address = place.getVicinity();
+		} else if (item instanceof Event) {
+			Event event = ((Event) item);
+			address = event.getAddress();
+		} else if (item instanceof GeoTag) {
+			GeoTag geoTag = ((GeoTag) item);
+			address = geoTag.getAddress();
+		} else if (item instanceof String) {
+			address = item.toString();
+		}
+
+		if (address != null) {
+			address = address.trim();
+		}
+		return address;
+	}
+	
+	public static String getItemImageUrl(Object item) {
+		String imageUrl = "";
+		if (item instanceof People) {
+
+			People people = ((People) item);
+			imageUrl = people.getAvatar();
+
+		} else if (item instanceof SecondDegreePeople) {
+
+			SecondDegreePeople secondDegreePeople = (SecondDegreePeople) item;
+			imageUrl = secondDegreePeople.getAvatar();
+
+		} else if (item instanceof Place) {
+			Place place = ((Place) item);
+			imageUrl = place.getIconUrl();
+		} else if (item instanceof Event) {
+			Event event = ((Event) item);
+			imageUrl = event.getEventImageUrl();
+		} else if (item instanceof GeoTag) {
+			GeoTag geoTag = ((GeoTag) item);
+			imageUrl = geoTag.getPhoto();
+		} else if (item instanceof String) {
+			imageUrl = item.toString();
+		}
+
+		if (imageUrl != null) {
+			imageUrl = imageUrl.trim();
+		}
+		return imageUrl;
+	}
+	
+	public static String getItemId(Object item) {
+		String id = "";
+		if (item instanceof People) {
+
+			People people = ((People) item);
+			id = people.getId();
+
+		} else if (item instanceof SecondDegreePeople) {
+
+			SecondDegreePeople secondDegreePeople = (SecondDegreePeople) item;
+			id = secondDegreePeople.getRefId();
+
+		} else if (item instanceof Place) {
+			Place place = ((Place) item);
+			id = place.getId();
+		} else if (item instanceof Event) {
+			Event event = ((Event) item);
+			id = event.getEventId();
+		} else if (item instanceof GeoTag) {
+			GeoTag geoTag = ((GeoTag) item);
+			id = geoTag.getId();
+		} else if (item instanceof String) {
+			id = item.toString();
+		}
+
+		if (id != null) {
+			id = id.trim();
+		}
+		return id;
+	}
+
 	/**
 	 * Returns a List of searched object based on Object's title(
-	 * {@link #getFieldText(Object)}). Object should be instance of People,
+	 * {@link #getItemTitle(Object)}). Object should be instance of People,
 	 * Place, SecondDegreePeople, MyInfo, Event or GeoTag
 	 * 
 	 * @param masterList
@@ -151,7 +264,7 @@ public class Utility {
 	 * @param key
 	 *            search key on which search would be performed.
 	 * @return Searched result of List associated with the search key.
-	 * @see #getFieldText(Object)
+	 * @see #getItemTitle(Object)
 	 * @see List
 	 */
 	public static List<Object> getSearchResult(List<Object> masterList,
@@ -165,7 +278,7 @@ public class Utility {
 
 			for (int i = 0; i < count; i++) {
 				final Object value = masterList.get(i);
-				final String valueText = getFieldText(value).toLowerCase();
+				final String valueText = getItemTitle(value).toLowerCase();
 
 				// First match against the whole, non-splitted value
 				if (valueText.startsWith(prefixString)) {
@@ -226,7 +339,7 @@ public class Utility {
 						people = Utility.getPeopleById(people.getId(),
 								orgFriendList);
 						if (people != null) {
-							final String valueText = getFieldText(people);
+							final String valueText = getItemTitle(people);
 
 							if (valueText.startsWith(prefixString)) {
 								newFriendList.add(people);
@@ -632,7 +745,7 @@ public class Utility {
 	 * @see SimpleDateFormat
 	 */
 	public static String getdate(String format) {
-		// "yyyy-MM-dd" 
+		// "yyyy-MM-dd"
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat(format, Locale.US);
 		String newtime = sdfDateTime
 				.format(new Date(System.currentTimeMillis()));
@@ -1023,6 +1136,18 @@ public class Utility {
 	public static boolean getFacebookInvitationDisplayStatus(Context context) {
 		return PreferenceConnector.readBoolean(context,
 				"fbinvitedisplaystatus", false);
+	}
+	
+	
+	
+	
+	public static void setFacebookSessionExpireTime(Context context, long time) {
+		PreferenceConnector.writeLong(context, "fbSessionExpire", time);
+	}
+
+
+	public static long getFacebookSessionExpireTime(Context context) {
+		return PreferenceConnector.readLong(context, "fbSessionExpire", -1);
 	}
 
 	/**
@@ -1439,6 +1564,97 @@ public class Utility {
 
 				String result = null;
 
+				String serverUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat
+						+ "," + lng + "&sensor=true";
+				
+				Log.i("ReverseGeo:url",serverUrl);
+
+				RestClient client = new RestClient(serverUrl);
+
+				try {
+					client.Execute(RestClient.RequestMethod.GET);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				result = client.getResponse();
+				int responseStatus = client.getResponseCode();
+
+				
+				Message msg = Message.obtain();
+				msg.setTarget(handler);
+				if (result != null) {
+
+					Log.i("ReverseGeo:response",result);
+					String address = null;
+					String name = null;
+
+					try {
+						
+						
+						
+						JSONObject jObj = new JSONObject(result);
+
+						if (!jObj.isNull("results")) {
+							JSONArray jArray = jObj.getJSONArray("results");
+							if (jArray.length() > 0) {
+								JSONObject addObj = jArray.getJSONObject(0);
+								if (!addObj.isNull("formatted_address")) {
+									address = addObj.getString("formatted_address");
+								}
+							}
+						}
+
+						/*if (!jObj.isNull("name")) {
+							name = jObj.getString("name");
+						}*/
+
+						
+						msg.what = 1;
+						Bundle bundle = new Bundle();
+						if(isValidString(address))
+						{
+							bundle.putString("address", address.trim());
+						}
+						else
+						{
+							bundle.putString("address", "");
+						}
+						if(isValidString(name))
+						{
+							bundle.putString("name", name.trim());
+						}
+						else
+						{
+							bundle.putString("name", "");
+						}
+						
+						msg.setData(bundle);
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						msg.what = 0;
+						e.printStackTrace();
+					}
+
+				} else {
+					msg.what = 0;
+				}
+
+				msg.sendToTarget();
+			}
+		};
+
+		thread.start();
+	}
+	/*public static void getAddressByCoordinate(final double lat,
+			final double lng, final Handler handler) {
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+
+				String result = null;
+
 				String serverUrl = "http://www.google.com/maps/geo?q=" + lat
 						+ "," + lng + "&output=json";
 
@@ -1477,10 +1693,26 @@ public class Utility {
 							name = jObj.getString("name");
 						}
 
+						
 						msg.what = 1;
 						Bundle bundle = new Bundle();
-						bundle.putString("address", address.trim());
-						bundle.putString("name", name.trim());
+						if(isValidString(address))
+						{
+							bundle.putString("address", address.trim());
+						}
+						else
+						{
+							bundle.putString("address", "");
+						}
+						if(isValidString(name))
+						{
+							bundle.putString("name", name.trim());
+						}
+						else
+						{
+							bundle.putString("name", "");
+						}
+						
 						msg.setData(bundle);
 
 					} catch (JSONException e) {
@@ -1498,7 +1730,7 @@ public class Utility {
 		};
 
 		thread.start();
-	}
+	}*/
 
 	/**
 	 * Forcefully hide the soft keyboard if opened.
@@ -1619,7 +1851,8 @@ public class Utility {
 	/**
 	 * Returns the People object for a corresponding people id.
 	 * 
-	 * @param peopleId Id of the people.
+	 * @param peopleId
+	 *            Id of the people.
 	 * @return People object, or null if not found.
 	 * @see People
 	 */
@@ -1638,9 +1871,13 @@ public class Utility {
 	}
 
 	/**
-	 *  Returns the People object for a corresponding people id from a List of People.
-	 * @param peopleId Id of the People.
-	 * @param peopleList List of People from which People object should be retrieved.
+	 * Returns the People object for a corresponding people id from a List of
+	 * People.
+	 * 
+	 * @param peopleId
+	 *            Id of the People.
+	 * @param peopleList
+	 *            List of People from which People object should be retrieved.
 	 * @return People object, or null if not found in the List
 	 * @see List
 	 * @see People
@@ -1659,10 +1896,11 @@ public class Utility {
 		return null;
 	}
 
-	
 	/**
 	 * Determines a String contains any character or not.
-	 * @param value String which needs to be validated.
+	 * 
+	 * @param value
+	 *            String which needs to be validated.
 	 * @return true if it contains at least one character, false otherwise.
 	 * @see String
 	 */
@@ -1676,16 +1914,27 @@ public class Utility {
 	/**
 	 * Calculate distance between two GeoPoints.
 	 * 
-	 * @param p1 Source GeoPoint
-	 * @param p2 Destination GeoPoint
+	 * @param p1
+	 *            Source LatLng
+	 * @param p2
+	 *            Destination LatLng
 	 * @return Distance in meter
-	 * @see GeoPoint
+	 * @see LatLng
 	 */
-	public static double calculateDistance(GeoPoint p1, GeoPoint p2) {
-		double lat1 = p1.getLatitudeE6() / 1e6;
-		double lng1 = p1.getLongitudeE6() / 1e6;
-		double lat2 = p2.getLatitudeE6() / 1e6;
-		double lng2 = p2.getLongitudeE6() / 1e6;
+//	public static double calculateDistance(LatLng p1, LatLng p2) {
+//		double lat1 = p1.latitude;
+//		double lng1 = p1.longitude;
+//		double lat2 = p2.latitude;
+//		double lng2 = p2.longitude;
+//
+//		return calculateDistance(lat1, lng1, lat2, lng2);
+//	}
+
+	public static double calculateDistance(LatLng p1, LatLng p2) {
+		double lat1 = p1.latitude;
+		double lng1 = p1.longitude;
+		double lat2 = p2.latitude;
+		double lng2 = p2.longitude;
 
 		return calculateDistance(lat1, lng1, lat2, lng2);
 	}
@@ -1693,10 +1942,14 @@ public class Utility {
 	/**
 	 * calculate distance between two locations.
 	 * 
-	 * @param sourceLat Latitude of the source
-	 * @param sourceLng Longitude of the source
-	 * @param destLat Latitude of the destination
-	 * @param destLng Longitude of the destination
+	 * @param sourceLat
+	 *            Latitude of the source
+	 * @param sourceLng
+	 *            Longitude of the source
+	 * @param destLat
+	 *            Latitude of the destination
+	 * @param destLng
+	 *            Longitude of the destination
 	 * @return Distance in meter
 	 */
 	public static double calculateDistance(double sourceLat, double sourceLng,
@@ -1706,11 +1959,11 @@ public class Utility {
 		return dist[0];
 	}
 
-	
 	/**
 	 * Updates the notification number of activities obtained from GCM.
 	 * 
-	 * @param pushData PushData containing notification number
+	 * @param pushData
+	 *            PushData containing notification number
 	 * @see PushData
 	 */
 	public static void updateNotificationCountFromPush(PushData pushData) {
@@ -1726,7 +1979,6 @@ public class Utility {
 
 					String[] tabCountsArray = tabCounts.split("[|]");
 
-					
 					if (tabCountsArray.length == 3) {
 						Log.i("if tabCountsArray.length", tabCountsArray.length
 								+ "");
@@ -1751,11 +2003,12 @@ public class Utility {
 		}
 	}
 
-	
 	/**
-	 * Updates the notification number of bubble counter placed at the top of activity.
+	 * Updates the notification number of bubble counter placed at the top of
+	 * activity.
 	 * 
-	 * @param btnNotification Bubble view that contains the notification number.
+	 * @param btnNotification
+	 *            Bubble view that contains the notification number.
 	 */
 	public static void updateNotificationBubbleCounter(Button btnNotification) {
 		// TODO Auto-generated method stub
@@ -1770,10 +2023,13 @@ public class Utility {
 	}
 
 	/**
-	 * Returns the Bitmap image for corresponding image Uri. Basically used for sampling an image to save memory.
+	 * Returns the Bitmap image for corresponding image Uri. Basically used for
+	 * sampling an image to save memory.
 	 * 
-	 * @param selectedImage Uri of the image.
-	 * @param contentResolver Corresponding ContentResolver
+	 * @param selectedImage
+	 *            Uri of the image.
+	 * @param contentResolver
+	 *            Corresponding ContentResolver
 	 * @return Bitmap image from the Uri, or null if not found.
 	 * @see Uri
 	 * @see Bitmap
@@ -1813,4 +2069,322 @@ public class Utility {
 
 	}
 
+	public static Bitmap generateMarker(LinearLayout markerLayout, Object item,
+			ImageFetcher imageFetcher, ImageDownloadListener imageDownloadListener) {
+
+		Bitmap bitmap;
+
+		try {
+			// we need to enable the drawing cache
+			markerLayout.setDrawingCacheEnabled(true);
+
+			ImageView avatar = (ImageView) markerLayout
+					.findViewById(R.id.avatar);
+			ImageView ivOnline = (ImageView) markerLayout
+					.findViewById(R.id.ivOnline);
+
+			String avatarUrl = null;
+			ivOnline.setVisibility(View.GONE);
+
+			if (item instanceof People) {
+
+				People user = (People) item;
+				avatarUrl = user.getAvatar();
+
+				ivOnline.setVisibility(View.VISIBLE);
+				if (user.isOnline()) {
+					ivOnline.setImageResource(R.drawable.online);
+				} else {
+					ivOnline.setImageResource(R.drawable.offline);
+				}
+
+			} else if (item instanceof Place) {
+
+				Place place = (Place) item;
+
+				avatarUrl = place.getIconUrl();
+
+			} else if (item instanceof SecondDegreePeople) {
+
+				SecondDegreePeople user = (SecondDegreePeople) item;
+
+				avatarUrl = user.getAvatar();
+
+			} else if (item instanceof Event) {
+				avatar.setImageResource(R.drawable.icon_event);
+
+			} else if (item instanceof GeoTag) {
+
+				avatar.setImageResource(R.drawable.icon);
+			}
+
+			if (isValidString(avatarUrl)) {
+				Log.i("Utility:generateMarker", "Attempt 1: "+avatarUrl);
+				imageFetcher.loadImage(avatarUrl, avatar,imageDownloadListener, Utility.getItemId(item));
+			}
+
+
+			// this is the important code
+			// Without it the view will have a dimension of 0,0 and the bitmap
+			// will be null
+			markerLayout.measure(
+					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(),
+					markerLayout.getMeasuredHeight());
+
+			// we need to build our drawing cache
+			markerLayout.buildDrawingCache(true);
+
+			// not null? then we are ready to capture our bitmap image
+			if (markerLayout.getDrawingCache() != null) {
+
+				bitmap = Bitmap.createBitmap(markerLayout.getDrawingCache());
+				if (bitmap != null) {
+					markerLayout.setDrawingCacheEnabled(false);
+					return bitmap;
+				}
+
+			} else {
+				Log.e("CustomMapMarkers",
+						"Item * generateMarker *** getDrawingCache is null");
+			}
+
+		}
+
+		catch (OutOfMemoryError e) {
+			Log.i("generateMarker", "OutOfMemory");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	public static Bitmap generateMarker(LinearLayout markerLayout, Object item, Drawable profilePic) {
+
+		Bitmap bitmap;
+
+		try {
+			// we need to enable the drawing cache
+			markerLayout.setDrawingCacheEnabled(true);
+
+			ImageView avatar = (ImageView) markerLayout
+					.findViewById(R.id.avatar);
+			ImageView ivOnline = (ImageView) markerLayout
+					.findViewById(R.id.ivOnline);
+
+			String avatarUrl = null;
+			ivOnline.setVisibility(View.GONE);
+
+			if (item instanceof People) {
+
+				People user = (People) item;
+				avatarUrl = user.getAvatar();
+
+				ivOnline.setVisibility(View.VISIBLE);
+				if (user.isOnline()) {
+					ivOnline.setImageResource(R.drawable.online);
+				} else {
+					ivOnline.setImageResource(R.drawable.offline);
+				}
+
+			} else if (item instanceof Place) {
+
+				Place place = (Place) item;
+
+				avatarUrl = place.getIconUrl();
+
+			} else if (item instanceof SecondDegreePeople) {
+
+				SecondDegreePeople user = (SecondDegreePeople) item;
+
+				avatarUrl = user.getAvatar();
+
+			} else if (item instanceof Event) {
+				avatar.setImageResource(R.drawable.icon_event);
+
+			} else if (item instanceof GeoTag) {
+
+				avatar.setImageResource(R.drawable.icon);
+			}
+
+			if (isValidString(avatarUrl)) {
+				avatar.setImageDrawable(profilePic);
+			}
+
+
+			// this is the important code
+			// Without it the view will have a dimension of 0,0 and the bitmap
+			// will be null
+			markerLayout.measure(
+					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(),
+					markerLayout.getMeasuredHeight());
+
+			// we need to build our drawing cache
+			markerLayout.buildDrawingCache(true);
+
+			// not null? then we are ready to capture our bitmap image
+			if (markerLayout.getDrawingCache() != null) {
+
+				bitmap = Bitmap.createBitmap(markerLayout.getDrawingCache());
+				if (bitmap != null) {
+					markerLayout.setDrawingCacheEnabled(false);
+					return bitmap;
+				}
+
+			} else {
+				Log.e("CustomMapMarkers",
+						"Item * generateMarker *** getDrawingCache is null");
+			}
+
+		}
+
+		catch (OutOfMemoryError e) {
+			Log.i("generateMarker", "OutOfMemory");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+
+	public static Drawable generateMarker(String value, LinearLayout markerLayout) {
+
+		Bitmap viewCapture = null;
+		Drawable drawOverlay = null;
+
+		// we need to enable the drawing cache
+		markerLayout.setDrawingCacheEnabled(true);
+
+		// this is the important code
+		// Without it the view will have a dimension of 0,0 and the bitmap
+		// will be null
+		markerLayout.measure(
+				MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+				MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+		markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(),
+				markerLayout.getMeasuredHeight());
+
+		// we need to build our drawing cache
+		markerLayout.buildDrawingCache(true);
+
+		/*
+		 * try { Thread.sleep(50); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
+
+		// not null? then we are ready to capture our bitmap image
+		if (markerLayout.getDrawingCache() != null) {
+			viewCapture = Bitmap.createBitmap(markerLayout.getDrawingCache());
+
+			// if the view capture is not null we should turn off the
+			// drawing cache
+			// and then create our marker drawable with the view capture
+			if (viewCapture != null) {
+				markerLayout.setDrawingCacheEnabled(false);
+				drawOverlay = new BitmapDrawable(viewCapture);
+				return drawOverlay;
+			}
+		} else {
+			Log.d("CustomMapMarkers",
+					"Item * generateMarker *** getDrawingCache is null");
+		}
+
+		return null;
+	}
+
+	public static boolean isLocationVisibleOnMap(GoogleMap mapView,
+			LatLng markerPoint) {
+
+		LatLngBounds bounds = mapView.getProjection().getVisibleRegion().latLngBounds;
+
+		if (bounds.contains(markerPoint)) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	public static Pair<Pair<Double, Double>, Pair<Double, Double>> getMapCorners(
+			MapView mapView) {
+		GeoPoint center = mapView.getMapCenter();
+		int latitudeSpan = mapView.getLatitudeSpan();
+		int longtitudeSpan = mapView.getLongitudeSpan();
+
+		double topRightLat = (center.getLatitudeE6() + (latitudeSpan / 2.0d)) / 1.0E6;
+		double topRightLon = (center.getLongitudeE6() + (longtitudeSpan / 2.0d)) / 1.0E6;
+
+		double bottomLeftLat = (center.getLatitudeE6() - (latitudeSpan / 2.0d)) / 1.0E6;
+		double bottomLeftLon = (center.getLongitudeE6() - (longtitudeSpan / 2.0d)) / 1.0E6;
+
+		return new Pair<Pair<Double, Double>, Pair<Double, Double>>(
+				new Pair<Double, Double>(topRightLat, topRightLon),
+				new Pair<Double, Double>(bottomLeftLat, bottomLeftLon));
+	}
+
+	public static Pair<GeoPoint, GeoPoint> getMapCornerPoints(MapView mapView) {
+		GeoPoint topLeft = mapView.getProjection().fromPixels(
+				mapView.getLeft(), mapView.getTop());
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(
+				mapView.getRight(), mapView.getBottom());
+
+		return new Pair<GeoPoint, GeoPoint>(topLeft, bottomRight);
+	}
+
+	public static LatLng getLatLngFromObject(Object item) {
+		LatLng latLng = null;
+		if (item instanceof People) {
+
+			People user = (People) item;
+
+			latLng = new LatLng(user.getCurrentLat(), user.getCurrentLng());
+		} else if (item instanceof Place) {
+
+			Place place = (Place) item;
+
+			latLng = new LatLng(place.getLatitude(), place.getLongitude());
+
+		} else if (item instanceof SecondDegreePeople) {
+
+			SecondDegreePeople user = (SecondDegreePeople) item;
+
+			latLng = new LatLng(user.getCurrentLat(), user.getCurrentLng());
+
+		} else if (item instanceof Event) {
+			Event event = (Event) item;
+			latLng = new LatLng(event.getLatitude(), event.getLongitude());
+
+		} else if (item instanceof GeoTag) {
+
+			GeoTag geoTag = (GeoTag) item;
+
+			latLng = new LatLng(geoTag.getLatitude(), geoTag.getLongitude());
+		}else if (item instanceof Plan) {
+
+			Plan plan = (Plan) item;
+
+			latLng = new LatLng(plan.getLatitude(), plan.getLatitude());
+		}
+
+		return latLng;
+	}
+
+	
+	public static boolean isFacebookSessionValid(Context context)
+	{
+		if(StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook))
+		{
+			long expireTime = Utility.getFacebookSessionExpireTime(context);
+			if(expireTime > Utility.getUnixTimestamp())
+			{
+				//session expired, auto sign-out
+				return true;
+			}
+		}
+		
+		
+		return false;
+	}
 }

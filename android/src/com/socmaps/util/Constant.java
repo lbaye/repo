@@ -3,7 +3,6 @@ package com.socmaps.util;
 
 /**
  * Constant class for providing necessary constant values.
- *
  */
 public class Constant {
 
@@ -30,8 +29,7 @@ public class Constant {
 
 	// final static public String smServerUrl = "http://174.143.240.157";
 	// final static public String smServerUrl = "http://203.76.126.69";
-	// final static public String smServerUrl =
-	// "http://192.168.1.71/social_maps_final/service/trunk/web";
+	//final static public String smServerUrl = "http://192.168.1.71/social_maps/web";
 	// final static public String smServerUrl =
 	// "http://203.76.126.69/social_maps_git/social-maps-service/web";
 	// final static public String smServerUrl =
@@ -45,12 +43,12 @@ public class Constant {
 	// final static public String smServerUrl =
 	// "http://192.168.1.71/social_maps/web";
 	// staging server
-	final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
+	//final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
+	// final static public String smServerUrl ="http://services.socialmapsapp.com/prodtest";
 	//final static public String smServerUrl = "http://192.168.1.212:8888";
 	//final static public String smServerUrl = "http://192.168.1.19/social_maps/web";
 
-	// final static public String smServerUrl
-	// ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
+	final static public String smServerUrl ="http://services.socialmapsapp.com/v2_2";
 
 	// production server
 	// final static public String smServerUrl = "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6";
@@ -108,10 +106,10 @@ public class Constant {
 	final static public String smLocationSharingUrl = smServerUrl+"/settings/sharing_privacy_mode";
 
 	/*
-	 * GENERAL STATUS CODE: 400 � Bad Request 401 � Unauthorized, Auth-Token
-	 * missing / Invalid Auth-Token / User not authorized 404 � Not Found, The
-	 * requested resource is not found 501 � Not Implemented, The requested
-	 * endpoint is not implemented (pending or business decision) 503 � Service
+	 * GENERAL STATUS CODE: 400: Bad Request 401: Unauthorized, Auth-Token
+	 * missing / Invalid Auth-Token / User not authorized 404: Not Found, The
+	 * requested resource is not found 501: Not Implemented, The requested
+	 * endpoint is not implemented (pending or business decision) 503: Service
 	 * Unavailable, server or DB down
 	 * 
 	 * GET: Success (content available): 200 Success (no content) : 204 Bad
@@ -174,8 +172,8 @@ public class Constant {
 	public final static String PERMISSION_CUSTOM = "custom";
 
 	public final static int REQUEST_CODE_MAP_PICKER = 11111;
-	public final static int REQUEST_CODE_CAMERA = 100;
-	public final static int REQUEST_CODE_GALLERY = 101;
+	//public final static int REQUEST_CODE_CAMERA = 100;
+	//public final static int REQUEST_CODE_GALLERY = 101;
 
 	public final static String MY_RESPONSE_YES = "yes";
 	public final static String MY_RESPONSE_NO = "no";
@@ -215,5 +213,7 @@ public class Constant {
 	public final static int MAX_ITEM_DISTANCE = 50000000;//meter
 	
 	public static enum Permission  {NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM};
+	
+	public static final String IMAGE_CACHE_DIR = "thumbs";
 
 }

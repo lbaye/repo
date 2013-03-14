@@ -1,9 +1,9 @@
 package com.socmaps.util;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.InformationSharingPreferences;
 import com.socmaps.entity.LayersPreferences;
 import com.socmaps.entity.MeetupRequest;
-import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.NotificationPreferences;
 import com.socmaps.entity.People;
@@ -27,7 +27,7 @@ public class StaticValues {
 
 	public static Place selectedPlace = null;
 	public static People selectedPeople = null;
-	public static MyGeoPoint myPoint = null;
+	public static LatLng myPoint = null;
 
 	public static MeetupRequest selectedMeetupRequest = null;
 

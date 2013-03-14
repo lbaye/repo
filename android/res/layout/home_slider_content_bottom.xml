@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="36dp"
+    android:layout_height="40dp"
     android:background="@drawable/footer_slider_bg"
     android:gravity="center"
     android:orientation="horizontal" >
@@ -10,12 +10,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center" >
+        android:gravity="center" 
+        android:orientation="horizontal"
+        android:paddingLeft="5dip">
         <Button
             android:id="@+id/btnMapView"
             android:layout_width="27dp"
             android:layout_height="22dp"
             android:background="@drawable/selector_icon_map_view" />
+        <TextView 
+            android:id="@+id/tvMapView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Map view"
+            android:textSize="16dip"
+            android:textColor="@color/gray_dark"
+            android:paddingLeft="5dip"
+            />
     </LinearLayout>
     
     <ImageView 
@@ -23,13 +34,14 @@
         android:layout_height="fill_parent"
         android:scaleType="centerInside"
         android:src="@drawable/seperator"
-        />
+        android:visibility="gone" />
     
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center" >
+        android:gravity="center"
+        android:visibility="gone" >
         <Button
             android:id="@+id/btnCircle"
             android:layout_width="30dp"
@@ -48,13 +60,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center" >
+        android:gravity="center" 
+        android:orientation="horizontal"
+        android:paddingRight="5dip">
         <Button
             android:id="@+id/btnListView"
             android:layout_width="27dp"
             android:layout_height="20dp"
             android:background="@drawable/selector_icon_list_view"
             android:padding="5dip" />
+        <TextView 
+            android:id="@+id/tvListView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List view"
+            android:textSize="16dip"
+            android:textColor="@color/gray_dark"
+            android:paddingLeft="5dip" />
     </LinearLayout>
     
     

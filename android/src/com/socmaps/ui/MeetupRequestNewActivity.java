@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +14,7 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,11 +36,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
@@ -52,10 +51,11 @@ import com.socmaps.widget.NearByPlacesPicker;
 import com.socmaps.widget.NearByPlacesPickerListener;
 
 /**
- * MeetupRequestNewActivity class for generating meet up request view to create new meet up and some user interaction.
- *
+ * MeetupRequestNewActivity class for generating meet up request view to create
+ * new meet up and some user interaction.
+ * 
  */
-public class MeetupRequestNewActivity extends Activity {
+public class MeetupRequestNewActivity extends FragmentActivity {
 
 	Button btnBack, btnNotification;
 	Button btnCancel, btnSend;
@@ -92,7 +92,7 @@ public class MeetupRequestNewActivity extends Activity {
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 	boolean isSelected;
 
 	private People selectedPeople;
@@ -131,8 +131,8 @@ public class MeetupRequestNewActivity extends Activity {
 		if (obj != null) {
 			selectedPeople = (People) (obj);
 			obj = null;
-			Log.d("CHECK VALUE", "Name: " + selectedPeople.getFirstName() + " "
-					+ selectedPeople.getLastName());
+			Log.d("CHECK VALUE",
+					"Name: " + Utility.getItemTitle(selectedPeople));
 			Log.d("people ID Check", selectedPeople.getId());
 		}
 
@@ -152,7 +152,29 @@ public class MeetupRequestNewActivity extends Activity {
 		super.onResume();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
+		imageFetcher.setExitTasksEarly(false);
 
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		imageFetcher.closeCache();
+		
+		
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+		
 	}
 
 	@Override
@@ -167,7 +189,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 		context = MeetupRequestNewActivity.this;
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		buttonActionListener = new ButtonActionListener();
 
@@ -467,13 +489,13 @@ public class MeetupRequestNewActivity extends Activity {
 		String avatarUrl = fEntity.getAvatar();
 
 		String name = "";
-		name = Utility.getFieldText(fEntity);
+		name = Utility.getItemTitle(fEntity);
 		nameView.setText(name);
 
 		selectedFriends.put(id, false);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-			imageDownloader.download(avatarUrl, profilePic);
+			imageFetcher.loadImage(avatarUrl, profilePic);
 		}
 
 		if (backupSelectedFriends.containsKey(id)) {
@@ -619,8 +641,7 @@ public class MeetupRequestNewActivity extends Activity {
 			String key = (String) me.getKey();
 			selectedFriends.put(key, isSelect);
 		}
-		
-		
+
 	}
 
 	private void selectionCircles(boolean isSelect) {
@@ -711,8 +732,8 @@ public class MeetupRequestNewActivity extends Activity {
 	private void getCurrentLocationAddress() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
-				requestLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				requestLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+				requestLat = StaticValues.myPoint.latitude;
+				requestLng = StaticValues.myPoint.longitude;
 				Utility.getAddressByCoordinate(requestLat, requestLng,
 						new LocationAddressHandler());
 
@@ -752,8 +773,8 @@ public class MeetupRequestNewActivity extends Activity {
 		double currentLng = 0;
 
 		if (StaticValues.myPoint != null) {
-			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+			currentLat = StaticValues.myPoint.latitude;
+			currentLng = StaticValues.myPoint.longitude;
 
 		}
 
@@ -770,12 +791,14 @@ public class MeetupRequestNewActivity extends Activity {
 		public void onPlaceSelect(String pickerName, Place selectedPlace) {
 			// TODO Auto-generated method stub
 			if (selectedPlace != null) {
-				GeoPoint geoPoint = new GeoPoint(
-						(int) (selectedPlace.getLatitude() * 1E6),
-						(int) (selectedPlace.getLongitude() * 1E6));
 
-				requestLat = geoPoint.getLatitudeE6() / 1E6;
-				requestLng = geoPoint.getLongitudeE6() / 1E6;
+				// GeoPoint geoPoint = new GeoPoint(
+				// (int) (selectedPlace.getLatitude() * 1E6),
+				// (int) (selectedPlace.getLongitude() * 1E6));
+
+				requestLat = selectedPlace.getLatitude();
+				requestLng = selectedPlace.getLongitude();
+
 				requestAddress = selectedPlace.getVicinity();
 				displayAddress(selectedPlace.getName(), requestAddress);
 

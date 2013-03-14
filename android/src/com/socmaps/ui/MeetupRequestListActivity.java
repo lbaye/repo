@@ -2,13 +2,13 @@ package com.socmaps.ui;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,9 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MeetupRequest;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -34,7 +33,7 @@ import com.socmaps.util.Utility;
  * MeetupRequestListActivity class for generating meet up request list view and some user interaction.
  *
  */
-public class MeetupRequestListActivity extends Activity {
+public class MeetupRequestListActivity extends FragmentActivity {
 
 	ButtonActionListener buttonActionListener;
 	LinearLayout meetupRequestListContainer;
@@ -54,7 +53,7 @@ public class MeetupRequestListActivity extends Activity {
 
 	int requestCount = 0;
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 	View selectedView;
 
 	@Override
@@ -71,7 +70,7 @@ public class MeetupRequestListActivity extends Activity {
 	private void initialize() {
 		context = MeetupRequestListActivity.this;
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		buttonActionListener = new ButtonActionListener();
 		meetupRequestListContainer = (LinearLayout) findViewById(R.id.meetup_request_list_container);
@@ -95,7 +94,7 @@ public class MeetupRequestListActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -201,7 +200,7 @@ public class MeetupRequestListActivity extends Activity {
 
 		String avatarUrl = meetupRequest.getOwnerAvatar();
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-			imageDownloader.download(avatarUrl, profilePic);
+			imageFetcher.loadImage(avatarUrl, profilePic);
 		}
 
 		String senderName = "";
@@ -356,7 +355,7 @@ public class MeetupRequestListActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -482,15 +481,26 @@ public class MeetupRequestListActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		imageFetcher.setExitTasksEarly(false);
 
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
 
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
+	}
+	
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {

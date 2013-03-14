@@ -10,15 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 /**
- * PeopleRowFactory class for generating a row (view), which row (view) is associates with corresponding layout.
- *
+ * PeopleRowFactory class for generating a row (view), which row (view) is
+ * associates with corresponding layout.
+ * 
  */
 public class PeopleRowFactory {
 
@@ -32,11 +34,9 @@ public class PeopleRowFactory {
 	 *            an object of type People.
 	 * @param con
 	 *            current state of the application/object.
-	 * @param licl
-	 *            which is used for a specific action when button is clicked.
 	 * @param convertView
 	 *            as view.
-	 * @param il
+	 * @param imageFetcher
 	 *            which is used to download image from a specific url.
 	 * @param listItemClickListenerPeople
 	 *            which is used for a specific action when button is clicked.
@@ -45,9 +45,8 @@ public class PeopleRowFactory {
 	 */
 
 	public static View getView(final LayoutInflater inflater,
-			final Object peopleObj, final Context con,
-			final ListItemClickListener licl, final View convertView,
-			final ImageDownloader il,
+			final Object peopleObj, final Context con, final View convertView,
+			final ImageFetcher imageFetcher,
 			final ListItemClickListenerPeople listItemClickListenerPeople) {
 		final ViewHolder holder;
 		View view;
@@ -86,8 +85,8 @@ public class PeopleRowFactory {
 
 		// *****************************************************************check
 		// the user type sm/fb
-		holder.sourceImage.setVisibility(View.GONE);
-		if (people.getRegMedia() != null) {
+		holder.sourceImage.setVisibility(View.VISIBLE);
+		/*if (people.getRegMedia() != null) {
 			if (!people.getRegMedia().equals("")) {
 				if (people.getRegMedia().equals("fb")) {
 					holder.sourceImage
@@ -100,9 +99,9 @@ public class PeopleRowFactory {
 
 			} else
 				holder.sourceImage.setVisibility(View.GONE);
-		}
+		}*/
 
-		holder.firstNameText.setText(Utility.getFieldText(people));
+		holder.firstNameText.setText(Utility.getItemTitle(people));
 		if (people.getStatusMsg() != null) {
 			if (!people.getStatusMsg().equals("")) {
 
@@ -142,14 +141,14 @@ public class PeopleRowFactory {
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 
-			il.download(people.getCoverPhoto(), holder.coverPhoto);
+			imageFetcher.loadImage(people.getCoverPhoto(), holder.coverPhoto);
 		} else
-			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
 
 				holder.avatar.setImageResource(R.drawable.img_blank);
-				il.download(people.getAvatar(), holder.avatar);
+				imageFetcher.loadImage(people.getAvatar(), holder.avatar);
 
 			}
 

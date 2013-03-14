@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/white"
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:background="@drawable/header"
@@ -18,8 +19,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:scaleType="fitXY"
-            android:background="@drawable/btn_back" />
+            android:background="@drawable/btn_back"
+            android:scaleType="fitXY" />
 
         <ImageView
             android:layout_width="135dip"
@@ -31,14 +32,18 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/regBar"
         android:layout_width="fill_parent"
         android:layout_height="39dp"
+        android:layout_below="@+id/header"
         android:scaleType="fitXY"
         android:src="@drawable/bar_reg" />
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/btnSubmit"
+        android:layout_below="@+id/regBar" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -128,50 +133,11 @@
                         android:layout_marginRight="10dp"
                         android:drawSelectorOnTop="true"
                         android:entries="@array/genderOptions" />
-                    <!-- android:background="@drawable/spinner_bg" -->
 
                 </LinearLayout>
 
-                <!-- <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
+              
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="@string/firstNameLabel"
-                        android:textColor="@drawable/black" />
-
-                    <EditText
-                        android:id="@+id/etFirstName"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:hint="@string/requiredText"
-                        android:inputType="textPersonName" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="@string/lastNameLabel"
-                        android:textColor="@drawable/black" />
-
-                    <EditText
-                        android:id="@+id/etLastName"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:hint="@string/requiredText"
-                        android:inputType="textPersonName" />
-                </LinearLayout>  --> 
-                
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
@@ -187,12 +153,12 @@
                         android:id="@+id/etUserName"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp" 
+                        android:layout_marginRight="10dp"
                         android:hint="@string/requiredText"
                         android:inputType="textPersonName" />
                 </LinearLayout>
             </LinearLayout>
-
+
             <LinearLayout
                 android:id="@+id/toggleOptionalInfoLayout"
                 android:layout_width="fill_parent"
@@ -201,8 +167,9 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bar_more_info_bg"
                 android:orientation="horizontal"
-                android:visibility="visible"
-                android:paddingLeft="5dp" >
+                android:paddingLeft="10dp"
+                android:visibility="visible" >
+
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
@@ -218,11 +185,10 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="@string/etcstr"
                     android:textColor="@color/white"
-                    android:layout_gravity="center" 
-                    android:textSize="12dp"
-                    />
+                    android:textSize="12dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -230,28 +196,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:paddingLeft="10dp" >
+                android:paddingLeft="10dp"
+                android:visibility="gone" >
 
-                <!-- <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
 
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="@string/userNameLabel"
-                        android:textColor="@drawable/black" />
-
-                    <EditText
-                        android:id="@+id/etUserName"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:inputType="textPersonName" />
-                </LinearLayout> --> 
-                
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
@@ -288,7 +236,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:inputType="textPersonName" />
-                </LinearLayout> 
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -306,8 +254,8 @@
                         android:layout_width="100dp"
                         android:layout_height="30dp"
                         android:layout_marginRight="20dp"
-                        android:text="@string/selectdate" 
-                        android:background="@drawable/selector_btn_light"/>
+                        android:background="@drawable/selector_btn_light"
+                        android:text="@string/selectdate" />
 
                     <TextView
                         android:id="@+id/tvShowSelectedDate"
@@ -333,7 +281,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp" />
                 </LinearLayout>
-                
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
@@ -418,13 +366,8 @@
                         android:text="@string/country"
                         android:textColor="@drawable/black" />
 
-                    <!--<EditText
-                        android:id="@+id/etCountry"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:inputType="text" /> -->
-                        
+                   
+
                     <Spinner
                         android:id="@+id/spCountry"
                         android:layout_width="fill_parent"
@@ -472,43 +415,19 @@
                         android:entries="@array/relationshipOptions" />
                 </LinearLayout>
             </LinearLayout>
-
-            <!--
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="90dp" >
-
-                <CheckBox
-                    android:id="@+id/chkRememberPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tvTerms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/licenseterms"
-                    android:textColor="@drawable/black" />
-            </LinearLayout>
-            -->
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="10dp" >
-
-                <Button
-                    android:id="@+id/btnSubmit"
-                    android:layout_width="135dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/btn_create_acc" />
-                <!-- android:text="@string/submit" -->
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="135dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dip"
+        android:background="@drawable/selector_btn_dark"
+        android:text="@string/createaccount"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</RelativeLayout>

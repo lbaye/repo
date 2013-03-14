@@ -401,7 +401,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
-                android:layout_marginTop="20dip" >
+                android:layout_marginTop="20dip"
+                android:scrollbars="none" >
 
                 <LinearLayout
                     android:id="@+id/scroll_container"
@@ -415,7 +416,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
                         android:background="@color/transparent"
-                        android:orientation="vertical" >
+                        android:orientation="vertical" 
+                        android:padding="2dip">
 
                         <FrameLayout
                             android:layout_width="60dip"
@@ -453,8 +455,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/listItemParent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
@@ -694,7 +694,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:text="Geotag..."
+                        android:text="@string/geotag"
                         android:textColor="@color/gray_dark"
                         android:textSize="12dip" />
 
@@ -724,7 +724,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:text="Upload photos..."
+                        android:text="@string/uploadPhotos"
                         android:textColor="@color/gray_dark"
                         android:textSize="12dip" />
 

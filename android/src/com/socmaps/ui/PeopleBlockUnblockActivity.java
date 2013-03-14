@@ -9,13 +9,13 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,13 +30,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
 import com.socmaps.entity.SecondDegreePeople;
-import com.socmaps.images.ImageDownloader;
-import com.socmaps.listrow.ListItemClickListener;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.PeopleRowFactoryBlockUnblock;
 import com.socmaps.listrow.RowType;
@@ -48,13 +46,14 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.ListComparator;
 
 /**
  * PeopleBlockUnblockActivity class is used to block & unblock of a particular user or a group of users from the list of people. 
  */
 
-public class PeopleBlockUnblockActivity extends Activity implements
-		OnClickListener, ListItemClickListener {
+public class PeopleBlockUnblockActivity extends FragmentActivity implements
+		OnClickListener {
 
 	private Context context;
 	private boolean isSearchEnabled = false;
@@ -76,6 +75,9 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	private boolean isAllSelect = false;
 
 	private HashMap<String, Boolean> selectedArrayList;
+	
+	private ImageFetcher imageFetcher;
+	private ListComparator listComparator;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,12 +101,47 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		imageFetcher.setExitTasksEarly(false);
 
 	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+		
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+		for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
+
+			StaticValues.searchResult.getPeoples().get(i).setUnit("");
+
+		}
+		
+		imageFetcher.closeCache();
+
+	}
+
 
 	private void initialize() {
 
 		context = PeopleBlockUnblockActivity.this;
+		listComparator = new ListComparator();
 
 		selectedArrayList = new HashMap<String, Boolean>();
 
@@ -149,6 +186,8 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 		btnSelectedFriends = (Button) findViewById(R.id.btnSelectedFriends);
 		btnSelectedFriends.setOnClickListener(this);
+		
+		imageFetcher = new ImageFetcher(context);
 
 	}
 
@@ -181,7 +220,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		} else if (v == btnInvitePeople) {
 
 			Intent inviteIntent = new Intent(getApplicationContext(),
-					PeopleInvityActivity.class);
+					PeopleInviteActivity.class);
 
 			inviteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(inviteIntent);
@@ -366,12 +405,12 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		private ImageDownloader imageDownloader;
+	
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			imageDownloader = ImageDownloader.getInstance();
+			
 		}
 
 		@Override
@@ -413,8 +452,8 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
 				return PeopleRowFactoryBlockUnblock.getView(
 						LayoutInflater.from(context), items.get(position),
-						context, PeopleBlockUnblockActivity.this, convertView,
-						imageDownloader, new PeopleItemListener());
+						context,  convertView,
+						imageFetcher, new PeopleItemListener());
 			} else {
 				return null;
 			}
@@ -486,34 +525,10 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	}
 
 	private void sortMasterListData() {
-		Collections.sort(this.listMasterContent, new ListComparator());
+		Collections.sort(this.listMasterContent, listComparator);
 	}
 
-	private class ListComparator implements Comparator<Object> {
-
-		@Override
-		public int compare(Object first, Object last) {
-			double firstDistance = getDistance(first);
-			double lastDistance = getDistance(last);
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-
-		private double getDistance(Object object) {
-			if (object instanceof People)
-				return ((People) object).getDistance();
-			else if (object instanceof Place)
-				return ((SecondDegreePeople) object).getDistance();
-			else
-				return 0;
-		}
-
-	}
+	
 
 	private class PeopleItemListener implements ListItemClickListenerPeople {
 
@@ -553,15 +568,12 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		}
 
 		@Override
-		public void onShowOnMapButtonClick(People people) {
+		public void onShowOnMapButtonClick(Object item) {
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
+			StaticValues.highlightAnnotationItem = item;
 
-			Intent intent = new Intent(context, HomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-
+			finish();
 		}
 
 		@Override
@@ -583,18 +595,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		}
 
 	}
-
-
-
-	@Override
-	public void onMapButtonClick(int flag) {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, ShowItemOnMap.class);
-		intent.putExtra("FLAG", flag);
-		startActivity(intent);
-	}
-
-	
 
 	/*
 	 * Hide Keybord
@@ -650,30 +650,5 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 	}
 
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-
-	}
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-
-		for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-
-			StaticValues.searchResult.getPeoples().get(i).setUnit("");
-
-		}
-
-	}
-
+	
 }

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.Event;
@@ -26,7 +27,6 @@ import com.socmaps.entity.LsValues;
 import com.socmaps.entity.MeetupRequest;
 import com.socmaps.entity.MessageEntity;
 import com.socmaps.entity.MetaContent;
-import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.NotificationCount;
 import com.socmaps.entity.NotificationPreferences;
@@ -41,10 +41,9 @@ import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.entity.TimeEntity;
 import com.socmaps.entity.UserSettings;
 
-
 /**
  * ServerResponseParser class for parsing all server response.
- *
+ * 
  */
 public class ServerResponseParser {
 
@@ -534,6 +533,12 @@ public class ServerResponseParser {
 				mEntity.setContent(content);
 			}
 
+			String lastMessage;
+			if (!jObject.isNull("lastMessage")) {
+				lastMessage = jObject.getString("lastMessage");
+				mEntity.setLastMessage(lastMessage);
+			}
+
 			String status;
 			if (!jObject.isNull("status")) {
 				status = jObject.getString("status");
@@ -634,10 +639,58 @@ public class ServerResponseParser {
 					mEntity.setSenderLastName(senderLastName);
 				}
 
+				String senderUserName;
+				if (!senderObj.isNull("username")) {
+					senderUserName = senderObj.getString("username");
+					mEntity.setSenderUserName(senderUserName);
+				}
+
 				String senderAvatar;
 				if (!senderObj.isNull("avatar")) {
 					senderAvatar = senderObj.getString("avatar");
 					mEntity.setSenderAvatar(senderAvatar);
+				}
+
+			}
+
+			if (!jObject.isNull("lastSender")) {
+
+				JSONObject senderObj = jObject.getJSONObject("lastSender");
+
+				String senderId;
+				if (!senderObj.isNull("id")) {
+					senderId = senderObj.getString("id");
+					mEntity.setLastSenderId(senderId);
+				}
+
+				String senderEmail;
+				if (!senderObj.isNull("email")) {
+					senderEmail = senderObj.getString("email");
+					mEntity.setLastSenderEmail(senderEmail);
+				}
+
+				String senderFirstName;
+				if (!senderObj.isNull("firstName")) {
+					senderFirstName = senderObj.getString("firstName");
+					mEntity.setLastSenderFirstName(senderFirstName);
+				}
+
+				String senderLastName;
+				if (!senderObj.isNull("lastName")) {
+					senderLastName = senderObj.getString("lastName");
+					mEntity.setLastSenderLastName(senderLastName);
+				}
+
+				String senderUserName;
+				if (!senderObj.isNull("username")) {
+					senderUserName = senderObj.getString("username");
+					mEntity.setLastSenderUserName(senderUserName);
+				}
+
+				String senderAvatar;
+				if (!senderObj.isNull("avatar")) {
+					senderAvatar = senderObj.getString("avatar");
+					mEntity.setLastSenderAvatar(senderAvatar);
 				}
 
 			}
@@ -662,9 +715,11 @@ public class ServerResponseParser {
 				Map<String, String> map = new HashMap<String, String>();
 				for (Iterator iterator = object.keys(); iterator.hasNext();) {
 					String key = (String) iterator.next();
-					String value = object.getString(key);
+					if (!object.isNull(key)) {
+						String value = object.getString(key);
+						map.put(key, value);
+					}
 
-					map.put(key, value);
 				}
 				recipients.add(map);
 			}
@@ -717,11 +772,11 @@ public class ServerResponseParser {
 					replyEntity.setUpdateDate(rUpdateDate);
 
 					TimeEntity timeEntity = new TimeEntity();
-					timeEntity.setDateTimeValue(jObject.getJSONObject(
+					timeEntity.setDateTimeValue(rjObject.getJSONObject(
 							"updateDate").getString("date"));
-					timeEntity.setTimeZoneType(jObject.getJSONObject(
+					timeEntity.setTimeZoneType(rjObject.getJSONObject(
 							"updateDate").getInt("timezone_type"));
-					timeEntity.setTimeZone(jObject.getJSONObject("updateDate")
+					timeEntity.setTimeZone(rjObject.getJSONObject("updateDate")
 							.getString("timezone"));
 
 					replyEntity.setUpdateTimeEntity(timeEntity);
@@ -754,6 +809,11 @@ public class ServerResponseParser {
 					if (!rSenderObj.isNull("lastName")) {
 						rSenderLastName = rSenderObj.getString("lastName");
 						replyEntity.setSenderLastName(rSenderLastName);
+					}
+					String senderUserName;
+					if (!rSenderObj.isNull("username")) {
+						senderUserName = rSenderObj.getString("username");
+						replyEntity.setSenderUserName(senderUserName);
 					}
 
 					String rSenderAvatar;
@@ -1772,9 +1832,19 @@ public class ServerResponseParser {
 			if (!peopleJSONObj.isNull("lastName"))
 				people.setLastName(peopleJSONObj.getString("lastName"));
 
+			if (!peopleJSONObj.isNull("username"))
+				people.setUserName(peopleJSONObj.getString("username"));
+
 			if (!peopleJSONObj.isNull("avatar")) {
 				String avatar = peopleJSONObj.getString("avatar");
-				if (avatar.contains("?type=normal")) {
+				if (avatar.contains("https")) {
+					avatar = avatar.replace("https", "http");
+				}
+				if (avatar.contains("type=normal")) {
+					avatar = avatar.replace("type=normal", "type=small");
+				}
+				if (avatar.contains("type=large")) {
+					avatar = avatar.replace("type=large", "type=small");
 				}
 
 				people.setAvatar(avatar);
@@ -1937,8 +2007,20 @@ public class ServerResponseParser {
 				secondDegreePeople.setRefType((peopleJSONObj
 						.getString("refType")));
 
-			if (!peopleJSONObj.isNull("avatar"))
-				secondDegreePeople.setAvatar(peopleJSONObj.getString("avatar"));
+			if (!peopleJSONObj.isNull("avatar")) {
+				String avatar = peopleJSONObj.getString("avatar");
+				if (avatar.contains("https")) {
+					avatar = avatar.replace("https", "http");
+				}
+				if (avatar.contains("type=normal")) {
+					avatar = avatar.replace("type=normal", "type=small");
+				}
+				if (avatar.contains("type=large")) {
+					avatar = avatar.replace("type=large", "type=small");
+				}
+
+				secondDegreePeople.setAvatar(avatar);
+			}
 
 			if (!peopleJSONObj.isNull("lastSeenAt")) {
 
@@ -1996,22 +2078,6 @@ public class ServerResponseParser {
 		}
 
 		return secondDegreePeople;
-	}
-
-	/**
-	 * Converts to MyGeoPoint object with specified latitude and longitude.
-	 * 
-	 * @param lat
-	 *            in double
-	 * @param lng
-	 *            in double
-	 * @return MyGeoPoint object
-	 * @see com.socmaps.entity.MyGeoPoint
-	 */
-	public static MyGeoPoint getGeoPointByLatLong(double lat, double lng) {
-
-		return new MyGeoPoint((int) (lat * 1E6), (int) (lng * 1E6), null);
-
 	}
 
 	private static List<People> getGuestList(JSONArray ja) throws JSONException {
@@ -2080,17 +2146,13 @@ public class ServerResponseParser {
 		return circles;
 	}
 
-	private static MyGeoPoint getGeoPointFromjsonObject(JSONObject jo)
-			throws JSONException {
+	private static LatLng getLatLngFromJSON(JSONObject jo) throws JSONException {
 		double lat = 0, lng = 0;
-		String add = "";
 		if (!jo.isNull("lat"))
 			lat = jo.getDouble("lat");
 		if (!jo.isNull("lng"))
 			lng = jo.getDouble("lng");
-		if (!jo.isNull("address"))
-			add = jo.getString("address");
-		return new MyGeoPoint((int) (lat * 1E6), (int) (lng * 1E6), add);
+		return new LatLng((int) (lat * 1E6), (int) (lng * 1E6));
 	}
 
 	private static TimeEntity getTimeEntityFromJsonObject(JSONObject jo)
@@ -2364,7 +2426,7 @@ public class ServerResponseParser {
 
 			JSONObject locationObj = jsonObject.getJSONObject("location");
 
-			meetupEntity.setLocation(getGeoPointFromjsonObject(locationObj));
+			// meetupEntity.setLocation(getLatLngFromJSON(locationObj));
 
 			if (!locationObj.isNull("lat")) {
 				meetupEntity.setLat(locationObj.getDouble("lat"));

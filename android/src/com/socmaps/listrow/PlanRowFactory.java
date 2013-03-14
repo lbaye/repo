@@ -9,17 +9,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.maps.GeoPoint;
 import com.socmaps.entity.Plan;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-
 /**
- * PlanRowFactory class for generating a row (view), which row (view) is associates with corresponding layout.
- *
+ * PlanRowFactory class for generating a row (view), which row (view) is
+ * associates with corresponding layout.
+ * 
  */
 public class PlanRowFactory {
 
@@ -51,7 +52,7 @@ public class PlanRowFactory {
 	public static View getView(final LayoutInflater inflater, final Plan plan,
 			final Context context,
 			final ListItemClickListenerPlan clickListener, final int position,
-			final View convertView, final ImageDownloader il, int a) {
+			final View convertView, final ImageFetcher il, int a) {
 
 		ViewHolder holder;
 		View view;
@@ -108,17 +109,16 @@ public class PlanRowFactory {
 		if (plan.getPlanImageUrl() != null) {
 
 			if (!plan.getPlanImageUrl().equalsIgnoreCase("")) {
-				il.download(plan.getPlanImageUrl(), holder.coverPhoto);
+				il.loadImage(plan.getPlanImageUrl(), holder.coverPhoto);
 			}
 		}
 
 		// set distance
 
 		if (StaticValues.myPoint != null) {
-			holder.distanceText.setText(Utility.getFormatedDistance(Utility
-					.calculateDistance(StaticValues.myPoint,
-							new GeoPoint((int) (plan.getLatitude() * 1E6),
-									(int) (plan.getLongitude() * 1E6))),
+			holder.distanceText.setText(Utility.getFormatedDistance(
+					Utility.calculateDistance(StaticValues.myPoint, new LatLng(
+							plan.getLatitude(), plan.getLongitude())),
 					StaticValues.myInfo.getSettings().getUnit()));
 		}
 

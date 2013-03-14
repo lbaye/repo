@@ -24,7 +24,7 @@ public class MeetupRequest {
 	private RSVP rsvp;
 	private List<People> guestList;
 	private List<Circle> circleList;
-	private MyGeoPoint location;
+	//private LatLng location;
 
 	public String getId() {
 		return Id;
@@ -186,12 +186,12 @@ public class MeetupRequest {
 		this.circleList = circleList;
 	}
 
-	public MyGeoPoint getLocation() {
+	/*public LatLng getLocation() {
 		return location;
 	}
 
-	public void setLocation(MyGeoPoint location) {
+	public void setLocation(LatLng location) {
 		this.location = location;
-	}
+	}*/
 
 }

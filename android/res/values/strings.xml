@@ -10,12 +10,12 @@
     -->
 
     <string name="app_name">Socialmaps</string>
-    <string name="app_version">1.0.1</string>
+    <string name="app_version">1.0.4</string>
     <string name="login">Login</string>
     <string name="registerLabel">Register</string>
     <string name="passwordLabel">Password</string>
     <string name="passwordreminder">Remember me</string>
-    <string name="createaccount">Create Account</string>
+    <string name="createaccount">Create account</string>
     <string name="fblogin">Facebook Login</string>
     <string name="registration">Registration</string>
     <string name="required">*</string>
@@ -53,7 +53,7 @@
     <string name="submit">Submit</string>
     <string name="status">Status</string>
     <string name="photo">Photo</string>
-    <string name="geotag">Geo-tag</string>
+    <string name="geotag">Geotag</string>
     <string name="name">Name</string>
     <string name="ageprofile">Age:</string>
     <string name="livesin">Lives in:</string>
@@ -150,8 +150,8 @@
     <string name="forgotPassDesc">Enter your email to reset your password:</string>
     <string name="cancel">Cancel</string>
     <string name="requiredText">Required</string>
-    <string name="moreinformations">More Informations</string>
-    <string name="etcstr">(choose interests, username, etc.)</string>
+    <string name="moreinformations">More Information</string>
+    <string name="etcstr">(choose name, interests, etc.)</string>
     <string name="acclog">Accept and login</string>
     <string name="dummytext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lacus leo, sodales ut pellentesque vel, posuere vitae metus. Nulla id nibh sem. Aliquam sed leo leo. Quisque consectetur erat in justo accumsan et eleifend augue egestas. Vivamus volutpat aliquet elit, nec venenatis elit facilisis vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus ac tortor arcu. Suspendisse vel sapien ac leo ultrices viverra porttitor vel tortor. Aliquam tristique nibh quis felis faucibus blandit. Nullam non lorem magna. Fusce vel arcu arcu.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lacus leo, sodales ut pellentesque vel, posuere vitae metus. Nulla id nibh sem. Aliquam sed leo leo. Quisque consectetur erat in justo accumsan et eleifend augue egestas. Vivamus volutpat aliquet elit, nec venenatis elit facilisis vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus ac tortor arcu. Suspendisse vel sapien ac leo ultrices viverra porttitor vel tortor. Aliquam tristique nibh quis felis faucibus blandit. Nullam non lorem magna. Fusce vel arcu arcu. </string>
     <string name="menuItemMyPlaces">My Places</string>
@@ -167,7 +167,6 @@
     <string name="menuItemEvents">Events</string>
     <string name="event_label">Event</string>
     <string name="plan_label">Plan</string>
-    <string name="direction_label">Directions</string>
     <string name="recommended_label">Recommend</string>
     <string name="review_label">Reviews</string>
     <string name="save_place_label">Save Place</string>
@@ -197,7 +196,7 @@
     <string name="menuItemCustomLabel">Custom</string>
     <string name="messagesLabel">Messages</string>
     <string name="messageLabel">Message</string>
-    <string name="friendRequestLabel">Friend(s) request(s)</string>
+    <string name="friendRequestLabel">Friend request(s)</string>
     <string name="notifyLabel">Notifications</string>
     <string name="friendRequestNameLabel">\u0020 wants to be your friend.</string>
     <string name="commonFriendNumberLabel">\u0020 friend(s) in common</string>
@@ -548,6 +547,8 @@
     <string name="inviteFriendsLabel">Invite Friends</string>
     <string name="byDistanceLabel">By distance</string>
     <string name="circlesLabel">Circles</string>
+     <string name="myFriendsLable">My friends</string>
+    
     <string name="blockUnblockLabel">Block/Unblock</string>
     <string name="blockLabel">Block</string>
     <string name="unblockLabel">Unblock</string>
@@ -603,7 +604,7 @@
     <string name="maybeLabel">Maybe</string>
     <string name="fbInviteDialogDesc">This is your first login to Socialmaps app, to get a better experience, we recommand you to invite Facebook friends:</string>
     <string name="detailsLabel">Details</string>
-    <string name="directionLabel">Direction</string>
+    <string name="directionLabel">Directions</string>
     <string name="getDirectionLabel">Get direction</string>
     <string name="errorMessageGallery">An error occured during select image from Gallery. Please try again with Camera.</string>
 
@@ -706,6 +707,7 @@
 
     <string name="myPhotos">My photos</string>
     <string name="uploadNewPhoto">Upload new photo...</string>
+    <string name="uploadPhotos">Upload photos</string>
     <string name="deleteSelectedPhotos">Delete selected photos</string>
      <string name="dateLabel">Date:</string>
 

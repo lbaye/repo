@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * GpsService class is used to obtain the current location(Latitude & Longitude) of an user. 
- * This class also updates the current location when user is on moving. 
+ * GpsService class is used to obtain the current location(Latitude & Longitude)
+ * of an user. This class also updates the current location when user is on
+ * moving.
  */
 
 public class GpsService {
@@ -99,32 +100,44 @@ public class GpsService {
 
 		@Override
 		public void onProviderDisabled(String provider) {
-			if (provider.equals(LocationManager.GPS_PROVIDER)
-					&& locationManager
-							.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-				locationManager.removeUpdates(deviceLocationListener);
-				locationProvider = LocationManager.NETWORK_PROVIDER;
-				deviceLocationListener = this;
-				locationManager.requestLocationUpdates(
-						LocationManager.NETWORK_PROVIDER, minTime, minDistance,
-						deviceLocationListener);
-			} else if (provider.equals(LocationManager.NETWORK_PROVIDER)
-					&& locationManager
-							.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-				locationManager.removeUpdates(deviceLocationListener);
-				locationProvider = LocationManager.GPS_PROVIDER;
-				deviceLocationListener = this;
-				locationManager.requestLocationUpdates(
-						LocationManager.GPS_PROVIDER, minTime, minDistance,
-						deviceLocationListener);
-			} else {
-				Criteria criteria = getCriteria();
-				locationProvider = locationManager.getBestProvider(criteria,
-						true);
-				deviceLocationListener = this;
-				locationManager.requestLocationUpdates(locationProvider,
-						minTime, minDistance, deviceLocationListener);
+
+			try {
+				if (provider.equals(LocationManager.GPS_PROVIDER)
+						&& locationManager
+								.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+					locationManager.removeUpdates(deviceLocationListener);
+					locationProvider = LocationManager.NETWORK_PROVIDER;
+					deviceLocationListener = this;
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, minTime,
+							minDistance, deviceLocationListener);
+				} else if (provider.equals(LocationManager.NETWORK_PROVIDER)
+						&& locationManager
+								.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+					locationManager.removeUpdates(deviceLocationListener);
+					locationProvider = LocationManager.GPS_PROVIDER;
+					deviceLocationListener = this;
+					locationManager.requestLocationUpdates(
+							LocationManager.GPS_PROVIDER, minTime, minDistance,
+							deviceLocationListener);
+				} else {
+					Criteria criteria = getCriteria();
+					locationProvider = locationManager.getBestProvider(
+							criteria, true);
+					deviceLocationListener = this;
+					if(locationProvider!=null)
+					{
+						locationManager.requestLocationUpdates(locationProvider,
+								minTime, minDistance, deviceLocationListener);
+					}
+					
+				}
+			} catch (IllegalArgumentException e) {
+
+			} catch (Exception e) {
+				// TODO: handle exception
 			}
+
 		}
 
 		@Override

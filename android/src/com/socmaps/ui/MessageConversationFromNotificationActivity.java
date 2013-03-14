@@ -10,12 +10,12 @@ import java.util.TimerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,9 +28,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MessageEntity;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -44,7 +43,7 @@ import com.socmaps.util.Utility;
  * particular conversation.
  * 
  */
-public class MessageConversationFromNotificationActivity extends Activity {
+public class MessageConversationFromNotificationActivity extends FragmentActivity{
 
 	ButtonActionListener buttonActionListener;
 	Button btnSend;
@@ -54,7 +53,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 	private Context context;
 
 	ScrollView scrollViewBody;
-
+	
 	EditText etNewMessage;
 	String newMessage;
 
@@ -75,11 +74,15 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	HashMap<String, Boolean> displayedMessageList = new HashMap<String, Boolean>();
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 
 	String itemThreadId;
 	String itemMessageId;
 	boolean isUnread;
+	String recipientId = null;
+	boolean isExistingThread = false;
+	
+	Timer timer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,18 +91,31 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		initialize();
 
-		itemThreadId = getIntent().getStringExtra("itemThreadId");
+		recipientId = getIntent().getStringExtra("recipientId");
 		itemMessageId = getIntent().getStringExtra("itemMessageId");
+
+		itemThreadId = getIntent().getStringExtra("itemThreadId");
 		isUnread = getIntent().getBooleanExtra("status", false);
 
-		getMessageDetails();
+		if (recipientId == null) {
+			isExistingThread = true;
+			getMessageDetails();
+
+			Log.w("MessageDetails", "recipientId is null");
+		} else {
+			Log.w("MessageDetails", "recipientId is not null :" + recipientId);
+			getMessageDetailsForRecipient();
+		}
+
+		// getMessageDetails();
 
 	}
 
 	private void getMessageDetails() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
-			if (itemMessageId != null && !itemMessageId.equalsIgnoreCase("")) {
+			if (Utility.isValidString(itemMessageId)) {
+
 				Thread thread = new Thread(null, messagesDetailsThread,
 						"Start get message details");
 				thread.start();
@@ -117,7 +133,34 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
+			finish();
+		}
+	}
+
+	private void getMessageDetailsForRecipient() {
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+			if (Utility.isValidString(recipientId)) {
+
+				Thread thread = new Thread(null, messagesDetailsThread,
+						"Start get message details");
+				thread.start();
+
+				// show progress dialog if needed
+				m_ProgressDialog = ProgressDialog.show(context, getResources()
+						.getString(R.string.please_wait_text), getResources()
+						.getString(R.string.sending_request_text), true, true);
+			} else {
+				Toast.makeText(context, "Message details not found.",
+						Toast.LENGTH_SHORT).show();
+				finish();
+			}
+
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(context);
 			finish();
 		}
 	}
@@ -125,13 +168,33 @@ public class MessageConversationFromNotificationActivity extends Activity {
 	private Runnable messagesDetailsThread = new Runnable() {
 		@Override
 		public void run() {
-			RestClient restClient = new RestClient(Constant.smMessagesUrl + "/"
-					+ itemMessageId);
+
+			RestClient restClient = null;
+
+			if (isExistingThread) {
+
+				restClient = new RestClient(Constant.smMessagesUrl + "/"
+						+ itemMessageId);
+
+			} else {
+
+				restClient = new RestClient(Constant.smMessagesUrl + "/thread");
+				restClient.AddParam("recipients[]", recipientId);
+
+			}
+
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
 			try {
-				restClient.Execute(RestClient.RequestMethod.GET);
+
+				if (isExistingThread) {
+					restClient.Execute(RestClient.RequestMethod.GET);
+				} else {
+					restClient.Execute(RestClient.RequestMethod.POST);
+
+				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -161,7 +224,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 	private void getRepliesPeriodically() {
 		final int delay = 30;
 		long period = fetchNewRepliesAfter;
-		Timer timer = new Timer();
+		timer = new Timer();
 
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -262,15 +325,17 @@ public class MessageConversationFromNotificationActivity extends Activity {
 								.containsKey(messageId);
 						if (!isDisplayed) {
 							View rView = getListItem(replyMessageEntity);
-							messageListContainer.addView(rView);
-							displayedMessageList.put(messageId, true);
+							if (rView != null) {
+								messageListContainer.addView(rView);
+								displayedMessageList.put(messageId, true);
+							}
 						}
 
 					}
 				}
 				// end of replies
 
-				etNewMessage.setText("");
+				
 
 				scrollToBottom();
 
@@ -290,6 +355,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		if (status == Constant.STATUS_SUCCESS) {
 
 			if (StaticValues.myInfo != null && isUnread) {
+				
 				StaticValues.myInfo.getNotificationCount().setMessageCount(
 						StaticValues.myInfo.getNotificationCount()
 								.getMessageCount() - 1);
@@ -320,8 +386,9 @@ public class MessageConversationFromNotificationActivity extends Activity {
 						tvThreadTitle.setText(messageInfoMap.get("title"));
 
 						View v = getListItem(messages);
-
-						messageListContainer.addView(v);
+						if (v != null) {
+							messageListContainer.addView(v);
+						}
 
 						// add replies here
 						List<MessageEntity> meList = messages.getReplies();
@@ -334,8 +401,12 @@ public class MessageConversationFromNotificationActivity extends Activity {
 										.containsKey(messageId);
 								if (!isDisplayed) {
 									View rView = getListItem(meList.get(j));
-									messageListContainer.addView(rView);
-									displayedMessageList.put(messageId, true);
+									if (rView != null) {
+										messageListContainer.addView(rView);
+										displayedMessageList.put(messageId,
+												true);
+									}
+
 								}
 
 							}
@@ -376,13 +447,20 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		TextView senderMessage = (TextView) v.findViewById(R.id.senderMessage);
 
 		String name = "";
-		if (mEntity.getSenderFirstName() != null) {
-			name = mEntity.getSenderFirstName() + " ";
-
+		if(Utility.isValidString(mEntity.getSenderUserName()))
+		{
+			name = mEntity.getSenderUserName();
 		}
-		if (mEntity.getSenderLastName() != null) {
-			name += mEntity.getSenderLastName();
+		else
+		{
+			if (mEntity.getSenderFirstName() != null) {
+				name = mEntity.getSenderFirstName() + " ";
 
+			}
+			if (mEntity.getSenderLastName() != null) {
+				name += mEntity.getSenderLastName();
+
+			}
 		}
 
 		senderName.setText(name);
@@ -399,8 +477,9 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		if (mEntity.getContent() != null) {
 			String messageText = mEntity.getContent();
-
 			senderMessage.setText(messageText);
+		} else {
+			return null;
 		}
 
 		Button btnDirection = (Button) v.findViewById(R.id.btnDirection);
@@ -435,7 +514,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		context = MessageConversationFromNotificationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(buttonActionListener);
@@ -461,11 +540,28 @@ public class MessageConversationFromNotificationActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		scrollToBottom();
+		imageFetcher.setExitTasksEarly(false);
+		
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		if(timer!=null)
+		{
+			timer.cancel();
+		}
+		
+		imageFetcher.closeCache();
 	}
 
 	@Override
@@ -526,7 +622,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -573,7 +669,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 			Toast.makeText(context, "Message sent successfully.",
 					Toast.LENGTH_SHORT).show();
-
+			etNewMessage.setText("");
 			getReplies();
 
 		} else {
@@ -601,7 +697,14 @@ public class MessageConversationFromNotificationActivity extends Activity {
 			// Build message title
 			String id = recipient.get("id");
 			if (!id.equals(userId)) {
-				recipientNames.add(recipient.get("firstName"));
+				String name = recipient.get("username");
+
+				if (Utility.isValidString(name)) {
+					recipientNames.add(name);
+				} else {
+					recipientNames.add(recipient.get("firstName"));
+				}
+				//recipientNames.add(recipient.get("firstName"));
 				recipientAvatars.add(recipient.get("avatar"));
 			}
 		}

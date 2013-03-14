@@ -133,7 +133,8 @@ public class MessageGroupActivity extends ActivityGroup {
 			finish();
 		}
 	}
-
+	
+	
 	@Override
 	public void onBackPressed() {
 		MessageGroupActivity.group.back();

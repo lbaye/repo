@@ -1,9 +1,9 @@
 package com.socmaps.ui;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -16,17 +16,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 
 /**
  * PhotoZoomActivity class is used to zoom in a particular photo from the photo list album.
  *
  */
 
-public class PhotoZoomActivity extends Activity {
+public class PhotoZoomActivity extends FragmentActivity {
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageFetcher;
 	private LayoutInflater inflater;
 	private Context context;
 	ViewPager viewPager;
@@ -52,6 +51,25 @@ public class PhotoZoomActivity extends Activity {
 		super.onResume();
 
 		generateView();
+		
+		imageFetcher.setExitTasksEarly(false);
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		imageFetcher.closeCache();
 	}
 
 	private void generateView() {
@@ -70,7 +88,7 @@ public class PhotoZoomActivity extends Activity {
 		photo_url = getIntent().getStringArrayExtra("PHOTO_URLS");
 
 		Log.w("PhotoZoomActivity photo_url size", photo_url.length + " what?");
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher =new ImageFetcher(context);
 
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -252,7 +270,7 @@ public class PhotoZoomActivity extends Activity {
 			});
 
 			ivPhotoZoom.setImageResource(R.drawable.img_blank);
-			imageDownloader.download(photo_url[position], ivPhotoZoom);
+			imageFetcher.loadImage(photo_url[position], ivPhotoZoom);
 
 			showHideButton(btnPhotoZoomRight, btnPhotoZoomLeft,
 					btnPhotoZoomClose);
@@ -332,9 +350,5 @@ public class PhotoZoomActivity extends Activity {
 		super.onStop();
 	}
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-	}
+	
 }

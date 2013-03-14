@@ -172,17 +172,14 @@
                                     android:layout_height="40dip"
                                     android:layout_alignParentBottom="true"
                                     android:layout_toRightOf="@+id/tvStatusMessage"
-                                    android:gravity="center" >
+                                    android:gravity="center"
+                                    android:visibility="gone" >
 
-                                    <!--
-                                         <ImageView
+                                    <ImageView
                                         android:id="@+id/btnEditStatus"
                                         android:layout_width="25dip"
                                         android:layout_height="25dip"
-                                        android:layout_alignParentBottom="true"
-                                        android:layout_toRightOf="@+id/tvStatusMessage"
-                                        android:src="@drawable/profile_pen_icon" />
-                                    -->
+                                        android:src="@drawable/profile_pen_icon" />
                                 </LinearLayout>
                             </RelativeLayout>
                         </LinearLayout>
@@ -408,7 +405,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
                         android:background="@color/transparent"
-                        android:orientation="vertical" >
+                        android:orientation="vertical"
+                        android:padding="2dip" >
 
                         <FrameLayout
                             android:layout_width="60dip"
@@ -446,8 +444,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/listItemParent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
@@ -631,7 +627,7 @@
                         android:background="@color/transparent"
                         android:orientation="vertical"
                         android:padding="2dip"
-                        android:visibility="visible" >
+                        android:visibility="gone" >
 
                         <FrameLayout
                             android:layout_width="60dip"
@@ -673,8 +669,7 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!--
-            <LinearLayout
+            <!-- <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
@@ -767,8 +762,7 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
-            </LinearLayout>
-            -->
+            </LinearLayout> -->
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -782,12 +776,12 @@
                     android:id="@+id/relativeLayoutFriendshipStatus"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_gray"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip"
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip"
                     android:visibility="gone" >
 
                     <TextView
@@ -807,22 +801,22 @@
                     android:id="@+id/relativeLayoutFriend"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip"
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip"
                     android:visibility="gone" >
 
                     <ImageView
-                        android:layout_width="15dip"
+                        android:layout_width="20dip"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/photos_icon_small" />
+                        android:src="@drawable/icon_friend_request" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -838,22 +832,22 @@
                     android:id="@+id/relativeLayoutMeetUp"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip"
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip"
                     android:visibility="gone" >
 
                     <ImageView
-                        android:layout_width="15dip"
+                        android:layout_width="18dip"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/photos_icon_small" />
+                        android:src="@drawable/icon_meet_up" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -869,28 +863,28 @@
                     android:id="@+id/relativeLayoutMessage"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip" >
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip" >
 
                     <ImageView
-                        android:layout_width="15dip"
+                        android:layout_width="20dip"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/photos_icon_small" />
+                        android:src="@drawable/icon_message" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:text="Message"
+                        android:text="@string/messageLabel"
                         android:textColor="@color/gray_dark"
                         android:textSize="10dip" />
                 </RelativeLayout>
@@ -899,28 +893,28 @@
                     android:id="@+id/relativeLayoutDirection"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip" >
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip" >
 
                     <ImageView
-                        android:layout_width="15dip"
+                        android:layout_width="13dip"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/photos_icon_small" />
+                        android:src="@drawable/map_direction_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:text="Get Direction"
+                        android:text="@string/directionLabel"
                         android:textColor="@color/gray_dark"
                         android:textSize="10dip" />
                 </RelativeLayout>

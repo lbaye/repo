@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.PeopleCircleActivity;
 import com.socmaps.ui.R;
 import com.socmaps.util.BackProcess;
@@ -63,7 +63,7 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 
 	private Circle circle;
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageDownloader;
 
 	private Button btnDeleteCircle, btnRenameCircle;
 
@@ -87,7 +87,7 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 	 */
 
 	public PeopleCirclePrefaranceItemView(Context context, Circle circle,
-			ImageDownloader imageDownloader) {
+			ImageFetcher imageDownloader) {
 		super(context, null);
 
 		this.context = context;
@@ -226,7 +226,7 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 			if (people != null) {
 
 				Log.w("PeopleCirclePrefaranceItemView people >>>>>>>>>>>>>>",
-						"Name: " + people.getFirstName() + people.getLastName()
+						"Name: " + Utility.getItemTitle(people)
 								+ " Address: " + people.getCurrentAddress()
 								+ " Avater: " + people.getAvatar());
 

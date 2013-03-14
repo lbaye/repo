@@ -389,6 +389,8 @@ public class LoginActivity extends Activity {
 			Utility.storeSession(StaticValues.myInfo.getId(),
 					StaticValues.myInfo.getAuthToken(), response,
 					LoginActivity.this);
+			
+			Utility.setFacebookSessionExpireTime(context, FBUtility.mFacebook.getAccessExpires());
 
 			finish();
 			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);

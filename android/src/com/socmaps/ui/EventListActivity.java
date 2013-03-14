@@ -2,10 +2,8 @@ package com.socmaps.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +12,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,7 +29,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.socmaps.entity.Event;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.EventRowFactory;
 import com.socmaps.listrow.ListItemClickListenerEvent;
 import com.socmaps.notificationBroadcast.BroadcastListener;
@@ -42,6 +41,7 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.ListComparator;
 
 
 
@@ -49,7 +49,7 @@ import com.socmaps.util.Utility;
  * EventListActivity class for generating event list view and some user interaction.
  *
  */
-public class EventListActivity extends Activity implements OnClickListener,
+public class EventListActivity extends FragmentActivity implements OnClickListener,
 		BroadcastListener {
 	private Context context;
 	private EditText searchEditText;
@@ -71,6 +71,10 @@ public class EventListActivity extends Activity implements OnClickListener,
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
 	int colorButtonNormal, colorButtonSelected;
+	
+	private ImageFetcher imageFetcher;
+	
+	private ListComparator listComparator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +110,8 @@ public class EventListActivity extends Activity implements OnClickListener,
 	private void init() {
 		// TODO Auto-generated method stub
 		context = EventListActivity.this;
+		
+		listComparator = new ListComparator();
 
 		colorButtonNormal = getResources().getColor(R.color.transparent);
 		colorButtonSelected = getResources().getColor(R.color.gray_light);
@@ -131,6 +137,8 @@ public class EventListActivity extends Activity implements OnClickListener,
 		contentAdapter = new ListArrayAdapter(context, R.layout.row_list_event,
 				events);
 		eventList.setTextFilterEnabled(true);
+		
+		imageFetcher = new ImageFetcher(context);
 	}
 
 	private void initializeNotificationCountBroadcast() {
@@ -155,6 +163,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		imageFetcher.closeCache();
 		System.gc();
 	}
 
@@ -163,12 +172,15 @@ public class EventListActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onPause();
 		unregisterReceiver(broadcastReceiver);
+		imageFetcher.setExitTasksEarly(true);
+        imageFetcher.flushCache();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		imageFetcher.setExitTasksEarly(false);
 		initializeNotificationCountBroadcast();
 		findViewById(R.id.mainLayout).requestFocus();
 
@@ -224,23 +236,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 	}
 
 	private void sortDataByDistance() {
-		Collections.sort(this.events, new ListComparator());
-	}
-
-	class ListComparator implements Comparator<Event> {
-
-		@Override
-		public int compare(Event first, Event last) {
-			double firstDistance = first.getDistance();
-			double lastDistance = last.getDistance();
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
+		Collections.sort(this.events, listComparator);
 	}
 
 	private Runnable viewList = new Runnable() {
@@ -420,12 +416,12 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		private LayoutInflater mInflater;
 
-		private ImageDownloader imageDownloader;
+		
 
 		private ListArrayAdapter(Context context, int textViewResourceId,
 				List<Event> objects) {
 
-			imageDownloader = ImageDownloader.getInstance();
+			
 
 			init(context, textViewResourceId, 0, objects);
 		}
@@ -497,7 +493,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 			return EventRowFactory.getView(LayoutInflater.from(context),
 					mObjects.get(position), context, new ItemListener(),
-					position, convertView, imageDownloader);
+					position, convertView, imageFetcher);
 		}
 
 		public void setDropDownViewResource(int resource) {

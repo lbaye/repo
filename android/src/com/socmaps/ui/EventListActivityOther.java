@@ -1,11 +1,8 @@
 package com.socmaps.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,7 +31,7 @@ import android.widget.Toast;
 
 import com.socmaps.entity.Event;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.EventRowFactory;
 import com.socmaps.listrow.ListItemClickListenerEvent;
 import com.socmaps.notificationBroadcast.BroadcastListener;
@@ -51,7 +49,7 @@ import com.socmaps.util.Utility;
  * EventListActivityOther class for generating other user event list view and some user interaction.
  *
  */
-public class EventListActivityOther extends Activity implements
+public class EventListActivityOther extends FragmentActivity implements
 		OnClickListener, BroadcastListener {
 	private Context context;
 	private EditText searchEditText;
@@ -76,6 +74,7 @@ public class EventListActivityOther extends Activity implements
 
 	String userID = null;
 	private People people;
+	private ImageFetcher imageFetcher;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +125,7 @@ public class EventListActivityOther extends Activity implements
 
 		separator = (LinearLayout) findViewById(R.id.separator);
 		tvtitle = (TextView) findViewById(R.id.tvtitle);
-		tvtitle.setText(people.getFirstName() + "'s" + " events");
+		tvtitle.setText(Utility.getItemTitle(people) + "'s" + " events");
 
 		btnDoSearch = (Button) findViewById(R.id.btnDoSearch);
 		eventList = (ListView) findViewById(R.id.event_list);
@@ -135,6 +134,8 @@ public class EventListActivityOther extends Activity implements
 		contentAdapter = new ListArrayAdapter(context, R.layout.row_list_event,
 				events);
 		eventList.setTextFilterEnabled(true);
+		
+		imageFetcher = new ImageFetcher(context);
 	}
 
 	private void initializeNotificationCountBroadcast() {
@@ -160,6 +161,7 @@ public class EventListActivityOther extends Activity implements
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		System.gc();
+		imageFetcher.closeCache();
 	}
 
 	@Override
@@ -167,6 +169,9 @@ public class EventListActivityOther extends Activity implements
 		// TODO Auto-generated method stub
 		super.onPause();
 		unregisterReceiver(broadcastReceiver);
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
 	}
 
 	@Override
@@ -177,6 +182,8 @@ public class EventListActivityOther extends Activity implements
 		findViewById(R.id.mainLayout).requestFocus();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
+		imageFetcher.setExitTasksEarly(false);
 	}
 
 	private void resetFilterEditText() {
@@ -227,25 +234,7 @@ public class EventListActivityOther extends Activity implements
 		}
 	}
 
-	private void sortDataByDistance() {
-		Collections.sort(this.events, new ListComparator());
-	}
-
-	class ListComparator implements Comparator<Event> {
-
-		@Override
-		public int compare(Event first, Event last) {
-			double firstDistance = first.getDistance();
-			double lastDistance = last.getDistance();
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-	}
+	
 
 	private Runnable viewList = new Runnable() {
 
@@ -385,12 +374,10 @@ public class EventListActivityOther extends Activity implements
 
 		private LayoutInflater mInflater;
 
-		private ImageDownloader imageDownloader;
+		
 
 		public ListArrayAdapter(Context context, int textViewResourceId,
 				List<Event> objects) {
-
-			imageDownloader = ImageDownloader.getInstance();
 
 			init(context, textViewResourceId, 0, objects);
 		}
@@ -452,7 +439,7 @@ public class EventListActivityOther extends Activity implements
 
 			return EventRowFactory.getView(LayoutInflater.from(context),
 					mObjects.get(position), context, new ItemListener(),
-					position, convertView, imageDownloader);
+					position, convertView, imageFetcher);
 		}
 
 		public void setDropDownViewResource(int resource) {

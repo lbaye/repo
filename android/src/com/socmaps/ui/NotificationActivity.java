@@ -1,6 +1,5 @@
 package com.socmaps.ui;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;

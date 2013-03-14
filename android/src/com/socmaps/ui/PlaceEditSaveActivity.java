@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -33,9 +33,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.BackProcess;
 import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
@@ -50,7 +49,7 @@ import com.socmaps.util.Utility;
  * Delete operation will remove the place from the list & update the list.
  */
 
-public class PlaceEditSaveActivity extends Activity implements OnClickListener {
+public class PlaceEditSaveActivity extends FragmentActivity implements OnClickListener {
 	private Context context;
 	private Button btnBack, btnPlaceNameEdit, btnPlaceDisEdit,
 			btnPlaceCategory, btnPlaceAddPhoto, btnPeopleDeletePhoto,
@@ -72,8 +71,11 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	private double lat = 0.0;
 	private double lng = 0.0;
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageFetcher;
 	private int catagoryPosition = 0;
+	
+	private final int REQUEST_CODE_CAMERA = 100;
+	private final int REQUEST_CODE_GALLERY = 101;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +92,41 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		imageFetcher.setExitTasksEarly(false);
 
 	}
 
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		if (placeIcon != null) {
+			placeIcon.recycle();
+		}
+		System.gc();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
+	}
+
+	
 	private void initialize() {
 
 		context = PlaceEditSaveActivity.this;
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		isHome = getIntent().getBooleanExtra("ISHOME", false);
 		place = (Place) getIntent().getSerializableExtra("PLACE_OBJECT");
@@ -175,7 +205,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 					&& !place.getStreetViewImage().equals("")) {
 				photoUrl = place.getStreetViewImage();
 				ivPlace.setImageResource(R.drawable.img_blank);
-				imageDownloader.download(photoUrl, ivPlace);
+				imageFetcher.loadImage(photoUrl, ivPlace);
 				placeIcon = getBitmapFromURL(place.getStreetViewImage());
 			}
 
@@ -335,7 +365,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 
 	}
@@ -420,9 +450,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				Toast.makeText(getApplicationContext(), items[item],
 						Toast.LENGTH_SHORT).show();
 				if (items[item].equals("Gallery")) {
-					requestCode = Constant.REQUEST_CODE_GALLERY;
+					requestCode = REQUEST_CODE_GALLERY;
 				} else {
-					requestCode = Constant.REQUEST_CODE_CAMERA;
+					requestCode = REQUEST_CODE_CAMERA;
 				}
 				onOptionItemSelected(requestCode);
 			}
@@ -434,14 +464,14 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
-		case Constant.REQUEST_CODE_GALLERY:
+		case REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
 					Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
-		case Constant.REQUEST_CODE_CAMERA:
+		case REQUEST_CODE_CAMERA:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
@@ -482,7 +512,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
+		if (requestCode == REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
 
 				if (placeIcon != null) {
@@ -501,7 +531,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				return;
 			}
 
-		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
+		} else if (requestCode == REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 
 				try {
@@ -665,26 +695,6 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 	}
 
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
 
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		if (placeIcon != null) {
-			placeIcon.recycle();
-		}
-		System.gc();
-	}
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-	}
 
 }

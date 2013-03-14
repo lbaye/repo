@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
@@ -34,8 +34,6 @@ public class PeopleRowFactoryInvite {
 	 *            an object of type People.
 	 * @param con
 	 *            current state of the application/object.
-	 * @param licl
-	 *            which is used for a specific action when button is clicked.
 	 * @param convertView
 	 *            as view.
 	 * @param il
@@ -48,8 +46,8 @@ public class PeopleRowFactoryInvite {
 
 	public static View getView(final LayoutInflater inflater,
 			final Object peopleObj, final Context con,
-			final ListItemClickListener licl, final View convertView,
-			final ImageDownloader il,
+			 final View convertView,
+			final ImageFetcher il,
 			final ListItemClickListenerPeople listItemClickListenerPeople) {
 
 		ViewHolder holder;
@@ -90,7 +88,7 @@ public class PeopleRowFactoryInvite {
 
 		// *****************************************************************check
 		// the user type sm/fb
-		if (people.getRegMedia() != null) {
+		/*if (people.getRegMedia() != null) {
 			if (!people.getRegMedia().equals("")) {
 				if (people.getRegMedia().equals("fb")) {
 					holder.sourceImage.setImageResource(R.drawable.source_fb);
@@ -100,11 +98,11 @@ public class PeopleRowFactoryInvite {
 
 			} else
 				holder.sourceImage.setVisibility(View.GONE);
-		}
+		}*/
 
 		// ******************************************************************first
 
-		holder.firstNameText.setText(Utility.getFieldText(people));
+		holder.firstNameText.setText(Utility.getItemTitle(people));
 		// ******************************************************************status
 		if (people.getStatusMsg() != null) {
 			if (!people.getStatusMsg().equals("")) {
@@ -143,15 +141,15 @@ public class PeopleRowFactoryInvite {
 				&& !people.getCoverPhoto().equals("")) {
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
-			il.download(people.getCoverPhoto(), holder.coverPhoto);
+			il.loadImage(people.getCoverPhoto(), holder.coverPhoto);
 		} else
-			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
 
 		holder.avatar.setImageResource(R.drawable.img_blank);
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
 
-				il.download(people.getAvatar(), holder.avatar);
+				il.loadImage(people.getAvatar(), holder.avatar);
 			}
 
 		}

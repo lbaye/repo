@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#EEEEEE"
-    android:orientation="vertical" >
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/com.socmaps.ui">
 
     <RelativeLayout
         android:id="@+id/layoutHeader"
@@ -90,7 +90,8 @@
                 android:orientation="vertical"
                 my:collapsedHeight="50dip"
                 my:expcontent="@+id/eraseValue"
-                my:exphandle="@+id/eraseExpand" >
+                my:exphandle="@+id/eraseExpand"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:id="@id/eraseValue"
@@ -313,7 +314,8 @@
                 android:orientation="vertical"
                 my:collapsedHeight="50dip"
                 my:expcontent="@+id/deleteAccountValue"
-                my:exphandle="@+id/deleteAccountExpand" >
+                my:exphandle="@+id/deleteAccountExpand"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:id="@id/deleteAccountValue"
@@ -885,15 +887,7 @@
                                 android:text="@string/country"
                                 android:textColor="@drawable/black" />
 
-                            <!--
-                                 <Spinner
-                                android:id="@+id/spCountry"
-                                android:layout_width="fill_parent"
-                                android:layout_height="45dp"
-                                android:layout_marginRight="10dp"
-                                android:drawSelectorOnTop="true"
-                                android:entries="@array/countries_array" />
-                            -->
+
 
                             <Spinner
                                 android:id="@+id/spCountry"

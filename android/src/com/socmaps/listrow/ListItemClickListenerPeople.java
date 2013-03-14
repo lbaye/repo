@@ -16,7 +16,7 @@ public interface ListItemClickListenerPeople {
 
 	public void onUnBlockButtonClick(People people);
 
-	public void onShowOnMapButtonClick(People people);
+	public void onShowOnMapButtonClick(Object people);
 
 	public void onSendMessageButtonClick(People people);
 

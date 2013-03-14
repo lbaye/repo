@@ -12,7 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.socmaps.entity.Event;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
@@ -51,7 +51,7 @@ public class EventRowFactory {
 	public static View getView(final LayoutInflater inflater,
 			final Event event, final Context context,
 			final ListItemClickListenerEvent clickListener, final int position,
-			final View convertView, final ImageDownloader il) {
+			final View convertView, final ImageFetcher il) {
 
 		ViewHolder holder;
 		View view;
@@ -118,7 +118,7 @@ public class EventRowFactory {
 		if (event.getEventImageUrl() != null) {
 
 			if (!event.getEventImageUrl().equalsIgnoreCase("")) {
-				il.download(event.getEventImageUrl(), holder.coverPhoto);
+				il.loadImage(event.getEventImageUrl(), holder.coverPhoto);
 			}
 		}
 

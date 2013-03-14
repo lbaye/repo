@@ -2,11 +2,11 @@ package com.socmaps.ui;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,9 +14,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.StaticValues;
 import com.socmaps.widget.PeopleCirclePrefaranceItemView;
 
@@ -26,7 +25,7 @@ import com.socmaps.widget.PeopleCirclePrefaranceItemView;
  * It also shows the persons of a particular circle. 
  */
 
-public class PeopleCircleActivity extends Activity implements OnClickListener {
+public class PeopleCircleActivity extends FragmentActivity implements OnClickListener {
 
 	private Context context;
 
@@ -50,7 +49,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		return ins;
 	}
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,24 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		super.onResume();
 
 		generateCircleView();
+		
+		imageFetcher.setExitTasksEarly(false);
 
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
 	}
 
 	private void initialize() {
@@ -75,8 +91,8 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		ins = PeopleCircleActivity.this;
 		context = PeopleCircleActivity.this;
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageFetcher = new ImageFetcher(context);
+		
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -108,6 +124,8 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		llCircleList = (LinearLayout) findViewById(R.id.llCircleList);
 
 	}
+	
+	
 
 	@Override
 	public void onClick(View v) {
@@ -129,7 +147,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		} else if (v == btnInvitePeople) {
 
 			Intent inviteIntent = new Intent(getApplicationContext(),
-					PeopleInvityActivity.class);
+					PeopleInviteActivity.class);
 
 			inviteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(inviteIntent);
@@ -167,7 +185,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 				if (circle != null) {
 					llCircleList.addView(new PeopleCirclePrefaranceItemView(
-							context, circle, imageDownloader));
+							context, circle, imageFetcher));
 				}
 			}
 		}

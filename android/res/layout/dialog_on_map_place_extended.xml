@@ -99,7 +99,7 @@
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
             android:background="@drawable/selector_btn_light"
-            android:text="@string/direction_label"
+            android:text="@string/directionLabel"
             android:textSize="10dip"
             android:textStyle="normal"
             android:layout_weight="1" />

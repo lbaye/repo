@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.PeopleCircleActivity;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
@@ -49,7 +49,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 
 	private People people;
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageDownloader;
 
 	/**
 	 * Initialization of PeopleCircleFriendsPrefaranceItemView constructor using
@@ -69,7 +69,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 	 */
 
 	public PeopleCircleFriendsPrefaranceItemView(Context context,
-			People people, ImageDownloader imageDownloader) {
+			People people, ImageFetcher imageDownloader) {
 		super(context, null);
 
 		this.context = context;
@@ -120,14 +120,13 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 		if (people != null) {
 
 			Log.i("Peple PeopleCircleFriendsPrefaranceItemView::::::::::::::::",
-					"FirstName: " + people.getFirstName()
-							+ people.getLastName() + " Address: "
+					"FirstName: " + Utility.getItemTitle(people)+ " Address: "
 							+ people.getCurrentAddress() + " Avater:"
 							+ people.getAvatar() + " cov pic: "
 							+ people.getCoverPhoto() + " RegMedia: "
 							+ people.getRegMedia());
 
-			first_name_text.setText(Utility.getFieldText(people));
+			first_name_text.setText(Utility.getItemTitle(people));
 
 			if (people.getCurrentAddress() != null) {
 				address_text.setText(people.getCurrentAddress());
@@ -147,16 +146,16 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 
 			if (people.getAvatar() != null) {
 				people_icon_image.setImageResource(R.drawable.img_blank);
-				imageDownloader.download(people.getAvatar(), people_icon_image);
+				imageDownloader.loadImage(people.getAvatar(), people_icon_image);
 			}
 
 			if (people.getCoverPhoto() != null
 					&& !people.getCoverPhoto().equals("")) {
 				cover_image_view.setImageResource(R.drawable.img_blank);
-				imageDownloader.download(people.getCoverPhoto(),
+				imageDownloader.loadImage(people.getCoverPhoto(),
 						cover_image_view);
 			} else
-				cover_image_view.setImageResource(R.drawable.cover_pic_people);
+				cover_image_view.setImageResource(R.drawable.cover_pic_default);
 
 		}
 
@@ -206,6 +205,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 			break;
 
 		case R.id.map_image_btn:
+			
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = people;
 

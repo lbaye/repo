@@ -89,6 +89,7 @@ public class ImageDownloader {
 	 *            The ImageView to bind the downloaded image to.
 	 */
 	public void download(String url, ImageView imageView) {
+		
 		resetPurgeTimer();
 		Bitmap bitmap = getBitmapFromCache(url);
 
@@ -120,7 +121,8 @@ public class ImageDownloader {
 			return;
 		}
 
-		if (cancelPotentialDownload(url, imageView)) {
+		//mahadi:commented so that download can be continued
+		//if (cancelPotentialDownload(url, imageView)) {
 			switch (mode) {
 			case NO_ASYNC_TASK:
 				Bitmap bitmap = FBUtility.getBitmap(url);
@@ -129,7 +131,7 @@ public class ImageDownloader {
 				break;
 
 			case NO_DOWNLOADED_DRAWABLE:
-				imageView.setMinimumHeight(156);
+				//imageView.setMinimumHeight(156);
 				BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
 				task.execute(url);
 				break;
@@ -141,7 +143,7 @@ public class ImageDownloader {
 					DownloadedDrawable downloadedDrawable = new DownloadedDrawable(
 							task);
 					imageView.setImageDrawable(downloadedDrawable);
-					imageView.setMinimumHeight(156);
+					//imageView.setMinimumHeight(156);
 					task.execute(url);
 				} catch (RejectedExecutionException e) {
 					// TODO: handle exception
@@ -151,7 +153,7 @@ public class ImageDownloader {
 
 				break;
 			}
-		}
+		//}
 	}
 
 	/**
@@ -340,8 +342,10 @@ public class ImageDownloader {
 			if (isCancelled()) {
 				bitmap = null;
 			}
-
-			addBitmapToCache(url, bitmap);
+			if(bitmap!=null)
+			{
+				addBitmapToCache(url, bitmap);
+			}
 
 			if (imageViewReference != null) {
 				ImageView imageView = imageViewReference.get();
@@ -394,7 +398,7 @@ public class ImageDownloader {
 	 * aggressively cleared by the Garbage Collector.
 	 */
 
-	private static final int HARD_CACHE_CAPACITY = 400;
+	private static final int HARD_CACHE_CAPACITY = 200;
 	private static final int DELAY_BEFORE_PURGE = 10 * 1000; // in milliseconds
 
 	// Hard cache, with a fixed maximum capacity and a life duration
@@ -433,7 +437,7 @@ public class ImageDownloader {
 	 *            The newly downloaded bitmap.
 	 */
 	private void addBitmapToCache(String url, Bitmap bitmap) {
-		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn") || url.contains("default-cover-photo.png") || url.contains("maps.gstatic.com"))
+		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn") || url.contains("default-cover-photo.png") || url.contains("maps.gstatic.com") || url.contains("images/place-icon"))
 				&& bitmap != null) {
 			synchronized (sHardBitmapCache) {
 				sHardBitmapCache.put(url, bitmap);

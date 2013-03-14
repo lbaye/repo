@@ -5,7 +5,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,19 +22,22 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -55,21 +61,25 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.google.android.gcm.GCMRegistrar;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
-import com.readystatesoftware.maps.OnSingleTapListener;
-import com.readystatesoftware.maps.TapControlledMapView;
-import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.customballons.BubleTapHandle;
-import com.socmaps.customballons.CustomItemizedOverlay;
-import com.socmaps.customballons.CustomOverlayItem;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.GeoTag;
-import com.socmaps.entity.MyGeoPoint;
+import com.socmaps.entity.MeetupRequest;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.PushData;
@@ -82,12 +92,12 @@ import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
 import com.socmaps.gps.GpsService;
 import com.socmaps.gps.ILocationUpdateIndicator;
-import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageDownloader.Mode;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.notificationBroadcast.BroadcastListener;
 import com.socmaps.notificationBroadcast.NotificationCountBroadcastReciever;
 import com.socmaps.pushNotification.CommonUtilities;
 import com.socmaps.pushNotification.ServerUtilities;
+import com.socmaps.service.LocationUpdateService;
 import com.socmaps.util.Constant;
 import com.socmaps.util.Constant.Permission;
 import com.socmaps.util.DialogsAndToasts;
@@ -96,128 +106,141 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.CustomInfoWindowAdapter;
+import com.socmaps.widget.ImageDownloadListener;
+import com.socmaps.widget.ListComparator;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
 import com.socmaps.widget.PermissionRadioGroupLess;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
 /**
- * HomeActivity class responsible for displaying all users, places, geo tags on map
- * and some user interaction.
+ * HomeActivity class responsible for displaying all users, places, geo tags on
+ * map and some user interaction.
  * 
  */
-public class HomeActivity extends MapActivity implements
-		ILocationUpdateIndicator, BubleTapHandle, OnCheckedChangeListener,
-		OnClickListener {
+public class HomeActivity extends FragmentActivity implements
+		ILocationUpdateIndicator, OnCheckedChangeListener, OnClickListener,
+		OnMarkerClickListener, OnCameraChangeListener, OnMapClickListener,
+		OnMapLongClickListener, OnInfoWindowClickListener,
+		ImageDownloadListener, BroadcastListener, PermissionRadioGroupListener,
+		LogoutListener, AuthListener, DialogListener {
 
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
-	Button btnNotification;
-	Button topCloseButton, bottomCloseButton;
-	MultiDirectionSlidingDrawer topDrawer, bottomDrawer;
+	private Button btnNotification;
+	private static Button topCloseButton, bottomCloseButton;
+	private static MultiDirectionSlidingDrawer topDrawer, bottomDrawer;
 
-	TopDrawerListener topDrawerListener;
-	BottomDrawerListener bottomDrawerListener;
+	private TopDrawerListener topDrawerListener;
+	private BottomDrawerListener bottomDrawerListener;
 
 	private Context context;
-	private TapControlledMapView mapView;
-	private static Handler handler;
-	private Runnable runneable;
+	private Handler handler;
+	private Runnable runnable;
 	private GpsService gpsService;
-	private List<Overlay> mapOverlays;
-
-	private LinearLayout btnEvent, btnMeetup;
-
-	private MapController mapController;
-
+	private LinearLayout btnDirections, btnMeetup, btnMyPlaces;
 	private double myLat, myLng;
-
-	int requestCode;
-	String responseString;
-	int responseStatus = 0;
-	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayOtherPeople;
-	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlaySecondDegreePeople;
-	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayEvent;
-	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayGeotag;
-	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlaySelf;
-	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayPlace;
+	private int requestCode;
+	private String responseString;
+	private int responseStatus = 0;
 
 	private ImageView avatar, placeIconImage;
 	private Dialog d, msgDialog, frndRequestDialog;
 
 	private ProgressDialog m_ProgressDialog;
 
-	String responseStringUpdateLocation;
-	int responseStatusUpdateLocation = 0;
+	private String responseStringUpdateLocation;
+	private int responseStatusUpdateLocation = 0;
 
-	String friendRequestFriendId = "";
-	String friendRequestMessage = "";
-	String friendRequestResponse = "";
-	int friendRequestStatus = 0;
+	private String friendRequestFriendId = "";
+	private String friendRequestMessage = "";
+	private String friendRequestResponse = "";
+	private int friendRequestStatus = 0;
 
-	String sendMessageFriendId = "";
-	String sendMessageSubject = "";
-	String sendMessageContent = "";
-	String sendMessageResponse = "";
-	int sendMessageStatus = 0;
-	AsyncTask<Void, Void, Void> mRegisterTask;
+	private String sendMessageFriendId = "";
+	private String sendMessageSubject = "";
+	private String sendMessageContent = "";
+	private String sendMessageResponse = "";
+	private int sendMessageStatus = 0;
+	private AsyncTask<Void, Void, Void> mRegisterTask;
 
 	private CheckBox peopleCheckBox, placeCheckBox, eventCheckBox,
 			dealCheckBox;
-	private Button btnListView, btnMapView, btnCircle;
+	private Button btnListView, btnMapView;
+	private TextView tvListView, tvMapView;
+	private Button btnCircle;
 	private Button btnUpdateLocation, btnCircleMenu;
 
-	MyGeoPoint point;
-	boolean isFirstLocationUpdate = true;
-	boolean isLocationFound = false;
+	// MyGeoPoint point;
+	private boolean isFirstLocationUpdate = true;
+	private boolean isLocationFound = false;
 
 	private List<String> friendRequestSentList = new ArrayList<String>();
 	private Dialog currentBubbleDialog;
 
-	PermissionRadioGroupLess permissionRadioGroupView;
-	LinearLayout shareWithRadioGroupContainer;
-	Permission locationSharingPermission;
-	String shareWithPickerName = "sharewith";
-	ShareWithSelectionListener shareWithSelectionListener;
+	private PermissionRadioGroupLess permissionRadioGroupView;
+	private LinearLayout shareWithRadioGroupContainer;
+	private Permission locationSharingPermission;
+	private String shareWithPickerName = "sharewith";
 
-	RelativeLayout circleMenu;
-	LinearLayout btnCloseCircleMenu;
+	private RelativeLayout circleMenu;
+	private LinearLayout btnCloseCircleMenu;
 
-	Button btnCircleMenuItemPeople, btnCircleMenuItemProfile,
+	private Button btnCircleMenuItemPeople, btnCircleMenuItemProfile,
 			btnCircleMenuItemMessages, btnCircleMenuItemFriends,
 			btnCircleMenuItemDeals, btnCircleMenuItemPlaces,
 			btnCircleMenuItemNewsfeed, btnCircleMenuItemSettings;
 
-	Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
-	RelativeLayout searchPanel;
-	EditText etSearchField;
+	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
+	private RelativeLayout searchPanel;
+	private EditText etSearchField;
 
-	boolean isSearchEnabled = false;
+	private boolean isSearchEnabled = false;
 
 	private List<Object> listMasterContent;
 	private List<Object> listContent;
-	private List<Object> listDisplayableContent;
 
-	int responseEventStatus = 0;
-	String responseEventString;
+	private int responseEventStatus = 0;
+	private String responseEventString;
 
-	int responseGeotagStatus = 0;
-	String responseGeotagString;
+	private int responseGeotagStatus = 0;
+	private String responseGeotagString;
 
-	List<Event> eventList;
-	List<GeoTag> geotagList;
+	private List<Event> eventList;
+	private List<GeoTag> geotagList;
 
-	ImageDownloader imageDownloader;
-	Dialog isFirstTimeFbdialog;
-	Button btnFBLogin;
+	// ImageDownloader imageDownloader;
+	private Dialog isFirstTimeFbdialog;
+	private Button btnFBLogin;
 
-	FbAPIsAuthListener fbAPIsAuthListener;
-	FbAPIsLogoutListener fbAPIsLogoutListener;
-	SessionEvents sessionEvents;
+	private SessionEvents sessionEvents;
 
-	TimerTask task;
-	Timer timer;
-	boolean isRunning = true;
-	long updateInterval = 60000; // 1 min
+	private TimerTask task;
+	private Timer timer;
+	private boolean isRunning = true;
+	private long updateInterval = 60000; // 1 min
+
+	private GoogleMap mapView;
+	private Timer mapUpdateTimer;
+	private float intialZoomLevel = 16.0f;
+	private int mapUpdateInterval = 2000; // milliseconds
+
+	// private Marker lastClickedMarker;
+	private HashMap<String, Object> visibleItemsOnMap = new HashMap<String, Object>();
+	private HashMap<String, Marker> visibleMarkers = new HashMap<String, Marker>();
+	private HashMap<String, Boolean> markerUpdateList = new HashMap<String, Boolean>();
+	private HashMap<String, Object> objectList = new HashMap<String, Object>();
+
+	private CustomInfoWindowAdapter customInfoWindowAdapter;
+
+	private boolean isMoveToAnotherPoint = false;
+	private LinearLayout markerLayout;
+
+	private boolean isNewSearch = false;
+
+	private ImageFetcher imageFetcher;
+
+	private ListComparator listComparator;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -240,10 +263,12 @@ public class HomeActivity extends MapActivity implements
 			// TODO: handle exception
 		}
 
-		facebookAuthentication();
+		// facebookAuthentication();
 
 		handleNavigationFromNotificationBar(getIntent());
 		initializeNotificationBroadcast();
+
+		centerToMyPosition();
 
 	}
 
@@ -251,77 +276,34 @@ public class HomeActivity extends MapActivity implements
 
 		context = HomeActivity.this;
 		gpsService = new GpsService(context, this);
-		mapView = (TapControlledMapView) findViewById(R.id.myGMap);
-		imageDownloader = ImageDownloader.getInstance();
+		// mapView = (TapControlledMapView) findViewById(R.id.myGMap);
+		imageFetcher = new ImageFetcher(context, getResources()
+				.getDimensionPixelSize(R.dimen.image_thumbnail_size), true);
 
-		mapView.setBuiltInZoomControls(false);
+		listComparator = new ListComparator();
 
-		// dismiss balloon upon single tap of MapView (iOS behavior)
-		mapView.setOnSingleTapListener(new OnSingleTapListener() {
+		FragmentManager myFragmentManager = getSupportFragmentManager();
+		SupportMapFragment myMapFragment = (SupportMapFragment) myFragmentManager
+				.findFragmentById(R.id.map);
+		mapView = myMapFragment.getMap();
+		mapView.setMyLocationEnabled(true);
+		// mapView.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		mapView.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		// mapView.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+		// mapView.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+		mapView.setOnMapClickListener(this);
+		mapView.setOnMapLongClickListener(this);
+		mapView.setOnCameraChangeListener(this);
+		mapView.setOnMarkerClickListener(this);
+		mapView.setIndoorEnabled(true);
+		mapView.setOnInfoWindowClickListener(this);
+		mapView.getUiSettings().setZoomControlsEnabled(false);
 
-			@Override
-			public boolean onSingleTap(MotionEvent e) {
-				itemizedOverlayOtherPeople.hideAllBalloons();
-				return true;
-			}
-		});
-		mapController = mapView.getController();
-		mapOverlays = mapView.getOverlays();
-
-		mapOverlays.clear();
-
-		Drawable drawableSelf = getResources().getDrawable(
-				R.drawable.self_marker);
-		itemizedOverlaySelf = new CustomItemizedOverlay<CustomOverlayItem>(
-				drawableSelf, mapView, this, Constant.FLAG_SELF,
-				imageDownloader);
-		itemizedOverlaySelf.populateItemizedOverlay();
-		mapOverlays.add(itemizedOverlaySelf);
-
-		Drawable drawable = getResources().getDrawable(R.drawable.user_marker);
-		itemizedOverlayOtherPeople = new CustomItemizedOverlay<CustomOverlayItem>(
-				drawable, mapView, this, Constant.FLAG_PEOPLE, imageDownloader);
-		itemizedOverlayOtherPeople.populateItemizedOverlay();
-		mapOverlays.add(itemizedOverlayOtherPeople);
-
-		Drawable drawablePlace = getResources().getDrawable(
-				R.drawable.place_marker);
-		itemizedOverlayPlace = new CustomItemizedOverlay<CustomOverlayItem>(
-				drawablePlace, mapView, this, Constant.FLAG_PLACE,
-				imageDownloader);
-		itemizedOverlayPlace.populateItemizedOverlay();
-		mapOverlays.add(itemizedOverlayPlace);
-
-		Drawable drawableSecondDegree = getResources().getDrawable(
-				R.drawable.map_marker_fb);
-		itemizedOverlaySecondDegreePeople = new CustomItemizedOverlay<CustomOverlayItem>(
-				drawableSecondDegree, mapView, this,
-				Constant.FLAG_SECOND_DEGREE, imageDownloader);
-		itemizedOverlaySecondDegreePeople.populateItemizedOverlay();
-		mapOverlays.add(itemizedOverlaySecondDegreePeople);
-
-		Drawable drawableEvent = getResources().getDrawable(
-				R.drawable.marker_event);
-		itemizedOverlayEvent = new CustomItemizedOverlay<CustomOverlayItem>(
-				drawableEvent, mapView, this, Constant.FLAG_EVENT,
-				imageDownloader);
-		itemizedOverlayEvent.populateItemizedOverlay();
-		mapOverlays.add(itemizedOverlayEvent);
-
-		Drawable drawableGeotag = getResources().getDrawable(
-				R.drawable.marker_geotag);
-		itemizedOverlayGeotag = new CustomItemizedOverlay<CustomOverlayItem>(
-				drawableGeotag, mapView, this, Constant.FLAG_GEOTAG,
-				imageDownloader);
-		itemizedOverlayGeotag.populateItemizedOverlay();
-		mapOverlays.add(itemizedOverlayGeotag);
-
-		mapView.setSatellite(false);
-		mapController.setZoom(16);
+		markerLayout = (LinearLayout) HomeActivity.this.getLayoutInflater()
+				.inflate(R.layout.marker, null);
 
 		topDrawerListener = new TopDrawerListener();
 		bottomDrawerListener = new BottomDrawerListener();
-		shareWithSelectionListener = new ShareWithSelectionListener();
 
 		topDrawer = (MultiDirectionSlidingDrawer) findViewById(R.id.topDrawer);
 		topDrawer.setOnDrawerOpenListener(topDrawerListener);
@@ -337,10 +319,13 @@ public class HomeActivity extends MapActivity implements
 		eventCheckBox = (CheckBox) vTop.findViewById(R.id.chkMenuItemEvents);
 		dealCheckBox = (CheckBox) vTop.findViewById(R.id.chkMenuItemDeals);
 
-		btnEvent = (LinearLayout) vTop.findViewById(R.id.event_btn);
-		btnEvent.setOnClickListener(this);
+		btnDirections = (LinearLayout) vTop.findViewById(R.id.btnDirections);
+		btnDirections.setOnClickListener(this);
 
-		btnMeetup = (LinearLayout) vTop.findViewById(R.id.meetup_button);
+		btnMyPlaces = (LinearLayout) vTop.findViewById(R.id.btnMyPlaces);
+		btnMyPlaces.setOnClickListener(this);
+
+		btnMeetup = (LinearLayout) vTop.findViewById(R.id.btnMeetup);
 		btnMeetup.setOnClickListener(this);
 
 		shareWithRadioGroupContainer = (LinearLayout) vTop
@@ -355,6 +340,9 @@ public class HomeActivity extends MapActivity implements
 		btnListView = (Button) vBottom.findViewById(R.id.btnListView);
 		btnListView.setOnClickListener(this);
 
+		tvListView = (TextView) vBottom.findViewById(R.id.tvListView);
+		tvListView.setOnClickListener(this);
+
 		btnCircle = (Button) vBottom.findViewById(R.id.btnCircle);
 		btnCircle.setOnClickListener(this);
 
@@ -365,8 +353,8 @@ public class HomeActivity extends MapActivity implements
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 		btnNotification.setOnClickListener(this);
 
-		btnUpdateLocation = (Button) findViewById(R.id.btnUpdateLocation);
-		btnUpdateLocation.setOnClickListener(this);
+		// btnUpdateLocation = (Button) findViewById(R.id.btnUpdateLocation);
+		// btnUpdateLocation.setOnClickListener(this);
 
 		btnCircleMenu = (Button) findViewById(R.id.btnCircleMenu);
 		btnCircleMenu.setOnClickListener(this);
@@ -409,13 +397,59 @@ public class HomeActivity extends MapActivity implements
 
 		listMasterContent = new ArrayList<Object>();
 		listContent = new ArrayList<Object>();
-		listDisplayableContent = new ArrayList<Object>();
 
-		fbAPIsAuthListener = new FbAPIsAuthListener();
-		fbAPIsLogoutListener = new FbAPIsLogoutListener();
 		sessionEvents = new SessionEvents();
 
 	}
+
+	private void centerToMyPosition() {
+		TimerTask myLocUpdateTask = new TimerTask() {
+			public void run() {
+
+				runOnUiThread(displayMyPosition);
+
+			}
+		};
+		Timer myLocUpdateTimer = new Timer();
+		myLocUpdateTimer.schedule(myLocUpdateTask, 1000);
+
+	}
+
+	private Runnable displayMyPosition = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			if (mapView.getMyLocation() != null) {
+
+				Log.i("HomeActivity", "CenterToMyPosition");
+
+				if (!isMoveToAnotherPoint) {
+					mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(
+							new LatLng(mapView.getMyLocation().getLatitude(),
+									mapView.getMyLocation().getLongitude()),
+							intialZoomLevel));
+
+					if (timer == null) {
+						Location location = new Location(
+								LocationManager.NETWORK_PROVIDER);
+						location.setLatitude(mapView.getMyLocation()
+								.getLatitude());
+						location.setLongitude(mapView.getMyLocation()
+								.getLongitude());
+						catchLocationUpdate(location);
+					}
+				}
+
+				isMoveToAnotherPoint = false;
+
+			} else {
+				centerToMyPosition();
+				// Toast.makeText(context, "No location found yet.",
+				// Toast.LENGTH_SHORT).show();
+			}
+		}
+	};
 
 	private void getMapDataFromServer() {
 		getSearchResult();
@@ -431,6 +465,9 @@ public class HomeActivity extends MapActivity implements
 				}
 			}
 		};
+		if (timer != null) {
+			timer.cancel();
+		}
 		timer = new Timer();
 		timer.schedule(task, 500, updateInterval);
 	}
@@ -451,7 +488,7 @@ public class HomeActivity extends MapActivity implements
 		// Make sure the manifest was properly set - comment out this line
 		// while developing the app, then uncomment it when it's ready.
 		GCMRegistrar.checkManifest(this);
-		;
+
 		final String regId = GCMRegistrar.getRegistrationId(this);
 
 		// boolean forceRegister = true;
@@ -506,11 +543,11 @@ public class HomeActivity extends MapActivity implements
 		handler = new Handler(new Callback() {
 			@Override
 			public boolean handleMessage(Message msg) {
-				handler.removeCallbacks(runneable);
+				handler.removeCallbacks(runnable);
 				return false;
 			}
 		});
-		runneable = new Runnable() {
+		runnable = new Runnable() {
 			Message msg;
 			Location location = null;
 
@@ -527,7 +564,7 @@ public class HomeActivity extends MapActivity implements
 				handler.postDelayed(this, 2000);
 			}
 		};
-		handler.post(runneable);
+		handler.post(runnable);
 	}
 
 	@Override
@@ -546,8 +583,10 @@ public class HomeActivity extends MapActivity implements
 
 		GCMRegistrar.onDestroy(getApplicationContext());
 
-		SessionEvents.removeAuthListener(fbAPIsAuthListener);
-		SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
+		SessionEvents.removeAuthListener(this);
+		SessionEvents.removeLogoutListener(this);
+
+		imageFetcher.closeCache();
 
 		System.gc();
 
@@ -558,31 +597,33 @@ public class HomeActivity extends MapActivity implements
 	public synchronized void catchLocationUpdate(Location location) {
 
 		isLocationFound = true;
-		point = ServerResponseParser.getGeoPointByLatLong(
-				location.getLatitude(), location.getLongitude());
-		StaticValues.myPoint = point;
+		// point =
+		// ServerResponseParser.getGeoPointByLatLong(location.getLatitude(),
+		// location.getLongitude());
+		StaticValues.myPoint = new LatLng(location.getLatitude(),
+				location.getLongitude());
 		myLat = location.getLatitude();
 		myLng = location.getLongitude();
 
 		Log.e("location.getLatitude():" + location.getLatitude(),
 				"location.getLongitude():" + location.getLongitude());
 
-		Log.e("Size mapoverlay self", mapOverlays.size() + "");
+		// Log.e("Size mapoverlay self", mapOverlays.size() + "");
 
-		itemizedOverlaySelf = (CustomItemizedOverlay) mapOverlays.get(0);
+		// itemizedOverlaySelf = (CustomItemizedOverlay) mapOverlays.get(0);
 
-		itemizedOverlaySelf.removeAllItem();
-		CustomOverlayItem overlayItem = new CustomOverlayItem(point, "self",
-				"", StaticValues.myInfo);
-		itemizedOverlaySelf.addOverlay(overlayItem);
+		// itemizedOverlaySelf.removeAllItem();
+		// CustomOverlayItem overlayItem = new CustomOverlayItem(point,
+		// "self","", StaticValues.myInfo);
+		// itemizedOverlaySelf.addOverlay(overlayItem);
 
 		if (isFirstLocationUpdate) {
-			relocationCurrentPosition();
+			// relocationCurrentPosition();
 			isFirstLocationUpdate = false;
 
 			initTimeTask();
 		}
-		mapView.invalidate();
+		// mapView.invalidate();
 
 		sendSelfLocationToServer();
 	}
@@ -634,16 +675,17 @@ public class HomeActivity extends MapActivity implements
 		Log.d("Get Search result", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			
-			SearchResult tempSearchResult = ServerResponseParser.parseSeachResult(response);
-			
-			
-			if(tempSearchResult!=null)
-			{
-				if(tempSearchResult.getPeoples()!=null || tempSearchResult.getPlaces()!=null || tempSearchResult.getSecondDegreePeoples()!=null)
-				{
+
+			SearchResult tempSearchResult = ServerResponseParser
+					.parseSeachResult(response);
+
+			if (tempSearchResult != null) {
+				if (tempSearchResult.getPeoples() != null
+						|| tempSearchResult.getPlaces() != null
+						|| tempSearchResult.getSecondDegreePeoples() != null) {
+
 					StaticValues.searchResult = tempSearchResult;
-					
+
 					populateMasterList();
 
 					if (isSearchEnabled == false) {
@@ -654,8 +696,7 @@ public class HomeActivity extends MapActivity implements
 					}
 				}
 			}
-			
-			
+
 			break;
 
 		case Constant.STATUS_BADREQUEST:
@@ -732,7 +773,7 @@ public class HomeActivity extends MapActivity implements
 			if (isSearchEnabled == false) {
 
 				updateContentList(listMasterContent);
-				updateMapDisplay(listContent);
+				// updateMapDisplay(listContent);
 			}
 
 			break;
@@ -810,7 +851,7 @@ public class HomeActivity extends MapActivity implements
 
 				Log.e("UpdateEventMap", "Inside it");
 				updateContentList(listMasterContent);
-				updateMapDisplay(listContent);
+				// updateMapDisplay(listContent);
 			}
 
 			break;
@@ -834,22 +875,28 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	private void populateMasterList() {
-		listMasterContent.clear();
+	private synchronized void populateMasterList() {
 
 		if (StaticValues.searchResult != null) {
+
+			listMasterContent.clear();
+
 			addPeoplesToMasterList();
 			addPlacesToMasterList();
 			addFacebbokPeoplesToMasterList();
+
+			if (eventList != null) {
+				addEventsToMasterList();
+			}
+
+			if (geotagList != null) {
+				addGeotagsToMasterList();
+			}
 		}
 
-		if (eventList != null) {
-			addEventsToMasterList();
-		}
+		sortMasterListData();
 
-		if (geotagList != null) {
-			addGeotagsToMasterList();
-		}
+		validateExistingMarkers();
 	}
 
 	private void addPlacesToMasterList() {
@@ -901,259 +948,215 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	private void clearMap(int index, boolean all) {
-		if (all) {
-			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(1));
-			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(2));
-			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(3));
-			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(4));
-			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(5));
-		} else {
-			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(index));
-		}
-
+	private void sortMasterListData() {
+		listComparator.setLatLng(null);
+		Collections.sort(this.listMasterContent, listComparator);
 	}
 
-	private void hideBallons(int index, boolean all) {
-		if (all) {
+	private MarkerOptions getMarkerOptions(Object item) {
+		MarkerOptions markerOptions = new MarkerOptions();
+		String title = Utility.getItemTitle(item);
+		markerOptions.title(title);
+		markerOptions.icon(null);
+		try {
 
-			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(1));
-			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(2));
-			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(3));
-			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(4));
-			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(5));
-		} else {
-			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
-					.get(index));
+			Bitmap bitmap = Utility.generateMarker(markerLayout, item,
+					imageFetcher, this);
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+			// markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon));
+			bitmap.recycle();
+			bitmap = null;
+		} catch (OutOfMemoryError e) {
+			markerOptions.icon(null);
+			// TODO: handle exception
+		} catch (Exception e) {
+			markerOptions.icon(null);
+			// TODO: handle exception
 		}
 
+		LatLng latLng = Utility.getLatLngFromObject(item);
+		if (latLng != null) {
+			markerOptions.position(latLng);
+
+			return markerOptions;
+		}
+
+		return null;
 	}
 
-	private void updateMapDisplay(final List<Object> list) {
+	private MarkerOptions getMarkerOptions(Object item, Drawable profilePic) {
+		MarkerOptions markerOptions = new MarkerOptions();
+		String title = Utility.getItemTitle(item);
+		markerOptions.title(title);
+		markerOptions.icon(null);
+		try {
 
+			Bitmap bitmap = Utility.generateMarker(markerLayout, item,
+					profilePic);
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+			// markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon));
+			bitmap.recycle();
+			bitmap = null;
+		} catch (OutOfMemoryError e) {
+			markerOptions.icon(null);
+			// TODO: handle exception
+		} catch (Exception e) {
+			markerOptions.icon(null);
+			// TODO: handle exception
+		}
+
+		LatLng latLng = Utility.getLatLngFromObject(item);
+		if (latLng != null) {
+			markerOptions.position(latLng);
+
+			return markerOptions;
+		}
+
+		return null;
+	}
+
+	private synchronized void updateMapDisplay(final List<Object> list) {
+
+		Log.i("HomeActivity", "updateMapDisplay");
 		if (list != null) {
-			if (list.size() > 1) {
 
-				new Thread(new Runnable() {
+			int totalItemDisplayed = 0;
+			String firstItemIdOnList = null;
 
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						//imageDownloader.setMode(ImageDownloader.Mode.NO_ASYNC_TASK);
-						
-						clearMap(0, true);
-						listDisplayableContent.clear();
+			if (!isSearchEnabled || !isNewSearch) {
+				listComparator.setLatLng(mapView.getCameraPosition().target);
+				Collections.sort(list, listComparator);
+			}
 
-						CustomOverlayItem focusedItemPeople = itemizedOverlayOtherPeople
-								.getFocus();
-						CustomOverlayItem focusedItemPlace = itemizedOverlayPlace
-								.getFocus();
+			boolean isPeople = SharedPreferencesHelper.getInstance(context)
+					.getBoolean(Constant.PEOPLE, true);
 
-						CustomOverlayItem focusedItemSecondDegreePeople = itemizedOverlaySecondDegreePeople
-								.getFocus();
+			boolean isPlace = SharedPreferencesHelper.getInstance(context)
+					.getBoolean(Constant.PLACE, false);
 
-						CustomOverlayItem focusedItemEvent = itemizedOverlayEvent
-								.getFocus();
-						CustomOverlayItem focusedItemGeotag = itemizedOverlayGeotag
-								.getFocus();
+			boolean isEvent = SharedPreferencesHelper.getInstance(context)
+					.getBoolean(Constant.EVENT, true);
 
-						int displayedItemCounter = 0;
-						Object onlyItem = null;
+			for (int i = 0; i < list.size(); i++) {
 
-						LinearLayout markerLayout = (LinearLayout) getLayoutInflater()
-								.inflate(R.layout.marker, null);
+				Object item = list.get(i);
+				String itemId = Utility.getItemId(item);
 
-						for (int i = 0; i < list.size(); i++) {
+				LatLng latLng = Utility.getLatLngFromObject(item);
 
-							Object item = list.get(i);
-							if (item instanceof People
-									&& SharedPreferencesHelper.getInstance(
-											context).getBoolean(
-											Constant.PEOPLE, true)) {
-								listDisplayableContent.add(item);
+				// boolean isSelectedMarker = false;
 
-								People user = (People) item;
-								onlyItem = item;
+				if (firstItemIdOnList == null
+						&& visibleMarkers.containsKey(itemId)) {
+					firstItemIdOnList = itemId;
+				}
 
-								GeoPoint geoPoint = new GeoPoint((int) (user
-										.getCurrentLat() * 1E6), (int) (user
-										.getCurrentLng() * 1E6));
+				if ((Utility.isLocationVisibleOnMap(mapView, latLng) || isSearchEnabled)
+						&& !visibleMarkers.containsKey(itemId)) {
 
-								// CustomOverlayItem overlayItem = new
-								// CustomOverlayItem(geoPoint, "", "", user);
+					MarkerOptions markerOptions = null;
 
-								CustomOverlayItem overlayItem = new CustomOverlayItem(
-										geoPoint, "", "", user, markerLayout,
-										imageDownloader);
+					if (item instanceof People && isPeople) {
 
-								/*
-								 * CustomOverlay itemizedOverlay = new
-								 * CustomOverlay(
-								 * overlayItem.getDefaultMarker());
-								 * itemizedOverlay.addOverlay(overlayItem);
-								 */
+						markerOptions = getMarkerOptions(item);
 
-								itemizedOverlayOtherPeople
-										.addOverlay(overlayItem);
+					} else if (item instanceof Place && isPlace) {
 
-								displayedItemCounter++;
+						markerOptions = getMarkerOptions(item);
 
-							} else if (item instanceof Place
-									&& SharedPreferencesHelper.getInstance(
-											context).getBoolean(Constant.PLACE,
-											false)) {
-								listDisplayableContent.add(item);
+						// displayedItemCounter++;
+					} else if (item instanceof SecondDegreePeople && isPeople) {
 
-								Place place = (Place) item;
-								onlyItem = item;
+						markerOptions = getMarkerOptions(item);
 
-								GeoPoint geoPoint = new GeoPoint((int) (place
-										.getLatitude() * 1E6), (int) (place
-										.getLongitude() * 1E6));
+					} else if (item instanceof Event && isEvent) {
+						markerOptions = getMarkerOptions(item);
 
-								CustomOverlayItem overlayItem = new CustomOverlayItem(
-										geoPoint, "", "", place, markerLayout,
-										imageDownloader);
-								itemizedOverlayPlace.addOverlay(overlayItem);
+					} else if (item instanceof GeoTag && isPeople) {
+						markerOptions = getMarkerOptions(item);
+					}
 
-								displayedItemCounter++;
-							} else if (item instanceof SecondDegreePeople
-									&& SharedPreferencesHelper.getInstance(
-											context).getBoolean(
-											Constant.PEOPLE, true)) {
-								listDisplayableContent.add(item);
+					if (markerOptions != null) {
 
-								SecondDegreePeople user = (SecondDegreePeople) item;
-								onlyItem = item;
+						try {
+							Marker marker = mapView.addMarker(markerOptions);
+							visibleItemsOnMap.put(marker.getId(), item);
+							visibleMarkers.put(itemId, marker);
+							objectList.put(itemId, item);
 
-								GeoPoint geoPoint = new GeoPoint((int) (user
-										.getCurrentLat() * 1E6), (int) (user
-										.getCurrentLng() * 1E6));
+							markerUpdateList
+									.put(Utility.getItemId(item), false);
 
-								CustomOverlayItem overlayItem = new CustomOverlayItem(
-										geoPoint, "", "", user, markerLayout,
-										imageDownloader);
-								itemizedOverlaySecondDegreePeople
-										.addOverlay(overlayItem);
+							totalItemDisplayed++;
 
-								displayedItemCounter++;
-
-							} else if (item instanceof Event
-									&& SharedPreferencesHelper.getInstance(
-											context).getBoolean(Constant.EVENT,
-											false)) {
-								listDisplayableContent.add(item);
-
-								Event event = (Event) item;
-								onlyItem = item;
-
-								GeoPoint geoPoint = new GeoPoint((int) (event
-										.getLatitude() * 1E6), (int) (event
-										.getLongitude() * 1E6));
-
-								CustomOverlayItem overlayItem = new CustomOverlayItem(
-										geoPoint, "", "", event);
-								itemizedOverlayEvent.addOverlay(overlayItem);
-
-								displayedItemCounter++;
-
-							} else if (item instanceof GeoTag
-									&& SharedPreferencesHelper.getInstance(
-											context).getBoolean(
-											Constant.PEOPLE, true)) {
-								listDisplayableContent.add(item);
-
-								GeoTag geoTag = (GeoTag) item;
-								onlyItem = item;
-
-								GeoPoint geoPoint = new GeoPoint((int) (geoTag
-										.getLatitude() * 1E6), (int) (geoTag
-										.getLongitude() * 1E6));
-
-								CustomOverlayItem overlayItem = new CustomOverlayItem(
-										geoPoint, "", "", geoTag);
-								itemizedOverlayGeotag.addOverlay(overlayItem);
-
-								displayedItemCounter++;
+							if (firstItemIdOnList == null) {
+								firstItemIdOnList = itemId;
 							}
 
+						} catch (NullPointerException e) {
+
+						} catch (Exception e) {
+							// TODO: handle exception
 						}
-
-						itemizedOverlayPlace.populateItemizedOverlay();
-						itemizedOverlayOtherPeople.populateItemizedOverlay();
-						itemizedOverlaySecondDegreePeople
-								.populateItemizedOverlay();
-						itemizedOverlayEvent.populateItemizedOverlay();
-						itemizedOverlayGeotag.populateItemizedOverlay();
-
-						mapView.invalidate();
-
-						if (isSearchEnabled && displayedItemCounter == 1) {
-							StaticValues.isHighlightAnnotation = true;
-							StaticValues.highlightAnnotationItem = onlyItem;
-						}
-
-						if (displayedItemCounter > 0) {
-							GeoPoint selectedGeoPoint;
-
-							if (StaticValues.isHighlightAnnotation
-									&& StaticValues.highlightAnnotationItem != null
-									&& (StaticValues.searchResult != null
-											|| eventList.size() > 0 || geotagList
-											.size() > 0)) {
-
-								highlightAnnotation();
-							}
-
-							else if (focusedItemPeople != null) {
-								selectedGeoPoint = focusedItemPeople.getPoint();
-								itemizedOverlayOtherPeople.onTap(
-										selectedGeoPoint, mapView);
-							} else if (focusedItemPlace != null) {
-								selectedGeoPoint = focusedItemPlace.getPoint();
-								itemizedOverlayPlace.onTap(selectedGeoPoint,
-										mapView);
-							} else if (focusedItemSecondDegreePeople != null) {
-								selectedGeoPoint = focusedItemSecondDegreePeople
-										.getPoint();
-								itemizedOverlaySecondDegreePeople.onTap(
-										selectedGeoPoint, mapView);
-							} else if (focusedItemEvent != null) {
-								selectedGeoPoint = focusedItemEvent.getPoint();
-								itemizedOverlayEvent.onTap(selectedGeoPoint,
-										mapView);
-							} else if (focusedItemGeotag != null) {
-								selectedGeoPoint = focusedItemGeotag.getPoint();
-								itemizedOverlayGeotag.onTap(selectedGeoPoint,
-										mapView);
-							}
-						} else {
-							if (isSearchEnabled) {
-								Toast.makeText(context,
-										"No search result found.",
-										Toast.LENGTH_SHORT).show();
-							}
-						}
-
-						listDisplayableContent.clear();
-						
-						//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 
 					}
-				}).run();
+
+				}
+
+				if (totalItemDisplayed == 10) {
+					break;
+				}
+			}
+
+			// list.clear();
+
+			customInfoWindowAdapter = new CustomInfoWindowAdapter(context,
+					getLayoutInflater(), visibleItemsOnMap, imageFetcher,
+					HomeActivity.this);
+
+			mapView.setInfoWindowAdapter(customInfoWindowAdapter);
+
+			Marker markerToHighlight = null;
+
+			if (isSearchEnabled && isNewSearch) {
+
+				if (visibleMarkers.size() > 0) {
+					markerToHighlight = visibleMarkers.get(firstItemIdOnList);
+
+				}
+				if (markerToHighlight == null) {
+					Toast.makeText(context, "No search result found.",
+							Toast.LENGTH_SHORT).show();
+				}
+				isNewSearch = false;
+			} else if (StaticValues.isHighlightAnnotation
+					&& StaticValues.highlightAnnotationItem != null) {
+
+				if (visibleMarkers.size() > 0) {
+					markerToHighlight = visibleMarkers.get(Utility
+							.getItemId(StaticValues.highlightAnnotationItem));
+				}
+
+				StaticValues.isHighlightAnnotation = false;
+				StaticValues.highlightAnnotationItem = null;
 
 			}
+
+			if (markerToHighlight != null) {
+				mapView.animateCamera(CameraUpdateFactory
+						.newLatLng(markerToHighlight.getPosition()));
+				markerToHighlight.showInfoWindow();
+			}
+
+			if (!isTimerRunning) {
+				markerUpdateTimer = new Timer("MarkerUpdate", true);
+				markerUpdateTimer.schedule(new MarkerUpdateTask(), 10000, 15000);
+				isTimerRunning = true;
+			}
+
+			updateMarkerVisibility();
+
+			System.gc();
 		}
 
 	}
@@ -1183,8 +1186,8 @@ public class HomeActivity extends MapActivity implements
 			locationSharingPermission = Permission.PUBLIC;
 		}
 
-		permissionRadioGroupView = new PermissionRadioGroupLess(context,
-				shareWithSelectionListener, locationSharingPermission);
+		permissionRadioGroupView = new PermissionRadioGroupLess(context, this,
+				locationSharingPermission);
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
@@ -1204,15 +1207,13 @@ public class HomeActivity extends MapActivity implements
 		super.onContentChanged();
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
-	}
-
 	/** Stop the updates when Activity is paused */
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		imageFetcher.setExitTasksEarly(true);
+		imageFetcher.flushCache();
 
 		isRunning = false;
 		Log.i("Home:onPause memory before",
@@ -1223,18 +1224,30 @@ public class HomeActivity extends MapActivity implements
 		StaticValues.highlightAnnotationItem = null;
 		StaticValues.isHighlightAnnotation = false;
 
-		listMasterContent.clear();
-		listContent.clear();
-		listDisplayableContent.clear();
+		// listMasterContent.clear();
+		// listContent.clear();
+		// listDisplayableContent.clear();
 
 		System.gc();
 
 		Log.i("Home:onPause memory after",
 				"" + Debug.getNativeHeapAllocatedSize());
 
+		if (markerUpdateTimer != null) {
+			markerUpdateTimer.cancel();
+		}
+		isTimerRunning = false;
+
+		// Start background service
+		startService(new Intent(HomeActivity.this, LocationUpdateService.class));
+
 	}
 
 	private void handleNavigationFromNotificationBar(Intent intent) {
+
+		Bundle extras = intent.getExtras();
+		Log.i("dbg", "onNewIntent");
+
 		if (StaticValues.myInfo == null) {
 			if (Utility.getUserData(context) != null) {
 				StaticValues.myInfo = ServerResponseParser
@@ -1243,89 +1256,99 @@ public class HomeActivity extends MapActivity implements
 			}
 
 			if (StaticValues.myInfo == null) {
-				Toast.makeText(context, "An unknown error occured.",
-						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(context, "An unknown error occurred.",
+				// Toast.LENGTH_SHORT).show();
+				extras = null;
 				finish();
+				startActivity(new Intent(context, LoginActivity.class));
 			}
 
 		}
-
-		Bundle extras = intent.getExtras();
-		Log.i("dbg", "onNewIntent");
 
 		if (extras != null) {
 			if (extras.containsKey("pushData")) {
 				Log.i("dbg", "containsKey(PushData)");
 				PushData pushData = (PushData) extras.get("pushData");
 				if (pushData != null) {
-					Log.i("Home:PushData:Type", pushData.getObjectType());
-					if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
-						Intent i = new Intent(
-								context,
-								MessageConversationFromNotificationActivity.class);
-						i.putExtra("itemThreadId", pushData.getObjectId());
-						i.putExtra("itemMessageId", pushData.getObjectId());
 
-						startActivity(i);
+					if (pushData.getReceiverId().equals(
+							StaticValues.myInfo.getId())) {
+						Log.i("Home:PushData:Type", pushData.getObjectType());
+						if (pushData.getObjectType().equals(
+								Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
+							Intent i = new Intent(
+									context,
+									MessageConversationFromNotificationActivity.class);
+							i.putExtra("itemThreadId", pushData.getObjectId());
+							i.putExtra("itemMessageId", pushData.getObjectId());
 
-					} else if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
+							startActivity(i);
 
-						Intent i = new Intent(
-								context,
-								MessageConversationFromNotificationActivity.class);
-						i.putExtra("itemThreadId", pushData.getObjectId());
-						i.putExtra("itemMessageId", pushData.getObjectId());
-						i.putExtra("status", true);
-						startActivity(i);
-					} else if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_EVENT)) {
-						Intent intent2 = new Intent(context,
-								EventListActivity.class);
-						startActivity(intent2);
-					} else if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_FRIEND_REQUEST)) {
-						Intent intent2 = new Intent(context,
-								NotificationActivity.class);
-						intent2.putExtra("selectedTab",
-								Constant.PUSH_NOTIFICATION_FRIEND_REQUEST);
-						startActivity(intent2);
-					} else if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT)) {
+						} else if (pushData.getObjectType().equals(
+								Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
 
-						updateFriendList();
-						Intent intent2 = new Intent(context,
-								ProfileActivity2.class);
-						intent2.putExtra("peopleId", pushData.getObjectId());
-						startActivity(intent2);
+							Intent i = new Intent(
+									context,
+									MessageConversationFromNotificationActivity.class);
+							i.putExtra("itemThreadId", pushData.getObjectId());
+							i.putExtra("itemMessageId", pushData.getObjectId());
+							i.putExtra("status", true);
+							startActivity(i);
+						} else if (pushData.getObjectType().equals(
+								Constant.PUSH_NOTIFICATION_EVENT)) {
+							Intent intent2 = new Intent(context,
+									EventListActivity.class);
+							startActivity(intent2);
+						} else if (pushData.getObjectType().equals(
+								Constant.PUSH_NOTIFICATION_FRIEND_REQUEST)) {
+							Intent intent2 = new Intent(context,
+									NotificationActivity.class);
+							intent2.putExtra("selectedTab",
+									Constant.PUSH_NOTIFICATION_FRIEND_REQUEST);
+							startActivity(intent2);
+						} else if (pushData
+								.getObjectType()
+								.equals(Constant.PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT)) {
 
-					} else if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_MEETUP)) {
-						Intent intent2 = new Intent(context,
-								MessageActivity.class);
-						intent2.putExtra("selectedTab",
-								Constant.PUSH_NOTIFICATION_MEETUP);
-						startActivity(intent2);
-					} else if (pushData.getObjectType().equals(
-							Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
-						if (StaticValues.searchResult != null) {
-							if (isSearchEnabled) {
-								disableSearch();
-								doSearch();
+							updateFriendList();
+							Intent intent2 = new Intent(context,
+									ProfileActivity2.class);
+							intent2.putExtra("peopleId", pushData.getObjectId());
+							startActivity(intent2);
+
+						} else if (pushData.getObjectType().equals(
+								Constant.PUSH_NOTIFICATION_MEETUP)) {
+							Intent intent2 = new Intent(context,
+									MessageActivity.class);
+							intent2.putExtra("selectedTab",
+									Constant.PUSH_NOTIFICATION_MEETUP);
+							startActivity(intent2);
+						} else if (pushData.getObjectType().equals(
+								Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
+							if (StaticValues.searchResult != null) {
+								if (isSearchEnabled) {
+									disableSearch();
+									doSearch();
+								}
+
+								People people = Utility.getPeopleById(
+										pushData.getObjectId(),
+										StaticValues.searchResult.getPeoples());
+								if (people != null) {
+									StaticValues.isHighlightAnnotation = true;
+									StaticValues.highlightAnnotationItem = people;
+									// highlightAnnotation();
+
+									LatLng selectedLatLng = Utility
+											.getLatLngFromObject(StaticValues.highlightAnnotationItem);
+									mapView.animateCamera(CameraUpdateFactory
+											.newLatLngZoom(selectedLatLng,
+													intialZoomLevel));
+
+								}
 							}
 
-							People people = Utility.getPeopleById(
-									pushData.getObjectId(),
-									StaticValues.searchResult.getPeoples());
-							if (people != null) {
-								StaticValues.isHighlightAnnotation = true;
-								StaticValues.highlightAnnotationItem = people;
-								highlightAnnotation();
-
-							}
 						}
-
 					}
 				} else {
 					Log.i("Home:PushData:Type", "PushData is null");
@@ -1380,13 +1403,27 @@ public class HomeActivity extends MapActivity implements
 	@Override
 	public void onNewIntent(Intent intent) {
 
-		handleNavigationFromNotificationBar(intent);
+		if (Utility.isLoggedIn(getApplicationContext())) {
+			handleNavigationFromNotificationBar(intent);
+		}
+
 	}
 
 	/** Register for the updates when Activity is in foreground */
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		validateFacebookSession();
+
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getApplicationContext());
+
+		if (resultCode == ConnectionResult.SUCCESS) {
+
+		} else {
+			GooglePlayServicesUtil.getErrorDialog(resultCode, this, 1);
+		}
 
 		isRunning = true;
 		Log.i("Home:onResume memory before",
@@ -1403,15 +1440,28 @@ public class HomeActivity extends MapActivity implements
 
 		disableSearch();
 
+		/*
+		 * if (StaticValues.isHighlightAnnotation &&
+		 * StaticValues.highlightAnnotationItem != null &&
+		 * (StaticValues.searchResult != null || eventList.size() > 0 ||
+		 * geotagList .size() > 0)) {
+		 * 
+		 * populateMasterList(); updateContentList(listMasterContent);
+		 * updateMapDisplay(listContent); }
+		 */
+
 		if (StaticValues.isHighlightAnnotation
-				&& StaticValues.highlightAnnotationItem != null
-				&& (StaticValues.searchResult != null || eventList.size() > 0 || geotagList
-						.size() > 0)) {
+				&& StaticValues.highlightAnnotationItem != null) {
 
-			populateMasterList();
-			updateContentList(listMasterContent);
+			circleMenu.setVisibility(View.GONE);
 
-			updateMapDisplay(listContent);
+			isMoveToAnotherPoint = true;
+
+			LatLng selectedLatLng = Utility
+					.getLatLngFromObject(StaticValues.highlightAnnotationItem);
+			mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(
+					selectedLatLng, intialZoomLevel));
+
 		}
 
 		startGpsService();
@@ -1419,6 +1469,11 @@ public class HomeActivity extends MapActivity implements
 		Log.i("Home:onResume memory after",
 				"" + Debug.getNativeHeapAllocatedSize());
 		Utility.updateNotificationBubbleCounter(btnNotification);
+
+		// Stop background service
+		stopService(new Intent(this, LocationUpdateService.class));
+
+		imageFetcher.setExitTasksEarly(false);
 
 	}
 
@@ -1428,81 +1483,56 @@ public class HomeActivity extends MapActivity implements
 		Log.i("inside", "initializeNotificationBroadcast");
 
 		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
-		broadcastReceiver.setCallback(new NotificationBroadcastListener());
+		broadcastReceiver.setCallback(this);
 		registerReceiver(broadcastReceiver, new IntentFilter(
 				CommonUtilities.DISPLAY_MESSAGE_ACTION));
 	}
 
-	private class NotificationBroadcastListener implements BroadcastListener {
-		@Override
-		public void updateNotificationCountBuble(Intent intent) {
+	@Override
+	public void updateNotificationCountBuble(Intent intent) {
 
-			Log.i("inside updateNotificationCountBuble", "");
+		Log.i("inside updateNotificationCountBuble", "");
 
-			PushData pushData = (PushData) intent
-					.getSerializableExtra("pushData");
+		PushData pushData = (PushData) intent.getSerializableExtra("pushData");
 
-			Utility.updateNotificationCountFromPush(pushData);
+		Utility.updateNotificationCountFromPush(pushData);
 
-			Utility.updateNotificationBubbleCounter(btnNotification);
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
-		}
 	}
 
-	private void highlightAnnotation() {
-
-		circleMenu.setVisibility(View.GONE);
-
-		GeoPoint selectedGeoPoint = new GeoPoint(0, 0);
-
-		if (StaticValues.highlightAnnotationItem instanceof People) {
-
-			People selectedPeople = (People) StaticValues.highlightAnnotationItem;
-
-			selectedGeoPoint = new GeoPoint(
-					(int) (selectedPeople.getCurrentLat() * 1E6),
-					(int) (selectedPeople.getCurrentLng() * 1E6));
-
-			itemizedOverlayOtherPeople.onTap(selectedGeoPoint, mapView);
-			
-
-		} else if (StaticValues.highlightAnnotationItem instanceof Place) {
-			Place place = (Place) StaticValues.highlightAnnotationItem;
-			selectedGeoPoint = new GeoPoint((int) (place.getLatitude() * 1E6),
-					(int) (place.getLongitude() * 1E6));
-
-			itemizedOverlayPlace.onTap(selectedGeoPoint, mapView);
-		} else if (StaticValues.highlightAnnotationItem instanceof SecondDegreePeople) {
-
-			SecondDegreePeople selectedPeople = (SecondDegreePeople) StaticValues.highlightAnnotationItem;
-			selectedGeoPoint = new GeoPoint(
-					(int) (selectedPeople.getCurrentLat() * 1E6),
-					(int) (selectedPeople.getCurrentLng() * 1E6));
-
-			itemizedOverlaySecondDegreePeople.onTap(selectedGeoPoint, mapView);
-
-		} else if (StaticValues.highlightAnnotationItem instanceof Event) {
-
-			Event event = (Event) StaticValues.highlightAnnotationItem;
-			selectedGeoPoint = new GeoPoint((int) (event.getLatitude() * 1E6),
-					(int) (event.getLongitude() * 1E6));
-
-			itemizedOverlayEvent.onTap(selectedGeoPoint, mapView);
-
-		} else if (StaticValues.highlightAnnotationItem instanceof GeoTag) {
-			GeoTag geoTag = (GeoTag) StaticValues.highlightAnnotationItem;
-			selectedGeoPoint = new GeoPoint((int) (geoTag.getLatitude() * 1E6),
-					(int) (geoTag.getLongitude() * 1E6));
-
-			itemizedOverlayGeotag.onTap(selectedGeoPoint, mapView);
-
-		}
-		
-		mapView.getController().animateTo(selectedGeoPoint);
-
-		StaticValues.highlightAnnotationItem = null;
-		StaticValues.isHighlightAnnotation = false;
-	}
+	/*
+	 * private void highlightAnnotation() {
+	 * 
+	 * circleMenu.setVisibility(View.GONE);
+	 * 
+	 * if (StaticValues.highlightAnnotationItem instanceof People) {
+	 * 
+	 * People selectedPeople = (People) StaticValues.highlightAnnotationItem;
+	 * 
+	 * } else if (StaticValues.highlightAnnotationItem instanceof Place) { Place
+	 * place = (Place) StaticValues.highlightAnnotationItem;
+	 * 
+	 * } else if (StaticValues.highlightAnnotationItem instanceof
+	 * SecondDegreePeople) {
+	 * 
+	 * SecondDegreePeople selectedPeople = (SecondDegreePeople)
+	 * StaticValues.highlightAnnotationItem;
+	 * 
+	 * } else if (StaticValues.highlightAnnotationItem instanceof Event) {
+	 * 
+	 * Event event = (Event) StaticValues.highlightAnnotationItem;
+	 * 
+	 * } else if (StaticValues.highlightAnnotationItem instanceof GeoTag) {
+	 * GeoTag geoTag = (GeoTag) StaticValues.highlightAnnotationItem;
+	 * 
+	 * }
+	 * 
+	 * // mapView.getController().animateTo(selectedGeoPoint);
+	 * 
+	 * StaticValues.highlightAnnotationItem = null;
+	 * StaticValues.isHighlightAnnotation = false; }
+	 */
 
 	private void disableSearch() {
 		etSearchField.setText("");
@@ -1513,9 +1543,10 @@ public class HomeActivity extends MapActivity implements
 	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
+		// this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 		Window window = getWindow();
-		// Eliminates color banding
 		window.setFormat(PixelFormat.RGBA_8888);
+
 	}
 
 	private void setCheckBoxSelection() {
@@ -1544,7 +1575,8 @@ public class HomeActivity extends MapActivity implements
 
 			Log.i("HomeActivity", "inside facebookAuthentication");
 
-			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb")) {
+			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase(
+					Constant.sourceFacebook)) {
 				initInviteFriends();
 			} else {
 				askForFacebookAccount();
@@ -1607,6 +1639,7 @@ public class HomeActivity extends MapActivity implements
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 
 			if (circleMenu.getVisibility() == View.VISIBLE) {
@@ -1640,6 +1673,7 @@ public class HomeActivity extends MapActivity implements
 			}
 
 		}
+
 		return false;
 
 	}
@@ -1661,50 +1695,44 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	@Override
-	public void catchBubleTap(CustomOverlayItem item, int typeFlag) {
-		// TODO Auto-generated method stub
+	/*
+	 * @Override public void catchBubleTap(CustomOverlayItem item, int typeFlag)
+	 * { // TODO Auto-generated method stub
+	 * 
+	 * if (typeFlag == Constant.FLAG_PEOPLE) {
+	 * 
+	 * showPeoplePopUpDetails(item); }
+	 * 
+	 * else if (typeFlag == Constant.FLAG_PLACE) {
+	 * 
+	 * // temporarily off for beta
+	 * 
+	 * showPlacePopUpDetails(item); } if (typeFlag == Constant.FLAG_SELF) {
+	 * 
+	 * Intent profileIntent = new Intent(context, ProfileActivity.class);
+	 * startActivity(profileIntent); } else if (typeFlag ==
+	 * Constant.FLAG_SECOND_DEGREE) { } else { // do nothing } }
+	 */
 
-		if (typeFlag == Constant.FLAG_PEOPLE) {
-
-			showPeoplePopUpDetails(item);
-		}
-
-		else if (typeFlag == Constant.FLAG_PLACE) {
-
-			// temporarily off for beta
-
-			showPlacePopUpDetails(item);
-		}
-		if (typeFlag == Constant.FLAG_SELF) {
-
-			Intent profileIntent = new Intent(context, ProfileActivity.class);
-			startActivity(profileIntent);
-		} else if (typeFlag == Constant.FLAG_SECOND_DEGREE) {
-		} else {
-			// do nothing
-		}
-	}
-
-	private void showPlacePopUpDetails(final CustomOverlayItem item) {
+	private void showPlacePopUpDetails(final Place item) {
 		// TODO Auto-generated method stub
 		d = DialogsAndToasts.showExtendedInfoDialog(context,
 				R.layout.dialog_on_map_place_extended);
 
 		TextView titleText = (TextView) d.findViewById(R.id.title_text);
-		String title = item.getPlace().getName();
+		String title = item.getName();
 		if (title != null && !title.equals("")) {
 			titleText.setText(title);
 		}
 
 		TextView addressText = (TextView) d.findViewById(R.id.address_text);
-		String address = item.getPlace().getVicinity();
+		String address = item.getVicinity();
 		if (address != null && !address.equals("")) {
 			addressText.setText(address);
 		}
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
-		double distanceValue = item.getPlace().getDistance();
+		double distanceValue = item.getDistance();
 		distance.setText(Utility.getFormatedDistance(distanceValue,
 				StaticValues.myInfo.getSettings().getUnit()) + " away");
 
@@ -1719,17 +1747,10 @@ public class HomeActivity extends MapActivity implements
 		});
 
 		placeIconImage = (ImageView) d.findViewById(R.id.place_icon_image);
-		String iconUrl = item.getPlace().getIconUrl();
-		if (iconUrl != null && !iconUrl.equals("")) {
+		String iconUrl = item.getIconUrl();
+		if (Utility.isValidString(iconUrl)) {
 
-			new FetchImageTask() {
-				@Override
-				protected void onPostExecute(Bitmap result) {
-					if (result != null) {
-						placeIconImage.setImageBitmap(result);
-					}
-				}
-			}.execute(iconUrl);
+			imageFetcher.loadImage(iconUrl, placeIconImage, this, item.getId());
 
 		}
 
@@ -1740,7 +1761,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Place place = item.getPlace();
+				Place place = item;
 				Intent peopleIntent = new Intent(context,
 						PlaceEditSaveActivity.class);
 				peopleIntent.putExtra("ISHOME", true);
@@ -1757,20 +1778,15 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Log.d("PLACE MEET UP",
-						String.valueOf(item.getPlace().getLatitude())
-								+ " "
-								+ String.valueOf(item.getPlace().getLongitude()));
+				Log.d("PLACE MEET UP", String.valueOf(item.getLatitude()) + " "
+						+ String.valueOf(item.getLongitude()));
 
 				Intent intentForMeetup = new Intent(context,
 						MeetupRequestNewActivity.class);
-				intentForMeetup.putExtra("destLat", item.getPlace()
-						.getLatitude());
-				intentForMeetup.putExtra("destLng", item.getPlace()
-						.getLongitude());
-				intentForMeetup.putExtra("destAddress", item.getPlace()
-						.getVicinity());
-				intentForMeetup.putExtra("selectedPlace", item.getPlace());
+				intentForMeetup.putExtra("destLat", item.getLatitude());
+				intentForMeetup.putExtra("destLng", item.getLongitude());
+				intentForMeetup.putExtra("destAddress", item.getVicinity());
+				intentForMeetup.putExtra("selectedPlace", item);
 				startActivity(intentForMeetup);
 			}
 		});
@@ -1782,15 +1798,13 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Log.d("PLACE MEET UP",
-						String.valueOf(item.getPlace().getLatitude())
-								+ " "
-								+ String.valueOf(item.getPlace().getLongitude()));
+				Log.d("PLACE MEET UP", String.valueOf(item.getLatitude()) + " "
+						+ String.valueOf(item.getLongitude()));
 
 				Intent intentForEvent = new Intent(context,
 						EventNewActivity.class);
 				intentForEvent.putExtra("flag", 1);
-				intentForEvent.putExtra("selectedPlace", item.getPlace());
+				intentForEvent.putExtra("selectedPlace", item);
 				startActivity(intentForEvent);
 			}
 		});
@@ -1802,7 +1816,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Place place = item.getPlace();
+				Place place = item;
 
 				Intent intent = new Intent(context,
 						RecommendationActivity.class);
@@ -1818,7 +1832,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Place place = item.getPlace();
+				Place place = item;
 
 				Intent intent = new Intent(context, PlanCreateActivity.class);
 
@@ -1847,11 +1861,9 @@ public class HomeActivity extends MapActivity implements
 				// TODO Auto-generated method stub
 
 				Intent intent = new Intent(context, DirectionActivity.class);
-				intent.putExtra("selectedPlace", item.getPlace());
-				Log.d("Place Check", item.getPlace().getName() + " "
-						+ item.getPlace().getVicinity() + " "
-						+ item.getPlace().getLatitude() + " "
-						+ item.getPlace().getLongitude());
+				intent.putExtra("selectedItem", item);
+				Log.d("Place Check", item.getName() + " " + item.getVicinity()
+						+ " " + item.getLatitude() + " " + item.getLongitude());
 				startActivity(intent);
 			}
 		});
@@ -1870,17 +1882,17 @@ public class HomeActivity extends MapActivity implements
 		d.show();
 	}
 
-	private void showPeoplePopUpDetails(final CustomOverlayItem item) {
+	private void showPeoplePopUpDetails(final People people) {
 		// TODO Auto-generated method stub
 		d = DialogsAndToasts.showExtendedInfoDialog(context,
 				R.layout.dialog_on_map_extended);
 
 		currentBubbleDialog = d;
 
-		String userId = item.getUser().getId();
+		final String userId = people.getId();
 
 		TextView firstName = (TextView) d.findViewById(R.id.first_name_text);
-		firstName.setText(Utility.getFieldText(item.getUser()));
+		firstName.setText(Utility.getItemTitle(people));
 
 		LinearLayout genderInfoContainer = (LinearLayout) d
 				.findViewById(R.id.genderInfoContainer);
@@ -1894,13 +1906,13 @@ public class HomeActivity extends MapActivity implements
 		TextView tvStatus = (TextView) d.findViewById(R.id.status_text);
 		TextView age = (TextView) d.findViewById(R.id.age_text);
 
-		if (Utility.isValidString(item.getUser().getStatusMsg())) {
-			tvStatus.setText(item.getUser().getStatusMsg());
+		if (Utility.isValidString(people.getStatusMsg())) {
+			tvStatus.setText(people.getStatusMsg());
 			tvStatus.setVisibility(View.VISIBLE);
 		} else
 			tvStatus.setVisibility(View.GONE);
 
-		int ageValue = item.getUser().getAge();
+		int ageValue = people.getAge();
 		if (ageValue != 0) {
 			age.setText("-Age: " + ageValue);
 			age.setVisibility(View.VISIBLE);
@@ -1908,20 +1920,20 @@ public class HomeActivity extends MapActivity implements
 			age.setVisibility(View.GONE);
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
-		double distanceValue = item.getUser().getDistance();
+		double distanceValue = people.getDistance();
 
 		distance.setText(Utility.getFormatedDistance(distanceValue,
 				StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		TextView street = (TextView) d.findViewById(R.id.street_text);
-		String sName = item.getUser().getCurrentAddress();
+		String sName = people.getCurrentAddress();
 		if (sName != null && !sName.equals("")) {
 			street.setText(sName);
 		} else {
 		}
 
 		TextView gender = (TextView) d.findViewById(R.id.gender_text);
-		String genderValue = item.getUser().getGender();
+		String genderValue = people.getGender();
 		if (genderValue != null && !genderValue.equals("")) {
 			gender.setText(": " + genderValue);
 		} else {
@@ -1930,7 +1942,7 @@ public class HomeActivity extends MapActivity implements
 
 		TextView relationshipSatus = (TextView) d
 				.findViewById(R.id.relationship_text);
-		String relationshipValue = item.getUser().getRelationshipStatus();
+		String relationshipValue = people.getRelationshipStatus();
 		if (relationshipValue != null && !relationshipValue.equals("")
 				&& !relationshipValue.equalsIgnoreCase("select...")) {
 			relationshipSatus.setText(relationshipValue);
@@ -1939,7 +1951,7 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		TextView city = (TextView) d.findViewById(R.id.city_text);
-		String cityValue = item.getUser().getCity();
+		String cityValue = people.getCity();
 		if (cityValue != null && !cityValue.equals("")) {
 			city.setText(cityValue);
 		} else {
@@ -1947,7 +1959,7 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		TextView work = (TextView) d.findViewById(R.id.work_text);
-		String workValue = item.getUser().getWorkStatus();
+		String workValue = people.getWorkStatus();
 		if (workValue != null && !workValue.equals("")) {
 			work.setText(workValue);
 		} else {
@@ -1955,16 +1967,16 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		ImageView ivOnline = (ImageView) d.findViewById(R.id.ivOnline);
-		if (item.getUser().isOnline()) {
+		if (people.isOnline()) {
 			ivOnline.setImageResource(R.drawable.online);
 		}
 
 		avatar = (ImageView) d.findViewById(R.id.avater_image);
 		avatar.setImageResource(R.drawable.img_blank);
-		String avatarUrl = item.getUser().getAvatar();
-		if (avatarUrl != null && !avatarUrl.equals("")) {
+		String avatarUrl = people.getAvatar();
+		if (Utility.isValidString(avatarUrl)) {
 
-			imageDownloader.download(avatarUrl, avatar);
+			imageFetcher.loadImage(avatarUrl, avatar, this, people.getId());
 		}
 
 		avatar.setOnClickListener(new OnClickListener() {
@@ -1973,7 +1985,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(context, ProfileActivity2.class);
-				intent.putExtra("otherUser", item.getUser());
+				intent.putExtra("otherUser", people);
 				startActivity(intent);
 			}
 		});
@@ -1989,7 +2001,7 @@ public class HomeActivity extends MapActivity implements
 		TextView tvFriendshipStatus = (TextView) d
 				.findViewById(R.id.tvFriendshipStatus);
 
-		String friendshipStatus = item.getUser().getFriendshipStatus();
+		String friendshipStatus = people.getFriendshipStatus();
 
 		Log.e("friendshipStatus", friendshipStatus);
 
@@ -2052,7 +2064,7 @@ public class HomeActivity extends MapActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				showFrndRequestDialog(item);
+				showFrndRequestDialog(people);
 			}
 		});
 
@@ -2062,7 +2074,15 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				showMessageDialog(item);
+				// showMessageDialog(item);
+
+				Intent messageDetailsIntent = new Intent(context,
+						MessageConversationFromNotificationActivity.class);
+
+				messageDetailsIntent.putExtra("recipientId", userId);
+
+				startActivity(messageDetailsIntent);
+
 			}
 
 		});
@@ -2074,11 +2094,10 @@ public class HomeActivity extends MapActivity implements
 				// TODO Auto-generated method stub
 				// d.dismiss();
 				Log.d("LAT LNG Meetup People",
-						String.valueOf(item.getUser().getCurrentLat())
-								+ " "
-								+ String.valueOf(item.getUser().getCurrentLng()));
+						String.valueOf(people.getCurrentLat()) + " "
+								+ String.valueOf(people.getCurrentLng()));
 
-				People people = item.getUser();
+				// People people = people;
 
 				Intent intent = new Intent(context,
 						MeetupRequestNewActivity.class);
@@ -2106,10 +2125,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(context, DirectionActivity.class);
-				intent.putExtra("destLat", item.getUser().getCurrentLat());
-				intent.putExtra("destLng", item.getUser().getCurrentLng());
-				intent.putExtra("destAddress", item.getUser()
-						.getCurrentAddress());
+				intent.putExtra("selectedItem", people);
 				startActivity(intent);
 			}
 		});
@@ -2117,17 +2133,18 @@ public class HomeActivity extends MapActivity implements
 		d.show();
 	}
 
-	private void showSecondDegreePeoplePopUpDetails(final CustomOverlayItem item) {
+	private void showSecondDegreePeoplePopUpDetails(
+			final SecondDegreePeople item) {
 		// TODO Auto-generated method stub
 		d = DialogsAndToasts.showExtendedInfoDialog(context,
 				R.layout.dialog_on_map_second_degree_extended);
 
 		currentBubbleDialog = d;
 
-		SecondDegreePeople secondDegreePeople = item.getSecondDegreePeople();
+		SecondDegreePeople secondDegreePeople = item;
 
 		TextView firstName = (TextView) d.findViewById(R.id.first_name_text);
-		firstName.setText(Utility.getFieldText(secondDegreePeople));
+		firstName.setText(Utility.getItemTitle(secondDegreePeople));
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
 		double distanceValue = secondDegreePeople.getDistance();
@@ -2144,15 +2161,9 @@ public class HomeActivity extends MapActivity implements
 
 		avatar = (ImageView) d.findViewById(R.id.avater_image);
 		String avatarUrl = secondDegreePeople.getAvatar();
-		if (avatarUrl != null && !avatarUrl.equals("")) {
-			new FetchImageTask() {
-				@Override
-				protected void onPostExecute(Bitmap result) {
-					if (result != null) {
-						avatar.setImageBitmap(result);
-					}
-				}
-			}.execute(secondDegreePeople.getAvatar());
+		if (Utility.isValidString(avatarUrl)) {
+			imageFetcher.loadImage(avatarUrl, avatar, this,
+					secondDegreePeople.getRefId());
 		}
 
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
@@ -2184,12 +2195,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(context, DirectionActivity.class);
-				intent.putExtra("destLat", item.getSecondDegreePeople()
-						.getCurrentLat());
-				intent.putExtra("destLng", item.getSecondDegreePeople()
-						.getCurrentLng());
-				intent.putExtra("destAddress", item.getSecondDegreePeople()
-						.getCurrentAddress());
+				intent.putExtra("selectedItem", item);
 				startActivity(intent);
 			}
 		});
@@ -2197,7 +2203,78 @@ public class HomeActivity extends MapActivity implements
 		d.show();
 	}
 
-	private void showFrndRequestDialog(final CustomOverlayItem item) {
+	private void showEventPopUpDetails(final Event event) {
+		// TODO Auto-generated method stub
+		d = DialogsAndToasts.showExtendedInfoDialog(context,
+				R.layout.dialog_on_map_event_extended);
+
+		currentBubbleDialog = d;
+
+		TextView tvName = (TextView) d.findViewById(R.id.tvName);
+		TextView tvAddress = (TextView) d.findViewById(R.id.tvAddress);
+		TextView tvDate = (TextView) d.findViewById(R.id.tvDate);
+		Button btnDetails = (Button) d.findViewById(R.id.btnDetails);
+		Button btnDirection = (Button) d.findViewById(R.id.btnDirection);
+		ImageView close_btn = (ImageView) d.findViewById(R.id.close_btn);
+
+		if (event.getEventTitle() != null) {
+			tvName.setText(event.getEventTitle());
+		} else {
+			tvName.setText("");
+		}
+
+		if (event.getAddress() != null) {
+			tvAddress.setText("at " + event.getAddress());
+		} else {
+			tvAddress.setText("");
+			tvAddress.setVisibility(View.GONE);
+		}
+
+		if (event.getEventTime() != null) {
+			tvDate.setText(Utility.getFormattedDisplayDateForMap(event
+					.getEventTime()));
+		} else {
+			tvDate.setVisibility(View.GONE);
+		}
+
+		btnDetails.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent eventDetailsIntent = new Intent(context,
+						EventDetailsActivity.class);
+				eventDetailsIntent.putExtra("selectedEvent", event);
+				eventDetailsIntent.putExtra("source", "map");
+				context.startActivity(eventDetailsIntent);
+			}
+		});
+
+		btnDirection.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context, DirectionActivity.class);
+				intent.putExtra("selectedItem", event);
+				context.startActivity(intent);
+
+			}
+		});
+
+		close_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				d.dismiss();
+			}
+		});
+
+		d.show();
+	}
+
+	private void showFrndRequestDialog(final People item) {
 		// TODO Auto-generated method stub
 		frndRequestDialog = DialogsAndToasts.showAddFrnd(context);
 		final EditText msgEditText = (EditText) frndRequestDialog
@@ -2211,7 +2288,7 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				sendFriendRequest(item.getUser().getId(), msgEditText.getText()
+				sendFriendRequest(item.getId(), msgEditText.getText()
 						.toString().trim());
 
 			}
@@ -2227,7 +2304,7 @@ public class HomeActivity extends MapActivity implements
 		frndRequestDialog.show();
 	}
 
-	private void showMessageDialog(final CustomOverlayItem item) {
+	private void showMessageDialog(final People item) {
 		// TODO Auto-generated method stub
 		msgDialog = DialogsAndToasts.showSendMessage(context);
 		final EditText msgEditText = (EditText) msgDialog
@@ -2240,8 +2317,9 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if (!msgEditText.getText().toString().trim().equals("")) {
-					sendMessage(item.getUser().getId(), "Message", msgEditText
-							.getText().toString().trim());
+					sendMessage(item.getId(), "Message", msgEditText.getText()
+							.toString().trim());
+
 				} else {
 					msgEditText.setError("Please enter your message!!");
 				}
@@ -2336,8 +2414,7 @@ public class HomeActivity extends MapActivity implements
 
 		} else {
 
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -2431,6 +2508,7 @@ public class HomeActivity extends MapActivity implements
 	}
 
 	private void sendMessage(String friendId, String subject, String content) {
+
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			sendMessageFriendId = friendId;
@@ -2441,16 +2519,17 @@ public class HomeActivity extends MapActivity implements
 					"Start send message");
 			thread.start();
 
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true, true);
+			// show progress dialog if needed m_ProgressDialog =
+			ProgressDialog.show(context,
+					getResources().getString(R.string.please_wait_text),
+					getResources().getString(R.string.sending_request_text),
+					true, true);
 
 		} else {
 
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
+
 	}
 
 	private Runnable sendMessageThread = new Runnable() {
@@ -2512,15 +2591,14 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	private class TopDrawerListener implements
+	private static final class TopDrawerListener implements
 			MultiDirectionSlidingDrawer.OnDrawerOpenListener,
 			MultiDirectionSlidingDrawer.OnDrawerCloseListener {
 
 		@Override
 		public void onDrawerClosed() {
 			// TODO Auto-generated method stub
-			Drawable openIcon = getResources().getDrawable(
-					R.drawable.btn_slider_open);
+
 			topCloseButton.setBackgroundResource(R.drawable.btn_slider_open);
 		}
 
@@ -2537,15 +2615,15 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	private class BottomDrawerListener implements
+	private static class BottomDrawerListener implements
 			MultiDirectionSlidingDrawer.OnDrawerOpenListener,
 			MultiDirectionSlidingDrawer.OnDrawerCloseListener {
 		@Override
 		public void onDrawerClosed() {
 			// TODO Auto-generated method stub
-			Drawable openIcon = getResources().getDrawable(
-					R.drawable.btn_footer_slider_open);
-			bottomCloseButton.setBackgroundDrawable(openIcon);
+
+			bottomCloseButton
+					.setBackgroundResource(R.drawable.btn_footer_slider_open);
 		}
 
 		@Override
@@ -2556,35 +2634,22 @@ public class HomeActivity extends MapActivity implements
 				topDrawer.animateClose();
 			}
 
-			Drawable closeIcon = getResources().getDrawable(
-					R.drawable.btn_footer_slider_close);
-			bottomCloseButton.setBackgroundDrawable(closeIcon);
+			bottomCloseButton
+					.setBackgroundResource(R.drawable.btn_footer_slider_close);
 		}
 
-	}
-
-	private void removeAllItemFromItemizedOverlay(
-			CustomItemizedOverlay<OverlayItem> items) {
-		items.removeAllItem();
-		items.hideAllBalloons();
-		items.populateItemizedOverlay();
-		mapView.invalidate();
-	}
-
-	private void hideAllBallonsFromItemizedOverlay(
-			CustomItemizedOverlay<OverlayItem> items) {
-		items.hideAllBalloons();
-		mapView.invalidate();
 	}
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		// TODO Auto-generated method stub
+
 		if (buttonView == peopleCheckBox) {
 			SharedPreferencesHelper.getInstance(context).setBoolean(
 					Constant.PEOPLE, isChecked);
 
 			updateMapDisplay(listContent);
+			// setMarkerVisibility(Constant.FLAG_PEOPLE, isChecked);
 		}
 		if (buttonView == placeCheckBox) {
 
@@ -2592,6 +2657,7 @@ public class HomeActivity extends MapActivity implements
 					Constant.PLACE, isChecked);
 
 			updateMapDisplay(listContent);
+			// setMarkerVisibility(Constant.FLAG_PLACE, isChecked);
 		}
 		if (buttonView == eventCheckBox) {
 
@@ -2599,6 +2665,7 @@ public class HomeActivity extends MapActivity implements
 					Constant.EVENT, isChecked);
 
 			updateMapDisplay(listContent);
+			// setMarkerVisibility(Constant.FLAG_EVENT, isChecked);
 		}
 		if (buttonView == dealCheckBox) {
 			SharedPreferencesHelper.getInstance(context).setBoolean(
@@ -2612,7 +2679,7 @@ public class HomeActivity extends MapActivity implements
 
 		Utility.hideKeyboardContext(context);
 
-		if (v == btnListView) {
+		if (v == btnListView || v == tvListView) {
 			if (StaticValues.searchResult != null) {
 				Intent showListIntent = new Intent(context,
 						ListViewActivity.class);
@@ -2628,8 +2695,11 @@ public class HomeActivity extends MapActivity implements
 		} else if (v == btnNotification) {
 			Intent i = new Intent(HomeActivity.this, NotificationActivity.class);
 			startActivity(i);
-		} else if (v == btnEvent) {
-			Intent i = new Intent(context, EventListActivity.class);
+		} else if (v == btnDirections) {
+			Intent i = new Intent(context, DirectionActivity.class);
+			startActivity(i);
+		} else if (v == btnMyPlaces) {
+			Intent i = new Intent(context, PlacesListActivity.class);
 			startActivity(i);
 		} else if (v == btnMeetup) {
 			Intent i = new Intent(context, MeetupRequestNewActivity.class);
@@ -2637,7 +2707,7 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		else if (v == btnUpdateLocation) {
-			relocationCurrentPosition();
+			// relocationCurrentPosition();
 		} else if (v == btnCircleMenu) {
 			circleMenu.setVisibility(View.VISIBLE);
 		}
@@ -2693,20 +2763,24 @@ public class HomeActivity extends MapActivity implements
 		else if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
+
+			// Log.i("btnDoSearch", "pressed");
+
 			if (listMasterContent.size() > 0
-					&& !etSearchField.getText().toString().trim()
-							.equalsIgnoreCase("")) {
+					&& !etSearchField.getText().toString().equalsIgnoreCase("")) {
 				isSearchEnabled = true;
 				doSearch();
 			}
 
 		} else if (v == btnClearSearch) {
-			if (listMasterContent.size() > 0
-					&& !etSearchField.getText().toString().trim()
-							.equalsIgnoreCase("")) {
+			etSearchField.setText("");
+			if (isSearchEnabled) {
 				isSearchEnabled = false;
-				etSearchField.setText("");
-				doSearch();
+
+				if (listMasterContent.size() > 0) {
+					doSearch();
+				}
+
 			}
 
 		}
@@ -2714,8 +2788,13 @@ public class HomeActivity extends MapActivity implements
 	}
 
 	private void doSearch() {
+
+		// Log.i("doSearch", "entered");
+
+		isNewSearch = true;
+
 		List<Object> list = Utility.getSearchResult(listMasterContent,
-				etSearchField.getText().toString().trim());
+				etSearchField.getText().toString());
 
 		listContent.clear();
 		listContent.addAll(list);
@@ -2739,26 +2818,15 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	private void relocationCurrentPosition() {
-		if (point != null) {
-			hideBallons(0, true);
-			mapController.animateTo(point);
-		}
-	}
+	@Override
+	public void onPermissionChanged(RadioGroup group, RadioButton radio,
+			Permission selectedItem) {
+		// TODO Auto-generated method stub
 
-	private class ShareWithSelectionListener implements
-			PermissionRadioGroupListener {
+		if (locationSharingPermission != selectedItem) {
+			locationSharingPermission = selectedItem;
 
-		@Override
-		public void onPermissionChanged(RadioGroup group, RadioButton radio,
-				Permission selectedItem) {
-			// TODO Auto-generated method stub
-
-			if (locationSharingPermission != selectedItem) {
-				locationSharingPermission = selectedItem;
-
-				updateLocationSharingPermission();
-			}
+			updateLocationSharingPermission();
 		}
 	}
 
@@ -2815,18 +2883,16 @@ public class HomeActivity extends MapActivity implements
 
 		// restore session if one exists
 		// SessionStore.restore(FBUtility.mFacebook, c);
-		SessionEvents.addAuthListener(fbAPIsAuthListener);
-		SessionEvents.addLogoutListener(fbAPIsLogoutListener);
+		SessionEvents.addAuthListener(this);
+		SessionEvents.addLogoutListener(this);
 
 		btnFBLogin.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				FBUtility.mFacebook
-						.authorize(HomeActivity.this,
-								Constant.facebookPermissions,
-								new LoginDialogListener());
+				FBUtility.mFacebook.authorize(HomeActivity.this,
+						Constant.facebookPermissions, HomeActivity.this);
 			}
 		});
 
@@ -2845,81 +2911,61 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	/*
-	 * The Callback for notifying the application when authorization succeeds or
-	 * fails.
-	 */
+	@Override
+	public void onAuthSucceed() {
 
-	private class FbAPIsAuthListener implements AuthListener {
+		initInviteFriends();
+		isFirstTimeFbdialog.dismiss();
 
-		// @Override
-		@Override
-		public void onAuthSucceed() {
-
-			initInviteFriends();
-			isFirstTimeFbdialog.dismiss();
-
-		}
-
-		// @Override
-		@Override
-		public void onAuthFail(String error) {
-			Log.e("HomeActivity", "Login Failed: " + error);
-		}
 	}
 
-	/*
-	 * The Callback for notifying the application when log out starts and
-	 * finishes.
-	 */
-	private class FbAPIsLogoutListener implements LogoutListener {
-		// @Override
-		@Override
-		public void onLogoutBegin() {
-			Log.e("HomeActivity", "Logging out...");
-		}
-
-		// @Override
-		@Override
-		public void onLogoutFinish() {
-			Log.e("HomeActivity", "You have logged out! ");
-
-			Utility.setFacebookImage(context, null);
-
-			FBUtility.mFacebook.authorize(HomeActivity.this,
-					Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH,
-					new LoginDialogListener());
-		}
+	// @Override
+	@Override
+	public void onAuthFail(String error) {
+		Log.e("HomeActivity", "Login Failed: " + error);
 	}
 
-	private final class LoginDialogListener implements DialogListener {
-		// @Override
-		@Override
-		public void onComplete(Bundle values) {
-			Log.e("LoginDialogListener", "onComplete");
-			SessionEvents.onLoginSuccess();
-		}
+	@Override
+	public void onLogoutBegin() {
+		Log.e("HomeActivity", "Logging out...");
+	}
 
-		// @Override
-		@Override
-		public void onFacebookError(FacebookError error) {
-			Log.e("LoginDialogListener", "onFacebookError");
-			SessionEvents.onLoginError(error.getMessage());
-		}
+	// @Override
+	@Override
+	public void onLogoutFinish() {
+		Log.e("HomeActivity", "You have logged out! ");
 
-		// @Override
-		@Override
-		public void onError(DialogError error) {
-			Log.e("LoginDialogListener", "onError");
-			SessionEvents.onLoginError(error.getMessage());
-		}
+		Utility.setFacebookImage(context, null);
 
-		// @Override
-		@Override
-		public void onCancel() {
-			Log.e("LoginDialogListener", "onCancel");
-			SessionEvents.onLoginError("Action Canceled");
-		}
+		FBUtility.mFacebook.authorize(HomeActivity.this,
+				Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH, this);
+	}
+
+	@Override
+	public void onComplete(Bundle values) {
+		Log.e("LoginDialogListener", "onComplete");
+		SessionEvents.onLoginSuccess();
+	}
+
+	// @Override
+	@Override
+	public void onFacebookError(FacebookError error) {
+		Log.e("LoginDialogListener", "onFacebookError");
+		SessionEvents.onLoginError(error.getMessage());
+	}
+
+	// @Override
+	@Override
+	public void onError(DialogError error) {
+		Log.e("LoginDialogListener", "onError");
+		SessionEvents.onLoginError(error.getMessage());
+	}
+
+	// @Override
+	@Override
+	public void onCancel() {
+		Log.e("LoginDialogListener", "onCancel");
+		SessionEvents.onLoginError("Action Canceled");
 	}
 
 	@Override
@@ -2927,6 +2973,368 @@ public class HomeActivity extends MapActivity implements
 		super.onActivityResult(requestCode, resultCode, data);
 
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
+	}
+
+	private void updateMapDisplayOnRegionChange() {
+
+		if (mapUpdateTimer != null) {
+			mapUpdateTimer.cancel();
+		}
+
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+
+				runOnUiThread(mapUpdateTimerTask);
+
+			}
+		};
+		mapUpdateTimer = new Timer();
+		mapUpdateTimer.schedule(timerTask, mapUpdateInterval);
+
+	}
+
+	private Runnable mapUpdateTimerTask = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			updateMapDisplay(listContent);
+		}
+	};
+
+	@Override
+	public void onCameraChange(CameraPosition position) {
+		// TODO Auto-generated method stub
+		Log.i("HomeActivity", "onCameraChange");
+
+		updateMapDisplayOnRegionChange();
+
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker marker) {
+		// TODO Auto-generated method stub
+		// lastClickedMarker = marker;
+
+		if (visibleItemsOnMap != null) {
+
+			Object item = visibleItemsOnMap.get(marker.getId());
+			if (!marker.isVisible()) {
+				return true;
+			} else if (item instanceof Event) {
+				// lastClickedMarker = null;
+
+				showEventPopUpDetails((Event) item);
+
+				return true;
+			}
+
+			Log.i("onMarkerClick", Utility.getItemTitle(item));
+		}
+
+		return false;
+	}
+
+	@Override
+	public void onMapLongClick(LatLng arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onMapClick(LatLng arg0) {
+		// TODO Auto-generated method stub
+		// lastClickedMarker = null;
+
+	}
+
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		// TODO Auto-generated method stub
+		Object item = visibleItemsOnMap.get(marker.getId());
+		// contents = inflater.inflate(R.layout.content_party, null);
+
+		if (item != null) {
+			getCustomInfoWindow(item);
+			// lastClickedMarker = null;
+			marker.hideInfoWindow();
+		}
+	}
+
+	private void getCustomInfoWindow(Object item) {
+
+		if (item instanceof People) {
+
+			showPeoplePopUpDetails((People) item);
+
+		} else if (item instanceof SecondDegreePeople) {
+
+			showSecondDegreePeoplePopUpDetails((SecondDegreePeople) item);
+
+		} else if (item instanceof Place) {
+
+			showPlacePopUpDetails((Place) item);
+
+		} else if (item instanceof Event) {
+
+		} else if (item instanceof GeoTag) {
+
+		} else if (item instanceof MeetupRequest) {
+
+		}
+
+	}
+
+	@Override
+	public void onDownloadComplete(final String itemId, final Bitmap bitmap,
+			final String imageUrl) {
+		// TODO Auto-generated method stub
+		Log.i("ImageDownloaded:" + itemId, imageUrl);
+
+		// Log.i("ImageDownloaded:>>"+itemId, imageUrl);
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				Log.i("ImageDownloaded:>>" + itemId, imageUrl);
+				if (markerUpdateList.containsKey(itemId)) {
+					if (!markerUpdateList.get(itemId)) {
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								updateMarker(itemId, bitmap);
+							}
+						});
+
+					}
+				}
+			}
+		}, 1000);
+
+	}
+
+	public synchronized void updateMarker(String itemId, Bitmap bitmap) {
+
+		Object item = objectList.get(itemId);
+		if (item != null) {
+
+			boolean isInfoWindowShown = false;
+			boolean isVisible = false;
+
+			if (visibleItemsOnMap.containsValue(item)) {
+				visibleItemsOnMap.values().remove(item);
+			}
+			if (visibleMarkers.containsKey(itemId)) {
+				Marker markerOld = visibleMarkers.get(itemId);
+				if (markerOld != null) {
+					isInfoWindowShown = markerOld.isInfoWindowShown();
+					isVisible = markerOld.isVisible();
+					markerOld.remove();
+				}
+
+			}
+
+			Drawable profilePic = new BitmapDrawable(bitmap);
+			MarkerOptions markerOptions = getMarkerOptions(item, profilePic);
+
+			if (markerOptions != null) {
+				Marker marker = mapView.addMarker(markerOptions);
+				visibleItemsOnMap.put(marker.getId(), item);
+				visibleMarkers.put(itemId, marker);
+				markerUpdateList.put(itemId, true);
+
+				customInfoWindowAdapter = new CustomInfoWindowAdapter(context,
+						getLayoutInflater(), visibleItemsOnMap, imageFetcher,
+						this);
+
+				mapView.setInfoWindowAdapter(customInfoWindowAdapter);
+				if (!isVisible) {
+					marker.setVisible(isVisible);
+				} else if (isInfoWindowShown) {
+					marker.showInfoWindow();
+				}
+			}
+
+		}
+
+	}
+
+	private void updateMarkerVisibility() {
+
+		boolean isPeople = SharedPreferencesHelper.getInstance(context)
+				.getBoolean(Constant.PEOPLE, true);
+
+		boolean isPlace = SharedPreferencesHelper.getInstance(context)
+				.getBoolean(Constant.PLACE, false);
+
+		boolean isEvent = SharedPreferencesHelper.getInstance(context)
+				.getBoolean(Constant.EVENT, false);
+
+		if (objectList != null) {
+			for (String itemId : objectList.keySet()) {
+				Object item = objectList.get(itemId);
+				if (item instanceof People
+						|| item instanceof SecondDegreePeople) {
+					visibleMarkers.get(itemId).setVisible(isPeople);
+				} else if (item instanceof Place) {
+					visibleMarkers.get(itemId).setVisible(isPlace);
+				} else if (item instanceof Event) {
+					Marker marker = visibleMarkers.get(itemId);
+					if (marker != null) {
+						marker.setVisible(isEvent);
+					}
+				}
+			}
+		}
+
+	}
+
+	private void setMarkerVisibility(int flag, boolean isChecked) {
+		if (objectList != null) {
+			for (String itemId : objectList.keySet()) {
+				Object item = objectList.get(itemId);
+				if ((flag == Constant.FLAG_PEOPLE)
+						&& (item instanceof People || item instanceof SecondDegreePeople)) {
+					visibleMarkers.get(itemId).setVisible(isChecked);
+				} else if ((flag == Constant.FLAG_PLACE)
+						&& item instanceof Place) {
+					visibleMarkers.get(itemId).setVisible(isChecked);
+				} else if ((flag == Constant.FLAG_EVENT)
+						&& item instanceof Event) {
+					Marker marker = visibleMarkers.get(itemId);
+					if (marker != null) {
+						marker.setVisible(isChecked);
+					}
+				}
+			}
+		}
+	}
+
+	private void validateExistingMarkers() {
+		// TODO Auto-generated method stub
+		// listMasterContent
+		// objectList
+
+		// visibleItemsOnMap
+		// visibleMarkers
+
+		List<String> itemIdList = new ArrayList<String>();
+
+		for (Object listItem : listMasterContent) {
+			String itemId = Utility.getItemId(listItem);
+			itemIdList.add(itemId);
+
+			if (objectList.containsKey(itemId)) {
+				Object oldItem = objectList.get(itemId);
+
+				LatLng newLatLng = Utility.getLatLngFromObject(oldItem);
+				LatLng oldLatLng = Utility.getLatLngFromObject(listItem);
+
+				if (newLatLng.latitude != oldLatLng.latitude
+						|| newLatLng.longitude != oldLatLng.longitude) {
+					// update visibleItemsOnMap
+					// update visibleMarkers
+					// update objectList
+
+					Marker oldMarker = visibleMarkers.get(itemId);
+					String oldMarkerId = null;
+					if (oldMarker != null) {
+						oldMarkerId = oldMarker.getId();
+						oldMarker.remove();
+						visibleItemsOnMap.remove(oldMarkerId);
+					}
+
+					visibleMarkers.remove(itemId);
+					objectList.remove(itemId);
+
+					MarkerOptions markerOptions = getMarkerOptions(listItem);
+					if (markerOptions != null) {
+						Marker marker = mapView.addMarker(markerOptions);
+						visibleItemsOnMap.put(marker.getId(), listItem);
+						visibleMarkers.put(itemId, marker);
+						objectList.put(itemId, listItem);
+						markerUpdateList.put(itemId, false);
+					}
+
+				}
+
+			}
+		}
+
+		for (String itemId : ((HashMap<String, Object>) objectList.clone())
+				.keySet()) {
+			if (!itemIdList.contains(itemId)) {
+				Marker oldMarker = visibleMarkers.get(itemId);
+				String oldMarkerId = null;
+				if (oldMarker != null) {
+					oldMarkerId = oldMarker.getId();
+					oldMarker.remove();
+					visibleItemsOnMap.remove(oldMarkerId);
+				}
+				visibleMarkers.remove(itemId);
+				objectList.remove(itemId);
+				markerUpdateList.remove(itemId);
+			}
+		}
+
+	}
+
+	boolean isTimerRunning = false;
+	Timer markerUpdateTimer = new Timer();
+
+	private class MarkerUpdateTask extends TimerTask {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					validateMarkers();
+				}
+			});
+		}
+	}
+
+	private void validateMarkers() {
+
+		Log.i("HomeActivity", "validateMarkers");
+		HashMap<String, Boolean> tempMap = (HashMap<String, Boolean>) markerUpdateList
+				.clone();
+
+		ImageView imageView = new ImageView(context);
+		imageView.setVisibility(View.GONE);
+		for (String itemId : tempMap.keySet()) {
+			if (!tempMap.get(itemId)) {
+				Object object = objectList.get(itemId);
+				if (object != null) {
+					String imageUrl = Utility.getItemImageUrl(object);
+					if (Utility.isValidString(imageUrl)) {
+						Log.i("HomeActivity:validateMarkers", "retrying:"+imageUrl);
+						imageFetcher.loadImage(imageUrl, imageView,
+								HomeActivity.this, itemId);
+					}
+				}
+
+			}
+		}
+
+	}
+
+	private void validateFacebookSession() {
+		if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook)
+				&& !Utility.isFacebookSessionValid(context)) {
+
+			finish();
+			startActivity(new Intent(context, LoginActivity.class));
+
+		}
+
 	}
 
 }

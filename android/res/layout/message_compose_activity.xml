@@ -70,9 +70,9 @@
                     android:layout_height="40dip"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/btnFriendSelect"
-                    android:ems="10"
                     android:hint="by name"
-                    android:textSize="12dip" />
+                    android:textSize="12dip" 
+                    android:textColor="@color/black"/>
 
                 <Button
                     android:id="@+id/btnCircleSelect"
@@ -134,8 +134,7 @@
                          <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Friend List" />
-                            -->
+                        android:text="Friend List" />-->
                         </LinearLayout>
                     </HorizontalScrollView>
                 </ScrollView>
@@ -155,12 +154,10 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <!--
-                         <TextView
+                        <!-- <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Circle List" />
-                        -->
+                        android:text="Circle List" /> -->
                     </LinearLayout>
                 </ScrollView>
             </RelativeLayout>
@@ -198,12 +195,13 @@
         </LinearLayout>
     </ScrollView>
 
+    
     <RelativeLayout
         android:id="@+id/linearLayoutFoot"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#FFF7F7F7" 
+        android:background="#00F7F7F7" 
         >
 
         <View
@@ -220,12 +218,11 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:gravity="top"
             android:hint="Your message..."
             android:minLines="2"
             android:textColor="@color/black"
             android:textSize="13dip" 
-            android:inputType="textCapSentences"/>
+            android:inputType="textMultiLine|textCapSentences"/>
 
         <LinearLayout
             android:id="@+id/buttonContainer"

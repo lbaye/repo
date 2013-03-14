@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,10 +29,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
@@ -45,7 +44,7 @@ import com.socmaps.util.Utility;
  *
  */
 
-public class RecommendationActivity extends Activity {
+public class RecommendationActivity extends FragmentActivity {
 
 	Context context;
 
@@ -72,7 +71,7 @@ public class RecommendationActivity extends Activity {
 	ScrollView scrollViewFriends;
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 	private Place place;
 
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
@@ -105,7 +104,25 @@ public class RecommendationActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		Utility.updateNotificationBubbleCounter(btnNotification);
-
+		imageFetcher.setExitTasksEarly(false);
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		imageFetcher.closeCache();
 	}
 
 	@Override
@@ -120,7 +137,7 @@ public class RecommendationActivity extends Activity {
 
 		context = RecommendationActivity.this;
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		buttonActionListener = new ButtonActionListener();
 
@@ -249,13 +266,13 @@ public class RecommendationActivity extends Activity {
 		String avatarUrl = fEntity.getAvatar();
 
 		String name = "";
-		name = Utility.getFieldText(fEntity);
+		name = Utility.getItemTitle(fEntity);
 		nameView.setText(name);
 
 		selectedFriends.put(id, false);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-			imageDownloader.download(avatarUrl, profilePic);
+			imageFetcher.loadImage(avatarUrl, profilePic);
 		}
 
 		if (backupSelectedFriends.containsKey(id)) {

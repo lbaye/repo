@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -226,6 +228,7 @@ public class RestClient {
 		HttpResponse httpResponse;
 
 		try {
+			request.addHeader("Accept-Encoding", "gzip");
 			httpResponse = client.execute(request);
 			responseCode = httpResponse.getStatusLine().getStatusCode();
 			message = httpResponse.getStatusLine().getReasonPhrase();
@@ -235,6 +238,12 @@ public class RestClient {
 			if (entity != null) {
 
 				InputStream instream = entity.getContent();
+				Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
+				if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+				    instream = new GZIPInputStream(instream);
+				}
+				
+				
 				response = convertStreamToString(instream);
 
 				// Closing the input stream will trigger connection release

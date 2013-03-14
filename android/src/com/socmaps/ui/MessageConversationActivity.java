@@ -10,12 +10,12 @@ import java.util.TimerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,9 +29,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MessageEntity;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -43,7 +42,7 @@ import com.socmaps.util.Utility;
  * and user can participate to the particular conversation.
  * 
  */
-public class MessageConversationActivity extends Activity {
+public class MessageConversationActivity extends FragmentActivity {
 
 	ButtonActionListener buttonActionListener;
 	Button btnSend;
@@ -74,7 +73,9 @@ public class MessageConversationActivity extends Activity {
 
 	HashMap<String, Boolean> displayedMessageList = new HashMap<String, Boolean>();
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
+	
+	Timer timer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class MessageConversationActivity extends Activity {
 	private void getRepliesPeriodically() {
 		final int delay = 30;
 		long period = fetchNewRepliesAfter;
-		Timer timer = new Timer();
+		timer = new Timer();
 
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -192,15 +193,19 @@ public class MessageConversationActivity extends Activity {
 								.containsKey(messageId);
 						if (!isDisplayed) {
 							View rView = getListItem(replyMessageEntity);
-							messageListContainer.addView(rView);
-							displayedMessageList.put(messageId, true);
+							if(rView!=null)
+							{
+								messageListContainer.addView(rView);
+								displayedMessageList.put(messageId, true);
+							}
+							
 						}
 
 					}
 				}
 				// end of replies
 
-				etNewMessage.setText("");
+				//etNewMessage.setText("");
 
 				scrollToBottom();
 
@@ -236,8 +241,11 @@ public class MessageConversationActivity extends Activity {
 						tvThreadTitle.setText(messageInfoMap.get("title"));
 
 						View v = getListItem(messages);
-
-						messageListContainer.addView(v);
+						if(v!=null)
+						{
+							messageListContainer.addView(v);
+						}
+						
 
 						// add replies here
 						List<MessageEntity> meList = messages.getReplies();
@@ -250,8 +258,12 @@ public class MessageConversationActivity extends Activity {
 										.containsKey(messageId);
 								if (!isDisplayed) {
 									View rView = getListItem(meList.get(j));
-									messageListContainer.addView(rView);
-									displayedMessageList.put(messageId, true);
+									if(rView!=null)
+									{
+										messageListContainer.addView(rView);
+										displayedMessageList.put(messageId, true);
+									}
+									
 								}
 							}
 						}
@@ -289,15 +301,21 @@ public class MessageConversationActivity extends Activity {
 		TextView senderMessage = (TextView) v.findViewById(R.id.senderMessage);
 
 		String name = "";
-		if (mEntity.getSenderFirstName() != null) {
-			name = mEntity.getSenderFirstName() + " ";
-
+		if(Utility.isValidString(mEntity.getSenderUserName()))
+		{
+			name = mEntity.getSenderUserName();
 		}
-		if (mEntity.getSenderLastName() != null) {
-			name += mEntity.getSenderLastName();
+		else
+		{
+			if (mEntity.getSenderFirstName() != null) {
+				name = mEntity.getSenderFirstName() + " ";
 
+			}
+			if (mEntity.getSenderLastName() != null) {
+				name += mEntity.getSenderLastName();
+
+			}
 		}
-
 		senderName.setText(name);
 
 		if (mEntity.getUpdateTimeEntity() != null) {
@@ -309,6 +327,10 @@ public class MessageConversationActivity extends Activity {
 			String messageText = mEntity.getContent();
 
 			senderMessage.setText(messageText);
+		}
+		else
+		{
+			return null;
 		}
 
 		Button btnDirection = (Button) v.findViewById(R.id.btnDirection);
@@ -343,7 +365,7 @@ public class MessageConversationActivity extends Activity {
 		context = MessageConversationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		btnSend = (Button) findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(buttonActionListener);
@@ -367,13 +389,29 @@ public class MessageConversationActivity extends Activity {
 		super.onResume();
 
 		scrollToBottom();
+		
+		imageFetcher.setExitTasksEarly(false);
 
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		if(timer!=null)
+		{
+			timer.cancel();
+		}
+		
+		imageFetcher.closeCache();
 	}
 
 	@Override
@@ -441,7 +479,7 @@ public class MessageConversationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -488,6 +526,8 @@ public class MessageConversationActivity extends Activity {
 			Toast.makeText(MessageGroupActivity.group,
 					"Message sent successfully.", Toast.LENGTH_SHORT).show();
 
+			etNewMessage.setText("");
+			
 			getReplies();
 
 		} else {
@@ -516,14 +556,33 @@ public class MessageConversationActivity extends Activity {
 			// Build message title
 			String id = recipient.get("id");
 			if (!id.equals(userId)) {
-				recipientNames.add(recipient.get("firstName"));
+				
+				String name = recipient.get("username");
+				
+				if(Utility.isValidString(name))
+				{
+					recipientNames.add(name);
+				}
+				else
+				{
+					recipientNames.add(recipient.get("firstName"));
+				}
 				recipientAvatars.add(recipient.get("avatar"));
 			}
 		}
 
 		// Build message title and set it over "title" key
 		if (recipientNames.isEmpty()) {
-			info.put("title", message.getSenderFirstName());
+			
+			if(Utility.isValidString(message.getSenderUserName()))
+			{
+				info.put("title", message.getSenderUserName());
+			}
+			else
+			{
+				info.put("title", message.getSenderFirstName());
+			}
+			//info.put("title", message.getSenderFirstName());
 		} else {
 			info.put("title", Utility.joinString(recipientNames, ", "));
 		}

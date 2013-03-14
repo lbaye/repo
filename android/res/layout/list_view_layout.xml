@@ -2,16 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/gray_light" >
+    android:background="@color/gray_light"
+    android:id="@+id/rootLayout" >
 
     <RelativeLayout
         android:id="@+id/layoutHeader"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:background="@drawable/header"
+        android:orientation="horizontal"
         android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:orientation="horizontal" >
+        android:paddingRight="10dip" >
 
         <Button
             android:id="@+id/btnSearch"
@@ -37,12 +38,12 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/selector_icon_notification"
-            android:text="0"
-            android:textSize="10dip"
-            android:textStyle="normal"
-            android:textColor="@color/black"
             android:paddingBottom="12dip"
-            android:paddingRight="2dip" />
+            android:paddingRight="2dip"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="10dip"
+            android:textStyle="normal" />
     </RelativeLayout>
 
     <include
@@ -83,8 +84,7 @@
             android:layout_toLeftOf="@+id/btnSearchResult"
             android:hint="@string/hint_search_home"
             android:textSize="12dip" />
-    </RelativeLayout>
-    -->
+    </RelativeLayout> -->
 
     <ListView
         android:id="@+id/content_list"
@@ -94,12 +94,7 @@
         android:background="@color/transparent"
         android:cacheColorHint="@android:color/white" />
 
-    <!--
-    hasan.mahadi: "0prmApk3Xe_F-FvVvg6OoEj7t6lo6iI9yq1k1qA"
-    GENWEB2 KEY: "0prmApk3Xe_ErirjTS0lzMu3WuxvqqvyVQAz1qw"
-    Masum="0prmApk3Xe_HK1vKiYUE5ziBsLlLJGHAAN-AOIA"
-    modak.plabon="0PikUOPdseVupj0_kmKvOSRvvFPB5s3bebEhOiA"
-    -->
+
 
     <com.socmaps.widget.MultiDirectionSlidingDrawer
         xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
@@ -127,7 +122,7 @@
         xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
         android:id="@+id/bottomDrawer"
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:background="#00000000"
         my:content="@+id/bottomContent"
@@ -144,7 +139,7 @@
             android:layout_height="24dp"
             android:background="@drawable/btn_footer_slider_open" />
     </com.socmaps.widget.MultiDirectionSlidingDrawer>
-    
+
     <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"

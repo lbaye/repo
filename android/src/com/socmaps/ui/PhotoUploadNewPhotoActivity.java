@@ -29,7 +29,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Place;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
@@ -82,6 +81,9 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	private String savePhotoResponse;
 	private int savePhotoStatus;
 	private String title, description;
+	
+	private final int REQUEST_CODE_CAMERA = 100;
+	private final int REQUEST_CODE_GALLERY = 101;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -174,9 +176,9 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 				Toast.makeText(getApplicationContext(), items[item],
 						Toast.LENGTH_SHORT).show();
 				if (items[item].equals("Gallery")) {
-					requestCode = Constant.REQUEST_CODE_GALLERY;
+					requestCode = REQUEST_CODE_GALLERY;
 				} else {
-					requestCode = Constant.REQUEST_CODE_CAMERA;
+					requestCode = REQUEST_CODE_CAMERA;
 				}
 				onOptionItemSelected(requestCode);
 			}
@@ -188,14 +190,14 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
-		case Constant.REQUEST_CODE_GALLERY:
+		case REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
 					Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
-		case Constant.REQUEST_CODE_CAMERA:
+		case REQUEST_CODE_CAMERA:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
@@ -207,16 +209,12 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
+		if (requestCode == REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
-
-				if (photoIcon != null) {
-					
-				}
 
 				photoIcon = Utility.resizeBitmap(
 						(Bitmap) data.getExtras().get("data"),
-						Constant.photoWidth, 0, true);
+						Constant.photoWidth*2, 0, true);
 
 				ivPhoto.setImageBitmap(photoIcon);
 
@@ -226,7 +224,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 				return;
 			}
 
-		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
+		} else if (requestCode == REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 				
 				Uri selectedImage = data.getData();
@@ -361,8 +359,8 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	private void getCurrentLocationAddress() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
-				latitude = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				longitude = StaticValues.myPoint.getLongitudeE6() / 1E6;
+				latitude = StaticValues.myPoint.latitude;
+				longitude = StaticValues.myPoint.longitude;
 				Utility.getAddressByCoordinate(latitude, longitude,
 						new LocationAddressHandler());
 
@@ -448,8 +446,8 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		double currentLng = 0;
 
 		if (StaticValues.myPoint != null) {
-			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+			currentLat = StaticValues.myPoint.latitude;
+			currentLng = StaticValues.myPoint.longitude;
 
 		}
 
@@ -508,7 +506,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			} else {
 
 				DialogsAndToasts
-						.showNoInternetConnectionDialog(getApplicationContext());
+						.showNoInternetConnectionDialog(context);
 			}
 
 		} else {

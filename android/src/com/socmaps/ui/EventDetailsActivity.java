@@ -3,13 +3,13 @@ package com.socmaps.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -24,10 +24,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -41,7 +40,7 @@ import com.socmaps.widget.PeoplePickerListener;
  * EventDetailsActivity class for generating event details view and some user interaction.
  *
  */
-public class EventDetailsActivity extends Activity implements OnClickListener {
+public class EventDetailsActivity extends FragmentActivity implements OnClickListener {
 
 	private TextView eventNameText, eventDateTimeText, shortSummaryText,
 			venueText, distanceText, descriptionText;
@@ -72,7 +71,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	private Event selectedEvent;
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 
 	String source = "";
 	String s = "";
@@ -301,7 +300,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			if (selectedEvent.getEventImageUrl() != null) {
 
 				if (!selectedEvent.getEventImageUrl().equalsIgnoreCase("")) {
-					imageDownloader.download(selectedEvent.getEventImageUrl(),
+					imageFetcher.loadImage(selectedEvent.getEventImageUrl(),
 							eventImage);
 				}
 
@@ -346,25 +345,16 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		String firstName = people.getFirstName();
-		String lastName = people.getLastName();
 		final String id = people.getId();
 		String avatarUrl = people.getAvatar();
 
 		String name = "";
-
-		if (firstName != null) {
-			name = firstName + " ";
-		}
-		if (lastName != null) {
-			name += lastName;
-		}
-
+		name = Utility.getItemTitle(people);
 		nameView.setText(name);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			imageDownloader.download(avatarUrl, profilePic);
+			imageFetcher.loadImage(avatarUrl, profilePic);
 
 		} else {
 
@@ -392,7 +382,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		context = EventDetailsActivity.this;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher = new ImageFetcher(context);
 
 		eventNameText = (TextView) findViewById(R.id.event_name_text);
 		eventDateTimeText = (TextView) findViewById(R.id.event_date_text);
@@ -419,32 +409,23 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		imageFetcher.setExitTasksEarly(false);
 	}
-
+	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-			if (source != null) {
-				if (source.equalsIgnoreCase("map")) {
-
-					StaticValues.isHighlightAnnotation = true;
-					StaticValues.highlightAnnotationItem = selectedEvent;
-
-					Intent intent = new Intent(context, HomeActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-				} else {
-					finish();
-				}
-			} else {
-				finish();
-			}
-
-		}
-		return false;
-
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
 	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+        imageFetcher.flushCache();
+	}
+
 
 	@Override
 	public void onClick(View v) {
@@ -729,4 +710,32 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		}
 	};
 
+	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+			if (source != null) {
+				if (source.equalsIgnoreCase("map")) {
+					
+					finish();
+
+//					StaticValues.isHighlightAnnotation = true;
+//					StaticValues.highlightAnnotationItem = selectedEvent;
+//
+//					Intent intent = new Intent(context, HomeActivity.class);
+//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//					startActivity(intent);
+				} else {
+					finish();
+				}
+			} else {
+				finish();
+			}
+
+		}
+		return false;
+
+	}
 }

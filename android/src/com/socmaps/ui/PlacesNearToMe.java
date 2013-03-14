@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,25 +24,27 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
+import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
-import com.socmaps.images.ImageDownloader;
-import com.socmaps.listrow.ListItemClickListener;
+import com.socmaps.images.ImageFetcher;
+
+import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.ListItemClickListenerPlace;
 import com.socmaps.listrow.PlaceRowFactory;
 import com.socmaps.listrow.RowType;
+
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.ListComparator;
 
 /**
- * PlacesNearToMe class is used to show all the places that are in near position from my 
- * own location. Places are shown in a list.
- *
+ * PlacesNearToMe class is used to show all the places that are in near position
+ * from my own location. Places are shown in a list.
+ * 
  */
 
-public class PlacesNearToMe extends Activity implements OnClickListener,
-		ListItemClickListener {
+public class PlacesNearToMe extends FragmentActivity implements OnClickListener {
 
 	private Button btnNotification;
 	private Button btnMyPlaces, btnBack;
@@ -62,6 +64,9 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 
 	boolean isSearchEnabled = false;
 
+	private ImageFetcher imageFetcher;
+	private ListComparator listComparator;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +82,8 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	protected void onResume() {
 		super.onResume();
 
+		imageFetcher.setExitTasksEarly(false);
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 		populateMasterList();
@@ -88,6 +95,7 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	private void initialize() {
 
 		context = PlacesNearToMe.this;
+		listComparator = new ListComparator();
 
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 		btnNotification.setOnClickListener(this);
@@ -115,6 +123,8 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 		btnClearSearch.setOnClickListener(this);
 
 		etSearchField = (EditText) findViewById(R.id.etSearchField);
+
+		imageFetcher = new ImageFetcher(context);
 
 	}
 
@@ -211,33 +221,10 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	}
 
 	private void sortMasterListData() {
-		Collections.sort(this.listMasterContent, new ListComparator());
+		Collections.sort(this.listMasterContent, listComparator);
 	}
 
-	class ListComparator implements Comparator<Object> {
-
-		@Override
-		public int compare(Object first, Object last) {
-			double firstDistance = getDistance(first);
-			double lastDistance = getDistance(last);
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-
-		private double getDistance(Object object) {
-			if (object instanceof Place)
-				return ((Place) object).getDistance();
-
-			else
-				return 0;
-		}
-
-	}
+	
 
 	private void addPlacesToMasterList() {
 
@@ -254,17 +241,17 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	protected void onPause() {
 		super.onPause();
 
+		imageFetcher.setExitTasksEarly(true);
+		imageFetcher.flushCache();
 	}
 
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			imageDownloader = ImageDownloader.getInstance();
 
 		}
 
@@ -303,8 +290,8 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 
 			if (getItemViewType(position) == RowType.PLACE.ordinal()) {
 				return PlaceRowFactory.getView(LayoutInflater.from(context),
-						items.get(position), context, PlacesNearToMe.this,
-						convertView, imageDownloader, new PlaceItemListener());
+						items.get(position), context, convertView,
+						imageFetcher, new PlaceItemListener());
 			} else {
 				return null;
 			}
@@ -312,44 +299,71 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 
 	}
 
-	private class PlaceItemListener implements ListItemClickListenerPlace {
+	private class PlaceItemListener implements ListItemClickListenerPeople {
 
 		@Override
-		public void onItemClick(Place place) {
+		public void onItemClick(People people) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void onArrowButtonClick(Place place) {
+		public void onArrowButtonClick(People people) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void onReviewButtonClick(Place place) {
+		public void onInviteButtonClick(People people) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void onShowOnMapButtonClick(Place place) {
+		public void onAddFriendButtonClick(People people) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onBlockButtonClick(People people) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onUnBlockButtonClick(People people) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onShowOnMapButtonClick(Object item) {
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = place;
+			StaticValues.highlightAnnotationItem = item;
 
-			Intent intent = new Intent(context, HomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			finish();
 		}
 
-	}
+		@Override
+		public void onSendMessageButtonClick(People people) {
+			// TODO Auto-generated method stub
 
-	@Override
-	public void onMapButtonClick(int flag) {
-		Intent intent = new Intent(context, ShowItemOnMap.class);
-		intent.putExtra("FLAG", flag);
-		startActivity(intent);
+		}
+
+		@Override
+		public void onMeetupButtonClick(People people) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCheckChange(String itemId, boolean isChecked) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 	private void doSearch() {
@@ -398,6 +412,9 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+
+		imageFetcher.closeCache();
+
 		System.gc();
 	}
 

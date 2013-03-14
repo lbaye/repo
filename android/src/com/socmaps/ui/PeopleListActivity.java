@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +29,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
 import com.socmaps.entity.SecondDegreePeople;
-import com.socmaps.images.ImageDownloader;
-import com.socmaps.listrow.ListItemClickListener;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.ListItemClickListenerSecondDegreePeople;
 import com.socmaps.listrow.PeopleRowFactory2;
@@ -45,17 +43,20 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.ListComparator;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
 
 /**
- * PeopleListActivity class is used show a list of people based on distance, invitation, 
- * circle & block/unblock. Each tab has different actions; in block/unblock, user can block/unblock a particular user, 
- * in circle, user can create new circle & put people into it or put people from one circle to another or rename a circle, 
- * in invitation, user can sent invitation to his facebook friends to use socialmap. 
+ * PeopleListActivity class is used show a list of people based on distance,
+ * invitation, circle & block/unblock. Each tab has different actions; in
+ * block/unblock, user can block/unblock a particular user, in circle, user can
+ * create new circle & put people into it or put people from one circle to
+ * another or rename a circle, in invitation, user can sent invitation to his
+ * facebook friends to use socialmap.
  */
 
-public class PeopleListActivity extends Activity implements OnClickListener,
-		ListItemClickListener, OnCheckedChangeListener {
+public class PeopleListActivity extends FragmentActivity implements
+		OnClickListener, OnCheckedChangeListener {
 
 	private Button btnBack, btnPeopleInvite, btnCirclePeople,
 			btnBlockUnblockPeople, btnPeopleByDistance;
@@ -77,10 +78,12 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private CheckBox socialmapsCheckBox, facebookCheckBox;
 
 	private boolean checkBoxFlag = false;
-	
+
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
+	private ImageFetcher imageFetcher;
+	private ListComparator listComparator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,23 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 
 		updateContentList(listMasterContent);
 		updateDisplayList(listContent);
+
+		imageFetcher.setExitTasksEarly(false);
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
 	}
 
 	/*
@@ -110,6 +130,9 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private void initialize() {
 
 		context = PeopleListActivity.this;
+		
+		listComparator = new ListComparator();
+		
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
@@ -156,32 +179,34 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		btnClearSearch = (Button) findViewById(R.id.btnClearSearch);
 		btnClearSearch.setOnClickListener(this);
 
+		imageFetcher = new ImageFetcher(context);
+
 	}
 
 	@Override
 	public void onClick(View v) {
 
 		Utility.hideKeyboardContext(context);
-		
+
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
-			
+
 			isSearchEnabled = true;
 			doSearch();
 			hideKeybord();
-			
+
 		} else if (v == btnClearSearch) {
-			
+
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
 			hideKeybord();
-			
+
 		} else if (v == btnPeopleInvite) {
 
 			Intent inviteIntent = new Intent(getApplicationContext(),
-					PeopleInvityActivity.class);
+					PeopleInviteActivity.class);
 
 			inviteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(inviteIntent);
@@ -209,9 +234,9 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	}
 
 	private void getIntentData() {
-		
+
 		peoplesAndPlacesEntity = StaticValues.searchResult;
-		
+
 	}
 
 	private void setListParameters() {
@@ -238,13 +263,11 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			
-			imageDownloader = ImageDownloader.getInstance();
+
 		}
 
 		@Override
@@ -285,15 +308,15 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 
 			if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
 				return PeopleRowFactory2.getView(LayoutInflater.from(context),
-						items.get(position), context, PeopleListActivity.this,
-						convertView, imageDownloader, new PeopleItemListener());
+						items.get(position), context, convertView,
+						imageFetcher, new PeopleItemListener());
 			}
 			if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal()) {
 				return SecondDegreePeopleRowFactory2.getView(
 						LayoutInflater.from(context), items.get(position),
-						context, PeopleListActivity.this, convertView,
-						imageDownloader, new SecondDegreePeopleItemListener());
-			}else {
+						context, convertView, imageFetcher,
+						new SecondDegreePeopleItemListener());
+			} else {
 				return null;
 			}
 
@@ -394,36 +417,10 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	}
 
 	private void sortMasterListData() {
-		Collections.sort(this.listMasterContent, new ListComparator());
+		Collections.sort(this.listMasterContent, listComparator);
 	}
 
-	private class ListComparator implements Comparator<Object> {
-
-		@Override
-		public int compare(Object first, Object last) {
-			double firstDistance = getDistance(first);
-			double lastDistance = getDistance(last);
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-
-		private double getDistance(Object object) {
-			if (object instanceof People)
-				return ((People) object).getDistance();
-			else if (object instanceof Place)
-				return ((Place) object).getDistance();
-			else if (object instanceof SecondDegreePeople)
-				return ((SecondDegreePeople) object).getDistance();
-			else
-				return 0;
-		}
-
-	}
+	
 
 	private class PeopleItemListener implements ListItemClickListenerPeople {
 
@@ -464,19 +461,20 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		}
 
 		@Override
-		public void onShowOnMapButtonClick(People people) {
+		public void onShowOnMapButtonClick(Object people) {
 			// TODO Auto-generated method stub
 
+			// StaticValues.isHighlightAnnotation = true;
+			// StaticValues.highlightAnnotationItem = people;
+			// finish();
+
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-			//finish(); 
-			
 			StaticValues.highlightAnnotationItem = people;
 
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-			
+			finish();
 
 		}
 
@@ -544,9 +542,7 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = people;
 
-			Intent intent = new Intent(context, HomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			finish();
 		}
 
 		@Override
@@ -593,14 +589,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onMapButtonClick(int flag) {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, ShowItemOnMap.class);
-		intent.putExtra("FLAG", flag);
-		startActivity(intent);
-	}
-
-	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		// TODO Auto-generated method stub
 		if (!checkBoxFlag) {
@@ -620,8 +608,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			updateDisplayList(listContent);
 		}
 	}
-
-	
 
 	/*
 	 * Hide Keybord

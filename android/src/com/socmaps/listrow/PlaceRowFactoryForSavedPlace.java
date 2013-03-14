@@ -9,9 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.maps.GeoPoint;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -34,8 +35,6 @@ public class PlaceRowFactoryForSavedPlace {
 	 *            an object of type Place.
 	 * @param con
 	 *            current state of the application/object.
-	 * @param licl
-	 *            which is used for a specific action when button is clicked.
 	 * @param convertView
 	 *            as view.
 	 * @param il
@@ -51,8 +50,8 @@ public class PlaceRowFactoryForSavedPlace {
 
 	public static View getView(final LayoutInflater inflater,
 			final Place placeObj, final Context con,
-			final ListItemClickListener licl, final View convertView,
-			final ImageDownloader il,
+			 final View convertView,
+			final ImageFetcher il,
 			final ListItemClickListenerPlace listItemClickListenerPlace, int a) {
 		final ViewHolder holder;
 		View view;
@@ -84,9 +83,9 @@ public class PlaceRowFactoryForSavedPlace {
 		if (place.getStreetViewImage() != null
 				&& !place.getStreetViewImage().equals("")) {
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
-			il.download(place.getStreetViewImage(), holder.coverPhoto);
+			il.loadImage(place.getStreetViewImage(), holder.coverPhoto);
 		} else {
-			holder.coverPhoto.setImageResource(R.drawable.cover_pic_place);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
 		}
 
 		// ******************************************************************current
@@ -101,8 +100,8 @@ public class PlaceRowFactoryForSavedPlace {
 		if (StaticValues.myPoint != null) {
 			holder.distanceText.setText(Utility.getFormatedDistance(Utility
 					.calculateDistance(StaticValues.myPoint,
-							new GeoPoint((int) (place.getLatitude() * 1E6),
-									(int) (place.getLongitude() * 1E6))),
+							new LatLng(place.getLatitude(),
+									place.getLongitude() )),
 					StaticValues.myInfo.getSettings().getUnit()));
 		}
 

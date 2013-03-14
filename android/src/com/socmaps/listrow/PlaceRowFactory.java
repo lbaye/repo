@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
@@ -31,11 +32,9 @@ public class PlaceRowFactory {
 	 *            an object of type Place.
 	 * @param con
 	 *            current state of the application/object.
-	 * @param licl
-	 *            which is used for a specific action when button is clicked.
 	 * @param convertView
 	 *            as view.
-	 * @param il
+	 * @param imageFetcher
 	 *            which is used to download image from a specific url.
 	 * @param listItemClickListenerPlace
 	 *            which is used for a specific action when button is clicked.
@@ -45,9 +44,9 @@ public class PlaceRowFactory {
 
 	public static View getView(final LayoutInflater inflater,
 			final Object placeObj, final Context con,
-			final ListItemClickListener licl, final View convertView,
-			final ImageDownloader il,
-			final ListItemClickListenerPlace listItemClickListenerPlace) {
+			 final View convertView,
+			final ImageFetcher imageFetcher,
+			final ListItemClickListenerPeople listItemClickListenerPlace) {
 		final ViewHolder holder;
 		View view;
 		final Place place;
@@ -81,15 +80,15 @@ public class PlaceRowFactory {
 		if (iconUrl != null) {
 
 			holder.avatar.setImageResource(R.drawable.img_blank);
-			il.download(iconUrl, holder.avatar);
+			imageFetcher.loadImage(iconUrl, holder.avatar);
 		}
 
 		if (place.getStreetViewImage() != null
 				&& !place.getStreetViewImage().equals("")) {
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
-			il.download(place.getStreetViewImage(), holder.coverPhoto);
+			imageFetcher.loadImage(place.getStreetViewImage(), holder.coverPhoto);
 		} else {
-			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
 		}
 
 		// ******************************************************************current

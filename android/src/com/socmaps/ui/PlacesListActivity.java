@@ -7,13 +7,13 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,10 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
-import com.socmaps.listrow.ListItemClickListener;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.ListItemClickListenerPlace;
 import com.socmaps.listrow.PlaceRowFactoryForSavedPlace;
 import com.socmaps.listrow.RowType;
@@ -45,14 +43,16 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.ListComparator;
 
-/** 
- * PlacesListActivity class is used to show those places in a list which are liked by user( user himself or a particular user). 
- * There is options like Edit or Delete if is shows user's own place list.
+/**
+ * PlacesListActivity class is used to show those places in a list which are
+ * liked by user( user himself or a particular user). There is options like Edit
+ * or Delete if is shows user's own place list.
  */
 
-public class PlacesListActivity extends Activity implements OnClickListener,
-		ListItemClickListener {
+public class PlacesListActivity extends FragmentActivity implements
+		OnClickListener {
 
 	private Button btnBack, btnNearToMe;
 	private ListView contentListView;
@@ -74,6 +74,8 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 	private String personName = "";
 	private TextView titlePlaceEditSave;
+	private ImageFetcher imageFetcher;
+	private ListComparator listComparator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,25 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		setListParameters();
 
 		Log.w("PlacesListActivity ", "onResume()");
+		imageFetcher.setExitTasksEarly(false);
 
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+
+		imageFetcher.setExitTasksEarly(true);
+		imageFetcher.flushCache();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+		imageFetcher.closeCache();
 	}
 
 	/*
@@ -108,6 +128,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private void initialize() {
 
 		context = PlacesListActivity.this;
+		listComparator = new ListComparator();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -146,6 +167,8 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		if (personName != null && !personName.equals("")) {
 			titlePlaceEditSave.setText(personName + "'s" + " Places");
 		}
+
+		imageFetcher = new ImageFetcher(context);
 
 	}
 
@@ -199,12 +222,11 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Place> items;
-		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Place> itemsList) {
 
 			this.items = itemsList;
-			imageDownloader = ImageDownloader.getInstance();
+
 		}
 
 		@Override
@@ -242,13 +264,13 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 				if (personID == null) {
 					return PlaceRowFactoryForSavedPlace.getView(
 							LayoutInflater.from(context), items.get(position),
-							context, PlacesListActivity.this, convertView,
-							imageDownloader, new PlaceItemListener(), 1);
+							context, convertView, imageFetcher,
+							new PlaceItemListener(), 1);
 				} else if (personID != null) {
 					return PlaceRowFactoryForSavedPlace.getView(
 							LayoutInflater.from(context), items.get(position),
-							context, PlacesListActivity.this, convertView,
-							imageDownloader, new PlaceItemListener(), 2);
+							context, convertView, imageFetcher,
+							new PlaceItemListener(), 2);
 				} else {
 					return null;
 				}
@@ -287,31 +309,10 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	}
 
 	private void sortMasterListData() {
-		Collections.sort(this.listMasterContent, new ListComparator());
+		Collections.sort(this.listMasterContent, listComparator);
 	}
 
-	private class ListComparator implements Comparator<Place> {
-
-		@Override
-		public int compare(Place first, Place last) {
-			double firstDistance = getDistance(first);
-			double lastDistance = getDistance(last);
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-
-		private double getDistance(Place object) {
-
-			return object.getDistance();
-
-		}
-
-	}
+	
 
 	private class PlaceItemListener implements ListItemClickListenerPlace {
 
@@ -342,24 +343,14 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 		@Override
 		public void onShowOnMapButtonClick(Place place) {
-			// TODO Auto-generated method stub
+
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = place;
 
-			Intent intent = new Intent(context, HomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			finish();
 
 		}
 
-	}
-
-	@Override
-	public void onMapButtonClick(int flag) {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(context, ShowItemOnMap.class);
-		intent.putExtra("FLAG", flag);
-		startActivity(intent);
 	}
 
 	private void callAPI() {

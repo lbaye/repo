@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.socmaps.entity.People;
 import com.socmaps.entity.Photo;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -37,7 +37,7 @@ import com.socmaps.widget.PhotoZoomDialogPicker;
  * There is an option to zoom in a particular photo. 
  */
 
-public class PhotoListActivity extends Activity implements OnClickListener {
+public class PhotoListActivity extends FragmentActivity implements OnClickListener {
 
 	private Context context;
 	private Button btnSearch, btnNotification, btnBack, btnUploadNewPhoto,
@@ -57,7 +57,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 	private String responseString = "";
 	private int responseStatus = 0;
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageFetcher;
 	private String userID = null;
 	private People people;
 
@@ -97,7 +97,29 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		}
 
 		Log.d("onResume", "PhotoListActivity");
+		
+		imageFetcher.setExitTasksEarly(false);
 
+	}
+	
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		isUploadNewPhoto = false;
+		Log.w("onPause()", "PhotoListActivity");
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		imageFetcher.closeCache();
 	}
 
 	private void initialize() {
@@ -132,14 +154,14 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		selectedPhoto = new HashMap<String, Boolean>();
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher =new ImageFetcher(context);
 
 		if (userID != null) {
 			btnUploadNewPhoto.setVisibility(View.GONE);
 			btnDeletePhotos.setVisibility(View.GONE);
 			ivSeperator.setVisibility(View.GONE);
 			buttonContainerTop.setGravity(Gravity.LEFT);
-			btnMyPhotos.setText(people.getFirstName() + "'s" + " " + "photos");
+			btnMyPhotos.setText(Utility.getItemTitle(people) + "'s" + " " + "photos");
 		}
 
 	}
@@ -210,7 +232,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		final String id = photo.getId();
 
 		if (photo.getImageThumb() != null && photo.getImageThumb() != "") {
-			imageDownloader.download(photo.getImageThumb(), ivPhoto);
+			imageFetcher.loadImage(photo.getImageThumb(), ivPhoto);
 		}
 
 		ivPhoto.setOnClickListener(new View.OnClickListener() {
@@ -249,7 +271,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 
 				PhotoZoomDialogPicker photoZoomPicker = new PhotoZoomDialogPicker(
-						context, "CIRCLE LIST", photoList, imageDownloader,
+						context, "CIRCLE LIST", photoList,
 						photoList.indexOf(photo));
 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
@@ -384,12 +406,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		isUploadNewPhoto = false;
-		Log.w("onPause()", "PhotoListActivity");
-	}
+	
 
 	private void initiateDeletePhotos() {
 		if (Utility.isConnectionAvailble(context)) {

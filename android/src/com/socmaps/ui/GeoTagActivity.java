@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,6 +24,7 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -47,11 +47,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
@@ -69,7 +68,7 @@ import com.socmaps.widget.PermissionRadioGroup;
  * GeoTagActivity class responsible for creating geo tag view.
  *
  */
-public class GeoTagActivity extends Activity implements PeoplePickerListener {
+public class GeoTagActivity extends FragmentActivity implements PeoplePickerListener {
 
 	Button btnBack, btnNotification;
 	Button btnList, btnDescription, btnPhoto, btnCancel, btnSave;
@@ -121,8 +120,11 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 	String permissionValue = "";
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
+	
+	private final int REQUEST_CODE_CAMERA = 100;
+	private final int REQUEST_CODE_GALLERY = 101;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +146,18 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 		Log.i("EventNewActivity:onResume memory before",
 				"" + Debug.getNativeHeapAllocatedSize());
+		
+		imageFetcher.setExitTasksEarly(false);
 
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
 	}
 
 	@Override
@@ -153,6 +166,8 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		if (eventPicture != null) {
 			eventPicture.recycle();
 		}
+		
+		imageFetcher.closeCache();
 	}
 
 	@Override
@@ -176,8 +191,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 		context = GeoTagActivity.this;
 
-		imageDownloader = ImageDownloader.getInstance();
-
+		imageFetcher = new ImageFetcher(context);
 		buttonActionListener = new ButtonActionListener();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
@@ -527,14 +541,14 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		String avatarUrl = fEntity.getAvatar();
 
 		String name = "";
-		name = Utility.getFieldText(fEntity);
+		name = Utility.getItemTitle(fEntity);
 		nameView.setText(name);
 
 		selectedFriends.put(id, false);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			imageDownloader.download(avatarUrl, profilePic);
+			imageFetcher.loadImage(avatarUrl, profilePic);
 
 		}
 
@@ -788,9 +802,9 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 				Toast.makeText(getApplicationContext(), items[item],
 						Toast.LENGTH_SHORT).show();
 				if (items[item].equals("Gallery")) {
-					requestCode = Constant.REQUEST_CODE_GALLERY;
+					requestCode = REQUEST_CODE_GALLERY;
 				} else {
-					requestCode = Constant.REQUEST_CODE_CAMERA;
+					requestCode = REQUEST_CODE_CAMERA;
 				}
 				onOptionItemSelected(requestCode);
 			}
@@ -802,14 +816,14 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
-		case Constant.REQUEST_CODE_GALLERY:
+		case REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
 					Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
-		case Constant.REQUEST_CODE_CAMERA:
+		case REQUEST_CODE_CAMERA:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
@@ -821,7 +835,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
+		if (requestCode == REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
 
 				if (eventPicture != null) {
@@ -837,7 +851,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 				return;
 			}
 
-		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
+		} else if (requestCode == REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 
 				Uri selectedImage = data.getData();
@@ -926,8 +940,8 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	private void getCurrentLocationAddress() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
-				eventLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				eventLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+				eventLat = StaticValues.myPoint.latitude;
+				eventLng = StaticValues.myPoint.longitude;
 				Utility.getAddressByCoordinate(eventLat, eventLng,
 						new LocationAddressHandler());
 
@@ -980,8 +994,8 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		double currentLng = 0;
 
 		if (StaticValues.myPoint != null) {
-			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+			currentLat = StaticValues.myPoint.latitude;
+			currentLng = StaticValues.myPoint.longitude;
 
 		}
 

@@ -2,10 +2,8 @@ package com.socmaps.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,18 +30,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
 import com.socmaps.entity.SecondDegreePeople;
-import com.socmaps.images.ImageDownloader;
-import com.socmaps.listrow.ListItemClickListener;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.ListItemClickListenerPeople;
-import com.socmaps.listrow.ListItemClickListenerPlace;
-import com.socmaps.listrow.ListItemClickListenerSecondDegreePeople;
 import com.socmaps.listrow.PeopleRowFactory;
 import com.socmaps.listrow.PlaceRowFactory;
 import com.socmaps.listrow.RowType;
@@ -51,14 +47,16 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.ListComparator;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
 
 /**
- * LayerPreferencesActivity class for generating all users and places list view and some user interaction.
- *
+ * LayerPreferencesActivity class for generating all users and places list view
+ * and some user interaction.
+ * 
  */
-public class ListViewActivity extends Activity implements
-		OnCheckedChangeListener, OnClickListener, ListItemClickListener {
+public class ListViewActivity extends FragmentActivity implements
+		OnCheckedChangeListener, OnClickListener, ListItemClickListenerPeople {
 
 	Button btnNotification;
 	Button topCloseButton, bottomCloseButton;
@@ -73,6 +71,7 @@ public class ListViewActivity extends Activity implements
 	private SearchResult peoplesAndPlacesEntity;
 	private Button btnMapView, btnListView, btnCircle, btnToggleSearchPanel,
 			btnDoSearch, btnClearSearch;
+	private TextView tvMapView;
 	private boolean checkBoxFlag = false;
 	private CheckBox peopleCheckBox, placeCheckBox, dealCheckBox;
 	private RelativeLayout searchPanel;
@@ -95,6 +94,9 @@ public class ListViewActivity extends Activity implements
 	double lng;
 	double latitude, longitude;
 
+	private ImageFetcher mImageFetcher;
+	private ListComparator listComparator;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,6 +112,8 @@ public class ListViewActivity extends Activity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		mImageFetcher.setExitTasksEarly(false);
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
@@ -145,6 +149,8 @@ public class ListViewActivity extends Activity implements
 
 		context = ListViewActivity.this;
 
+		listComparator = new ListComparator();
+
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 		btnNotification.setOnClickListener(this);
 
@@ -168,6 +174,9 @@ public class ListViewActivity extends Activity implements
 		btnMapView = (Button) vBottom.findViewById(R.id.btnMapView);
 		btnMapView.setOnClickListener(this);
 
+		tvMapView = (TextView) vBottom.findViewById(R.id.tvMapView);
+		tvMapView.setOnClickListener(this);
+
 		btnCircle = (Button) vBottom.findViewById(R.id.btnCircle);
 		btnCircle.setOnClickListener(this);
 
@@ -183,7 +192,8 @@ public class ListViewActivity extends Activity implements
 		listMasterContent = new ArrayList<Object>();
 		listContent = new ArrayList<Object>();
 		listDisplayableContent = new ArrayList<Object>();
-		contentAdapter = new ContentListAdapter(context, listDisplayableContent);
+		contentAdapter = new ContentListAdapter(getApplicationContext(),
+				listDisplayableContent);
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -219,6 +229,9 @@ public class ListViewActivity extends Activity implements
 		btnCircleMenuItemNewsfeed.setOnClickListener(this);
 		btnCircleMenuItemSettings = (Button) findViewById(R.id.btnCircleMenuItemSettings);
 		btnCircleMenuItemSettings.setOnClickListener(this);
+
+		mImageFetcher = new ImageFetcher(context);
+
 	}
 
 	private void setOnCheckChangeListener() {
@@ -240,7 +253,57 @@ public class ListViewActivity extends Activity implements
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+
+		mImageFetcher.closeCache();
+		
+
+		peoplesAndPlacesEntity = null;
+		listMasterContent = null;
+		listContent = null;
+		listDisplayableContent = null;
+		mImageFetcher = null;
+
+		contentAdapter = null;
+
+		RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+		rootLayout.removeAllViews();
+
+		unbindReferences(ListViewActivity.this, R.id.rootLayout);
+
 		System.gc();
+	}
+
+	public static void unbindReferences(FragmentActivity activity, int viewID) {
+		try {
+			View view = activity.findViewById(viewID);
+			if (view != null) {
+
+				if (view instanceof ViewGroup)
+					unbindViewGroupReferences((ViewGroup) view);
+			}
+			System.gc();
+		} catch (Throwable e) {
+			// whatever exception is thrown just ignore it because a crash is
+			// always worse than this method not doing what it's supposed to do
+		}
+	}
+
+	private static void unbindViewGroupReferences(ViewGroup viewGroup) {
+		int nrOfChildren = viewGroup.getChildCount();
+
+		for (int i = 0; i < nrOfChildren; i++) {
+			View view = viewGroup.getChildAt(i);
+			// unbindViewReferences(view);
+			if (view instanceof ViewGroup)
+				unbindViewGroupReferences((ViewGroup) view);
+		}
+
+		try {
+			viewGroup.removeAllViews();
+		} catch (Throwable mayHappen) {
+			// AdapterViews, ListViews and potentially other ViewGroups don't
+			// support the removeAllViews operation
+		}
 	}
 
 	private void updateContentList(List<Object> list) {
@@ -304,35 +367,7 @@ public class ListViewActivity extends Activity implements
 	}
 
 	private void sortMasterListData() {
-		Collections.sort(this.listMasterContent, new ListComparator());
-	}
-
-	class ListComparator implements Comparator<Object> {
-
-		@Override
-		public int compare(Object first, Object last) {
-			double firstDistance = getDistance(first);
-			double lastDistance = getDistance(last);
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-
-		private double getDistance(Object object) {
-			if (object instanceof People)
-				return ((People) object).getDistance();
-			else if (object instanceof Place)
-				return ((Place) object).getDistance();
-			else if (object instanceof SecondDegreePeople)
-				return ((SecondDegreePeople) object).getDistance();
-			else
-				return 0;
-		}
-
+		Collections.sort(this.listMasterContent, listComparator);
 	}
 
 	private void addPlacesToMasterList() {
@@ -381,6 +416,9 @@ public class ListViewActivity extends Activity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		mImageFetcher.setExitTasksEarly(true);
+		mImageFetcher.flushCache();
 
 	}
 
@@ -461,14 +499,11 @@ public class ListViewActivity extends Activity implements
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-
-		private ImageDownloader imageDownloader;
+		private Context context;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
-
+			this.context = context;
 			this.items = itemsList;
-			imageDownloader = ImageDownloader.getInstance();
-
 		}
 
 		@Override
@@ -509,21 +544,20 @@ public class ListViewActivity extends Activity implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-
 			if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
 				return PeopleRowFactory.getView(LayoutInflater.from(context),
-						items.get(position), context, ListViewActivity.this,
-						convertView, imageDownloader, new PeopleItemListener());
-			}
-			if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal()) {
+						items.get(position), context, convertView,
+						mImageFetcher, ListViewActivity.this);
+			} else if (getItemViewType(position) == RowType.SECOND_DEGREE
+					.ordinal()) {
 				return SecondDegreePeopleRowFactory.getView(
 						LayoutInflater.from(context), items.get(position),
-						context, ListViewActivity.this, convertView,
-						imageDownloader, new SecondDegreePeopleItemListener());
+						context, convertView, mImageFetcher,
+						ListViewActivity.this);
 			} else if (getItemViewType(position) == RowType.PLACE.ordinal()) {
 				return PlaceRowFactory.getView(LayoutInflater.from(context),
-						items.get(position), context, ListViewActivity.this,
-						convertView, imageDownloader, new PlaceItemListener());
+						items.get(position), context, convertView,
+						mImageFetcher, ListViewActivity.this);
 			} else {
 				return null;
 			}
@@ -531,181 +565,9 @@ public class ListViewActivity extends Activity implements
 
 	}
 
-	private class PeopleItemListener implements ListItemClickListenerPeople {
-
-		@Override
-		public void onItemClick(People people) {
-			// TODO Auto-generated method stub
-			// send user to profile screen with people object
-
-			Intent intent = new Intent(context, ProfileActivity2.class);
-			intent.putExtra("otherUser", people);
-			Log.d("People Age", people.getAge() + "");
-			startActivity(intent);
-			finish();
-
-		}
-
-		@Override
-		public void onArrowButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onInviteButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onAddFriendButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onBlockButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onUnBlockButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onShowOnMapButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-
-			finish();
-
-		}
-
-		@Override
-		public void onSendMessageButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onMeetupButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCheckChange(String itemId, boolean isChecked) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	private class SecondDegreePeopleItemListener implements
-			ListItemClickListenerSecondDegreePeople {
-
-		@Override
-		public void onItemClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onArrowButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onInviteButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onAddFriendButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onBlockButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onUnBlockButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onShowOnMapButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-			finish();
-		}
-
-		@Override
-		public void onSendMessageButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onMeetupButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCheckChange(String itemId, boolean isChecked) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	private class PlaceItemListener implements ListItemClickListenerPlace {
-
-		@Override
-		public void onItemClick(Place place) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onArrowButtonClick(Place place) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onReviewButtonClick(Place place) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onShowOnMapButtonClick(Place place) {
-			// TODO Auto-generated method stub
-			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = place;
-			finish();
-		}
-
-	}
-
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 
 			if (circleMenu.getVisibility() == View.VISIBLE) {
@@ -721,7 +583,10 @@ public class ListViewActivity extends Activity implements
 			}
 
 		}
+
 		return false;
+
+		// return super.onKeyDown(keyCode, event);
 
 	}
 
@@ -730,7 +595,7 @@ public class ListViewActivity extends Activity implements
 
 		Utility.hideKeyboardContext(context);
 
-		if (v == btnMapView) {
+		if (v == btnMapView || v == tvMapView) {
 			this.finish();
 		} else if (v == btnCircle) {
 			if (bottomDrawer.isOpened()) {
@@ -850,16 +715,9 @@ public class ListViewActivity extends Activity implements
 		}
 	};
 
-	@Override
-	public void onMapButtonClick(int flag) {
-		Intent intent = new Intent(context, ShowItemOnMap.class);
-		intent.putExtra("FLAG", flag);
-		startActivity(intent);
-	}
-
 	private void doSearch() {
 		List<Object> list = (Utility.getSearchResult(listMasterContent,
-				etSearchField.getText().toString().trim()));
+				etSearchField.getText().toString()));
 
 		listContent.clear();
 		listContent.addAll(list);
@@ -881,6 +739,74 @@ public class ListViewActivity extends Activity implements
 		} else {
 			searchPanel.setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	public void onItemClick(People people) {
+		// send user to profile screen with people object
+
+		Intent intent = new Intent(context, ProfileActivity2.class);
+		intent.putExtra("otherUser", people);
+		Log.d("People Age", people.getAge() + "");
+		startActivity(intent);
+		finish();
+
+	}
+
+	@Override
+	public void onArrowButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onInviteButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAddFriendButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onBlockButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnBlockButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onShowOnMapButtonClick(Object item) {
+		// TODO Auto-generated method stub
+		StaticValues.isHighlightAnnotation = true;
+		StaticValues.highlightAnnotationItem = item;
+		finish();
+	}
+
+	@Override
+	public void onSendMessageButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onMeetupButtonClick(People people) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onCheckChange(String itemId, boolean isChecked) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

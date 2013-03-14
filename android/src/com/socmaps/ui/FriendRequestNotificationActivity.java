@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.FriendRequest;
 import com.socmaps.util.Constant;
@@ -83,7 +82,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -244,7 +243,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -345,7 +344,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -436,7 +435,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 

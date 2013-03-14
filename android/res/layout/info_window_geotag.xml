@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/balloon_main_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@id/balloon_inner_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_weight="1"
+        android:background="@drawable/balloon_overlay_bg_selector"
+        android:gravity="center_vertical"
+        android:minWidth="200dip"
+        android:orientation="horizontal"
+        android:paddingBottom="25dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="0dip" >
+
+        <ImageView
+            android:id="@+id/balloon_item_image"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_marginBottom="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="10dip"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rounded_border_image_bg_white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="10dip" >
+
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="12dip" />
+
+            <TextView
+                android:id="@+id/user_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="balloon_item_snippet"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="12dip" />
+
+            <TextView
+                android:id="@+id/address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="balloon_item_snippet"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="12dip" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

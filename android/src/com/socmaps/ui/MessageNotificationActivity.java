@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MessageEntity;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
@@ -28,8 +27,9 @@ import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
 /**
- * MessageNotificationActivity class for generating message notification view and some user interaction.
- *
+ * MessageNotificationActivity class for generating message notification view
+ * and some user interaction.
+ * 
  */
 public class MessageNotificationActivity extends Activity {
 
@@ -63,12 +63,12 @@ public class MessageNotificationActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
 			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+					.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class MessageNotificationActivity extends Activity {
 			handleResponseMessage(messageStatus, messageResponse);
 
 			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 		}
@@ -146,20 +146,55 @@ public class MessageNotificationActivity extends Activity {
 											.findViewById(R.id.sentTime);
 									TextView senderMessage = (TextView) v
 											.findViewById(R.id.senderMessage);
+									
+									
 
-									String name = "";
-									if (messageEntity.getSenderFirstName() != null) {
+									String name = "";									
+									if (Utility.isValidString(messageEntity
+											.getSenderUserName())) {
 										name = messageEntity
-												.getSenderFirstName() + " ";
+												.getSenderUserName();
+									} else {
+										if (messageEntity.getSenderFirstName() != null) {
+											name = messageEntity
+													.getSenderFirstName() + " ";
 
+										}
+										if (messageEntity.getSenderLastName() != null) {
+											name += messageEntity
+													.getSenderLastName();
+
+										}
 									}
-									if (messageEntity.getSenderLastName() != null) {
-										name += messageEntity
-												.getSenderLastName();
+									
+									String lastSenderName = "";
+									if (Utility.isValidString(messageEntity
+											.getLastSenderUserName())) {
+										lastSenderName = messageEntity
+												.getLastSenderUserName();
+									} else {
+										if (messageEntity.getLastSenderFirstName() != null) {
+											lastSenderName = messageEntity
+													.getLastSenderFirstName() + " ";
 
+										}
+										if (messageEntity.getLastSenderLastName() != null) {
+											lastSenderName += messageEntity
+													.getLastSenderLastName();
+
+										}
 									}
-
-									senderName.setText(name);
+									
+									
+									if(Utility.isValidString(lastSenderName))
+									{
+										senderName.setText(lastSenderName);
+									}
+									else
+									{
+										senderName.setText(name);
+									}
+									
 
 									if (messageEntity.getUpdateTimeEntity() != null) {
 										sentTime.setText(Utility
@@ -167,7 +202,10 @@ public class MessageNotificationActivity extends Activity {
 														.getUpdateTimeEntity()));
 									}
 
-									if (messageEntity.getContent() != null) {
+									if (messageEntity.getLastMessage() != null) {
+										senderMessage.setText(messageEntity
+												.getLastMessage());
+									} else if (messageEntity.getContent() != null) {
 										senderMessage.setText(messageEntity
 												.getContent());
 									}
@@ -176,15 +214,37 @@ public class MessageNotificationActivity extends Activity {
 
 										@Override
 										public void onClick(View arg0) {
-											
-											Intent i = new Intent(context,
+
+											Intent i = new Intent(
+													context,
 													MessageConversationFromNotificationActivity.class);
 											i.putExtra("itemThreadId", threadId);
-											i.putExtra("itemMessageId", messageId);
+											i.putExtra("itemMessageId",
+													messageId);
 
 											startActivity(i);
-											
+
 											v.setVisibility(View.GONE);
+
+											// I think i have to do something
+											// here to count down notification
+
+											if (StaticValues.myInfo != null) {
+												StaticValues.myInfo
+														.getNotificationCount()
+														.setMessageCount(
+																StaticValues.myInfo
+																		.getNotificationCount()
+																		.getMessageCount() - 1);
+												StaticValues.myInfo
+														.getNotificationCount()
+														.setTotalCount(
+																StaticValues.myInfo
+																		.getNotificationCount()
+																		.getTotalCount() - 1);
+
+											}
+
 										}
 									});
 
@@ -236,16 +296,16 @@ public class MessageNotificationActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		if(StaticValues.myInfo!=null)
-		{
-			NotificationActivity ta = (NotificationActivity) this
-					.getParent();
+
+		if (StaticValues.myInfo != null) {
+			NotificationActivity ta = (NotificationActivity) this.getParent();
 			TabHost th = ta.getMyTabHost();
 			View tab = th.getChildAt(0);
 			final TextView tabLabel = (TextView) tab
 					.findViewById(R.id.tvItemCountDisplay);
-			tabLabel.setText("" + StaticValues.myInfo.getNotificationCount().getMessageCount());
+			tabLabel.setText(""
+					+ StaticValues.myInfo.getNotificationCount()
+							.getMessageCount());
 		}
 
 	}

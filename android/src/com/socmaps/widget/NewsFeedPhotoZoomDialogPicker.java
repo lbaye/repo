@@ -16,7 +16,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 
 
@@ -30,7 +30,7 @@ public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 
 	LinearLayout photoContainer;
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageDownloader;
 
 	List<ImageView> itemViewList;
 
@@ -48,13 +48,13 @@ public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 	 */
 
 	public NewsFeedPhotoZoomDialogPicker(Context context, String url,
-			ImageDownloader imageDownloader) {
+			ImageFetcher imageDownloader) {
 		super(context);
 
 		this.url = url;
 
 		this.imageDownloader = imageDownloader;
-		this.imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		
 
 		/** It will hide the title */
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -68,7 +68,7 @@ public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 	private void loadImage() {
 		if (url != null) {
 			iv.setImageResource(R.drawable.img_blank);
-			imageDownloader.download(url, iv);
+			imageDownloader.loadImage(url, iv);
 		}
 	}
 

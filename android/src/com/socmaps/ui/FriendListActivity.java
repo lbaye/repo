@@ -11,11 +11,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -30,13 +30,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.readystatesoftware.mapviewballoons.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SecondDegreePeople;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.BackProcess;
 import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
@@ -45,13 +44,15 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
-
+import com.socmaps.widget.ListComparator;
+import com.socmaps.widget.ListComparator.COMPARATOR;
 
 /**
- * FriendListActivity class for generating friend list (by distance,circle and a to z) view and some user interaction.
- *
+ * FriendListActivity class for generating friend list (by distance,circle and a
+ * to z) view and some user interaction.
+ * 
  */
-public class FriendListActivity extends Activity implements OnClickListener {
+public class FriendListActivity extends FragmentActivity implements OnClickListener {
 
 	private enum SelectedTab {
 		ATOZ, DISTANCE, CIRCLES
@@ -76,7 +77,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	private HashMap<String, Boolean> selectedPhoto;
 
-	private ImageDownloader imageDownloader;
+	private ImageFetcher imageFetcher;
 
 	private String personID = null;
 
@@ -85,14 +86,21 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	private List<Circle> tempCircleList;
 
 	private int colorButtonSelected;
+	TextView titleTxt;
+
+	private String personName = "";
+	
+	private ListComparator listComparator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_layout);
 
-		initialize();
 		personID = getIntent().getStringExtra("PERSON_ID");
+		personName = getIntent().getStringExtra("PERSON_NAME");
+
+		initialize();
 
 		if (personID == null) {
 			if (StaticValues.myInfo != null) {
@@ -115,16 +123,35 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		super.onResume();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
+		imageFetcher.setExitTasksEarly(false);
 
 	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		imageFetcher.closeCache();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+	}
+	
 
 	private void initialize() {
 
 		context = FriendListActivity.this;
+		listComparator = new ListComparator();
 
-		personID = getIntent().getStringExtra("PERSON_ID");
-		if (personID != null)
-			Log.d("Person ID", personID);
+		// personID = getIntent().getStringExtra("PERSON_ID");
+		// if (personID != null)
+		// Log.d("Person ID", personID);
 
 		selectedTab = SelectedTab.ATOZ.ordinal();
 
@@ -168,7 +195,21 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedPhoto = new HashMap<String, Boolean>();
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageFetcher =new ImageFetcher(context);
+				
+		titleTxt = (TextView) findViewById(R.id.titleTxtFriend);
+
+		if (personID != null) {
+
+			Log.i("person id in friend list in if block>>", personID);
+
+			if (personName != null && !personName.equals("")) {
+				titleTxt.setText(personName + "'s" + " friends");
+			}
+		} else {
+			// Log.i("person id in friend list in else block>>",personID);
+			titleTxt.setText("Friends");
+		}
 	}
 
 	@Override
@@ -256,7 +297,9 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 			int counter = 0;
 			for (int i = 0; i < tempFriendList.size(); i++) {
-				String firstNameTemp = tempFriendList.get(i).getFirstName();
+				// String firstNameTemp = tempFriendList.get(i).getFirstName();
+				String firstNameTemp = Utility.getItemTitle(tempFriendList
+						.get(i));
 				if (isHeader(startingChar, firstNameTemp)) {
 					if (i > 0) {
 						addAlreadyCreatedRow(itemRow);
@@ -301,10 +344,10 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				LayoutParams.WRAP_CONTENT));
 
 		if (people.getAvatar() != null && people.getAvatar() != "") {
-			imageDownloader.download(people.getAvatar(), profilePic);
+			imageFetcher.loadImage(people.getAvatar(), profilePic);
 		}
 
-		name.setText(Utility.getFieldText(people));
+		name.setText(Utility.getItemTitle(people));
 
 		profilePic.setOnClickListener(new View.OnClickListener() {
 
@@ -313,6 +356,14 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 
 				// go user profile
+
+				// Intent profileInt = new Intent(FriendListActivity.this,
+				// ProfileActivity2.class);
+				/*
+				 * Intent profileInt = new Intent(FriendListActivity.this,
+				 * ProfileActivity2.class); profileInt.putExtra("otherUser",
+				 * people); startActivity(profileInt);
+				 */
 
 				if (people.getId().equals(StaticValues.myInfo.getId())) {
 					Intent intent = new Intent(context, ProfileActivity.class);
@@ -481,16 +532,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	private class ListComparatorName implements Comparator<People> {
-
-		@Override
-		public int compare(People first, People last) {
-			String firstString = first.getFirstName();
-			String secondString = last.getFirstName();
-			return firstString.compareToIgnoreCase(secondString);
-		}
-
-	}
+	
 
 	private void generateListViewForCircles() {
 
@@ -573,10 +615,9 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 				People people = tempFriendListDistance.get(i);
 
-				double distances = Utility.calculateDistance(
-						StaticValues.myPoint,
-						new GeoPoint((int) (people.getCurrentLat() * 1E6),
-								(int) (people.getCurrentLng() * 1E6)));
+				double distances = Utility
+						.calculateDistance(StaticValues.myPoint, new LatLng(
+								people.getCurrentLat(), people.getCurrentLng()));
 
 				Log.w("distances:" + distances, "distanceLabel(distances):"
 						+ distanceLabel(distances));
@@ -633,7 +674,8 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	private void sortDataAlphabetically() {
 
 		if (this.tempFriendList != null) {
-			Collections.sort(tempFriendList, new ListComparatorName());
+			listComparator.setType(COMPARATOR.TEXT);
+			Collections.sort(tempFriendList, listComparator);
 		}
 
 	}
@@ -641,37 +683,12 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	private void sortMasterListDistance() {
 
 		if (this.tempFriendListDistance != null) {
-			Collections.sort(this.tempFriendListDistance, new ListComparator());
+			listComparator.setType(COMPARATOR.DISTANCE);
+			Collections.sort(this.tempFriendListDistance, listComparator);
 		}
 	}
 
-	private class ListComparator implements Comparator<Object> {
-
-		@Override
-		public int compare(Object first, Object last) {
-			double firstDistance = getDistance(first);
-			double lastDistance = getDistance(last);
-
-			if (firstDistance > lastDistance)
-				return 1;
-			else if (firstDistance == lastDistance)
-				return 0;
-			else
-				return -1;
-		}
-
-		private double getDistance(Object object) {
-			if (object instanceof People)
-				return ((People) object).getDistance();
-			else if (object instanceof Place)
-				return ((Place) object).getDistance();
-			else if (object instanceof SecondDegreePeople)
-				return ((SecondDegreePeople) object).getDistance();
-			else
-				return 0;
-		}
-
-	}
+	
 
 	private void toggleSearchPanel() {
 		if (!searchPanel.isShown())
@@ -743,9 +760,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+	
 
 }

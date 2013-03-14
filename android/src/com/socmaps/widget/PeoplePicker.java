@@ -33,7 +33,7 @@ import android.widget.TextView;
 
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -69,7 +69,7 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 	List<String> removedFriendList;
 	List<String> removedCircleList;
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageDownloader;
 
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
 
@@ -132,7 +132,7 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		this.context = context;
 		this.pickerName = pickerName;
 
-		imageDownloader = ImageDownloader.getInstance();
+		imageDownloader = new ImageFetcher(context);
 
 		this.preSelectedFriendList = preSelectedFriendList;
 		this.preSelectedCircleList = preSelectedCircleList;
@@ -367,26 +367,18 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		String firstName = people.getFirstName();
-		String lastName = people.getLastName();
+		
 		final String id = people.getId();
 		String avatarUrl = people.getAvatar();
 
 		String name = "";
-
-		if (firstName != null) {
-			name = firstName + " ";
-		}
-		if (lastName != null) {
-			name += lastName;
-		}
+		name = Utility.getItemTitle(people);
+		nameView.setText(name);
 
 		selectedFriends.put(id, false);
 
-		nameView.setText(name);
-
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-			imageDownloader.download(avatarUrl, profilePic);
+			imageDownloader.loadImage(avatarUrl, profilePic);
 
 		}
 

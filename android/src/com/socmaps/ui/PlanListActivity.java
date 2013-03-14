@@ -3,7 +3,6 @@ package com.socmaps.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Plan;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.listrow.ListItemClickListenerPlan;
 import com.socmaps.listrow.PlanRowFactory;
 import com.socmaps.notificationBroadcast.BroadcastListener;
@@ -43,13 +42,13 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 /**
- * PlanListActivity class is used to depict the list of plans of user's & others users. 
- * There is options of Edit & Delete if that is user's own Plan List. 
- * No chance for Edit or Delete is it shows other particular user's Plan List. 
+ * PlanListActivity class is used to depict the list of plans of user's & others
+ * users. There is options of Edit & Delete if that is user's own Plan List. No
+ * chance for Edit or Delete is it shows other particular user's Plan List.
  */
 
-public class PlanListActivity extends Activity implements OnClickListener,
-		BroadcastListener {
+public class PlanListActivity extends FragmentActivity implements
+		OnClickListener, BroadcastListener {
 
 	private Context context;
 	private Button btnBack, btnNotification;
@@ -71,7 +70,9 @@ public class PlanListActivity extends Activity implements OnClickListener,
 	Plan seletedPlan;
 
 	String personID = null;
-	String personFirstName = "", personLastName = "";
+	String personName = "";
+
+	private ImageFetcher imageFetcher;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.plan_list_layout);
 
 		personID = getIntent().getStringExtra("personID");
-		personFirstName = getIntent().getStringExtra("firstName");
-		personLastName = getIntent().getStringExtra("lastName");
+		personName = getIntent().getStringExtra("personName");
 		if (personID != null)
 			Log.d("Person ID", personID);
 
@@ -115,9 +115,10 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		if (personID == null) {
 			tvtitle.setText("Plans");
 		} else if (personID != null) {
-			tvtitle.setText(personFirstName + " " + personLastName + "'s" + " "
-					+ "Plans");
+			tvtitle.setText(personName + "'s" + " " + "Plans");
 		}
+
+		imageFetcher = new ImageFetcher(context);
 	}
 
 	private void initializeNotificationCountBroadcast() {
@@ -148,6 +149,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		System.gc();
+
+		imageFetcher.closeCache();
 	}
 
 	@Override
@@ -155,6 +158,9 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onPause();
 		unregisterReceiver(broadcastReceiver);
+
+		imageFetcher.setExitTasksEarly(true);
+		imageFetcher.flushCache();
 	}
 
 	@Override
@@ -165,6 +171,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		findViewById(R.id.mainLayout).requestFocus();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
+
+		imageFetcher.setExitTasksEarly(false);
 	}
 
 	@Override
@@ -308,12 +316,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 		private LayoutInflater mInflater;
 
-		private ImageDownloader imageDownloader;
-
 		public ListArrayAdapter(Context context, int textViewResourceId,
 				List<Plan> objects) {
-
-			imageDownloader = ImageDownloader.getInstance();
 
 			init(context, textViewResourceId, 0, objects);
 		}
@@ -373,11 +377,11 @@ public class PlanListActivity extends Activity implements OnClickListener,
 			if (personID == null) {
 				return PlanRowFactory.getView(LayoutInflater.from(context),
 						mObjects.get(position), context, new ItemListener(),
-						position, convertView, imageDownloader, 1);
+						position, convertView, imageFetcher, 1);
 			} else if (personID != null) {
 				return PlanRowFactory.getView(LayoutInflater.from(context),
 						mObjects.get(position), context, new ItemListener(),
-						position, convertView, imageDownloader, 2);
+						position, convertView, imageFetcher, 2);
 			} else
 				return null;
 
@@ -489,6 +493,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+
+			finish();
 		}
 
 		@Override

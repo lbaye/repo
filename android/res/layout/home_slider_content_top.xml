@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#EEEFF3EF"
+    android:background="@color/transparent_deep"
+    android:orientation="vertical"
     android:paddingLeft="10dip"
-    android:paddingRight="10dip"
-    android:orientation="vertical" >
+    android:paddingRight="10dip" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <LinearLayout
-            android:id="@+id/event_btn"
+            android:id="@+id/btnDirections"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -26,14 +26,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_event" />
+                android:src="@drawable/icon_directions_new" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/menuItemEvents"
-                android:textColor="@color/gray_dark"
+                android:text="@string/directionLabel"
+                android:textColor="@color/white"
                 android:textSize="12dip" />
         </LinearLayout>
 
@@ -44,7 +44,7 @@
             android:src="@drawable/seperator" />
 
         <LinearLayout
-            android:id="@+id/meetup_button"
+            android:id="@+id/btnMyPlaces"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,53 +55,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_meet_up" />
+                android:src="@drawable/icon_myplaces" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/myplaces"
+                android:textColor="@color/white"
+                android:textSize="12dip" />
+        </LinearLayout>
+        
+
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/seperator" />
+
+         
+        <LinearLayout
+            android:id="@+id/btnMeetup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_meet_up_new" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/menuItemMeetupRequest"
-                android:textColor="@color/gray_dark"
+                android:textColor="@color/white"
                 android:textSize="12dip" />
         </LinearLayout>
-        
-        
-
-        <!--<ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/seperator" />
-
-         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_breadcrumb" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/menuItemBreadcrumbs"
-                android:textColor="@color/gray_dark"
-                android:textSize="12dip" />
-        </LinearLayout> -->
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/gray_dark"
-        android:visibility="gone" />
+        android:background="@color/gray_light"
+        android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -281,68 +283,8 @@
         android:layout_height="1dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/gray_dark" />
+        android:background="@color/gray_dark" />
     -->
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="0dip"
-            android:text="@string/menuItemShowOnMap"
-            android:textColor="@color/gray_dark"
-            android:textSize="12dp" />
-
-        <CheckBox
-            android:id="@+id/chkMenuItemPeople"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/menuItemPeopleLabel"
-            android:textColor="@color/gray_dark"
-            android:textSize="12dp" />
-
-        <CheckBox
-            android:id="@+id/chkMenuItemPlaces"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/menuItemPlacesLabel"
-            android:textColor="@color/gray_dark"
-            android:textSize="12dp" />
-        
-        <CheckBox
-            android:id="@+id/chkMenuItemEvents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/menuItemEvents"
-            android:textColor="@color/gray_dark"
-            android:textSize="12dp"
-            android:visibility="visible" />
-
-        <CheckBox
-            android:id="@+id/chkMenuItemDeals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/menuItemDealsLabel"
-            android:textColor="@color/gray_dark"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray_dark"
-        android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -357,7 +299,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/menuItemShareLocationWithlabel"
-            android:textColor="@color/gray_dark"
+            android:textColor="@color/white"
             android:textSize="12dip" />
 
         <LinearLayout
@@ -366,5 +308,67 @@
             android:layout_height="wrap_content" >
         </LinearLayout>
     </LinearLayout>
+    
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_light"
+        android:visibility="visible" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dip"
+            android:text="@string/menuItemShowOnMap"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
+        <CheckBox
+            android:id="@+id/chkMenuItemPeople"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/menuItemPeopleLabel"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
+        <CheckBox
+            android:id="@+id/chkMenuItemPlaces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/menuItemPlacesLabel"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
+        <CheckBox
+            android:id="@+id/chkMenuItemEvents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/menuItemEvents"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:visibility="visible" />
+
+        <CheckBox
+            android:id="@+id/chkMenuItemDeals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/menuItemDealsLabel"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    
 </LinearLayout>

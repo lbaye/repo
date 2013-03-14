@@ -11,6 +11,7 @@ public class PushData implements Serializable {
 	private String message = "";
 	private int badge = 0;
 	private String tabCounts = "";
+	private String receiverId = "";
 	
 	
 	public String getObjectId() {
@@ -48,6 +49,12 @@ public class PushData implements Serializable {
 	}
 	public void setTabCounts(String tabCounts) {
 		this.tabCounts = tabCounts;
+	}
+	public String getReceiverId() {
+		return receiverId;
+	}
+	public void setReceiverId(String receiverId) {
+		this.receiverId = receiverId;
 	}
 	
 

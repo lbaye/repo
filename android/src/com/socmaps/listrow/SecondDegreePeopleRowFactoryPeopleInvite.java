@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.socmaps.entity.SecondDegreePeople;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -33,8 +33,6 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 	 *            an object of type Secondary People.
 	 * @param con
 	 *            current state of the application/object.
-	 * @param licl
-	 *            which is used for a specific action when button is clicked.
 	 * @param convertView
 	 *            as view.
 	 * @param il
@@ -49,9 +47,9 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 			final LayoutInflater inflater,
 			final Object peopleObj,
 			final Context con,
-			final ListItemClickListener licl,
+		
 			final View convertView,
-			final ImageDownloader il,
+			final ImageFetcher il,
 			final ListItemClickListenerSecondDegreePeople listItemClickListenerSecondDegreePeople,
 			boolean isChecked) {
 		ViewHolder holder;
@@ -90,7 +88,7 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 
 		holder.sourceImage.setVisibility(View.GONE);
 
-		holder.firstNameText.setText(Utility.getFieldText(people));
+		holder.firstNameText.setText(Utility.getItemTitle(people));
 		// ******************************************************************status
 
 		holder.statusText.setVisibility(View.GONE);
@@ -110,7 +108,7 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
 
-				il.download(people.getAvatar(), holder.avatar);
+				il.loadImage(people.getAvatar(), holder.avatar);
 			}
 
 		}
@@ -119,11 +117,11 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 				&& !people.getCoverPhoto().equals("")) {
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
-			il.download(people.getAvatar(), holder.coverPhoto);
+			il.loadImage(people.getAvatar(), holder.coverPhoto);
 
 		} else
 			holder.coverPhoto
-					.setImageResource(R.drawable.cover_pic_second_degree);
+					.setImageResource(R.drawable.cover_pic_default);
 
 		holder.distanceText.setText(Utility.getFormatedDistance(people
 				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));

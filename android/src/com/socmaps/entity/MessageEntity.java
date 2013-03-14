@@ -11,14 +11,25 @@ public class MessageEntity {
 	private String createDate;
 	private String updateDate;
 	private String status;
+	
 	private String senderId;
 	private String senderEmail;
 	private String senderFirstName;
 	private String senderLastName;
+	private String senderUserName;
 	private String senderAvatar;
+	
+	private String lastSenderId;
+	private String lastSenderEmail;
+	private String lastSenderFirstName;
+	private String lastSenderLastName;
+	private String lastSenderUserName;
+	private String lastSenderAvatar;
+	
 	private String thread;
 	private int replyCount;
 	private MetaContent metaContent;
+	private String lastMessage;
 	
 	
 	
@@ -108,12 +119,68 @@ public class MessageEntity {
 		return senderLastName;
 	}
 
+	public String getSenderUserName() {
+		return senderUserName;
+	}
+
+	public void setSenderUserName(String senderUserName) {
+		this.senderUserName = senderUserName;
+	}
+
 	public void setSenderAvatar(String senderAvatar) {
 		this.senderAvatar = senderAvatar;
 	}
 
 	public String getSenderAvatar() {
 		return senderAvatar;
+	}
+
+	public String getLastSenderId() {
+		return lastSenderId;
+	}
+
+	public void setLastSenderId(String lastSenderId) {
+		this.lastSenderId = lastSenderId;
+	}
+
+	public String getLastSenderEmail() {
+		return lastSenderEmail;
+	}
+
+	public void setLastSenderEmail(String lastSenderEmail) {
+		this.lastSenderEmail = lastSenderEmail;
+	}
+
+	public String getLastSenderFirstName() {
+		return lastSenderFirstName;
+	}
+
+	public void setLastSenderFirstName(String lastSenderFirstName) {
+		this.lastSenderFirstName = lastSenderFirstName;
+	}
+
+	public String getLastSenderLastName() {
+		return lastSenderLastName;
+	}
+
+	public void setLastSenderLastName(String lastSenderLastName) {
+		this.lastSenderLastName = lastSenderLastName;
+	}
+
+	public String getLastSenderUserName() {
+		return lastSenderUserName;
+	}
+
+	public void setLastSenderUserName(String lastSenderUserName) {
+		this.lastSenderUserName = lastSenderUserName;
+	}
+
+	public String getLastSenderAvatar() {
+		return lastSenderAvatar;
+	}
+
+	public void setLastSenderAvatar(String lastSenderAvatar) {
+		this.lastSenderAvatar = lastSenderAvatar;
 	}
 
 	public void setThread(String thread) {
@@ -162,6 +229,14 @@ public class MessageEntity {
 
 	public void setMetaContent(MetaContent metaContent) {
 		this.metaContent = metaContent;
+	}
+
+	public String getLastMessage() {
+		return lastMessage;
+	}
+
+	public void setLastMessage(String lastMessage) {
+		this.lastMessage = lastMessage;
 	}
 
 }

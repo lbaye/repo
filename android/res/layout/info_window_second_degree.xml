@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/balloon_main_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <!-- your click region must be some sort of layout container using @id/balloon_inner_layout -->
+
+    <LinearLayout
+        android:id="@id/balloon_inner_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_weight="1"
+        android:background="@drawable/balloon_overlay_bg_selector"
+        android:gravity="center_vertical"
+        android:minWidth="200dip"
+        android:orientation="horizontal"
+        android:paddingBottom="25dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="0dip" >
+
+        <RelativeLayout
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_marginBottom="10dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="10dip" >
+
+            <ImageView
+                android:id="@+id/balloon_item_image"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/rounded_border_image_bg"
+                android:scaleType="fitCenter"
+                android:src="@null" />
+
+            <ImageView
+                android:id="@+id/ivSourceIcon"
+                android:layout_width="15dip"
+                android:layout_height="15dip"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="2dip"
+                android:layout_marginTop="2dip"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/facebookicon" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="5dip" >
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="User name"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="13dip" />
+
+            <ImageView
+                android:id="@+id/ivIconLocation"
+                android:layout_width="11dip"
+                android:layout_height="14dip"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tvName"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="2dip"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_fb_checkin_location" />
+
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvName"
+                android:layout_marginTop="2dip"
+                android:layout_toRightOf="@+id/ivIconLocation"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="10dip" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tvAddress"
+                android:layout_marginTop="2dip"
+                android:text=""
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="10dip" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

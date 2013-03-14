@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -20,6 +19,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -40,10 +40,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -58,7 +57,7 @@ import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
  *
  */
 
-public class ProfileActivity extends Activity implements OnClickListener {
+public class ProfileActivity extends FragmentActivity implements OnClickListener {
 	Context context;
 
 	Button btnBack, btnNotification;
@@ -80,7 +79,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	int responseStatus = 0;
 	String responseString = "";
 
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 
 	private String flag = "";
 	private ProgressDialog m_ProgressDialog = null;
@@ -126,13 +125,39 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		super.onResume();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
+		imageFetcher.setExitTasksEarly(false);
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		imageFetcher.setExitTasksEarly(true);
+	    imageFetcher.flushCache();
+		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+		if (avatar != null) {
+			avatar.recycle();
+		}
+		if (coverPic != null) {
+			coverPic.recycle();
+		}
+		imageFetcher.closeCache();
+		System.gc();
 	}
 
 	private void initialize() {
 
-		imageDownloader = ImageDownloader.getInstance();
-
 		context = ProfileActivity.this;
+		
+		imageFetcher = new ImageFetcher(context);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -261,15 +286,19 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			if (StaticValues.myInfo.getAvatar() != null) {
 
 				ivProfilePic.setImageResource(R.drawable.thumb);
-				imageDownloader.download(StaticValues.myInfo.getAvatar(),
+				imageFetcher.loadImage(StaticValues.myInfo.getAvatar(),
 						ivProfilePic);
 			}
 
 			if (StaticValues.myInfo.getCoverPhoto() != null) {
 				ivCoverPic.setImageResource(R.drawable.img_blank);
-				imageDownloader.download(StaticValues.myInfo.getCoverPhoto(),
+				imageFetcher.loadImage(StaticValues.myInfo.getCoverPhoto(),
 						ivCoverPic);
+			}else{
+				ivCoverPic.setImageResource(R.drawable.cover_pic_default);
 			}
+			
+			
 			if (StaticValues.myInfo.getRegMedia() != null) {
 				if (StaticValues.myInfo.getRegMedia().equals("fb")) {
 					ivRegMedia.setVisibility(View.VISIBLE);
@@ -1022,7 +1051,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 				Log.d("URL", imageURL);
 
 				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
-						context, imageURL, imageDownloader);
+						context, imageURL, imageFetcher);
 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				photoZoomPicker.show();
@@ -1034,18 +1063,5 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	}
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-
-		if (avatar != null) {
-			avatar.recycle();
-		}
-		if (coverPic != null) {
-			coverPic.recycle();
-		}
-
-		System.gc();
-	}
+	
 }

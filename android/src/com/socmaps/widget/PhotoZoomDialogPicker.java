@@ -11,8 +11,10 @@ package com.socmaps.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -27,7 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.socmaps.entity.Photo;
-import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
 
 /**
@@ -48,7 +50,7 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 	private List<Photo> photoList;
 	private Photo photo;
-	ImageDownloader imageDownloader;
+	ImageFetcher imageFetcher;
 
 	List<ImageView> itemViewList;
 	private LayoutInflater inflater;
@@ -61,7 +63,7 @@ public class PhotoZoomDialogPicker extends Dialog implements
 	private static final int SWIPE_MAX_OFF_PATH = 100;
 
 	private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-	private boolean isShow = false; 
+	private boolean isShow = false;
 	
 	/**
 	 * This methods performs to pick out a particular photo to zoom out. 
@@ -69,11 +71,11 @@ public class PhotoZoomDialogPicker extends Dialog implements
 	 * @param context 			Currently active Context. 
 	 * @param pickerName 		As String which is the name of the item. 
 	 * @param photoList 		An array list of type Photo which contains a list of photos. 
-	 * @param imageDownloader 	An instance of ImageDownloader which is used to download image from a particular uri. 
+	 * @param imageFetcher 	An instance of ImageDownloader which is used to download image from a particular uri. 
 	 * @param position 			As Integer which indicates the idex of a particular photo. 
 	 * @see Context 
 	 * @see String 
-	 * @see ImageDownloader 
+	 * @see ImageFetcher 
 	 * @see #initialize() 
 	 * @see #generateViewList() 
 	 * @see #displayItems() 
@@ -81,17 +83,28 @@ public class PhotoZoomDialogPicker extends Dialog implements
 	 */
 
 	public PhotoZoomDialogPicker(Context context, String pickerName,
-			List<Photo> photoList, ImageDownloader imageDownloader, int position) {
+			List<Photo> photoList, int position) {
 		super(context);
 
 		this.context = context;
 		this.pickerName = pickerName;
 		this.photoList = photoList;
-
-		this.imageDownloader = imageDownloader;
-		this.imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		this.position = position;
+		
+		
+		
+		final DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        final int height = displayMetrics.heightPixels;
+        final int width = displayMetrics.widthPixels;
 
+        // For this sample we'll use half of the longest width to resize our images. As the
+        // image scaling ensures the image is larger than this, we should be left with a
+        // resolution that is appropriate for both portrait and landscape. For best image quality
+        // we shouldn't divide by 2, but this will use more memory and require a larger memory
+        // cache.
+        final int longest = height > width ? height : width;
+		imageFetcher = new ImageFetcher(context,longest,false);
 		/** It will hide the title */
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.photo_zoom_layout);
@@ -137,7 +150,7 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 		if (photo.getImageLarge() != null) {
 			if (!photo.getImageLarge().equalsIgnoreCase("")) {
-				imageDownloader.download(photo.getImageLarge(), view);
+				imageFetcher.loadImage(photo.getImageLarge(), view);
 			}
 		}
 
