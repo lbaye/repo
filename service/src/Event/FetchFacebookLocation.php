@@ -302,7 +302,8 @@ class FetchFacebookLocation extends Base
                 'avatar' => $userInfo['pic_square'],
                 'gender' => $userInfo['sex'],
                 'createdAt' => $created_at,
-                'lastSeenAt' => $pageInfo['name'],
+//                'lastSeenAt' => $pageInfo['name'],
+                'lastSeenAt' => $this->buildAddress($pageInfo),
                 'currentLocation' => array(
                     'lat' => $checkinInfo['coords']['latitude'],
                     'lng' => $checkinInfo['coords']['longitude'],
