@@ -65,10 +65,15 @@ class Reverse extends Base
 
         $content = json_decode($responseBody);
 
-        if ($content->Status->code == 200) {    // Save in Cache for future use
-            return $content->Placemark[0]->address;
+//        if ($content->Status->code == 200) {    // Save in Cache for future use
+//            return $content->Placemark[0]->address;
+//        } else {
+//            throw new \Exception("Service Unavailable (Google Maps API said: '{$content->Status->code}')", 503);
+//        }
+        if (!empty($content)) {    // Save in Cache for future use
+            return $content->results[0]->formatted_address;
         } else {
-            throw new \Exception("Service Unavailable (Google Maps API said: '{$content->Status->code}')", 503);
+            throw new \Exception("Service Unavailable (Google Maps API said: '{$content->results[0]->formatted_address}')", 503);
         }
     }
 }
