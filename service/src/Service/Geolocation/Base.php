@@ -14,7 +14,7 @@ abstract class Base
 
     public function __construct(
         $logger, $apiKey, \Doctrine\ODM\MongoDB\DocumentManager $dm,
-        $endpoint = "http://maps.google.com/maps/geo")
+        $endpoint = "http://maps.googleapis.com/maps/api/geocode/json")
     {
         $this->apiKey = $apiKey;
         $this->endpoint = $endpoint;

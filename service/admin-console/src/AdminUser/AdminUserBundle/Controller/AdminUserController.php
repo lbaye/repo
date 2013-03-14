@@ -731,15 +731,23 @@ class AdminUserController extends Controller
         // set your API key here
         $api_key = "AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw";
         // format this string with the appropriate latitude longitude
-        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true_or_false&key=' . $api_key;
+//        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true_or_false&key=' . $api_key;
+//        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true';
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' . $lat . ',' . $lng . '&sensor=false';
         // make the HTTP request
         $data = @file_get_contents($url);
         // parse the json response
         $jsondata = json_decode($data, true);
         // if we get a placemark array and the status was good, get the addres
-        if (is_array($jsondata) && $jsondata ['Status']['code'] == 200) {
-            $address = $jsondata ['Placemark'][0]['address'];
-        }
+//        if (is_array($jsondata) && $jsondata ['Status']['code'] == 200) {
+//            $address = $jsondata ['Placemark'][0]['address'];
+//        }
+
+         if (is_array($jsondata) && !empty($jsondata ['results'][0]['formatted_address'])) {
+            $address = $jsondata ['results'][0]['formatted_address'];
+        } else {
+             $address = "";
+         }
 
         echo $address;
         exit;
