@@ -210,24 +210,41 @@ int createCounter=0, updateCounter=0;
     }
 }
 
+- (void) setAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude forAnnotation:(DDAnnotation*)annotation
+{
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:pdblLatitude longitude:pdblLongitude];
+    
+    CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark *placemark =  [placemarks objectAtIndex:0];
+        NSString *cityName = (placemark.locality) ? [NSString stringWithFormat:@", %@ ", placemark.locality] : @"";
+        NSString *countryName = (placemark.country) ? [NSString stringWithFormat:@", %@", placemark.country] : @"";
+        annotation.subtitle = [NSString stringWithFormat:@"%@%@%@", placemark.name, cityName, countryName];
+        [location release];
+        [geoCoder release];
+    }];
+}
+
 -(void)getCurrentAddress
 {
     addressLabel.text = @"";
     annotation.subtitle=addressLabel.text;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            annotation.subtitle=addressLabel.text;
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    //    addressLabel.text=
+    [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] andLabel:addressLabel];
+        //dispatch_async(dispatch_get_main_queue(), ^{
+    //        annotation.subtitle =
+    [self setAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] forAnnotation:annotation];
             plan.planAddress=addressLabel.text;
             plan.planGeolocation.latitude=smAppDelegate.currPosition.latitude;
             plan.planGeolocation.longitude=smAppDelegate.currPosition.longitude;
-        });
-    });
+        //});
+    //});
 }
 
 -(void)getAddressFromMap
 {
-    addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude andLabel:addressLabel];
 }
 
 -(IBAction)saveMapLocation:(id)sender
@@ -243,6 +260,8 @@ int createCounter=0, updateCounter=0;
 
 -(IBAction)savePlan:(id)sender
 {
+    plan.planAddress=addressLabel.text;
+    
     NSMutableString *validation=[[NSMutableString alloc] initWithString:@"Please select"];
     if ([dateLabel.text isEqualToString:@""])
     {
@@ -427,7 +446,8 @@ int createCounter=0, updateCounter=0;
 {	
 	annotation = notification.object;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-    annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    //annotation.subtitle=
+    [self setAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude forAnnotation:annotation];
 }
 
 - (void)getMyPlaces:(NSNotification *)notif
@@ -520,7 +540,8 @@ int createCounter=0, updateCounter=0;
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-        annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+        //annotation.subtitle=
+        [self setAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude forAnnotation:annotation];
 	}
 }
 
@@ -559,15 +580,15 @@ int createCounter=0, updateCounter=0;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-    [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
+    //[self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
-
+/*
 -(void)getLoc:(DDAnnotation *)annotation
 {
     [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
-
+*/
 -(IBAction)segmentChanged:(id)sender
 {
     if (segmentControl.selectedSegmentIndex==0) {

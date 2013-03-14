@@ -213,12 +213,12 @@
 	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
 	[lblAddress addSubview: activityView];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        lblAddress.text=[UtilityClass getAddressFromLatLon:locCoord.latitude withLongitude:locCoord.longitude];
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [UtilityClass getAddressFromLatLon:locCoord.latitude withLongitude:locCoord.longitude andLabel:lblAddress];
         [activityView stopAnimating];
         [activityView removeFromSuperview];
         [activityView release];
-    });
+    //});
 }
 
 // Cancel button

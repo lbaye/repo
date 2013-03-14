@@ -84,9 +84,9 @@
  * @brief Get address from lat and long
  * @param (double) - Latitude
  * @param (double) - Longitude
- * @retval (NSString) - Converted date
+ * @retval (uilabel) - Lable for which text needs to be set
  */
-+ (NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude;
++ (NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude andLabel:(UILabel*)label;
 
 /**
  * @brief Convert NSDate to unix format

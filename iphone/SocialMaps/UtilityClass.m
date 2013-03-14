@@ -115,18 +115,20 @@ CGFloat animatedDistance;
     return convDate;
 }
 
-+(NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude
-
++ (NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude andLabel:(UILabel*)label
 {
-    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv",pdblLatitude, pdblLongitude];
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:pdblLatitude longitude:pdblLongitude];
     
-    NSError* error;
-    NSString *locationString = [NSString stringWithContentsOfURL:[NSURL URLWithString:urlString] encoding:NSUTF8StringEncoding error:&error];
-    
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-    
-    return [locationString substringFromIndex:6];
-    
+    CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark *placemark =  [placemarks objectAtIndex:0];
+        NSString *cityName = (placemark.locality) ? [NSString stringWithFormat:@", %@ ", placemark.locality] : @"";
+        NSString *countryName = (placemark.country) ? [NSString stringWithFormat:@", %@", placemark.country] : @"";
+        label.text = [NSString stringWithFormat:@"%@%@%@", placemark.name, cityName, countryName];
+        [location release];
+        [geoCoder release];
+    }];
+    return nil;
 }
 
 +(NSString *)convertNSDateToUnix:(NSDate *)date

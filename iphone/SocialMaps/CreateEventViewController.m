@@ -444,18 +444,20 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     addressLabel.text = @"Loading current address...";
     annotation.subtitle=addressLabel.text;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            annotation.subtitle=addressLabel.text;
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        //addressLabel.text=
+        [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] andLabel:addressLabel];
+        //dispatch_async(dispatch_get_main_queue(), ^{
+    //annotation.subtitle =
+    [self setAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] forAnnotation:annotation];
             NSLog(@"get current address.");
-        });
-    });
+        //});
+    //});
 }
 
 -(void)getAddressFromMap
 {
-    addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude andLabel:addressLabel];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -1010,6 +1012,21 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     [mapContainerView removeFromSuperview];    
 }
 
+- (void) setAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude forAnnotation:(DDAnnotation*)annotation
+{
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:pdblLatitude longitude:pdblLongitude];
+    
+    CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark *placemark =  [placemarks objectAtIndex:0];
+        NSString *cityName = (placemark.locality) ? [NSString stringWithFormat:@", %@ ", placemark.locality] : @"";
+        NSString *countryName = (placemark.country) ? [NSString stringWithFormat:@", %@", placemark.country] : @"";
+        annotation.subtitle = [NSString stringWithFormat:@"%@%@%@", placemark.name, cityName, countryName];
+        [location release];
+        [geoCoder release];
+    }];
+}
+
 #pragma mark -
 #pragma mark DDAnnotationCoordinateDidChangeNotification
 
@@ -1018,7 +1035,8 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {	
 	annotation = notification.object;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-    annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    //annotation.subtitle=
+    [self setAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude forAnnotation:annotation];
 }
 
 //table view delegate methods
@@ -1140,7 +1158,8 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-        annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+        //annotation.subtitle=
+        [self setAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude forAnnotation:annotation];
 	}
 }
 
@@ -1179,15 +1198,15 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-    [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
+    //[self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
-
+/*
 -(void)getLoc:(DDAnnotation *)annotation
 {
     [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
-
+*/
 //draggable annotations changed
 
 //lazy scroller

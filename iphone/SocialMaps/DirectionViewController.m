@@ -324,10 +324,10 @@
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             if (annotation == annotationFrom) {
-                labelAddressFrom.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+                [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude andLabel:labelAddressFrom];
             } else {
                 NSLog(@"to annotation %@", annotation);
-                labelAddressTo.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+                [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude andLabel:labelAddressTo];
             }
             
         });
@@ -487,12 +487,13 @@
     } else if (tableView.tag == TAG_CURRENT_LOCATION) {
         if ([self.currentAddress isEqualToString:@""] || !self.currentAddress) {
             labelPlaceName.text = @"Retrieving address ...";
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    labelPlaceName.text = self.currentAddress;
-                });
-            });
+            //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                //self.currentAddress =
+                [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] andLabel:labelPlaceName];
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                  //  labelPlaceName.text = self.currentAddress;
+                //});
+            //});
         } else {
             labelPlaceName.text = self.currentAddress;
         }

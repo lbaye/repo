@@ -43,7 +43,7 @@
     [self.mapViewLoacation setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapViewLoacation addAnnotation:annotation];
     
-    annotation.title = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    //annotation.title = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
 - (void)viewDidAppear:(BOOL)animated

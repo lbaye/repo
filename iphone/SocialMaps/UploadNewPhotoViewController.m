@@ -173,6 +173,7 @@ int uploadPhotoCounter=0;
 -(IBAction)uploadPhotos:(id)sender
 {
     photo.title=@"Test";
+    photo.address = addressLabel.text;
     photo.comment=commentView.text;
     [commentView resignFirstResponder];
     NSMutableString *msg=[[NSMutableString alloc] initWithString:@"Please select"];
@@ -181,7 +182,7 @@ int uploadPhotoCounter=0;
         [msg appendString:@" image,"];
     }
     
-    if ([addressLabel.text isEqualToString:@"Loading current address..."]) 
+    if ([addressLabel.text isEqualToString:@"Retrieving address..."]) 
     {
         [msg appendString:@" address,"];
     }
@@ -343,23 +344,12 @@ int uploadPhotoCounter=0;
 
 -(void)getCurrentAddress
 {
-    addressDetailLabel.text=@"";
-        NSLog(@"load new add");
-        addressLabel.text = @"Loading current address...";
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            NSString *address=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
-            if ((![address isEqual:[NSNull null]]) ||(address != NULL))
-            {
-                curAddress=address;
-            }
-            photo.address=curAddress;
-            photo.location.latitude=smAppDelegate.currPosition.latitude;
-            photo.location.longitude=smAppDelegate.currPosition.longitude;
-            addressLabel.text=curAddress;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"get current address.");
-            });
-        });
+    addressDetailLabel.text = @"";
+    addressLabel.text = @"Retrieving address...";
+    
+    photo.location.latitude=smAppDelegate.currPosition.latitude;
+    photo.location.longitude=smAppDelegate.currPosition.longitude;
+    [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] andLabel:addressLabel];
 }
 
 - (void)uploadPhotoDone:(NSNotification *)notif
