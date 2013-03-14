@@ -279,7 +279,8 @@
         }
     }
     
-    [imgView loadFromURLTemporaryCache:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
+    if (!imgView.image)
+        [imgView loadFromURLTemporaryCache:[NSURL URLWithString:[(Photo*)[photoList objectAtIndex:page] imageUrl]]];
 }
 
 -(void)scrollToPage:(int)page:(BOOL)animated
