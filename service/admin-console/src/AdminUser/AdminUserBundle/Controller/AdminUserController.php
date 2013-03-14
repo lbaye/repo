@@ -735,8 +735,6 @@ class AdminUserController extends Controller
 
 //        $url = 'http://maps.google.com/maps/geo?q=' . $lat . ',' . $lng . '&output=json&sensor=true';
         $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' . $lat . ',' . $lng . '&sensor=false';
-
-
         // make the HTTP request
         $data = @file_get_contents($url);
         // parse the json response
