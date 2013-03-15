@@ -62,12 +62,15 @@ static char const * const ObjectTagKey = "ObjectTag";
             [self setImageInfo:imageInfo];
             [imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
             
-            UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            activityIndicator.center = self.center;
-            [activityIndicator startAnimating];
-            activityIndicator.tag = TAG_INDICATOR_VIEW;
-            [self addSubview:activityIndicator];
-            [activityIndicator release];
+            if (![self viewWithTag:TAG_INDICATOR_VIEW])
+            {
+                UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                activityIndicator.center = self.center;
+                [activityIndicator startAnimating];
+                activityIndicator.tag = TAG_INDICATOR_VIEW;
+                [self addSubview:activityIndicator];
+                [activityIndicator release];
+            }
         }
     }
 }

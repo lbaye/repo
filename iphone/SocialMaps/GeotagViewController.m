@@ -423,20 +423,20 @@ int geoCounter=0;
 {
     addressLabel.text = @"";
     annotation.subtitle=addressLabel.text;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
-        dispatch_async(dispatch_get_main_queue(), ^{
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue] andLabel:addressLabel];
+        //dispatch_async(dispatch_get_main_queue(), ^{
             annotation.subtitle=addressLabel.text;
             geotag.geoTagAddress=addressLabel.text;
             geotag.geoTagLocation.latitude=smAppDelegate.currPosition.latitude;
             geotag.geoTagLocation.longitude=smAppDelegate.currPosition.longitude;
-        });
-    });
+        //});
+    //});
 }
 
 -(void)getAddressFromMap
 {
-    addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude andLabel:addressLabel];
     geotag.geoTagAddress=addressLabel.text;
     geotag.geoTagLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
     geotag.geoTagLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
@@ -889,7 +889,22 @@ int geoCounter=0;
 {	
 	annotation = notification.object;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-    annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [self setAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude forAnnotation:annotation];
+}
+
+- (void) setAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude forAnnotation:(DDAnnotation*)annotation
+{
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:pdblLatitude longitude:pdblLongitude];
+    
+    CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark *placemark =  [placemarks objectAtIndex:0];
+        NSString *cityName = (placemark.locality) ? [NSString stringWithFormat:@", %@ ", placemark.locality] : @"";
+        NSString *countryName = (placemark.country) ? [NSString stringWithFormat:@", %@", placemark.country] : @"";
+        annotation.subtitle = [NSString stringWithFormat:@"%@%@%@", placemark.name, cityName, countryName];
+        [location release];
+        [geoCoder release];
+    }];
 }
 
 //table view delegate methods
@@ -1006,7 +1021,7 @@ int geoCounter=0;
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-        annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+        [self setAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude forAnnotation:annotation];
 	}
 }
 
@@ -1045,15 +1060,15 @@ int geoCounter=0;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-    [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
+    //[self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
-
+/*
 -(void)getLoc:(DDAnnotation *)annotation
 {
     [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
-
+*/
 //draggable annotations changed
 
 //lazy scroller
