@@ -18,7 +18,7 @@ class FetchFacebookLocation extends Base
     /**
      * Maximum number of users's checkins to show on map
      */
-    const MAX_CHECKINS = 100;
+    const MAX_CHECKINS = 150;
 
     protected function setFunction()
     {

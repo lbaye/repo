@@ -30,7 +30,7 @@ class Facebook extends Base {
             SELECT author_uid, coords, page_id, timestamp
             FROM checkin
             WHERE author_uid
-            IN (SELECT uid2 FROM friend WHERE uid1 = me())
+            IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND timestamp > '.strtotime("-2 week").'
             ';
 
         $fbCheckins = $this->fetchFqlResult($fql);
