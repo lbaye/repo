@@ -927,21 +927,21 @@ bool searchFlags=true;
             case 2:
                 NSLog(@"may be");
                 aEvent.myResponse=@"maybe";
-                [filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
+                //[filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
                 NSLog(@"eventID %@",aEvent.eventID);
                 [rc setEventRsvp:aEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
                 break;
             case 1:
                 NSLog(@"no");
                 aEvent.myResponse=@"no";
-                [filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
+                //[filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
                 NSLog(@"eventID %@",aEvent.eventID);
                 [rc setEventRsvp:aEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
                 break;
             case 0:
                 NSLog(@"yes");
                 aEvent.myResponse=@"yes";
-                [filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
+                //[filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
                 NSLog(@"eventID %@",aEvent.eventID);
                 [rc setEventRsvp:aEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
                 break;
