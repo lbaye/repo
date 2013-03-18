@@ -138,6 +138,46 @@ abstract class Content
             }
             return in_array($user->getId(), $circleUsers);
         } else {
+
+            foreach ($this->getOwner()->getCircles() as $circle) {
+                if ($circle->getName() == "friends" && $this->getPermission() == 'friends') {
+                    if (in_array($user->getId(), $circle->getFriends())) {
+                        return true;
+                    }
+                }
+                if ($this->getPermission() == 'circles') {
+                    if (in_array($user->getId(), $circle->getFriends())) {
+                        return true;
+                    }
+                }
+            }
+
+            if (!in_array($user->getId(), $this->getPermittedUsers())) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    public function isPermittedPhotos(\Document\User $user, $permittedObj = null)
+    {
+        if ($this->getPermission() == 'public' || $this->getOwner() == $user) {
+            return true;
+        } else if ($this->getPermission() == 'private' || $this->getPermission() == '') {
+            return false;
+        } else if ($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
+            return true;
+        } else if ($permittedCircles = $this->getPermittedCircles()) {
+            $circleUsers = array();
+
+            foreach ($this->getOwner()->getCircles() as $circle) {
+                if (in_array($circle->getId(), $permittedCircles)) {
+                    $circleUsers = array_merge($circleUsers, $circle->getFriends());
+                }
+            }
+            return in_array($user->getId(), $circleUsers);
+        } else {
             foreach ($this->getOwner()->getCircles() as $circle) {
                 if ($circle->getName() == "friends") {
                     if (in_array($user->getId(), $circle->getFriends())) {
