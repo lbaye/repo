@@ -385,20 +385,26 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     for (int i = 0; i < [smAppDelegate.messages count]; i++)
     {
-        if ([self.selectedMessage.notifSenderId isEqualToString:@"sender_id"] && [self.selectedMessage.notifID isEqualToString:[(NotifMessage*)[smAppDelegate.messages objectAtIndex:i] notifID]]) {
-            NotifMessage *notifMsg = (NotifMessage*)[smAppDelegate.messages objectAtIndex:i];
-            MessageReply *messageReply = [[MessageReply alloc] init];
-            messageReply.content = notifMsg.notifMessage;
-            messageReply.time = notifMsg.notifTime;
-            NSArray *components = [notifMsg.notifSender componentsSeparatedByString:@" "];
-            messageReply.senderName = [components objectAtIndex:0];
-            messageReply.senderID = notifMsg.notifSenderId;
-            messageReply.senderAvater = notifMsg.notifAvater;
-            [messageReplyList insertObject:messageReply atIndex:0];
-            [messageReply release];
-            [messageReplyTableView reloadData];
-        }
+        if([self.selectedMessage.notifID isEqualToString:[(NotifMessage*)[smAppDelegate.messages objectAtIndex:i] notifID]])
+            {
+                [(NotifMessage*)[smAppDelegate.messages objectAtIndex:i] setMsgStatus:@"read"];
+                
+                if ([self.selectedMessage.notifSenderId isEqualToString:@"sender_id"] && [self.selectedMessage.notifID isEqualToString:[(NotifMessage*)[smAppDelegate.messages objectAtIndex:i] notifID]]) {
+                    NotifMessage *notifMsg = (NotifMessage*)[smAppDelegate.messages objectAtIndex:i];
+                    MessageReply *messageReply = [[MessageReply alloc] init];
+                    messageReply.content = notifMsg.notifMessage;
+                    messageReply.time = notifMsg.notifTime;
+                    NSArray *components = [notifMsg.notifSender componentsSeparatedByString:@" "];
+                    messageReply.senderName = [components objectAtIndex:0];
+                    messageReply.senderID = notifMsg.notifSenderId;
+                    messageReply.senderAvater = notifMsg.notifAvater;
+                    [messageReplyList insertObject:messageReply atIndex:0];
+                    [messageReply release];
+                    [messageReplyTableView reloadData];
+                }
+            }
     }
+    
     [msgListTableView reloadData];
     
 }
