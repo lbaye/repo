@@ -951,6 +951,7 @@ AppDelegate *smAppDelegate;
     }
     aUserInfo.userFirstName=[self getNestedKeyVal:jsonObjects key1:@"firstName" key2:nil key3:nil];
     aUserInfo.avatar = [self getNestedKeyVal:jsonObjects key1:@"avatar" key2:nil key3:nil];
+    aUserInfo.avatarOriginal = [self getNestedKeyVal:jsonObjects key1:@"avatarOriginal" key2:nil key3:nil];
     aUserInfo.deactivated = [self getNestedKeyVal:jsonObjects key1:@"deactivated" key2:nil key3:nil];
     aUserInfo.authToken = [self getNestedKeyVal:jsonObjects key1:@"authToken" key2:nil key3:nil];
     aUserInfo.unit = [self getNestedKeyVal:jsonObjects key1:@"settings" key2:@"unit" key3:nil];

@@ -57,6 +57,7 @@
 @property(nonatomic,retain) NSString *firstName;
 @property(nonatomic,retain) NSString *lastName;
 @property(nonatomic,retain) NSString *avatar;
+@property(nonatomic,retain) NSString *avatarOriginal;
 @property(nonatomic,retain) UIImage  *icon;
 @property(nonatomic,retain) NSString *deactivated;
 @property(nonatomic,retain) NSString *authToken;

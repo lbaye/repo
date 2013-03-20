@@ -27,6 +27,7 @@
 #import "ODRefreshControl.h"
 #import "FriendsProfileViewController.h"
 #import "NSData+Base64.h"
+#import "UIImageView+Cached.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -349,6 +350,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)goToZoomView:(id)sender;
 {
+    [fullImageView loadFromURLTemporaryCache:[NSURL URLWithString:userInfo.avatarOriginal]];
     CGFloat xpos = self.view.frame.origin.x;
     CGFloat ypos = self.view.frame.origin.y;
     zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
