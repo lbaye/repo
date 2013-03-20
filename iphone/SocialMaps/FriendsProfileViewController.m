@@ -33,6 +33,7 @@
 #import "MessageListViewController.h"
 #import "UserBasicProfileViewController.h"
 #import "NSData+Base64.h"
+#import "UIImageView+Cached.h"
 
 @interface FriendsProfileViewController ()
 
@@ -572,6 +573,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)goToZoomView:(id)sender
 {
+    [fullImageView loadFromURLTemporaryCache:[NSURL URLWithString:userInfo.avatarOriginal]];
     CGFloat xpos = self.view.frame.origin.x;
     CGFloat ypos = self.view.frame.origin.y;
     zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);

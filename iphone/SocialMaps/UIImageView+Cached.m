@@ -56,6 +56,8 @@ static char const * const ObjectTagKey = "ObjectTag";
         self.image = nil;
         ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURLTemporaryCache:url]);
         
+        [self canclePreviousDownload];
+        
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
         } else {

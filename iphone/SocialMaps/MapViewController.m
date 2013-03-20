@@ -2111,7 +2111,14 @@ ButtonClickCallbackData callBackData;
 
 - (void)gotListings:(NSNotification *)notif
 {
-    NSLog(@"got listing");
+    static BOOL gotListingIsInProgress = FALSE;
+    
+    if (gotListingIsInProgress) return;
+    
+     NSLog(@"got listing");
+    
+    gotListingIsInProgress = TRUE;
+    
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         
@@ -2361,6 +2368,8 @@ ButtonClickCallbackData callBackData;
                     [self.view setNeedsDisplay];
                     isFirstTimeDownloading = YES;
                 }
+            
+                gotListingIsInProgress = FALSE;
             });
     
         });

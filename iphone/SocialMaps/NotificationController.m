@@ -55,7 +55,7 @@
     notifTabArrow.frame = newFrame;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    smAppDelegate.msgRead = TRUE;
+    smAppDelegate.msgRead = TRUE;    
     
     if (smAppDelegate.notifRead == TRUE || smAppDelegate.notifications.count == 0) {
         alertCount.text = @"";
@@ -108,6 +108,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    smAppDelegate.ignoreCount = 0;
     
     [self displayNotificationCount];
     
@@ -443,7 +445,12 @@
 - (void) buttonClicked:(NSString*)name cellRow:(int)row {
     NSLog(@"Delegate button %@ clicked for row %d", name, row);
     NotifRequest *req = [smAppDelegate.friendRequests objectAtIndex:row];
-    if ([name isEqualToString:@"Accept"]){
+    [smAppDelegate.friendRequests removeObjectAtIndex:row];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
+    [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    
+    if ([name isEqualToString:@"Accept"])
+    {
         [CustomAlert setBackgroundColor:[UIColor grayColor] 
                         withStrokeColor:[UIColor grayColor]];
         NSString *msg = [NSString stringWithFormat:@"Congratulations! You and %@ are now friends!", req.notifSender];
@@ -460,38 +467,23 @@
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient acceptFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
-        if (req.ignored == TRUE)
-            smAppDelegate.ignoreCount--;
-        [smAppDelegate.friendRequests removeObjectAtIndex:row];
-
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
-        [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
-
-
-    } else if ([name isEqualToString:@"Decline"]) {
+        [self setNOtificationCount];
+    }
+    else if ([name isEqualToString:@"Decline"])
+    {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient declineFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        
-        [smAppDelegate.friendRequests removeObjectAtIndex:row];
-        if (req.ignored == TRUE)
-            smAppDelegate.ignoreCount--;
-    
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
-        [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
-    } else { // Ignore
-        if (req.ignored == FALSE)
-            smAppDelegate.ignoreCount++;
-        req.ignored = TRUE;
+        [self setNOtificationCount];
     }
-    int ignoreCount = 0;
-    if (smAppDelegate.msgRead == TRUE)
-        ignoreCount += [self.unreadMesg count];
     
-    if (smAppDelegate.notifRead == TRUE)
-        ignoreCount += [smAppDelegate.notifications count];
+    [notificationItems reloadData];
+}
+
+- (void)setNOtificationCount
+{
     int totalCount = smAppDelegate.friendRequests.count+
-                        self.unreadMesg.count+smAppDelegate.notifications.count-
-                        smAppDelegate.ignoreCount-ignoreCount;
+    self.unreadMesg.count+smAppDelegate.notifications.count-
+    smAppDelegate.ignoreCount/*-ignoreCount*/;
     if (totalCount <= 0)
         notifCount.text = @"";
     else
@@ -502,8 +494,6 @@
         reqCount.text = @"";
     else
         reqCount.text = [NSString stringWithFormat:@"%d",requestCount];
-    
-    [notificationItems reloadData];
 }
 
 - (IBAction)actionBackMe:(id)sender
@@ -530,6 +520,7 @@
         reqCount.text   = [NSString stringWithFormat:@"%d",requestCount];
     
     [smAppDelegate hideActivityViewer];
+    [self displayNotificationCount];
 }
 
 -(void)gotNewMessageDone:(NSNotification *)notif

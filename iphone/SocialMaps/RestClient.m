@@ -951,6 +951,7 @@ AppDelegate *smAppDelegate;
     }
     aUserInfo.userFirstName=[self getNestedKeyVal:jsonObjects key1:@"firstName" key2:nil key3:nil];
     aUserInfo.avatar = [self getNestedKeyVal:jsonObjects key1:@"avatar" key2:nil key3:nil];
+    aUserInfo.avatarOriginal = [self getNestedKeyVal:jsonObjects key1:@"avatarOriginal" key2:nil key3:nil];
     aUserInfo.deactivated = [self getNestedKeyVal:jsonObjects key1:@"deactivated" key2:nil key3:nil];
     aUserInfo.authToken = [self getNestedKeyVal:jsonObjects key1:@"authToken" key2:nil key3:nil];
     aUserInfo.unit = [self getNestedKeyVal:jsonObjects key1:@"settings" key2:@"unit" key3:nil];
@@ -6627,15 +6628,17 @@ AppDelegate *smAppDelegate;
     [request addPostValue:geotag.geoTagAddress forKey:@"address"];
     [request addPostValue:geotag.geoTagLocation.latitude forKey:@"lat"];
     [request addPostValue:geotag.geoTagLocation.longitude forKey:@"lng"];
+
     for (int i=0; i<[geotag.frndList count]; i++)
-    {
-        [request addPostValue:[geotag.frndList objectAtIndex:i] forKey:@"friends[]"];
-    }
+        [request addPostValue:[geotag.frndList objectAtIndex:i] forKey:@"permittedUsers[]"];
     
     for (int i=0; i<[geotag.circleList count]; i++)
-    {
-        [request addPostValue:[geotag.circleList objectAtIndex:i] forKey:@"circles[]"];
-    }
+        [request addPostValue:[geotag.circleList objectAtIndex:i] forKey:@"permittedCircles[]"];
+    
+    if(([geotag.frndList count] > 0) || ([geotag.circleList count] > 0))
+        [request addPostValue:@"custom" forKey:@"permission"];
+    else
+        [request addPostValue:@"private" forKey:@"permission"];
     
     // Handle successful REST call
     [request setCompletionBlock:^{
