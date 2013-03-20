@@ -6627,15 +6627,17 @@ AppDelegate *smAppDelegate;
     [request addPostValue:geotag.geoTagAddress forKey:@"address"];
     [request addPostValue:geotag.geoTagLocation.latitude forKey:@"lat"];
     [request addPostValue:geotag.geoTagLocation.longitude forKey:@"lng"];
+
     for (int i=0; i<[geotag.frndList count]; i++)
-    {
-        [request addPostValue:[geotag.frndList objectAtIndex:i] forKey:@"friends[]"];
-    }
+        [request addPostValue:[geotag.frndList objectAtIndex:i] forKey:@"permittedUsers[]"];
     
     for (int i=0; i<[geotag.circleList count]; i++)
-    {
-        [request addPostValue:[geotag.circleList objectAtIndex:i] forKey:@"circles[]"];
-    }
+        [request addPostValue:[geotag.circleList objectAtIndex:i] forKey:@"permittedCircles[]"];
+    
+    if(([geotag.frndList count] > 0) || ([geotag.circleList count] > 0))
+        [request addPostValue:@"custom" forKey:@"permission"];
+    else
+        [request addPostValue:@"private" forKey:@"permission"];
     
     // Handle successful REST call
     [request setCompletionBlock:^{
