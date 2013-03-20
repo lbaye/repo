@@ -143,61 +143,66 @@ class UserActivities extends Base
 
         $offset = $this->request->get('offset', 0);
 
-        if ($networkFeed)
-            $activities = $this->userActivitiesRepo->getByNetwork($user, $offset, 5);
-        else
-            $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
+//        if ($networkFeed)
+//            $activities = $this->userActivitiesRepo->getByNetwork($user, $offset, 5);
+//        else
+//            $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
 
         $partialView = $offset > 0;
 
-        $i = 1;
         $allowItems = array();
-        if (count($activities) > 0)
+
+        while( $requiredItems = (5 - count($allowItems)) )
+        {
+            if ($networkFeed)
+                $activities = $this->userActivitiesRepo->getByNetwork($user, $offset, 5);
+            else
+                $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
+
+            $recNo = 0;
             foreach ($activities as $activity) {
-                if ($activity->getObjectType() == "photo") {
-                    $photo = $this->photoRepository->getByPhotoId($user, $activity->getObjectId());
-                    $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
-
-                    if (empty($permittedDocs))
-                        unset($activity);
-                    else
-                        $allowItems[] = $activity;
-                } else if ($activity->getObjectType() == "geotag") {
-                    $geotags = $this->placeRepository->searchForUserActivities($this->user, $user, $activity->getObjectId());
-                    $i = 0;
-                    $customPermission = 0;
-
-                    foreach ($geotags as $geotag) {
-                        if (empty($geotag)) {
-                            unset($activity);
-                        } else {
-                            if (($geotag->getPermission() == "custom") && ($this->user->getId() != $user->getId())) {
-                                $circleUsers = array();
-                                foreach ($user->getCircles() as $circle) {
-                                    if (in_array($circle->getId(), $geotag->getPermittedCircles())) {
-                                        $circleUsers = array_merge($circleUsers, $circle->getFriends());
-                                    }
-                                }
-                                if (!in_array($this->user->getId(), $circleUsers)) {
-                                    if (!in_array($this->user->getId(), $geotag->getPermittedUsers())) {
-                                        unset($activity);
-                                        $customPermission = 1;
-                                    }
-                                }
-                            }
-                            if ($customPermission == 0) {
-                                $allowItems[] = $activity;
-                            }
-                        }
-                        $i = 1;
-                    }
-                    if ($i == 0) {
-                        unset($activity);
-                    }
-                } else {
-                    $allowItems[] = $activity;
-                }
+                $recNo++;
             }
+
+
+//            if (empty($activities)) {
+//                echo "RRRRRRRRRRRRR";
+//                break;
+//            }
+
+            $items = $this->expectedActivities($activities, $user, $offset);
+
+            if ( ($removeItems = ( count($items) - $requiredItems) ) > 0)
+            {
+                while($removeItems>0 )
+                {
+                  array_pop($items);
+                  --$removeItems;
+                }
+                $offset += count($items);
+            } else{
+                $offset += 5;
+            }
+
+            $allowItems = array_merge($allowItems, $items);
+
+            // TRICKS
+            if ($recNo < 5){
+                break;
+            }
+        }
+
+
+//        if (count($activities) > 0) {
+//            $allowItems = $this->expectedActivities($activities, $user, $offset);
+//            if ($requiredItems = (5 - count($allowItems))) {
+//                if ($networkFeed)
+//                    $activities = $this->userActivitiesRepo->getByNetwork($user, $offset, 5);
+//                else
+//                    $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
+//            }
+//        }
+
 
         if (self::DEFAULT_CONTENT_TYPE === $type) {
             $items = array();
@@ -220,6 +225,58 @@ class UserActivities extends Base
                     'authToken' => $this->user->getAuthToken()
                 ));
         }
+    }
+
+    private function expectedActivities($activities, $user, $offset = 0)
+    {
+        $i = 1;
+        $allowItems = array();
+        foreach ($activities as $activity) {
+            if ($activity->getObjectType() == "photo") {
+                $photo = $this->photoRepository->getByPhotoId($user, $activity->getObjectId());
+                $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
+
+                if (empty($permittedDocs))
+                    unset($activity);
+                else
+                    $allowItems[] = $activity;
+            } else if ($activity->getObjectType() == "geotag") {
+                $geotags = $this->placeRepository->searchForUserActivities($this->user, $user, $activity->getObjectId());
+                $i = 0;
+                $customPermission = 0;
+
+                foreach ($geotags as $geotag) {
+                    if (empty($geotag)) {
+                        unset($activity);
+                    } else {
+                        if (($geotag->getPermission() == "custom") && ($this->user->getId() != $user->getId())) {
+                            $circleUsers = array();
+                            foreach ($user->getCircles() as $circle) {
+                                if (in_array($circle->getId(), $geotag->getPermittedCircles())) {
+                                    $circleUsers = array_merge($circleUsers, $circle->getFriends());
+                                }
+                            }
+                            if (!in_array($this->user->getId(), $circleUsers)) {
+                                if (!in_array($this->user->getId(), $geotag->getPermittedUsers())) {
+                                    unset($activity);
+                                    $customPermission = 1;
+                                }
+                            }
+                        }
+                        if ($customPermission == 0) {
+                            $allowItems[] = $activity;
+                        }
+                    }
+                    $i = 1;
+                }
+                if ($i == 0) {
+                    unset($activity);
+                }
+            } else {
+                $allowItems[] = $activity;
+            }
+        }
+        return $allowItems;
     }
 
     /**
