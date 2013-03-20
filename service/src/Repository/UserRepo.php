@@ -785,10 +785,14 @@ class UserRepo extends Base
             $user->setAvatar($avatarUrl);
         } else {
             $thumbPath = $this->findOrCreateAvatarThumbnailPath();
-            ImageHelper::saveResizeAvatarFromBase64(
+            $originalPath = $this->findOrCreateAvatarOriginalThumbnailPath();
+            $fileOriginalPath = "/images/avatar/original/" . $user->getId();
+
+            ImageHelper::saveResizeAvatarOriginFromBase64(
                 $avatar, ROOTDIR . $filePath,
-                $thumbPath . DIRECTORY_SEPARATOR . $user->getId());
+                $thumbPath . DIRECTORY_SEPARATOR . $user->getId(), $originalPath. DIRECTORY_SEPARATOR . $user->getId());
             $user->setAvatar($filePath . "?" . $timeStamp);
+            $user->setAvatarOriginal($fileOriginalPath. "?" . $timeStamp);
         }
 
         $this->dm->persist($user);
@@ -800,6 +804,18 @@ class UserRepo extends Base
     public function findOrCreateAvatarThumbnailPath()
     {
         $fullThumbPath = ROOTDIR . '/images/avatar/thumb';
+
+        if (!file_exists($fullThumbPath)) {
+            mkdir($fullThumbPath, 0777, true);
+            return $fullThumbPath;
+        }
+
+        return $fullThumbPath;
+    }
+
+    public function findOrCreateAvatarOriginalThumbnailPath()
+    {
+        $fullThumbPath = ROOTDIR . '/images/avatar/original';
 
         if (!file_exists($fullThumbPath)) {
             mkdir($fullThumbPath, 0777, true);

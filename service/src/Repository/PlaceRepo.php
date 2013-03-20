@@ -14,7 +14,8 @@ use Helper\Image as ImageHelper;
  */
 class PlaceRepo extends Base implements Likable
 {
-    protected function bindObservers() {
+    protected function bindObservers()
+    {
         $this->addObserver(new \Document\PlacesObserver($this->dm));
     }
 
@@ -29,8 +30,8 @@ class PlaceRepo extends Base implements Likable
 
     public function map(array $data, UserDocument $owner, \Document\Landmark $placeTypeDoc = null)
     {
-        if(is_null($placeTypeDoc)){
-            if('Document\Geotag' == $this->documentName) {
+        if (is_null($placeTypeDoc)) {
+            if ('Document\Geotag' == $this->documentName) {
                 $placeTypeDoc = new GeotagDocument();
             } else {
                 $placeTypeDoc = new PlaceDocument();
@@ -41,20 +42,20 @@ class PlaceRepo extends Base implements Likable
             $placeTypeDoc->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title','category', 'description', 'photo');
+        $setIfExistFields = array('title', 'category', 'description', 'photo');
 
-        foreach($setIfExistFields as $field) {
+        foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
                 $placeTypeDoc->{"set{$field}"}($data[$field]);
             }
         }
 
         $placeTypeDoc->setOwner($owner);
-        if(isset($data['lat'])) {
+        if (isset($data['lat'])) {
             $placeTypeDoc->setLocation(new \Document\Location($data));
         }
 
-        if(isset($data['permission'])){
+        if (isset($data['permission'])) {
             $placeTypeDoc->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
@@ -84,7 +85,7 @@ class PlaceRepo extends Base implements Likable
             if (!file_exists(ROOTDIR . "/" . $dirPath)) {
                 mkdir(ROOTDIR . "/" . $dirPath, 0777, true);
             }
-            
+
             ImageHelper::saveImageFromBase64($placePhoto, ROOTDIR . $filePath);
             $place->setPhoto($filePath . "?" . $timeStamp);
         }
@@ -107,12 +108,13 @@ class PlaceRepo extends Base implements Likable
         return $place->getOwner();
     }
 
-    public function getByUser(UserDocument $user) {
+    public function getByUser(UserDocument $user)
+    {
         $docs = $this->findBy(array('owner' => $user->getId()), array('createDate' => 'DESC'));
         return $this->_toArrayAll($docs);
     }
 
-    public function search(UserDocument $user,$lng,$lat)
+    public function search(UserDocument $user, $lng = null, $lat = null)
     {
         $circles = $user->getCircles();
         foreach ($circles as $circle) {
@@ -131,38 +133,63 @@ class PlaceRepo extends Base implements Likable
         return $this->_toArrayAll($docs);
     }
 
-    public function like($place, $user) {
-        $docName = $this->determineDocName($place);
-        return $this->dm->createQueryBuilder("Document\\$docName")
-                ->update()
-                ->field('likes')->addToSet($user->getId())
-                ->field('id')->equals($place->getId())
-                ->getQuery()
-                ->execute();
+    public function searchForUserActivities(UserDocument $currentUser, UserDocument $user, $geoTagId, $lng = null, $lat = null)
+    {
+        $circles = $user->getCircles();
+        foreach ($circles as $circle) {
+            $circleId[] = $circle->getId();
+        }
+        $qb = $this->dm->createQueryBuilder('Document\Geotag');
+        $qb->field('id')->equals($geoTagId);
+        if (!empty($lat) && !empty($lng))
+            $qb->field('location')->near($lat, $lng);
+        $qb->addOr($qb->expr()->field('owner')->equals($currentUser->getId()));
+        $qb->addOr($qb->expr()->field('permittedUsers')->equals($currentUser->getId()));
+        $qb->addOr($qb->expr()->field('permittedCircles')->in($circleId));
+        $qb->addOr($qb->expr()->field('permission')->equals('public'));
+
+        $docs = $qb->getQuery()->execute();
+
+        return $docs;
     }
 
-    public function unlike($place, $user) {
+    public function like($place, $user)
+    {
         $docName = $this->determineDocName($place);
         return $this->dm->createQueryBuilder("Document\\$docName")
-                ->update()
-                ->field('likes')->pull($user->getId())
-                ->field('id')->equals($place->getId())
-                ->getQuery()
-                ->execute();
+            ->update()
+            ->field('likes')->addToSet($user->getId())
+            ->field('id')->equals($place->getId())
+            ->getQuery()
+            ->execute();
     }
 
-    public function hasLiked($place, $user) {
+    public function unlike($place, $user)
+    {
+        $docName = $this->determineDocName($place);
+        return $this->dm->createQueryBuilder("Document\\$docName")
+            ->update()
+            ->field('likes')->pull($user->getId())
+            ->field('id')->equals($place->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function hasLiked($place, $user)
+    {
         if ($place->getLikesCount() > 0)
             return in_array($user->getId(), $place->getLikes());
 
         return false;
     }
 
-    public function getLikes($place) {
+    public function getLikes($place)
+    {
         return $place->getLikes();
     }
 
-    protected function determineDocName($place) {
+    protected function determineDocName($place)
+    {
         if ($place->getObjectType() == 'geotag')
             return 'Geotag';
         else
