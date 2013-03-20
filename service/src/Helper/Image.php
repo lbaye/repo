@@ -65,6 +65,28 @@ class Image
         imagedestroy($new);
     }
 
+    public function imageOriginal($image, $filePath, $original = null)
+    {
+        // Get current dimensions
+        $oldWidth = imagesx($image);
+        $oldHeight = imagesy($image);
+
+        // Create new empty image
+        $new = imagecreatetruecolor($oldWidth, $oldHeight);
+        // Resize old image into new
+        imagecopyresampled($new, $image,
+            0, 0, 0, 0,
+            $oldWidth, $oldHeight, $oldWidth, $oldHeight);
+
+        // Catch the imagedata
+        imagejpeg($new, $filePath, 50);
+
+        // Destroy resources
+        if ($original == 1)
+            imagedestroy($image);
+        imagedestroy($new);
+    }
+
     public static function saveResizeAvatarFromBase64($base64Str, $fPath, $tPath)
     {
         $img = imagecreatefromstring(base64_decode($base64Str));
@@ -73,6 +95,21 @@ class Image
             return false;
 
         if ($img != false) {
+            self::imageResize(50, 50, $img, $tPath);
+            self::imageResize(100, 100, $img, $fPath);
+            return true;
+        }
+    }
+
+    public static function saveResizeAvatarOriginFromBase64($base64Str, $fPath, $tPath, $originalPath)
+    {
+        $img = imagecreatefromstring(base64_decode($base64Str));
+
+        if (empty($img))
+            return false;
+
+        if ($img != false) {
+            self::imageOriginal($img, $originalPath);
             self::imageResize(50, 50, $img, $tPath);
             self::imageResize(100, 100, $img, $fPath);
             return true;

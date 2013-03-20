@@ -128,7 +128,7 @@ abstract class Content
             return false;
         } else if ($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
             return true;
-        } else if ($permittedCircles = $this->getPermittedCircles()) {
+        } else if (($permittedCircles = $this->getPermittedCircles()) OR ($permittedUsers = $this->getPermittedUsers())) {
             $circleUsers = array();
 
             foreach ($this->getOwner()->getCircles() as $circle) {
@@ -136,7 +136,12 @@ abstract class Content
                     $circleUsers = array_merge($circleUsers, $circle->getFriends());
                 }
             }
-            return in_array($user->getId(), $circleUsers);
+            if (!in_array($user->getId(), $circleUsers)) {
+                if (!in_array($user->getId(), $this->getPermittedUsers())) {
+                    return false;
+                }
+            }
+            return true;
         } else {
 
             foreach ($this->getOwner()->getCircles() as $circle) {
@@ -162,13 +167,14 @@ abstract class Content
 
     public function isPermittedPhotos(\Document\User $user, $permittedObj = null)
     {
+
         if ($this->getPermission() == 'public' || $this->getOwner() == $user) {
             return true;
         } else if ($this->getPermission() == 'private' || $this->getPermission() == '') {
             return false;
         } else if ($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
             return true;
-        } else if ($permittedCircles = $this->getPermittedCircles()) {
+        } else if (($permittedCircles = $this->getPermittedCircles()) OR ($permittedUsers = $this->getPermittedUsers())) {
             $circleUsers = array();
 
             foreach ($this->getOwner()->getCircles() as $circle) {
@@ -176,7 +182,16 @@ abstract class Content
                     $circleUsers = array_merge($circleUsers, $circle->getFriends());
                 }
             }
-            return in_array($user->getId(), $circleUsers);
+
+            if (!in_array($user->getId(), $circleUsers)) {
+//                echo $user->getId()."<br />";
+//            echo $this->getOwner()->getId()."<br />";
+//                 var_dump($this->getPermittedUsers());
+                if (!in_array($user->getId(), $this->getPermittedUsers())) {
+                    return false;
+                }
+            }
+            return true;
         } else {
             foreach ($this->getOwner()->getCircles() as $circle) {
                 if ($circle->getName() == "friends") {

@@ -14,13 +14,16 @@ use \Helper\Dependencies as Dependencies;
 /**
  * Manage user activities related logs
  */
-class UserActivities extends Base {
+class UserActivities extends Base
+{
 
     private $userActivitiesRepo;
     private $photoRepository;
     private $geotagRepository;
+    private $placeRepository;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         $this->createLogger('Controller::UserActivities');
@@ -29,6 +32,7 @@ class UserActivities extends Base {
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->photoRepository = $this->dm->getRepository('Document\Photo');
         $this->geotagRepository = $this->dm->getRepository('Document\Geotag');
+        $this->placeRepository = $this->dm->getRepository('Document\Place');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
     }
@@ -43,7 +47,8 @@ class UserActivities extends Base {
      * @param bool $networkFeed Set true if you want to include all friend's activities
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getActivities($type, $networkFeed = false) {
+    public function getActivities($type, $networkFeed = false)
+    {
         $this->_ensureLoggedIn();
         return $this->getActivitiesByUser($this->user, $type, $networkFeed);
     }
@@ -59,7 +64,8 @@ class UserActivities extends Base {
      * @param bool $networkFeed Set true if you want to include all friend's activities
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getMiniFeed($type, $networkFeed = false){
+    public function getMiniFeed($type, $networkFeed = false)
+    {
         $this->_ensureLoggedIn();
         return $this->getMiniFeedByUser($this->user, $type, $networkFeed);
     }
@@ -74,7 +80,8 @@ class UserActivities extends Base {
      * @param  $type JSON or HTML
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getMiniFeedByUserId($type) {
+    public function getMiniFeedByUserId($type)
+    {
         $userId = $this->request->get('userId');
         return $this->getMiniFeedByUser($this->userRepository->find($userId), $type);
     }
@@ -89,15 +96,17 @@ class UserActivities extends Base {
      * @param bool $networkFeed Set true if you want to include all friend's activities
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getActivitiesByUserId($type, $networkFeed = false) {
+    public function getActivitiesByUserId($type, $networkFeed = false)
+    {
         $userId = $this->request->get('userId');
         return $this->getActivitiesByUser($this->userRepository->find($userId), $type, $networkFeed);
     }
 
     public function getMiniFeedByUser(
-        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE, $networkFeed = false) {
+        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE, $networkFeed = false)
+    {
 
-        if($networkFeed)
+        if ($networkFeed)
             $activities = $this->userActivitiesRepo->getByNetwork($user);
         else
             $activities = $this->userActivitiesRepo->getByUser($user);
@@ -129,7 +138,8 @@ class UserActivities extends Base {
     }
 
     public function getActivitiesByUser(
-        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE, $networkFeed = false) {
+        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE, $networkFeed = false)
+    {
 
         $offset = $this->request->get('offset', 0);
 
@@ -140,6 +150,60 @@ class UserActivities extends Base {
 
         $partialView = $offset > 0;
 
+        $i = 1;
+        $allowItems = array();
+        if (count($activities) > 0)
+            foreach ($activities as $activity) {
+                if ($activity->getObjectType() == "photo") {
+                    $photo = $this->photoRepository->getByPhotoId($user, $activity->getObjectId());
+                    $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
+
+                    if (empty($permittedDocs))
+                        unset($activity);
+                    else
+                        $allowItems[] = $activity;
+                } else if ($activity->getObjectType() == "geotag") {
+                    $geotags = $this->placeRepository->searchForUserActivities($this->user, $user, $activity->getObjectId());
+//                   var_dump($geotags);
+                    $i = 0;
+                    $customPermission = 0;
+
+                    foreach ($geotags as $geotag) {
+
+                        if (empty($geotag)) {
+                            unset($activity);
+                        } else {
+                            if (($geotag->getPermission() == "custom") && ($this->user->getId() != $user->getId())) {
+                                $circleUsers = array();
+                                foreach ($user->getCircles() as $circle) {
+                                    if (in_array($circle->getId(), $geotag->getPermittedCircles())) {
+                                        $circleUsers = array_merge($circleUsers, $circle->getFriends());
+                                    }
+                                }
+                                if (!in_array($this->user->getId(), $circleUsers)) {
+                                    if (!in_array($this->user->getId(), $geotag->getPermittedUsers())) {
+                                        unset($activity);
+                                        $customPermission = 1;
+                                    }
+
+                                }
+                            }
+                            if ($customPermission == 0) {
+                                $allowItems[] = $activity;
+                            }
+                        }
+                        $i = 1;
+                    }
+                    if ($i == 0) {
+                        unset($activity);
+                    }
+
+                } else {
+                    $allowItems[] = $activity;
+                }
+
+            }
+
         if (self::DEFAULT_CONTENT_TYPE === $type) {
             $items = array();
             if (count($activities) > 0)
@@ -149,16 +213,16 @@ class UserActivities extends Base {
         } else {
             return $this->render(
                 array(
-                     'activities' => $activities,
-                     'userRepo' => $this->userRepository,
-                     'photoRepo' => $this->photoRepository,
-                     'geotagRepo' => $this->geotagRepository,
-                     'activityRepo' => $this->userActivitiesRepo,
-                     'contextUser' => $user,
-                     'currentUser' => $this->user,
-                     'partialView' => $partialView,
-                     'networkFeed' => $networkFeed,
-                     'authToken' => $this->user->getAuthToken()
+                    'activities' => $allowItems,
+                    'userRepo' => $this->userRepository,
+                    'photoRepo' => $this->photoRepository,
+                    'geotagRepo' => $this->geotagRepository,
+                    'activityRepo' => $this->userActivitiesRepo,
+                    'contextUser' => $user,
+                    'currentUser' => $this->user,
+                    'partialView' => $partialView,
+                    'networkFeed' => $networkFeed,
+                    'authToken' => $this->user->getAuthToken()
                 ));
         }
     }
@@ -172,7 +236,8 @@ class UserActivities extends Base {
      * @param string $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function likeById($id, $type = self::DEFAULT_CONTENT_TYPE) {
+    public function likeById($id, $type = self::DEFAULT_CONTENT_TYPE)
+    {
         $this->_ensureLoggedIn();
 
         $activity = $this->userActivitiesRepo->find($id);
@@ -195,7 +260,8 @@ class UserActivities extends Base {
      * @param string $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function unlikeById($id, $type = self::DEFAULT_CONTENT_TYPE) {
+    public function unlikeById($id, $type = self::DEFAULT_CONTENT_TYPE)
+    {
         $this->_ensureLoggedIn();
 
         $activity = $this->userActivitiesRepo->find($id);
@@ -218,7 +284,8 @@ class UserActivities extends Base {
      * @param string $type HTML or JSON format
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getLikesById($id, $type = self::DEFAULT_CONTENT_TYPE) {
+    public function getLikesById($id, $type = self::DEFAULT_CONTENT_TYPE)
+    {
         $this->_ensureLoggedIn();
 
         $activity = $this->userActivitiesRepo->find($id);

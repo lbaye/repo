@@ -70,6 +70,9 @@ class User
     protected $avatar;
 
     /** @ODM\String */
+    protected $avatarOriginal;
+
+    /** @ODM\String */
     protected $source;
 
     /** @ODM\Date */
@@ -396,6 +399,7 @@ class User
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
             'avatar' => $this->getAvatar(),
+            'avatarOriginal' => $this->getAvatarOriginal(),
             'coverPhoto' => $this->getCoverPhoto(),
             'deactivated' => $this->getDeactivated(),
             'authToken' => $this->getAuthToken(),
@@ -1344,6 +1348,16 @@ class User
             return $this->getUsername();
         else
             return $this->getFirstName();
+    }
+
+    public function setAvatarOriginal($avatarOriginal)
+    {
+        $this->avatarOriginal = $avatarOriginal;
+    }
+
+    public function getAvatarOriginal()
+    {
+        return $this->avatarOriginal;
     }
 
 }

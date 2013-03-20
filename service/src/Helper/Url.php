@@ -46,6 +46,11 @@ class Url
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['avatar']);
     }
 
+    public static function buildAvatarOriginalUrl($data)
+    {
+        return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['avatarOriginal']);
+    }
+
     public static function buildEventPhotoUrl($data)
     {
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['eventImage']);
@@ -103,7 +108,8 @@ class Url
         }
     }
 
-    public static function buildFacebookAvatar($fbId) {
+    public static function buildFacebookAvatar($fbId)
+    {
         return 'https://graph.facebook.com/' . $fbId . '/picture?type=normal';
     }
 }

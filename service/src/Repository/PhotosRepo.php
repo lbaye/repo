@@ -73,6 +73,7 @@ class PhotosRepo extends Base implements Likable
 
     public function getByPhotoId(UserDocument $user, $photoId)
     {
+
         return $this->dm->createQueryBuilder()
             ->find('Document\Photo')
             ->field('_id')

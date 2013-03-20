@@ -209,6 +209,19 @@ abstract class Base
         return $permittedDocs;
     }
 
+    protected function _filterByPermissionForDetails($documents, $userObj)
+    {
+
+        $permittedDocs = array();
+        foreach ($documents as $doc) {
+            if ($doc->isPermittedPhotos($userObj)) {
+                $permittedDocs[] = $doc;
+            }
+        }
+
+        return $permittedDocs;
+    }
+
     protected function _toArrayAll(array $results)
     {
         $arrayItems = array();
