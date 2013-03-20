@@ -184,9 +184,6 @@ abstract class Content
             }
 
             if (!in_array($user->getId(), $circleUsers)) {
-//                echo $user->getId()."<br />";
-//            echo $this->getOwner()->getId()."<br />";
-//                 var_dump($this->getPermittedUsers());
                 if (!in_array($user->getId(), $this->getPermittedUsers())) {
                     return false;
                 }

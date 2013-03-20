@@ -164,12 +164,10 @@ class UserActivities extends Base
                         $allowItems[] = $activity;
                 } else if ($activity->getObjectType() == "geotag") {
                     $geotags = $this->placeRepository->searchForUserActivities($this->user, $user, $activity->getObjectId());
-//                   var_dump($geotags);
                     $i = 0;
                     $customPermission = 0;
 
                     foreach ($geotags as $geotag) {
-
                         if (empty($geotag)) {
                             unset($activity);
                         } else {
@@ -185,7 +183,6 @@ class UserActivities extends Base
                                         unset($activity);
                                         $customPermission = 1;
                                     }
-
                                 }
                             }
                             if ($customPermission == 0) {
@@ -197,11 +194,9 @@ class UserActivities extends Base
                     if ($i == 0) {
                         unset($activity);
                     }
-
                 } else {
                     $allowItems[] = $activity;
                 }
-
             }
 
         if (self::DEFAULT_CONTENT_TYPE === $type) {

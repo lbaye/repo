@@ -211,7 +211,6 @@ abstract class Base
 
     protected function _filterByPermissionForDetails($documents, $userObj)
     {
-
         $permittedDocs = array();
         foreach ($documents as $doc) {
             if ($doc->isPermittedPhotos($userObj)) {
