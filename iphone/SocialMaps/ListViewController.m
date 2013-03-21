@@ -806,9 +806,10 @@ PullableView *pullUpView;
             if (anItem.itemCoverPhotoUrl) 
                 [imgCover loadFromURL:anItem.itemCoverPhotoUrl];
             
-            if (anItem.itemAvaterURL)
-                 [imgIcon loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
-            
+            if (anItem.itemAvaterURL && [anItem.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound)
+                 [imgIcon loadFromURL:[NSURL fileURLWithPath:anItem.itemAvaterURL isDirectory:NO]];
+            else
+                [imgIcon loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
         }
     }
 }
