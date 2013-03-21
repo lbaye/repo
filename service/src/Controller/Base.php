@@ -213,7 +213,9 @@ abstract class Base
     {
         $permittedDocs = array();
         foreach ($documents as $doc) {
+//            echo "<br /> Photos OBJ: ".$doc->getId()."<br />";
             if ($doc->isPermittedPhotos($userObj)) {
+//                echo "<br /> Photos Filtered: ".$doc->getId()."<br />";
                 $permittedDocs[] = $doc;
             }
         }
