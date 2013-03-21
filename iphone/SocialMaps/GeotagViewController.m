@@ -25,6 +25,7 @@
 #import "Places.h"
 #import "NSData+Base64.h"
 #import "UIImageView+Cached.h"
+#import "CachedImages.h"
 
 @interface GeotagViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -1618,6 +1619,20 @@ int geoCounter=0;
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"didReceiveMemoryWarining");
+    [CachedImages removeAllCache];
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)dealloc {
+    
+    [super dealloc];
 }
 
 @end
