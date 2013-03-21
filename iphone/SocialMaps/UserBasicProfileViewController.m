@@ -108,9 +108,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
     
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     nameArr=[[NSMutableArray alloc] init];
@@ -169,6 +166,12 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+    
+    [super viewWillAppear:animated];
+    
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
@@ -954,8 +957,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -1082,6 +1084,12 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 -(void)viewDidDisappear:(BOOL)animated
 {
     isDirty=FALSE;
+    [dicImages_msg removeAllObjects];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+    
+    [super viewDidDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning

@@ -211,6 +211,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];
 
+    [dicImages_msg removeAllObjects];
+    
     [super viewDidDisappear:animated];
 }
 

@@ -80,6 +80,12 @@ UILabel *statusLabel;
     
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [dicImages_msg removeAllObjects];
+    [super viewDidDisappear:animated];
+}
+
 - (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         [webView stopLoading];
