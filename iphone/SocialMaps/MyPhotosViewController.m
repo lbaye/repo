@@ -154,6 +154,8 @@
 
 -(IBAction)gotoZoomView:(id)sender
 {
+    [prevButton setHidden:YES];
+    [nextButton setHidden:YES];
     [self scrollToPage:[sender tag]:NO];
     CGFloat xpos = self.view.frame.origin.x;
     CGFloat ypos = self.view.frame.origin.y;
