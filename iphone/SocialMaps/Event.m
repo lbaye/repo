@@ -39,6 +39,15 @@
     eventDate=[[Date alloc] init];
     eventCreateDate=[[Date alloc] init];
     eventLocation=[[Geolocation alloc] init];
+    eventImage = [[UIImage alloc] init];
+    eventList = [[NSMutableArray alloc] init];
+    guestList = [[NSMutableArray alloc] init];
+    circleList = [[NSMutableArray alloc] init];
+    yesArr = [[NSMutableArray alloc] init];
+    noArr = [[NSMutableArray alloc] init];
+    maybeArr = [[NSMutableArray alloc] init];
+    permittedUsers = [[NSMutableArray alloc] init];
+    permittedCircles = [[NSMutableArray alloc] init];
     }
     return self;
 }
