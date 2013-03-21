@@ -43,6 +43,9 @@ int planListCounter=0;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlanes:) name:NOTIF_GET_ALL_PLANS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePlan:) name:NOTIF_DELETE_PLANS_DONE object:nil];
+ 
     planListCounter=0;
     [super viewWillAppear:animated];
     if (loadNewPlan==TRUE)
@@ -63,8 +66,6 @@ int planListCounter=0;
     [rc getAllplans:@"Auth-Token" :smAppDelegate.authToken];
     planListArr=[[NSMutableArray alloc] init];
     dicIcondownloaderPlans=[[NSMutableDictionary alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlanes:) name:NOTIF_GET_ALL_PLANS_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePlan:) name:NOTIF_DELETE_PLANS_DONE object:nil];    
     
 }
 
@@ -330,15 +331,19 @@ int planListCounter=0;
     [super viewWillDisappear:animated];
     NSArray *allDownloads = [dicIcondownloaderPlans allValues];
     [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-
+    
+    [dicIcondownloaderPlans removeAllObjects];
+    [dicImages_msg removeAllObjects];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_ALL_PLANS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_PLANS_DONE object:nil];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_ALL_PLANS_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_PLANS_DONE object:nil];
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

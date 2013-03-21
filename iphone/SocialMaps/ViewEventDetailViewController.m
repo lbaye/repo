@@ -136,7 +136,7 @@ NSString *searchText;
     }
     else if(globalEvent.eventImage)
     {
-        eventImgView.image=globalEvent.eventImage;
+        if (!eventImgView.image) eventImgView.image=globalEvent.eventImage;
         NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
     }
     
@@ -233,6 +233,12 @@ NSString *searchText;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteFriendsEventDone:) name:NOTIF_INVITE_FRIENDS_EVENT_DONE object:nil];
+    
+    [super viewWillAppear:animated];
+    
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
     detNotfCounter=0;
@@ -255,10 +261,7 @@ NSString *searchText;
     
     notfCounter=0;
     detNotfCounter=0;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];    
-    guestScrollView.delegate = self;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteFriendsEventDone:) name:NOTIF_INVITE_FRIENDS_EVENT_DONE object:nil];
+    
     
     if (globalEvent.isInvited==FALSE)
     {
@@ -284,6 +287,8 @@ NSString *searchText;
     
     [backgroundImageView.layer setCornerRadius:8.0f];
     [backgroundImageView.layer setMasksToBounds:YES];
+    
+    guestScrollView.delegate = self;
 }
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
@@ -324,20 +329,21 @@ NSString *searchText;
 {
     if ([dicImages_msg objectForKey:globalEvent.eventID])
     {
-        eventImgView.image=[dicImages_msg objectForKey:globalEvent.eventID];
+        if (!eventImgView.image)
+            eventImgView.image=[dicImages_msg objectForKey:globalEvent.eventID];
     }
     else
     {
     UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:globalEvent.eventImageUrl]]];
     if (img)
     {
-        eventImgView.image=img;
+        if (!eventImgView.image) eventImgView.image=img;
         [dicImages_msg setObject:img forKey:globalEvent.eventID];
     }
-    else
-    {
-        eventImgView.image=[UIImage imageNamed:@"blank.png"];
-    }
+//    else
+//    {
+//        eventImgView.image=[UIImage imageNamed:@"blank.png"];
+//    }
     NSLog(@"image setted after download. %@",img);
         [img release];
     }
@@ -345,7 +351,6 @@ NSString *searchText;
 
 - (void)viewDidUnload
 {
-    [backgroundImageView release];
     backgroundImageView = nil;
     [super viewDidUnload];
     
@@ -1203,6 +1208,13 @@ NSString *searchText;
 {
     isBackgroundTaskRunning=FALSE;
     detNotfCounter=0;
+    //[dicImages_msg removeAllObjects];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_EVENT_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_INVITE_FRIENDS_EVENT_DONE object:nil];
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)dealloc {

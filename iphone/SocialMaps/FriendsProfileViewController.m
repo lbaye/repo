@@ -34,6 +34,8 @@
 #import "UserBasicProfileViewController.h"
 #import "NSData+Base64.h"
 #import "UIImageView+Cached.h"
+#import "CachedImages.h"
+#import "Plan.h"
 
 @interface FriendsProfileViewController ()
 
@@ -208,6 +210,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];
+
+    [dicImages_msg removeAllObjects];
     
     [super viewDidDisappear:animated];
 }
@@ -1307,6 +1311,16 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         textView.text = @"Your message...";
         textView.textColor = [UIColor lightGrayColor];
     }
+}
+
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"didReceiveMemoryWarining");
+    [CachedImages removeAllCache];
+    [dicImages_msg removeAllObjects];
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    // Release any cached data, images, etc that aren't in use.
 }
 
 - (void)dealloc {

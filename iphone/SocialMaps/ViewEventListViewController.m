@@ -105,6 +105,8 @@ bool searchFlags=true;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
@@ -118,6 +120,8 @@ bool searchFlags=true;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventsByUserIdDone:) name:NOTIF_GET_EVENTS_BY_USERID_DONE object:nil];
     
     [smAppDelegate showActivityViewer:self.view];
@@ -153,6 +157,10 @@ bool searchFlags=true;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_EVENTS_BY_USERID_DONE object:nil];
     [self.eventSearchBar resignFirstResponder];
+    
+    //[dicImages_msg removeAllObjects];
+    
+    [super viewDidDisappear:animated];
 }
 
 -(NSMutableArray *)loadDummyData

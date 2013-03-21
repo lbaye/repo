@@ -883,6 +883,14 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             [userCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleID];
         }
         event.circleList=userCircleArr;
+        
+        for (int i=0; i<[selectedCustomCircleCheckArr count]; i++)
+        {
+            NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleName) ;
+            [event.permittedCircles addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleID];
+        }
+        
+        
         if (isFromVenue==TRUE)
         {
             useLocalData=FALSE;

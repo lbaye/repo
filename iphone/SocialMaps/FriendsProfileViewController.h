@@ -11,11 +11,12 @@
  * @brief Display friends and other user's profile through this view controller.
  */
 
-#import <UIKit/UIKit.h>
-#import "Plan.h"
+
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "PhotoPicker.h"
+
+@class Plan;
 
 @interface FriendsProfileViewController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
 {

@@ -810,6 +810,8 @@ int uploadPhotoCounter=0;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
     
+    [dicImages_msg removeAllObjects];
+    
     [super viewWillDisappear:animated];
     isBgTaskRunning=false;
 }
