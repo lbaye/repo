@@ -41,8 +41,12 @@ int frndPlanListCounter=0;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlanes:) name:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
+    
     frndPlanListCounter=0;
     [super viewWillAppear:animated];
+    
+    
 }
 
 - (void)viewDidLoad
@@ -57,7 +61,7 @@ int frndPlanListCounter=0;
     [rc getFriendsAllplans:userInfo.userId:@"Auth-Token" :smAppDelegate.authToken];
     planListArr=[[NSMutableArray alloc] init];
     dicIcondownloaderPlans=[[NSMutableDictionary alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlanes:) name:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];    
+    
 }
 
 //table view delegate methods
@@ -309,7 +313,6 @@ int frndPlanListCounter=0;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -317,7 +320,10 @@ int frndPlanListCounter=0;
     [super viewWillDisappear:animated];
     NSArray *allDownloads = [dicIcondownloaderPlans allValues];
     [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
+    [dicIcondownloaderPlans removeAllObjects];
+    [dicImages_msg removeAllObjects];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
 }
 
 
