@@ -37,7 +37,7 @@ $(document).ready(function () {
             $('.more img').show();
         };
 
-        var offset = parseInt($('.content ul li').length - 2);
+        var offset = $('.content ul li.events').last().attr('offset');
         container.attr("scroll", "no");
         $.ajax({
             type:'get',

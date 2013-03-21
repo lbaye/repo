@@ -146,11 +146,30 @@ class PlaceRepo extends Base implements Likable
         $qb->addOr($qb->expr()->field('owner')->equals($currentUser->getId()));
         $qb->addOr($qb->expr()->field('permittedUsers')->equals($currentUser->getId()));
         $qb->addOr($qb->expr()->field('permittedCircles')->in($circleId));
-        $qb->addOr($qb->expr()->field('permission')->equals('public'));
+        $qb->addOr($qb->expr()->field('permission')->equals('custom'));
 
         $docs = $qb->getQuery()->execute();
 
         return $docs;
+    }
+
+    public function getUserActivityById($geoTagId)
+    {
+        $qb = $this->dm->createQueryBuilder('Document\Geotag');
+        $qb->field('id')->equals($geoTagId);
+        $doc = $qb->getQuery()->getSingleResult();
+
+        return $doc;
+    }
+
+    public function getOwnActivityById($geoTagId, UserDocument $currentUser)
+    {
+        $qb = $this->dm->createQueryBuilder('Document\Geotag');
+        $qb->field('id')->equals($geoTagId);
+        $qb->field('owner')->equals($currentUser->getId());
+        $doc = $qb->getQuery()->getSingleResult();
+
+        return $doc;
     }
 
     public function like($place, $user)

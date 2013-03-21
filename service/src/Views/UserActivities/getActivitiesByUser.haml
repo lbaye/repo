@@ -10,7 +10,7 @@
       %meta(name="viewport" content="initial-scale=1.0, user-scalable=no")
 
     %body
-      .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl)
+      .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl id="content" offset=0)
         %ul
           - $userProfileLink =  "self::profile:" . $contextUser->getId()
 
@@ -20,7 +20,7 @@
             - $rowCommentsId = $activity->getId() . '_comments'
             - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
 
-            %li.events
+            %li.events(offset=$offset)
               - if ($activity->getObjectType() === 'photo')
                 - $photo = $photoRepo->find($activity->getObjectId())
 
@@ -191,7 +191,7 @@
     - $rowCommentsId = $activity->getId() . '_comments'
     - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
 
-    %li.events
+    %li.events(offset=$offset)
       - if ($activity->getObjectType() === 'photo')
         - $photo = $photoRepo->find($activity->getObjectId())
 

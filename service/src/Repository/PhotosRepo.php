@@ -85,6 +85,18 @@ class PhotosRepo extends Base implements Likable
             ->execute();
     }
 
+    public function getByPhotoIdWithoutAuth(UserDocument $user, $photoId)
+    {
+
+        return $this->dm->createQueryBuilder()
+            ->find('Document\Photo')
+            ->field('_id')
+            ->equals($photoId)
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
+    }
+
     public function update($data, $id)
     {
         $photo = $this->find($id);
