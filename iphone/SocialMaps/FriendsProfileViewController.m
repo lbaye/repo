@@ -1317,6 +1317,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 {
     NSLog(@"didReceiveMemoryWarining");
     [CachedImages removeAllCache];
+    [dicImages_msg removeAllObjects];
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.

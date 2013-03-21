@@ -735,6 +735,7 @@ int geoCounter=0;
     }
     geotag.geoTagTitle=titleTextField.text;
     [smAppDelegate showActivityViewer:self.view];
+    geotag.geoTagAddress=addressLabel.text;
     [smAppDelegate.window setUserInteractionEnabled:NO];
     [rc createGeotag:geotag :@"Auth-Token" :smAppDelegate.authToken];
     }
