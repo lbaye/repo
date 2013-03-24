@@ -2,8 +2,11 @@ package com.socmaps.widget;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,9 @@ import com.socmaps.entity.Place;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageFetcher;
+import com.socmaps.images.singly.ImageCacheListener;
+import com.socmaps.images.singly.ImageInfo;
+import com.socmaps.images.singly.RemoteImageCache;
 import com.socmaps.ui.DirectionActivity;
 import com.socmaps.ui.EventDetailsActivity;
 import com.socmaps.ui.R;
@@ -31,18 +37,21 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 	LayoutInflater inflater = null;
 	Context context;
 	HashMap<String, Object> itemsOnMap;
-	ImageFetcher imageFetcher;
+	//ImageFetcher imageFetcher;
 	
-	ImageDownloadListener imageDownloadListener;
+	//ImageDownloadListener imageDownloadListener;
+	
+	RemoteImageCache remoteImageCache;
+	ImageCacheListener imageCacheListener;
 
 	public CustomInfoWindowAdapter(Context context, LayoutInflater inflater,
-			HashMap<String, Object> itemsOnMap, ImageFetcher imageFetcher, ImageDownloadListener imageDownloadListener) {
+			HashMap<String, Object> itemsOnMap, RemoteImageCache remoteImageCache, ImageCacheListener imageCacheListener) {
 		this.inflater = inflater;
 		this.context = context;
 		this.itemsOnMap = itemsOnMap;
 
-		this.imageFetcher = imageFetcher;
-		this.imageDownloadListener = imageDownloadListener;
+		this.remoteImageCache = remoteImageCache;
+		this.imageCacheListener = imageCacheListener;
 	}
 
 	// /@Override
@@ -111,7 +120,8 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 		ImageView image = (ImageView) v.findViewById(R.id.balloon_item_image);
 		
 		image.setImageResource(R.drawable.img_blank);
-		imageFetcher.loadImage(item.getAvatar(), image, imageDownloadListener,item.getRefId());
+		setIconImage(item.getRefId(), item.getAvatar(), image);
+		//imageFetcher.loadImage(item.getAvatar(), image, imageDownloadListener,item.getRefId());
 
 
 		name.setText(Utility.getItemTitle(item));
@@ -149,7 +159,8 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 				StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		image.setImageResource(R.drawable.img_blank);
-		imageFetcher.loadImage(item.getIconUrl(), image,imageDownloadListener, item.getId());
+		//imageFetcher.loadImage(item.getIconUrl(), image,imageDownloadListener, item.getId());
+		setIconImage(item.getId(), item.getIconUrl(), image);
 
 	}
 
@@ -191,7 +202,8 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 		}
 
 		image.setImageResource(R.drawable.img_blank);
-		imageFetcher.loadImage(item.getAvatar(), image, imageDownloadListener,item.getId());
+		//imageFetcher.loadImage(item.getAvatar(), image, imageDownloadListener,item.getId());
+		setIconImage(item.getId(), item.getAvatar(), image);
 	}
 	
 	
@@ -256,6 +268,25 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 			tvAddress.setVisibility(View.GONE);
 		}
 
+	}
+	
+	private void setIconImage(String itemId, String imageUrl, ImageView imageView)
+	{
+		if(Utility.isValidString(imageUrl))
+		{
+			Bitmap bitmap = null;
+			ImageInfo imageInfo = new ImageInfo();
+	        imageInfo.id = StringUtils.lowerCase(itemId);
+	        imageInfo.imageUrl = imageUrl;
+	        imageInfo.listener = imageCacheListener;
+	        bitmap = remoteImageCache.getImage(imageInfo);
+			if(bitmap!=null)
+			{
+				imageView.setImageBitmap(bitmap);
+			}
+			
+			Log.i("CustomInfoWindow:url", imageUrl);
+		}
 	}
 	
 }

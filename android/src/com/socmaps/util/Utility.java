@@ -22,9 +22,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,6 +83,9 @@ import com.socmaps.entity.PushData;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.entity.TimeEntity;
 import com.socmaps.images.ImageFetcher;
+import com.socmaps.images.singly.ImageCacheListener;
+import com.socmaps.images.singly.ImageInfo;
+import com.socmaps.images.singly.RemoteImageCache;
 import com.socmaps.ui.R;
 import com.socmaps.widget.ImageDownloadListener;
 
@@ -191,7 +197,7 @@ public class Utility {
 		}
 		return address;
 	}
-	
+
 	public static String getItemImageUrl(Object item) {
 		String imageUrl = "";
 		if (item instanceof People) {
@@ -222,7 +228,7 @@ public class Utility {
 		}
 		return imageUrl;
 	}
-	
+
 	public static String getItemId(Object item) {
 		String id = "";
 		if (item instanceof People) {
@@ -267,8 +273,7 @@ public class Utility {
 	 * @see #getItemTitle(Object)
 	 * @see List
 	 */
-	public static List<Object> getSearchResult(List<Object> masterList,
-			String key) {
+	public static List<Object> getSearchResult(List<Object> masterList, String key) {
 		if (key == null || key.length() == 0) {
 			return masterList;
 		} else {
@@ -315,8 +320,7 @@ public class Utility {
 	 *            People name or search text.
 	 * @return List of circles.
 	 */
-	public static List<Circle> getSearchResultFromCircle(
-			List<Circle> masterList, List<People> orgFriendList, String key) {
+	public static List<Circle> getSearchResultFromCircle(List<Circle> masterList, List<People> orgFriendList, String key) {
 
 		final List<Circle> newCircles = new ArrayList<Circle>();
 
@@ -336,8 +340,7 @@ public class Utility {
 					for (int j = 0; j < friends.size(); j++) {
 						People people = friends.get(j);
 
-						people = Utility.getPeopleById(people.getId(),
-								orgFriendList);
+						people = Utility.getPeopleById(people.getId(), orgFriendList);
 						if (people != null) {
 							final String valueText = getItemTitle(people);
 
@@ -399,8 +402,7 @@ public class Utility {
 
 			distance = toYard(distance);
 			if (distance >= imperialDivisor)
-				result = String.format("%.2f", distance / imperialDivisor)
-						+ "miles";
+				result = String.format("%.2f", distance / imperialDivisor) + "miles";
 			else
 				result = (int) distance + "yd";
 
@@ -429,10 +431,8 @@ public class Utility {
 	 * @see Date
 	 */
 	public static Date getLocalTimeFromUTC(TimeEntity timeEntity) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss");
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeEntity
-				.getTimeZone()));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeEntity.getTimeZone()));
 		try {
 			return simpleDateFormat.parse(timeEntity.getDateTimeValue());
 		} catch (ParseException e) {
@@ -507,17 +507,13 @@ public class Utility {
 		return offsetString;
 	}
 
-	private static SimpleDateFormat todayTimeFormater = new SimpleDateFormat(
-			"HH:mm");
+	private static SimpleDateFormat todayTimeFormater = new SimpleDateFormat("HH:mm");
 
-	private static SimpleDateFormat otherTimeFormater = new SimpleDateFormat(
-			"MMM dd, yyyy");
+	private static SimpleDateFormat otherTimeFormater = new SimpleDateFormat("MMM dd, yyyy");
 
-	private static SimpleDateFormat withinSevenDaysTimeFormater = new SimpleDateFormat(
-			"E, MMM dd, yyyy");
+	private static SimpleDateFormat withinSevenDaysTimeFormater = new SimpleDateFormat("E, MMM dd, yyyy");
 
-	private static SimpleDateFormat eventListTimeFormater = new SimpleDateFormat(
-			"EEEE, MMMM dd, yyyy HH:mm");
+	private static SimpleDateFormat eventListTimeFormater = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm");
 
 	/**
 	 * Converts a TimeEntity to formated text to display date and time.
@@ -571,14 +567,11 @@ public class Utility {
 	}
 
 	private static boolean today(Date thatDate, Date thisDate) {
-		return thisDate.getDate() == thatDate.getDate()
-				&& thisDate.getMonth() == thatDate.getMonth()
-				&& thisDate.getYear() == thatDate.getYear();
+		return thisDate.getDate() == thatDate.getDate() && thisDate.getMonth() == thatDate.getMonth() && thisDate.getYear() == thatDate.getYear();
 	}
 
 	private static boolean dateIsOlderThan7Days(Date targetDate, Date now) {
-		Date sevenDaysBefore = new Date(now.getYear(), now.getMonth(),
-				now.getDate() - 7);
+		Date sevenDaysBefore = new Date(now.getYear(), now.getMonth(), now.getDate() - 7);
 		return sevenDaysBefore.before(targetDate);
 	}
 
@@ -622,8 +615,7 @@ public class Utility {
 	 * @see Context
 	 */
 	public static boolean isConnectionAvailble(Context context) {
-		ConnectivityManager cm = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			return true;
@@ -642,10 +634,8 @@ public class Utility {
 	 * @see Context
 	 */
 	public static boolean isServiceRunning(String serviceName, Context context) {
-		final ActivityManager activityManager = (ActivityManager) context
-				.getSystemService(Context.ACTIVITY_SERVICE);
-		final List<RunningServiceInfo> services = activityManager
-				.getRunningServices(Integer.MAX_VALUE);
+		final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		final List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 
 		for (RunningServiceInfo runningServiceInfo : services) {
 			if (runningServiceInfo.service.getClassName().equals(serviceName)) {
@@ -667,8 +657,7 @@ public class Utility {
 	public static String toMD5Hash(String string) {
 		try {
 			// Create MD5 Hash
-			MessageDigest digest = java.security.MessageDigest
-					.getInstance("MD5");
+			MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
 			digest.update(string.getBytes());
 			byte messageDigest[] = digest.digest();
 
@@ -719,10 +708,8 @@ public class Utility {
 	 * @see SimpleDateFormat
 	 */
 	public static String getdate() {
-		SimpleDateFormat sdfDateTime = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss", Locale.US);
-		String newtime = sdfDateTime
-				.format(new Date(System.currentTimeMillis()));
+		SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+		String newtime = sdfDateTime.format(new Date(System.currentTimeMillis()));
 		return newtime;
 	}
 
@@ -747,8 +734,7 @@ public class Utility {
 	public static String getdate(String format) {
 		// "yyyy-MM-dd"
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat(format, Locale.US);
-		String newtime = sdfDateTime
-				.format(new Date(System.currentTimeMillis()));
+		String newtime = sdfDateTime.format(new Date(System.currentTimeMillis()));
 		return newtime;
 
 	}
@@ -765,8 +751,7 @@ public class Utility {
 
 		String[] dobArray = fbdob.split("/");
 
-		String dobFormatted = dobArray[2] + "-" + dobArray[0] + "-"
-				+ dobArray[1];
+		String dobFormatted = dobArray[2] + "-" + dobArray[0] + "-" + dobArray[1];
 
 		return dobFormatted;
 	}
@@ -788,13 +773,9 @@ public class Utility {
 		Calendar nowCal = new GregorianCalendar();
 		int age = nowCal.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
 
-		boolean isMonthGreater = birthCal.get(Calendar.MONTH) >= nowCal
-				.get(Calendar.MONTH);
+		boolean isMonthGreater = birthCal.get(Calendar.MONTH) >= nowCal.get(Calendar.MONTH);
 
-		boolean isMonthSameButDayGreater = birthCal.get(Calendar.MONTH) == nowCal
-				.get(Calendar.MONTH)
-				&& birthCal.get(Calendar.DAY_OF_MONTH) > nowCal
-						.get(Calendar.DAY_OF_MONTH);
+		boolean isMonthSameButDayGreater = birthCal.get(Calendar.MONTH) == nowCal.get(Calendar.MONTH) && birthCal.get(Calendar.DAY_OF_MONTH) > nowCal.get(Calendar.DAY_OF_MONTH);
 
 		if (isMonthGreater || isMonthSameButDayGreater) {
 			age = age - 1;
@@ -907,8 +888,7 @@ public class Utility {
 	 * @see SharedPreferences
 	 * @see Context
 	 */
-	public static void storeLoginInfo(String email, String password,
-			Context context) {
+	public static void storeLoginInfo(String email, String password, Context context) {
 		PreferenceConnector.writeString(context, "email", email);
 		PreferenceConnector.writeString(context, "password", password);
 		PreferenceConnector.writeBoolean(context, "isRememberd", true);
@@ -930,8 +910,7 @@ public class Utility {
 	 * @see SharedPreferences
 	 * @see Context
 	 */
-	public static void storeSession(String id, String authToken,
-			String userData, Context context) {
+	public static void storeSession(String id, String authToken, String userData, Context context) {
 		PreferenceConnector.writeString(context, "id", id);
 		PreferenceConnector.writeString(context, "authToken", authToken);
 		PreferenceConnector.writeString(context, "userData", userData);
@@ -998,8 +977,7 @@ public class Utility {
 	 *            true if authenticated, false otherwise.
 	 * @see Context
 	 */
-	public static void setBetaAuthenticationStatus(Context context,
-			boolean status) {
+	public static void setBetaAuthenticationStatus(Context context, boolean status) {
 		PreferenceConnector.writeBoolean(context, "isBetaAuth", status);
 	}
 
@@ -1118,10 +1096,8 @@ public class Utility {
 	 * @see Context
 	 * @see SharedPreferences
 	 */
-	public static void setFacebookInvitationDisplayStatus(Context context,
-			boolean flag) {
-		PreferenceConnector
-				.writeBoolean(context, "fbinvitedisplaystatus", flag);
+	public static void setFacebookInvitationDisplayStatus(Context context, boolean flag) {
+		PreferenceConnector.writeBoolean(context, "fbinvitedisplaystatus", flag);
 	}
 
 	/**
@@ -1134,17 +1110,12 @@ public class Utility {
 	 * @see Context
 	 */
 	public static boolean getFacebookInvitationDisplayStatus(Context context) {
-		return PreferenceConnector.readBoolean(context,
-				"fbinvitedisplaystatus", false);
+		return PreferenceConnector.readBoolean(context, "fbinvitedisplaystatus", false);
 	}
-	
-	
-	
-	
+
 	public static void setFacebookSessionExpireTime(Context context, long time) {
 		PreferenceConnector.writeLong(context, "fbSessionExpire", time);
 	}
-
 
 	public static long getFacebookSessionExpireTime(Context context) {
 		return PreferenceConnector.readLong(context, "fbSessionExpire", -1);
@@ -1166,8 +1137,7 @@ public class Utility {
 	 * @see Bitmap
 	 * @see BitmapFactory
 	 */
-	public static Bitmap getThumbnail(Context context, Uri uri,
-			int THUMBNAIL_SIZE) throws FileNotFoundException, IOException {
+	public static Bitmap getThumbnail(Context context, Uri uri, int THUMBNAIL_SIZE) throws FileNotFoundException, IOException {
 		InputStream input = context.getContentResolver().openInputStream(uri);
 
 		BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
@@ -1176,15 +1146,12 @@ public class Utility {
 		onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;// optional
 		BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
 		input.close();
-		if ((onlyBoundsOptions.outWidth == -1)
-				|| (onlyBoundsOptions.outHeight == -1))
+		if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
 			return null;
 
-		int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight
-				: onlyBoundsOptions.outWidth;
+		int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
 
-		double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE)
-				: 1.0;
+		double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE) : 1.0;
 
 		BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
 		bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
@@ -1241,8 +1208,7 @@ public class Utility {
 	 * @return Bitmap image sacled with desired height and width.
 	 * @see Bitmap
 	 */
-	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width,
-			int height, boolean keepAspectRatio) {
+	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width, int height, boolean keepAspectRatio) {
 
 		int orgHeight = inputBitmap.getHeight();
 		int orgWidth = inputBitmap.getWidth();
@@ -1322,8 +1288,7 @@ public class Utility {
 	public static Drawable drawableFromUrl(String url) throws IOException {
 		Bitmap x;
 
-		HttpURLConnection connection = (HttpURLConnection) new URL(url)
-				.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 		connection.connect();
 		InputStream input = connection.getInputStream();
 
@@ -1369,9 +1334,7 @@ public class Utility {
 	 * @see People
 	 * @see Circle
 	 */
-	public static List<String> getPeopleListFromFriendsAndCircles(
-			HashMap<String, Boolean> selectedCircles,
-			HashMap<String, Boolean> selectedFriends) {
+	public static List<String> getPeopleListFromFriendsAndCircles(HashMap<String, Boolean> selectedCircles, HashMap<String, Boolean> selectedFriends) {
 		List<String> mergedList = new ArrayList<String>();
 
 		// set invited people value
@@ -1459,21 +1422,18 @@ public class Utility {
 	 * @see Handler
 	 * @see Context
 	 */
-	public static void getAddressFromLocation(final Context context,
-			final Location location, final Handler handler) {
+	public static void getAddressFromLocation(final Context context, final Location location, final Handler handler) {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
 				Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 				String result = null;
 				try {
-					List<Address> list = geocoder.getFromLocation(
-							location.getLatitude(), location.getLongitude(), 1);
+					List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 					if (list != null && list.size() > 0) {
 						Address address = list.get(0);
 						// sending back first address line and locality
-						result = address.getAddressLine(0) + ", "
-								+ address.getLocality();
+						result = address.getAddressLine(0) + ", " + address.getLocality();
 					}
 				} catch (IOException e) {
 					Log.e("GEOCODER", "Impossible to connect to Geocoder", e);
@@ -1509,8 +1469,7 @@ public class Utility {
 	 * @see Handler
 	 * @see Context
 	 */
-	public static void getAddressFromLocation(final Context context,
-			final double lat, final double lng, final Handler handler) {
+	public static void getAddressFromLocation(final Context context, final double lat, final double lng, final Handler handler) {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
@@ -1521,8 +1480,7 @@ public class Utility {
 					if (list != null && list.size() > 0) {
 						Address address = list.get(0);
 						// sending back first address line and locality
-						result = address.getAddressLine(0) + ", "
-								+ address.getLocality();
+						result = address.getAddressLine(0) + ", " + address.getLocality();
 					}
 				} catch (IOException e) {
 					Log.e("GEOCODER", "Impossible to connect to Geocoder", e);
@@ -1556,18 +1514,16 @@ public class Utility {
 	 *            successfully.
 	 * @see Handler
 	 */
-	public static void getAddressByCoordinate(final double lat,
-			final double lng, final Handler handler) {
+	public static void getAddressByCoordinate(final double lat, final double lng, final Handler handler) {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
 
 				String result = null;
 
-				String serverUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat
-						+ "," + lng + "&sensor=true";
-				
-				Log.i("ReverseGeo:url",serverUrl);
+				String serverUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true";
+
+				Log.i("ReverseGeo:url", serverUrl);
 
 				RestClient client = new RestClient(serverUrl);
 
@@ -1580,19 +1536,16 @@ public class Utility {
 				result = client.getResponse();
 				int responseStatus = client.getResponseCode();
 
-				
 				Message msg = Message.obtain();
 				msg.setTarget(handler);
 				if (result != null) {
 
-					Log.i("ReverseGeo:response",result);
+					Log.i("ReverseGeo:response", result);
 					String address = null;
 					String name = null;
 
 					try {
-						
-						
-						
+
 						JSONObject jObj = new JSONObject(result);
 
 						if (!jObj.isNull("results")) {
@@ -1605,30 +1558,24 @@ public class Utility {
 							}
 						}
 
-						/*if (!jObj.isNull("name")) {
-							name = jObj.getString("name");
-						}*/
+						/*
+						 * if (!jObj.isNull("name")) { name =
+						 * jObj.getString("name"); }
+						 */
 
-						
 						msg.what = 1;
 						Bundle bundle = new Bundle();
-						if(isValidString(address))
-						{
+						if (isValidString(address)) {
 							bundle.putString("address", address.trim());
-						}
-						else
-						{
+						} else {
 							bundle.putString("address", "");
 						}
-						if(isValidString(name))
-						{
+						if (isValidString(name)) {
 							bundle.putString("name", name.trim());
-						}
-						else
-						{
+						} else {
 							bundle.putString("name", "");
 						}
-						
+
 						msg.setData(bundle);
 
 					} catch (JSONException e) {
@@ -1647,90 +1594,58 @@ public class Utility {
 
 		thread.start();
 	}
-	/*public static void getAddressByCoordinate(final double lat,
-			final double lng, final Handler handler) {
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
 
-				String result = null;
-
-				String serverUrl = "http://www.google.com/maps/geo?q=" + lat
-						+ "," + lng + "&output=json";
-
-				RestClient client = new RestClient(serverUrl);
-
-				try {
-					client.Execute(RestClient.RequestMethod.POST);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				result = client.getResponse();
-				int responseStatus = client.getResponseCode();
-
-				Message msg = Message.obtain();
-				msg.setTarget(handler);
-				if (result != null) {
-
-					String address = null;
-					String name = null;
-
-					try {
-						JSONObject jObj = new JSONObject(result);
-
-						if (!jObj.isNull("Placemark")) {
-							JSONArray jArray = jObj.getJSONArray("Placemark");
-							if (jArray.length() > 0) {
-								JSONObject addObj = jArray.getJSONObject(0);
-								if (!addObj.isNull("address")) {
-									address = addObj.getString("address");
-								}
-							}
-						}
-
-						if (!jObj.isNull("name")) {
-							name = jObj.getString("name");
-						}
-
-						
-						msg.what = 1;
-						Bundle bundle = new Bundle();
-						if(isValidString(address))
-						{
-							bundle.putString("address", address.trim());
-						}
-						else
-						{
-							bundle.putString("address", "");
-						}
-						if(isValidString(name))
-						{
-							bundle.putString("name", name.trim());
-						}
-						else
-						{
-							bundle.putString("name", "");
-						}
-						
-						msg.setData(bundle);
-
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						msg.what = 0;
-						e.printStackTrace();
-					}
-
-				} else {
-					msg.what = 0;
-				}
-
-				msg.sendToTarget();
-			}
-		};
-
-		thread.start();
-	}*/
+	/*
+	 * public static void getAddressByCoordinate(final double lat, final double
+	 * lng, final Handler handler) { Thread thread = new Thread() {
+	 * 
+	 * @Override public void run() {
+	 * 
+	 * String result = null;
+	 * 
+	 * String serverUrl = "http://www.google.com/maps/geo?q=" + lat + "," + lng
+	 * + "&output=json";
+	 * 
+	 * RestClient client = new RestClient(serverUrl);
+	 * 
+	 * try { client.Execute(RestClient.RequestMethod.POST); } catch (Exception
+	 * e) { e.printStackTrace(); }
+	 * 
+	 * result = client.getResponse(); int responseStatus =
+	 * client.getResponseCode();
+	 * 
+	 * Message msg = Message.obtain(); msg.setTarget(handler); if (result !=
+	 * null) {
+	 * 
+	 * String address = null; String name = null;
+	 * 
+	 * try { JSONObject jObj = new JSONObject(result);
+	 * 
+	 * if (!jObj.isNull("Placemark")) { JSONArray jArray =
+	 * jObj.getJSONArray("Placemark"); if (jArray.length() > 0) { JSONObject
+	 * addObj = jArray.getJSONObject(0); if (!addObj.isNull("address")) {
+	 * address = addObj.getString("address"); } } }
+	 * 
+	 * if (!jObj.isNull("name")) { name = jObj.getString("name"); }
+	 * 
+	 * 
+	 * msg.what = 1; Bundle bundle = new Bundle(); if(isValidString(address)) {
+	 * bundle.putString("address", address.trim()); } else {
+	 * bundle.putString("address", ""); } if(isValidString(name)) {
+	 * bundle.putString("name", name.trim()); } else { bundle.putString("name",
+	 * ""); }
+	 * 
+	 * msg.setData(bundle);
+	 * 
+	 * } catch (JSONException e) { // TODO Auto-generated catch block msg.what =
+	 * 0; e.printStackTrace(); }
+	 * 
+	 * } else { msg.what = 0; }
+	 * 
+	 * msg.sendToTarget(); } };
+	 * 
+	 * thread.start(); }
+	 */
 
 	/**
 	 * Forcefully hide the soft keyboard if opened.
@@ -1742,11 +1657,8 @@ public class Utility {
 	public static void hideKeyboardContext(Context context) {
 
 		try {
-			InputMethodManager inputManager = (InputMethodManager) context
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(((Activity) context)
-					.getCurrentFocus().getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS);
+			InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		} catch (Exception e) {
 			// TODO: handle exception
 			Log.e("hideKeyboardContext", e.toString());
@@ -1763,8 +1675,7 @@ public class Utility {
 	 */
 	public static void hideKeyboard(Activity activity) {
 		try {
-			activity.getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		} catch (Exception e) {
 			// TODO: handle exception
 			Log.e("hideKeyboard", e.toString());
@@ -1802,8 +1713,7 @@ public class Utility {
 	 * @return Number of messages for corresponding status.
 	 * @see MessageEntity
 	 */
-	public static int getMessageCount(List<MessageEntity> messageList,
-			String status) {
+	public static int getMessageCount(List<MessageEntity> messageList, String status) {
 		int count = 0;
 
 		if (status == null) {
@@ -1831,8 +1741,7 @@ public class Utility {
 	 *         the Circle.
 	 * @see List
 	 */
-	public static List<String> getCircleIdsForPeople(String peopleId,
-			List<Circle> circles) {
+	public static List<String> getCircleIdsForPeople(String peopleId, List<Circle> circles) {
 		List<String> circleIds = new ArrayList<String>();
 
 		for (Circle circle : circles) {
@@ -1921,14 +1830,14 @@ public class Utility {
 	 * @return Distance in meter
 	 * @see LatLng
 	 */
-//	public static double calculateDistance(LatLng p1, LatLng p2) {
-//		double lat1 = p1.latitude;
-//		double lng1 = p1.longitude;
-//		double lat2 = p2.latitude;
-//		double lng2 = p2.longitude;
-//
-//		return calculateDistance(lat1, lng1, lat2, lng2);
-//	}
+	// public static double calculateDistance(LatLng p1, LatLng p2) {
+	// double lat1 = p1.latitude;
+	// double lng1 = p1.longitude;
+	// double lat2 = p2.latitude;
+	// double lng2 = p2.longitude;
+	//
+	// return calculateDistance(lat1, lng1, lat2, lng2);
+	// }
 
 	public static double calculateDistance(LatLng p1, LatLng p2) {
 		double lat1 = p1.latitude;
@@ -1952,8 +1861,7 @@ public class Utility {
 	 *            Longitude of the destination
 	 * @return Distance in meter
 	 */
-	public static double calculateDistance(double sourceLat, double sourceLng,
-			double destLat, double destLng) {
+	public static double calculateDistance(double sourceLat, double sourceLng, double destLat, double destLng) {
 		float[] dist = new float[1];
 		Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
 		return dist[0];
@@ -1969,8 +1877,7 @@ public class Utility {
 	public static void updateNotificationCountFromPush(PushData pushData) {
 		if (pushData != null) {
 			if (StaticValues.myInfo != null) {
-				StaticValues.myInfo.getNotificationCount().setTotalCount(
-						pushData.getBadge());
+				StaticValues.myInfo.getNotificationCount().setTotalCount(pushData.getBadge());
 				String tabCounts = pushData.getTabCounts().trim();
 
 				Log.i("tabCounts on parser", tabCounts);
@@ -1980,23 +1887,15 @@ public class Utility {
 					String[] tabCountsArray = tabCounts.split("[|]");
 
 					if (tabCountsArray.length == 3) {
-						Log.i("if tabCountsArray.length", tabCountsArray.length
-								+ "");
-						StaticValues.myInfo.getNotificationCount()
-								.setMessageCount(
-										Integer.parseInt(tabCountsArray[0]));
+						Log.i("if tabCountsArray.length", tabCountsArray.length + "");
+						StaticValues.myInfo.getNotificationCount().setMessageCount(Integer.parseInt(tabCountsArray[0]));
 
 						Log.i("messageCount", tabCountsArray[0]);
 
-						StaticValues.myInfo.getNotificationCount()
-								.setFriendRequestCount(
-										Integer.parseInt(tabCountsArray[1]));
-						StaticValues.myInfo.getNotificationCount()
-								.setNotificationCount(
-										Integer.parseInt(tabCountsArray[2]));
+						StaticValues.myInfo.getNotificationCount().setFriendRequestCount(Integer.parseInt(tabCountsArray[1]));
+						StaticValues.myInfo.getNotificationCount().setNotificationCount(Integer.parseInt(tabCountsArray[2]));
 					} else {
-						Log.i("else tabCountsArray.length",
-								tabCountsArray.length + "");
+						Log.i("else tabCountsArray.length", tabCountsArray.length + "");
 					}
 				}
 			}
@@ -2016,9 +1915,7 @@ public class Utility {
 
 			if (StaticValues.myInfo.getNotificationCount().getTotalCount() >= 0)
 
-				btnNotification.setText(""
-						+ StaticValues.myInfo.getNotificationCount()
-								.getTotalCount());
+				btnNotification.setText("" + StaticValues.myInfo.getNotificationCount().getTotalCount());
 		}
 	}
 
@@ -2037,14 +1934,12 @@ public class Utility {
 	 * @see ContentResolver
 	 * @throws FileNotFoundException
 	 */
-	public static Bitmap decodeUri(Uri selectedImage,
-			ContentResolver contentResolver) throws FileNotFoundException {
+	public static Bitmap decodeUri(Uri selectedImage, ContentResolver contentResolver) throws FileNotFoundException {
 
 		// Decode image size
 		BitmapFactory.Options o = new BitmapFactory.Options();
 		o.inJustDecodeBounds = true;
-		BitmapFactory.decodeStream(
-				contentResolver.openInputStream(selectedImage), null, o);
+		BitmapFactory.decodeStream(contentResolver.openInputStream(selectedImage), null, o);
 
 		// The new size we want to scale to
 		final int REQUIRED_SIZE = 160;
@@ -2064,13 +1959,11 @@ public class Utility {
 		// Decode with inSampleSize
 		BitmapFactory.Options o2 = new BitmapFactory.Options();
 		o2.inSampleSize = scale;
-		return BitmapFactory.decodeStream(
-				contentResolver.openInputStream(selectedImage), null, o2);
+		return BitmapFactory.decodeStream(contentResolver.openInputStream(selectedImage), null, o2);
 
 	}
 
-	public static Bitmap generateMarker(LinearLayout markerLayout, Object item,
-			ImageFetcher imageFetcher, ImageDownloadListener imageDownloadListener) {
+	public static Bitmap generateMarker(LinearLayout markerLayout, Object item, ImageFetcher imageFetcher, ImageDownloadListener imageDownloadListener) {
 
 		Bitmap bitmap;
 
@@ -2078,10 +1971,8 @@ public class Utility {
 			// we need to enable the drawing cache
 			markerLayout.setDrawingCacheEnabled(true);
 
-			ImageView avatar = (ImageView) markerLayout
-					.findViewById(R.id.avatar);
-			ImageView ivOnline = (ImageView) markerLayout
-					.findViewById(R.id.ivOnline);
+			ImageView avatar = (ImageView) markerLayout.findViewById(R.id.avatar);
+			ImageView ivOnline = (ImageView) markerLayout.findViewById(R.id.ivOnline);
 
 			String avatarUrl = null;
 			ivOnline.setVisibility(View.GONE);
@@ -2119,19 +2010,15 @@ public class Utility {
 			}
 
 			if (isValidString(avatarUrl)) {
-				Log.i("Utility:generateMarker", "Attempt 1: "+avatarUrl);
-				imageFetcher.loadImage(avatarUrl, avatar,imageDownloadListener, Utility.getItemId(item));
+				Log.i("Utility:generateMarker", "Attempt 1: " + avatarUrl);
+				imageFetcher.loadImage(avatarUrl, avatar, imageDownloadListener, Utility.getItemId(item));
 			}
-
 
 			// this is the important code
 			// Without it the view will have a dimension of 0,0 and the bitmap
 			// will be null
-			markerLayout.measure(
-					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(),
-					markerLayout.getMeasuredHeight());
+			markerLayout.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(), markerLayout.getMeasuredHeight());
 
 			// we need to build our drawing cache
 			markerLayout.buildDrawingCache(true);
@@ -2146,8 +2033,7 @@ public class Utility {
 				}
 
 			} else {
-				Log.e("CustomMapMarkers",
-						"Item * generateMarker *** getDrawingCache is null");
+				Log.e("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
 			}
 
 		}
@@ -2159,7 +2045,7 @@ public class Utility {
 		}
 		return null;
 	}
-	
+
 	public static Bitmap generateMarker(LinearLayout markerLayout, Object item, Drawable profilePic) {
 
 		Bitmap bitmap;
@@ -2168,10 +2054,8 @@ public class Utility {
 			// we need to enable the drawing cache
 			markerLayout.setDrawingCacheEnabled(true);
 
-			ImageView avatar = (ImageView) markerLayout
-					.findViewById(R.id.avatar);
-			ImageView ivOnline = (ImageView) markerLayout
-					.findViewById(R.id.ivOnline);
+			ImageView avatar = (ImageView) markerLayout.findViewById(R.id.avatar);
+			ImageView ivOnline = (ImageView) markerLayout.findViewById(R.id.ivOnline);
 
 			String avatarUrl = null;
 			ivOnline.setVisibility(View.GONE);
@@ -2212,15 +2096,11 @@ public class Utility {
 				avatar.setImageDrawable(profilePic);
 			}
 
-
 			// this is the important code
 			// Without it the view will have a dimension of 0,0 and the bitmap
 			// will be null
-			markerLayout.measure(
-					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(),
-					markerLayout.getMeasuredHeight());
+			markerLayout.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(), markerLayout.getMeasuredHeight());
 
 			// we need to build our drawing cache
 			markerLayout.buildDrawingCache(true);
@@ -2235,8 +2115,7 @@ public class Utility {
 				}
 
 			} else {
-				Log.e("CustomMapMarkers",
-						"Item * generateMarker *** getDrawingCache is null");
+				Log.e("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
 			}
 
 		}
@@ -2249,53 +2128,109 @@ public class Utility {
 		return null;
 	}
 
-	public static Drawable generateMarker(String value, LinearLayout markerLayout) {
+	public static Bitmap generateMarker(LinearLayout markerLayout, Object item, RemoteImageCache remoteImageCache, ImageCacheListener imageCacheListener) {
 
-		Bitmap viewCapture = null;
-		Drawable drawOverlay = null;
+		String avatarUrl = null;
 
-		// we need to enable the drawing cache
-		markerLayout.setDrawingCacheEnabled(true);
+		Bitmap profilePic = null;
 
-		// this is the important code
-		// Without it the view will have a dimension of 0,0 and the bitmap
-		// will be null
-		markerLayout.measure(
-				MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-				MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-		markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(),
-				markerLayout.getMeasuredHeight());
+		Bitmap bitmap;
 
-		// we need to build our drawing cache
-		markerLayout.buildDrawingCache(true);
+		try {
+			// we need to enable the drawing cache
+			markerLayout.setDrawingCacheEnabled(true);
 
-		/*
-		 * try { Thread.sleep(50); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 */
+			ImageView avatar = (ImageView) markerLayout.findViewById(R.id.avatar);
+			ImageView ivOnline = (ImageView) markerLayout.findViewById(R.id.ivOnline);
 
-		// not null? then we are ready to capture our bitmap image
-		if (markerLayout.getDrawingCache() != null) {
-			viewCapture = Bitmap.createBitmap(markerLayout.getDrawingCache());
+			// String avatarUrl = null;
+			ivOnline.setVisibility(View.GONE);
 
-			// if the view capture is not null we should turn off the
-			// drawing cache
-			// and then create our marker drawable with the view capture
-			if (viewCapture != null) {
-				markerLayout.setDrawingCacheEnabled(false);
-				drawOverlay = new BitmapDrawable(viewCapture);
-				return drawOverlay;
+			avatar.setImageResource(R.drawable.img_blank);
+
+			if (item instanceof People) {
+
+				People user = (People) item;
+				avatarUrl = user.getAvatar();
+
+				ivOnline.setVisibility(View.VISIBLE);
+				if (user.isOnline()) {
+					ivOnline.setImageResource(R.drawable.online);
+				} else {
+					ivOnline.setImageResource(R.drawable.offline);
+				}
+
+			} else if (item instanceof Place) {
+
+				Place place = (Place) item;
+
+				avatarUrl = place.getIconUrl();
+
+			} else if (item instanceof SecondDegreePeople) {
+
+				SecondDegreePeople user = (SecondDegreePeople) item;
+
+				avatarUrl = user.getAvatar();
+
+			} else if (item instanceof Event) {
+				avatar.setImageResource(R.drawable.icon_event);
+
+			} else if (item instanceof GeoTag) {
+
+				avatar.setImageResource(R.drawable.icon);
 			}
-		} else {
-			Log.d("CustomMapMarkers",
-					"Item * generateMarker *** getDrawingCache is null");
+
+			if (Utility.isValidString(avatarUrl)) {
+				ImageInfo imageInfo = new ImageInfo();
+				imageInfo.id = StringUtils.lowerCase(Utility.getItemId(item));
+				imageInfo.imageUrl = avatarUrl;
+				//imageInfo.width = 50;
+				//imageInfo.height = 50;
+				//imageInfo.format = Bitmap.CompressFormat.JPEG;
+				//imageInfo.quality = 60;
+				//imageInfo.sample = false;
+				imageInfo.listener = imageCacheListener;
+				profilePic = remoteImageCache.getImage(imageInfo);
+				if (profilePic != null) {
+					avatar.setImageBitmap(profilePic);
+				}
+
+				Log.i("GenerateMarker:url", avatarUrl);
+			}
+
+			// this is the important code
+			// Without it the view will have a dimension of 0,0 and the bitmap
+			// will be null
+			markerLayout.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(), markerLayout.getMeasuredHeight());
+
+			// we need to build our drawing cache
+			markerLayout.buildDrawingCache(true);
+
+			// not null? then we are ready to capture our bitmap image
+			if (markerLayout.getDrawingCache() != null) {
+
+				bitmap = Bitmap.createBitmap(markerLayout.getDrawingCache());
+				if (bitmap != null) {
+					markerLayout.setDrawingCacheEnabled(false);
+					return bitmap;
+				}
+
+			} else {
+				Log.e("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
+			}
+
 		}
 
+		catch (OutOfMemoryError e) {
+			Log.i("generateMarker", "OutOfMemory");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return null;
 	}
 
-	public static boolean isLocationVisibleOnMap(GoogleMap mapView,
-			LatLng markerPoint) {
+	public static boolean isLocationVisibleOnMap(GoogleMap mapView, LatLng markerPoint) {
 
 		LatLngBounds bounds = mapView.getProjection().getVisibleRegion().latLngBounds;
 
@@ -2307,8 +2242,7 @@ public class Utility {
 
 	}
 
-	public static Pair<Pair<Double, Double>, Pair<Double, Double>> getMapCorners(
-			MapView mapView) {
+	public static Pair<Pair<Double, Double>, Pair<Double, Double>> getMapCorners(MapView mapView) {
 		GeoPoint center = mapView.getMapCenter();
 		int latitudeSpan = mapView.getLatitudeSpan();
 		int longtitudeSpan = mapView.getLongitudeSpan();
@@ -2319,16 +2253,12 @@ public class Utility {
 		double bottomLeftLat = (center.getLatitudeE6() - (latitudeSpan / 2.0d)) / 1.0E6;
 		double bottomLeftLon = (center.getLongitudeE6() - (longtitudeSpan / 2.0d)) / 1.0E6;
 
-		return new Pair<Pair<Double, Double>, Pair<Double, Double>>(
-				new Pair<Double, Double>(topRightLat, topRightLon),
-				new Pair<Double, Double>(bottomLeftLat, bottomLeftLon));
+		return new Pair<Pair<Double, Double>, Pair<Double, Double>>(new Pair<Double, Double>(topRightLat, topRightLon), new Pair<Double, Double>(bottomLeftLat, bottomLeftLon));
 	}
 
 	public static Pair<GeoPoint, GeoPoint> getMapCornerPoints(MapView mapView) {
-		GeoPoint topLeft = mapView.getProjection().fromPixels(
-				mapView.getLeft(), mapView.getTop());
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(
-				mapView.getRight(), mapView.getBottom());
+		GeoPoint topLeft = mapView.getProjection().fromPixels(mapView.getLeft(), mapView.getTop());
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getRight(), mapView.getBottom());
 
 		return new Pair<GeoPoint, GeoPoint>(topLeft, bottomRight);
 	}
@@ -2361,7 +2291,7 @@ public class Utility {
 			GeoTag geoTag = (GeoTag) item;
 
 			latLng = new LatLng(geoTag.getLatitude(), geoTag.getLongitude());
-		}else if (item instanceof Plan) {
+		} else if (item instanceof Plan) {
 
 			Plan plan = (Plan) item;
 
@@ -2371,20 +2301,47 @@ public class Utility {
 		return latLng;
 	}
 
-	
-	public static boolean isFacebookSessionValid(Context context)
-	{
-		if(StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook))
-		{
+	public static boolean isFacebookSessionValid(Context context) {
+		if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook)) {
 			long expireTime = Utility.getFacebookSessionExpireTime(context);
-			if(expireTime > Utility.getUnixTimestamp())
-			{
-				//session expired, auto sign-out
+			if (expireTime > Utility.getUnixTimestamp()) {
+				// session expired, auto sign-out
 				return true;
 			}
 		}
-		
-		
+
 		return false;
+	}
+
+	public static int convertDipToPixels(Context context, float dips) {
+		return (int) (dips * context.getResources().getDisplayMetrics().density + 0.5f);
+	}
+
+	public static void setImage(String itemId, String imageUrl, final ImageView imageView, RemoteImageCache remoteImageCache) {
+		if (Utility.isValidString(imageUrl)) {
+			Bitmap bitmap = null;
+			ImageInfo imageInfo = new ImageInfo();
+			imageInfo.id = StringUtils.lowerCase(itemId);
+			imageInfo.imageUrl = imageUrl;
+			imageInfo.listener = new ImageCacheListener() {
+				@Override
+				public void onSuccess(final ImageInfo imageInfo, final Bitmap bitmap) {
+					if (bitmap != null)
+						imageView.setImageBitmap(bitmap);
+				}
+
+				@Override
+				public void onFailure(Throwable error, ImageInfo imageInfo) {
+					Log.i("Utility:setImage:onFailure", imageInfo.id + ":" + imageInfo.imageUrl);
+					// remoteImageCache.getImage(imageInfo);
+				}
+			};
+			bitmap = remoteImageCache.getImage(imageInfo);
+			if (bitmap != null) {
+				imageView.setImageBitmap(bitmap);
+			}
+
+			Log.i("Utility:setImage:url", imageUrl);
+		}
 	}
 }

@@ -63,10 +63,9 @@ import com.socmaps.widget.NearByPlacesPickerListener;
 import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 
-
 /**
  * GeoTagActivity class responsible for creating geo tag view.
- *
+ * 
  */
 public class GeoTagActivity extends FragmentActivity implements PeoplePickerListener {
 
@@ -96,8 +95,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	ButtonActionListener buttonActionListener;
 
 	private LayoutInflater inflater;
-	private Button btnFriendSelect, btnCircleSelect, btnSelectAll,
-			btnUnselectAll;
+	private Button btnFriendSelect, btnCircleSelect, btnSelectAll, btnUnselectAll;
 	EditText etFriendSearch;
 	LinearLayout friendListContainer, circleListContainer;
 	ScrollView scrollViewFriends, scrollViewCircles;
@@ -111,8 +109,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 	String shareWithPickerName = "sharewith";
 
-	String eventName = "", eventSummary = "", eventDescription = "",
-			eventAddress = "", eventListItem = "";
+	String eventName = "", eventSummary = "", eventDescription = "", eventAddress = "", eventListItem = "";
 	double eventLat = 0, eventLng = 0;
 
 	Bitmap eventPicture;
@@ -122,7 +119,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 	ImageFetcher imageFetcher;
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
-	
+
 	private final int REQUEST_CODE_CAMERA = 100;
 	private final int REQUEST_CODE_GALLERY = 101;
 
@@ -144,20 +141,19 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
-		Log.i("EventNewActivity:onResume memory before",
-				"" + Debug.getNativeHeapAllocatedSize());
-		
+		Log.i("EventNewActivity:onResume memory before", "" + Debug.getNativeHeapAllocatedSize());
+
 		imageFetcher.setExitTasksEarly(false);
 
 	}
-	
+
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		
+
 		imageFetcher.setExitTasksEarly(true);
-	    imageFetcher.flushCache();
+		imageFetcher.flushCache();
 	}
 
 	@Override
@@ -166,7 +162,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		if (eventPicture != null) {
 			eventPicture.recycle();
 		}
-		
+
 		imageFetcher.closeCache();
 	}
 
@@ -220,8 +216,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		ivEventImage = (ImageView) findViewById(R.id.ivEventImage);
 		ivEventImage.setOnClickListener(buttonActionListener);
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		btnFriendSelect = (Button) findViewById(R.id.btnFriendSelect);
 		btnFriendSelect.setOnClickListener(buttonActionListener);
@@ -250,15 +245,12 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		}
 
 		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		}
 
 		@Override
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-			Log.d("Do Search", "Do Search Method Called  "
-					+ etFriendSearch.getText().toString().trim());
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			Log.d("Do Search", "Do Search Method Called  " + etFriendSearch.getText().toString().trim());
 			doSearch();
 		}
 
@@ -266,21 +258,16 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 	private void addLocationRadioGroup() {
 		// TODO Auto-generated method stub
-		locationRadioGroupView = new LocationRadioGroup(context,
-				new LocationSelectionListener());
+		locationRadioGroupView = new LocationRadioGroup(context, new LocationSelectionListener());
 
-		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView
-				.findViewById(R.id.selectedLocationInfoPanel);
-		tvSelectedLocationAddress = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationAddress);
+		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView.findViewById(R.id.selectedLocationInfoPanel);
+		tvSelectedLocationAddress = (TextView) locationRadioGroupView.findViewById(R.id.tvSelectedLocationAddress);
 
-		tvSelectedLocationTitle = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationTitle);
+		tvSelectedLocationTitle = (TextView) locationRadioGroupView.findViewById(R.id.tvSelectedLocationTitle);
 
 		locationRadioGroupContainer.addView(locationRadioGroupView);
 
-		locationRadioGroupView
-				.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
+		locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 	}
 
@@ -292,8 +279,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 			if (v == btnBack) {
 				finish();
 			} else if (v == btnNotification) {
-				Intent notificationIntent = new Intent(getApplicationContext(),
-						NotificationActivity.class);
+				Intent notificationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
 				startActivity(notificationIntent);
 			} else if (v == btnSave) {
 				validateEvent();
@@ -330,8 +316,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	private void selectItemFromSpinner() {
 		AlertDialog dialog;
 
-		final String str[] = getResources().getStringArray(
-				R.array.geoTagListOption);
+		final String str[] = getResources().getStringArray(R.array.geoTagListOption);
 
 		final String[] relArray = new String[str.length - 1];
 
@@ -343,24 +328,20 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder.setSingleChoiceItems(relArray, 1,
-				new DialogInterface.OnClickListener() {
+		builder.setSingleChoiceItems(relArray, 1, new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int position) {
+			@Override
+			public void onClick(DialogInterface dialog, int position) {
 
-						String listItem = relArray[position];
-						String listItem1 = listItem.toLowerCase().toString();
-						eventListItem = listItem1.replace(" ", "_")
-								.toLowerCase();
-						Log.d("Item Selection", relArray[position] + " "
-								+ listItem + " " + listItem1 + " "
-								+ eventListItem);
+				String listItem = relArray[position];
+				String listItem1 = listItem.toLowerCase().toString();
+				eventListItem = listItem1.replace(" ", "_").toLowerCase();
+				Log.d("Item Selection", relArray[position] + " " + listItem + " " + listItem1 + " " + eventListItem);
 
-						dialog.dismiss();
-					}
+				dialog.dismiss();
+			}
 
-				});
+		});
 		dialog = builder.create();
 		dialog.show();
 	}
@@ -385,14 +366,11 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	}
 
 	private void initiateSendEventData() {
-		Thread thread = new Thread(null, sendEventDataThread,
-				"Start send event data");
+		Thread thread = new Thread(null, sendEventDataThread, "Start send event data");
 		thread.start();
 
 		// show progress dialog if needed
-		m_ProgressDialog = ProgressDialog.show(context, getResources()
-				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.sending_request_text), true, true);
+		m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.sending_request_text), true, true);
 	}
 
 	private Runnable sendEventDataThread = new Runnable() {
@@ -400,8 +378,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		@Override
 		public void run() { // TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smGeoTag);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			restClient.AddParam("title", etTitle.getText().toString());
 			restClient.AddParam("description", eventDescription);
@@ -413,12 +390,10 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 				// Normal
 				ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
 
-				eventPicture.compress(Bitmap.CompressFormat.PNG, 60,
-						full_stream);
+				eventPicture.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 
 				byte[] full_bytes = full_stream.toByteArray();
-				eventPhotoString = Base64.encodeToString(full_bytes,
-						Base64.DEFAULT);
+				eventPhotoString = Base64.encodeToString(full_bytes, Base64.DEFAULT);
 
 				restClient.AddParam("photo", eventPhotoString);
 
@@ -430,20 +405,24 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 			restClient.AddParam("lat", eventLat + "");
 			restClient.AddParam("lng", eventLng + "");
 
-			List<String> invitedPeopleList = Utility
-					.getListFromHashMap(selectedFriends);
+			List<String> invitedPeopleList = Utility.getListFromHashMap(selectedFriends);
 			for (int i = 0; i < invitedPeopleList.size(); i++) {
-				restClient.AddParam("friends[]", invitedPeopleList.get(i));
+				restClient.AddParam("permittedUsers[]", invitedPeopleList.get(i));
 			}
 			// end of invited people
 
 			// add invited circles
-			List<String> invitedCircleList = Utility
-					.getListFromHashMap(selectedCircles);
+			List<String> invitedCircleList = Utility.getListFromHashMap(selectedCircles);
 			for (int i = 0; i < invitedCircleList.size(); i++) {
-				restClient.AddParam("circles[]", invitedCircleList.get(i));
+				restClient.AddParam("permittedCircles[]", invitedCircleList.get(i));
 			}
 			// end of invited circles
+
+			if (invitedPeopleList.size() == 0 && invitedCircleList.size() == 0) {
+				restClient.AddParam("permission", "private");
+			} else {
+				restClient.AddParam("permission", "custom");
+			}
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.POST);
@@ -479,17 +458,14 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 		if (status == Constant.STATUS_CREATED) {
 
-			Toast.makeText(context, "Geotag created Successfully.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Geotag created Successfully.", Toast.LENGTH_SHORT).show();
 
 			finish();
 		} else {
-			Toast.makeText(context, "Failed. Please try again.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Failed. Please try again.", Toast.LENGTH_SHORT).show();
 		}
 
 	}
-
 
 	private void generateFriendList() {
 
@@ -531,11 +507,9 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		View v = inflater.inflate(R.layout.people_item, null);
 
 		TextView nameView = (TextView) v.findViewById(R.id.name);
-		final ImageView profilePic = (ImageView) v
-				.findViewById(R.id.profilePic);
+		final ImageView profilePic = (ImageView) v.findViewById(R.id.profilePic);
 
-		final LinearLayout proficPicContainer = (LinearLayout) v
-				.findViewById(R.id.proficPicContainer);
+		final LinearLayout proficPicContainer = (LinearLayout) v.findViewById(R.id.proficPicContainer);
 
 		final String id = fEntity.getId();
 		String avatarUrl = fEntity.getAvatar();
@@ -556,8 +530,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 			boolean preValue = backupSelectedFriends.get(id);
 
 			if (preValue) {
-				proficPicContainer
-						.setBackgroundResource(R.color.highlightGreen);
+				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
 				selectedFriends.put(id, preValue);
 			}
 		}
@@ -569,11 +542,9 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 				// TODO Auto-generated method stub
 				boolean isSelected = selectedFriends.get(id);
 				if (isSelected) {
-					proficPicContainer
-							.setBackgroundResource(R.color.transparent);
+					proficPicContainer.setBackgroundResource(R.color.transparent);
 				} else {
-					proficPicContainer
-							.setBackgroundResource(R.color.highlightGreen);
+					proficPicContainer.setBackgroundResource(R.color.highlightGreen);
 				}
 				selectedFriends.put(id, !isSelected);
 
@@ -603,8 +574,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		chkCircle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
 					selectedCircles.put(id, true);
@@ -620,8 +590,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	private void showFriendList() {
 
 		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
-		btnCircleSelect.setTextAppearance(context,
-				R.style.ButtonTextStyleNormal);
+		btnCircleSelect.setTextAppearance(context, R.style.ButtonTextStyleNormal);
 
 		if (scrollViewCircles.getVisibility() == View.VISIBLE) {
 			scrollViewCircles.setVisibility(View.GONE);
@@ -631,8 +600,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	}
 
 	private void showCircleList() {
-		btnFriendSelect.setTextAppearance(context,
-				R.style.ButtonTextStyleNormal);
+		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleNormal);
 		btnCircleSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
 
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
@@ -669,8 +637,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		int totalChild = friendListContainer.getChildCount();
 		for (int i = 0; i < totalChild; i++) {
 			View v = friendListContainer.getChildAt(i);
-			LinearLayout proficPicContainer = (LinearLayout) v
-					.findViewById(R.id.proficPicContainer);
+			LinearLayout proficPicContainer = (LinearLayout) v.findViewById(R.id.proficPicContainer);
 			proficPicContainer.setBackgroundResource(selectionColor);
 		}
 
@@ -696,10 +663,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	}
 
 	@Override
-	public void onSelect(String pickerName, List<String> selectedFriendList,
-			List<String> selectedCircleList,
-			List<String> selectedCircleFriendList,
-			List<String> selectedFriendListAll) {
+	public void onSelect(String pickerName, List<String> selectedFriendList, List<String> selectedCircleList, List<String> selectedCircleFriendList, List<String> selectedFriendListAll) {
 
 		if (pickerName.equalsIgnoreCase(shareWithPickerName)) {
 			shareWithSelectedFriendList = selectedFriendList;
@@ -716,8 +680,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		final Dialog dialog = new Dialog(context, R.style.CustomDialogTheme);
 		dialog.setContentView(R.layout.input_text_dialog_layout);
 
-		final EditText etInputText = (EditText) dialog
-				.findViewById(R.id.etInputText);
+		final EditText etInputText = (EditText) dialog.findViewById(R.id.etInputText);
 		TextView tvTitle = (TextView) dialog.findViewById(R.id.tvTitle);
 
 		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
@@ -799,8 +762,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int item) {
-				Toast.makeText(getApplicationContext(), items[item],
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
 				if (items[item].equals("Gallery")) {
 					requestCode = REQUEST_CODE_GALLERY;
 				} else {
@@ -820,12 +782,10 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
-			startActivityForResult(
-					Intent.createChooser(intent, "Select Picture"), requestCode);
+			startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
 		case REQUEST_CODE_CAMERA:
-			Intent cameraIntent = new Intent(
-					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
 			break;
 		}
@@ -841,8 +801,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 				if (eventPicture != null) {
 
 				}
-				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
-						.get("data"), Constant.eventPhotoWidth, 0, true);
+				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras().get("data"), Constant.eventPhotoWidth, 0, true);
 
 				ivEventImage.setImageBitmap(eventPicture);
 			}
@@ -856,9 +815,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 
 				Uri selectedImage = data.getData();
 				try {
-					eventPicture = Utility.resizeBitmap(Utility.decodeUri(
-							selectedImage, getContentResolver()),
-							Constant.eventPhotoWidth, 0, true);
+					eventPicture = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.eventPhotoWidth, 0, true);
 
 					ivEventImage.setImageBitmap(eventPicture);
 
@@ -866,9 +823,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (OutOfMemoryError e) {
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, getString(R.string.errorMessageGallery), Toast.LENGTH_SHORT).show();
 					Log.e("Gallery image", "OutOfMemoryError");
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -879,8 +834,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 					e.printStackTrace();
 				}
 			}
-		} else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
-				&& resultCode == RESULT_OK) {
+		} else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER && resultCode == RESULT_OK) {
 			eventAddress = data.getStringExtra("ADDRESS");
 			eventLat = data.getDoubleExtra("LAT", 0.0);
 			eventLng = data.getDoubleExtra("LNG", 0.0);
@@ -889,12 +843,10 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		}
 	}
 
-	private class LocationSelectionListener implements
-			LocationRadioGroupListener {
+	private class LocationSelectionListener implements LocationRadioGroupListener {
 
 		@Override
-		public void onLocationSelectionChanged(RadioGroup group,
-				RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
+		public void onLocationSelectionChanged(RadioGroup group, RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
 			// TODO Auto-generated method stub
 			selectedLocationInfoPanel.setVisibility(View.GONE);
 			tvSelectedLocationAddress.setText("");
@@ -942,8 +894,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 			if (StaticValues.myPoint != null) {
 				eventLat = StaticValues.myPoint.latitude;
 				eventLng = StaticValues.myPoint.longitude;
-				Utility.getAddressByCoordinate(eventLat, eventLng,
-						new LocationAddressHandler());
+				Utility.getAddressByCoordinate(eventLat, eventLng, new LocationAddressHandler());
 
 			}
 		}
@@ -953,9 +904,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 	private void getNearByPlaces() {
 		if (StaticValues.searchResult != null) {
 			if (StaticValues.searchResult.getPlaces() != null) {
-				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
-						context, new NearByPlacesPickerhandler(),
-						"NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
+				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(context, new NearByPlacesPickerhandler(), "NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
 
 				nearByPlacesPicker.show();
 			}
@@ -1005,8 +954,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
 	}
 
-	private class NearByPlacesPickerhandler implements
-			NearByPlacesPickerListener {
+	private class NearByPlacesPickerhandler implements NearByPlacesPickerListener {
 
 		@Override
 		public void onPlaceSelect(String pickerName, Place selectedPlace) {
@@ -1028,8 +976,7 @@ public class GeoTagActivity extends FragmentActivity implements PeoplePickerList
 		List<Object> dataList = new ArrayList<Object>();
 		dataList.addAll(StaticValues.myInfo.getFriendList());
 
-		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch
-				.getText().toString().trim()));
+		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch.getText().toString().trim()));
 		friendListContainer.removeAllViews();
 
 		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);

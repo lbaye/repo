@@ -92,6 +92,7 @@ com.google.android.gms.plus.PlusOneButton
 com.google.android.gms.plus.PlusOneButton: PlusOneButton(android.content.Context,android.util.AttributeSet)
 com.google.android.gms.plus.PlusSignInButton
 com.google.android.gms.plus.PlusSignInButton: PlusSignInButton(android.content.Context,android.util.AttributeSet)
+com.loopj.android.http.SerializableCookie: long serialVersionUID
 com.socmaps.fb.FBUtility
 com.socmaps.fb.FBUtilityOld
 com.socmaps.fb.LoginButton
@@ -272,3 +273,53 @@ com.socmaps.widget.PullToRefreshListView: PullToRefreshListView(android.content.
 com.socmaps.widget.PullToRefreshListView: PullToRefreshListView(android.content.Context,android.util.AttributeSet,int)
 com.socmaps.widget.PullToRefreshListView$State: com.socmaps.widget.PullToRefreshListView$State[] values()
 com.socmaps.widget.PullToRefreshListView$State: com.socmaps.widget.PullToRefreshListView$State valueOf(java.lang.String)
+org.apache.commons.io.ByteOrderMark: long serialVersionUID
+org.apache.commons.io.DirectoryWalker$CancelException: long serialVersionUID
+org.apache.commons.io.FileExistsException: long serialVersionUID
+org.apache.commons.io.IOCase: long serialVersionUID
+org.apache.commons.io.IOExceptionWithCause: long serialVersionUID
+org.apache.commons.io.TaggedIOException: long serialVersionUID
+org.apache.commons.io.filefilter.MagicNumberFileFilter: long serialVersionUID
+org.apache.commons.io.input.XmlStreamReaderException: long serialVersionUID
+org.apache.commons.lang.CharRange: long serialVersionUID
+org.apache.commons.lang.CharSet: long serialVersionUID
+org.apache.commons.lang.IllegalClassException: long serialVersionUID
+org.apache.commons.lang.IncompleteArgumentException: long serialVersionUID
+org.apache.commons.lang.NotImplementedException: long serialVersionUID
+org.apache.commons.lang.NullArgumentException: long serialVersionUID
+org.apache.commons.lang.ObjectUtils$Null: long serialVersionUID
+org.apache.commons.lang.SerializationException: long serialVersionUID
+org.apache.commons.lang.UnhandledException: long serialVersionUID
+org.apache.commons.lang.builder.StandardToStringStyle: long serialVersionUID
+org.apache.commons.lang.builder.ToStringStyle$DefaultToStringStyle: long serialVersionUID
+org.apache.commons.lang.builder.ToStringStyle$MultiLineToStringStyle: long serialVersionUID
+org.apache.commons.lang.builder.ToStringStyle$NoFieldNameToStringStyle: long serialVersionUID
+org.apache.commons.lang.builder.ToStringStyle$ShortPrefixToStringStyle: long serialVersionUID
+org.apache.commons.lang.builder.ToStringStyle$SimpleToStringStyle: long serialVersionUID
+org.apache.commons.lang.enum.Enum: long serialVersionUID
+org.apache.commons.lang.enum.ValuedEnum: long serialVersionUID
+org.apache.commons.lang.enums.Enum: long serialVersionUID
+org.apache.commons.lang.enums.ValuedEnum: long serialVersionUID
+org.apache.commons.lang.exception.CloneFailedException: long serialVersionUID
+org.apache.commons.lang.exception.NestableDelegate: long serialVersionUID
+org.apache.commons.lang.exception.NestableError: long serialVersionUID
+org.apache.commons.lang.exception.NestableException: long serialVersionUID
+org.apache.commons.lang.exception.NestableRuntimeException: long serialVersionUID
+org.apache.commons.lang.math.DoubleRange: long serialVersionUID
+org.apache.commons.lang.math.FloatRange: long serialVersionUID
+org.apache.commons.lang.math.Fraction: long serialVersionUID
+org.apache.commons.lang.math.IntRange: long serialVersionUID
+org.apache.commons.lang.math.JVMRandom: long serialVersionUID
+org.apache.commons.lang.math.LongRange: long serialVersionUID
+org.apache.commons.lang.math.NumberRange: long serialVersionUID
+org.apache.commons.lang.mutable.MutableBoolean: long serialVersionUID
+org.apache.commons.lang.mutable.MutableByte: long serialVersionUID
+org.apache.commons.lang.mutable.MutableDouble: long serialVersionUID
+org.apache.commons.lang.mutable.MutableFloat: long serialVersionUID
+org.apache.commons.lang.mutable.MutableInt: long serialVersionUID
+org.apache.commons.lang.mutable.MutableLong: long serialVersionUID
+org.apache.commons.lang.mutable.MutableObject: long serialVersionUID
+org.apache.commons.lang.mutable.MutableShort: long serialVersionUID
+org.apache.commons.lang.text.CompositeFormat: long serialVersionUID
+org.apache.commons.lang.text.ExtendedMessageFormat: long serialVersionUID
+org.apache.commons.lang.time.FastDateFormat: long serialVersionUID

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -92,7 +91,9 @@ import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
 import com.socmaps.gps.GpsService;
 import com.socmaps.gps.ILocationUpdateIndicator;
-import com.socmaps.images.ImageFetcher;
+import com.socmaps.images.singly.ImageCacheListener;
+import com.socmaps.images.singly.ImageInfo;
+import com.socmaps.images.singly.RemoteImageCache;
 import com.socmaps.notificationBroadcast.BroadcastListener;
 import com.socmaps.notificationBroadcast.NotificationCountBroadcastReciever;
 import com.socmaps.pushNotification.CommonUtilities;
@@ -107,7 +108,6 @@ import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.CustomInfoWindowAdapter;
-import com.socmaps.widget.ImageDownloadListener;
 import com.socmaps.widget.ListComparator;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
 import com.socmaps.widget.PermissionRadioGroupLess;
@@ -118,12 +118,8 @@ import com.socmaps.widget.PermissionRadioGroupListener;
  * map and some user interaction.
  * 
  */
-public class HomeActivity extends FragmentActivity implements
-		ILocationUpdateIndicator, OnCheckedChangeListener, OnClickListener,
-		OnMarkerClickListener, OnCameraChangeListener, OnMapClickListener,
-		OnMapLongClickListener, OnInfoWindowClickListener,
-		ImageDownloadListener, BroadcastListener, PermissionRadioGroupListener,
-		LogoutListener, AuthListener, DialogListener {
+public class HomeActivity extends FragmentActivity implements ILocationUpdateIndicator, OnCheckedChangeListener, OnClickListener, OnMarkerClickListener, OnCameraChangeListener, OnMapClickListener,
+		OnMapLongClickListener, OnInfoWindowClickListener, BroadcastListener, PermissionRadioGroupListener, LogoutListener, AuthListener, DialogListener {
 
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
@@ -164,8 +160,7 @@ public class HomeActivity extends FragmentActivity implements
 	private int sendMessageStatus = 0;
 	private AsyncTask<Void, Void, Void> mRegisterTask;
 
-	private CheckBox peopleCheckBox, placeCheckBox, eventCheckBox,
-			dealCheckBox;
+	private CheckBox peopleCheckBox, placeCheckBox, eventCheckBox, dealCheckBox;
 	private Button btnListView, btnMapView;
 	private TextView tvListView, tvMapView;
 	private Button btnCircle;
@@ -186,10 +181,8 @@ public class HomeActivity extends FragmentActivity implements
 	private RelativeLayout circleMenu;
 	private LinearLayout btnCloseCircleMenu;
 
-	private Button btnCircleMenuItemPeople, btnCircleMenuItemProfile,
-			btnCircleMenuItemMessages, btnCircleMenuItemFriends,
-			btnCircleMenuItemDeals, btnCircleMenuItemPlaces,
-			btnCircleMenuItemNewsfeed, btnCircleMenuItemSettings;
+	private Button btnCircleMenuItemPeople, btnCircleMenuItemProfile, btnCircleMenuItemMessages, btnCircleMenuItemFriends, btnCircleMenuItemDeals, btnCircleMenuItemPlaces, btnCircleMenuItemNewsfeed,
+			btnCircleMenuItemSettings;
 
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 	private RelativeLayout searchPanel;
@@ -238,9 +231,11 @@ public class HomeActivity extends FragmentActivity implements
 
 	private boolean isNewSearch = false;
 
-	private ImageFetcher imageFetcher;
+	// private ImageFetcher imageFetcher;
 
 	private ListComparator listComparator;
+
+	public RemoteImageCache remoteImageCache;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -277,14 +272,16 @@ public class HomeActivity extends FragmentActivity implements
 		context = HomeActivity.this;
 		gpsService = new GpsService(context, this);
 		// mapView = (TapControlledMapView) findViewById(R.id.myGMap);
-		imageFetcher = new ImageFetcher(context, getResources()
-				.getDimensionPixelSize(R.dimen.image_thumbnail_size), true);
+		// imageFetcher = new ImageFetcher(context,
+		// getResources().getDimensionPixelSize(R.dimen.image_thumbnail_size),
+		// true);
+
+		remoteImageCache = new RemoteImageCache(context, 20, null, 50);
 
 		listComparator = new ListComparator();
 
 		FragmentManager myFragmentManager = getSupportFragmentManager();
-		SupportMapFragment myMapFragment = (SupportMapFragment) myFragmentManager
-				.findFragmentById(R.id.map);
+		SupportMapFragment myMapFragment = (SupportMapFragment) myFragmentManager.findFragmentById(R.id.map);
 		mapView = myMapFragment.getMap();
 		mapView.setMyLocationEnabled(true);
 		// mapView.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -299,8 +296,7 @@ public class HomeActivity extends FragmentActivity implements
 		mapView.setOnInfoWindowClickListener(this);
 		mapView.getUiSettings().setZoomControlsEnabled(false);
 
-		markerLayout = (LinearLayout) HomeActivity.this.getLayoutInflater()
-				.inflate(R.layout.marker, null);
+		markerLayout = (LinearLayout) HomeActivity.this.getLayoutInflater().inflate(R.layout.marker, null);
 
 		topDrawerListener = new TopDrawerListener();
 		bottomDrawerListener = new BottomDrawerListener();
@@ -328,14 +324,12 @@ public class HomeActivity extends FragmentActivity implements
 		btnMeetup = (LinearLayout) vTop.findViewById(R.id.btnMeetup);
 		btnMeetup.setOnClickListener(this);
 
-		shareWithRadioGroupContainer = (LinearLayout) vTop
-				.findViewById(R.id.shareWithRadioGroupContainer);
+		shareWithRadioGroupContainer = (LinearLayout) vTop.findViewById(R.id.shareWithRadioGroupContainer);
 
 		View vBottom = bottomDrawer.findViewById(R.id.bottomContent);
 
 		btnMapView = (Button) vBottom.findViewById(R.id.btnMapView);
-		btnMapView.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.icon_map_view_selected));
+		btnMapView.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_map_view_selected));
 
 		btnListView = (Button) vBottom.findViewById(R.id.btnListView);
 		btnListView.setOnClickListener(this);
@@ -347,8 +341,7 @@ public class HomeActivity extends FragmentActivity implements
 		btnCircle.setOnClickListener(this);
 
 		topCloseButton = (Button) topDrawer.findViewById(R.id.topHandle);
-		bottomCloseButton = (Button) bottomDrawer
-				.findViewById(R.id.bottomHandle);
+		bottomCloseButton = (Button) bottomDrawer.findViewById(R.id.bottomHandle);
 
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 		btnNotification.setOnClickListener(this);
@@ -362,8 +355,7 @@ public class HomeActivity extends FragmentActivity implements
 		circleMenu = (RelativeLayout) findViewById(R.id.circleMenu);
 		circleMenu.setOnClickListener(this);
 
-		btnCloseCircleMenu = (LinearLayout) circleMenu
-				.findViewById(R.id.btnCloseCircleMenu);
+		btnCloseCircleMenu = (LinearLayout) circleMenu.findViewById(R.id.btnCloseCircleMenu);
 		btnCloseCircleMenu.setOnClickListener(this);
 
 		btnCircleMenuItemPeople = (Button) findViewById(R.id.btnCircleMenuItemPeople);
@@ -425,18 +417,12 @@ public class HomeActivity extends FragmentActivity implements
 				Log.i("HomeActivity", "CenterToMyPosition");
 
 				if (!isMoveToAnotherPoint) {
-					mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(
-							new LatLng(mapView.getMyLocation().getLatitude(),
-									mapView.getMyLocation().getLongitude()),
-							intialZoomLevel));
+					mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapView.getMyLocation().getLatitude(), mapView.getMyLocation().getLongitude()), intialZoomLevel));
 
 					if (timer == null) {
-						Location location = new Location(
-								LocationManager.NETWORK_PROVIDER);
-						location.setLatitude(mapView.getMyLocation()
-								.getLatitude());
-						location.setLongitude(mapView.getMyLocation()
-								.getLongitude());
+						Location location = new Location(LocationManager.NETWORK_PROVIDER);
+						location.setLatitude(mapView.getMyLocation().getLatitude());
+						location.setLongitude(mapView.getMyLocation().getLongitude());
 						catchLocationUpdate(location);
 					}
 				}
@@ -474,8 +460,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void checkNotNull(Object reference, String name) {
 		if (reference == null) {
-			throw new NullPointerException(getString(R.string.error_config,
-					name));
+			throw new NullPointerException(getString(R.string.error_config, name));
 		}
 	}
 
@@ -498,8 +483,7 @@ public class HomeActivity extends FragmentActivity implements
 		if (regId == null || regId.equals("")) {
 			Log.i("GCM RegID", "regId is null");
 			// Automatically registers application on startup.
-			GCMRegistrar.register(getApplicationContext(),
-					CommonUtilities.SENDER_ID);
+			GCMRegistrar.register(getApplicationContext(), CommonUtilities.SENDER_ID);
 		} else {
 			registerDeviceOnServer(regId);
 		}
@@ -586,7 +570,8 @@ public class HomeActivity extends FragmentActivity implements
 		SessionEvents.removeAuthListener(this);
 		SessionEvents.removeLogoutListener(this);
 
-		imageFetcher.closeCache();
+		// imageFetcher.closeCache();
+		remoteImageCache.shutdown();
 
 		System.gc();
 
@@ -600,13 +585,11 @@ public class HomeActivity extends FragmentActivity implements
 		// point =
 		// ServerResponseParser.getGeoPointByLatLong(location.getLatitude(),
 		// location.getLongitude());
-		StaticValues.myPoint = new LatLng(location.getLatitude(),
-				location.getLongitude());
+		StaticValues.myPoint = new LatLng(location.getLatitude(), location.getLongitude());
 		myLat = location.getLatitude();
 		myLng = location.getLongitude();
 
-		Log.e("location.getLatitude():" + location.getLatitude(),
-				"location.getLongitude():" + location.getLongitude());
+		Log.e("location.getLatitude():" + location.getLatitude(), "location.getLongitude():" + location.getLongitude());
 
 		// Log.e("Size mapoverlay self", mapOverlays.size() + "");
 
@@ -629,8 +612,7 @@ public class HomeActivity extends FragmentActivity implements
 	}
 
 	private void getSearchResult() {
-		Thread userFetchThread = new Thread(null, getSearchResultThread,
-				"Start geting searchResult");
+		Thread userFetchThread = new Thread(null, getSearchResultThread, "Start geting searchResult");
 		userFetchThread.start();
 	}
 
@@ -645,8 +627,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void sendServerRequestToGetSearchResult() {
 		RestClient restClient = new RestClient(Constant.smGetUserUrl);
-		restClient.AddHeader(Constant.authTokenParam,
-				Utility.getAuthToken(context));
+		restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 		restClient.AddParam("lat", myLat + "");
 		restClient.AddParam("lng", myLng + "");
 		try {
@@ -676,13 +657,10 @@ public class HomeActivity extends FragmentActivity implements
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
-			SearchResult tempSearchResult = ServerResponseParser
-					.parseSeachResult(response);
+			SearchResult tempSearchResult = ServerResponseParser.parseSeachResult(response);
 
 			if (tempSearchResult != null) {
-				if (tempSearchResult.getPeoples() != null
-						|| tempSearchResult.getPlaces() != null
-						|| tempSearchResult.getSecondDegreePeoples() != null) {
+				if (tempSearchResult.getPeoples() != null || tempSearchResult.getPlaces() != null || tempSearchResult.getSecondDegreePeoples() != null) {
 
 					StaticValues.searchResult = tempSearchResult;
 
@@ -700,16 +678,12 @@ public class HomeActivity extends FragmentActivity implements
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -719,8 +693,7 @@ public class HomeActivity extends FragmentActivity implements
 	}
 
 	private void getGeotagList() {
-		Thread userFetchThread = new Thread(null, getGeotagListThread,
-				"Start geting geotag list");
+		Thread userFetchThread = new Thread(null, getGeotagListThread, "Start geting geotag list");
 		userFetchThread.start();
 	}
 
@@ -735,8 +708,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void sendServerRequestToGetGeotagList() {
 		RestClient restClient = new RestClient(Constant.smGeoTag);
-		restClient.AddHeader(Constant.authTokenParam,
-				Utility.getAuthToken(context));
+		restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 		try {
 			restClient.Execute(RestClient.RequestMethod.GET);
@@ -756,8 +728,7 @@ public class HomeActivity extends FragmentActivity implements
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleGetGeotagListResponse(responseGeotagStatus,
-					responseGeotagString);
+			handleGetGeotagListResponse(responseGeotagStatus, responseGeotagString);
 			responseGeotagString = null;
 		}
 	};
@@ -779,16 +750,12 @@ public class HomeActivity extends FragmentActivity implements
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -798,8 +765,7 @@ public class HomeActivity extends FragmentActivity implements
 	}
 
 	private void getEventList() {
-		Thread userFetchThread = new Thread(null, getEventListThread,
-				"Start geting event list");
+		Thread userFetchThread = new Thread(null, getEventListThread, "Start geting event list");
 		userFetchThread.start();
 	}
 
@@ -814,8 +780,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void sendServerRequestToGetEventList() {
 		RestClient getUserClient = new RestClient(Constant.smEventUrl);
-		getUserClient.AddHeader(Constant.authTokenParam,
-				Utility.getAuthToken(context));
+		getUserClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 		try {
 			getUserClient.Execute(RestClient.RequestMethod.GET);
@@ -857,16 +822,12 @@ public class HomeActivity extends FragmentActivity implements
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -902,8 +863,7 @@ public class HomeActivity extends FragmentActivity implements
 	private void addPlacesToMasterList() {
 		if (StaticValues.searchResult.getPlaces() != null) {
 			for (int i = 0; i < StaticValues.searchResult.getPlaces().size(); i++) {
-				listMasterContent.add(StaticValues.searchResult.getPlaces()
-						.get(i));
+				listMasterContent.add(StaticValues.searchResult.getPlaces().get(i));
 			}
 		}
 
@@ -912,8 +872,7 @@ public class HomeActivity extends FragmentActivity implements
 	private void addPeoplesToMasterList() {
 		if (StaticValues.searchResult.getPeoples() != null) {
 			for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-				listMasterContent.add(StaticValues.searchResult.getPeoples()
-						.get(i));
+				listMasterContent.add(StaticValues.searchResult.getPeoples().get(i));
 			}
 		}
 
@@ -921,10 +880,8 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void addFacebbokPeoplesToMasterList() {
 		if (StaticValues.searchResult.getSecondDegreePeoples() != null) {
-			for (int i = 0; i < StaticValues.searchResult
-					.getSecondDegreePeoples().size(); i++) {
-				listMasterContent.add(StaticValues.searchResult
-						.getSecondDegreePeoples().get(i));
+			for (int i = 0; i < StaticValues.searchResult.getSecondDegreePeoples().size(); i++) {
+				listMasterContent.add(StaticValues.searchResult.getSecondDegreePeoples().get(i));
 			}
 		}
 
@@ -958,14 +915,15 @@ public class HomeActivity extends FragmentActivity implements
 		String title = Utility.getItemTitle(item);
 		markerOptions.title(title);
 		markerOptions.icon(null);
+
 		try {
 
-			Bitmap bitmap = Utility.generateMarker(markerLayout, item,
-					imageFetcher, this);
+			Bitmap bitmap = Utility.generateMarker(markerLayout, item, remoteImageCache, imageCacheListener);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 			// markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon));
 			bitmap.recycle();
 			bitmap = null;
+
 		} catch (OutOfMemoryError e) {
 			markerOptions.icon(null);
 			// TODO: handle exception
@@ -991,8 +949,7 @@ public class HomeActivity extends FragmentActivity implements
 		markerOptions.icon(null);
 		try {
 
-			Bitmap bitmap = Utility.generateMarker(markerLayout, item,
-					profilePic);
+			Bitmap bitmap = Utility.generateMarker(markerLayout, item, profilePic);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 			// markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon));
 			bitmap.recycle();
@@ -1028,14 +985,11 @@ public class HomeActivity extends FragmentActivity implements
 				Collections.sort(list, listComparator);
 			}
 
-			boolean isPeople = SharedPreferencesHelper.getInstance(context)
-					.getBoolean(Constant.PEOPLE, true);
+			boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
 
-			boolean isPlace = SharedPreferencesHelper.getInstance(context)
-					.getBoolean(Constant.PLACE, false);
+			boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
 
-			boolean isEvent = SharedPreferencesHelper.getInstance(context)
-					.getBoolean(Constant.EVENT, true);
+			boolean isEvent = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.EVENT, true);
 
 			for (int i = 0; i < list.size(); i++) {
 
@@ -1046,13 +1000,11 @@ public class HomeActivity extends FragmentActivity implements
 
 				// boolean isSelectedMarker = false;
 
-				if (firstItemIdOnList == null
-						&& visibleMarkers.containsKey(itemId)) {
+				if (firstItemIdOnList == null && visibleMarkers.containsKey(itemId)) {
 					firstItemIdOnList = itemId;
 				}
 
-				if ((Utility.isLocationVisibleOnMap(mapView, latLng) || isSearchEnabled)
-						&& !visibleMarkers.containsKey(itemId)) {
+				if ((Utility.isLocationVisibleOnMap(mapView, latLng) || isSearchEnabled) && !visibleMarkers.containsKey(itemId)) {
 
 					MarkerOptions markerOptions = null;
 
@@ -1084,8 +1036,7 @@ public class HomeActivity extends FragmentActivity implements
 							visibleMarkers.put(itemId, marker);
 							objectList.put(itemId, item);
 
-							markerUpdateList
-									.put(Utility.getItemId(item), false);
+							markerUpdateList.put(Utility.getItemId(item), false);
 
 							totalItemDisplayed++;
 
@@ -1110,9 +1061,10 @@ public class HomeActivity extends FragmentActivity implements
 
 			// list.clear();
 
-			customInfoWindowAdapter = new CustomInfoWindowAdapter(context,
-					getLayoutInflater(), visibleItemsOnMap, imageFetcher,
-					HomeActivity.this);
+			// customInfoWindowAdapter = new
+			// CustomInfoWindowAdapter(context,getLayoutInflater(),
+			// visibleItemsOnMap, imageFetcher,HomeActivity.this);
+			customInfoWindowAdapter = new CustomInfoWindowAdapter(context, getLayoutInflater(), visibleItemsOnMap, remoteImageCache, imageCacheListener);
 
 			mapView.setInfoWindowAdapter(customInfoWindowAdapter);
 
@@ -1125,16 +1077,13 @@ public class HomeActivity extends FragmentActivity implements
 
 				}
 				if (markerToHighlight == null) {
-					Toast.makeText(context, "No search result found.",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "No search result found.", Toast.LENGTH_SHORT).show();
 				}
 				isNewSearch = false;
-			} else if (StaticValues.isHighlightAnnotation
-					&& StaticValues.highlightAnnotationItem != null) {
+			} else if (StaticValues.isHighlightAnnotation && StaticValues.highlightAnnotationItem != null) {
 
 				if (visibleMarkers.size() > 0) {
-					markerToHighlight = visibleMarkers.get(Utility
-							.getItemId(StaticValues.highlightAnnotationItem));
+					markerToHighlight = visibleMarkers.get(Utility.getItemId(StaticValues.highlightAnnotationItem));
 				}
 
 				StaticValues.isHighlightAnnotation = false;
@@ -1143,16 +1092,15 @@ public class HomeActivity extends FragmentActivity implements
 			}
 
 			if (markerToHighlight != null) {
-				mapView.animateCamera(CameraUpdateFactory
-						.newLatLng(markerToHighlight.getPosition()));
+				mapView.animateCamera(CameraUpdateFactory.newLatLng(markerToHighlight.getPosition()));
 				markerToHighlight.showInfoWindow();
 			}
 
-			if (!isTimerRunning) {
-				markerUpdateTimer = new Timer("MarkerUpdate", true);
-				markerUpdateTimer.schedule(new MarkerUpdateTask(), 10000, 15000);
-				isTimerRunning = true;
-			}
+			/*
+			 * if (!isTimerRunning) { markerUpdateTimer = new
+			 * Timer("MarkerUpdate", true); markerUpdateTimer .schedule(new
+			 * MarkerUpdateTask(), 10000, 15000); isTimerRunning = true; }
+			 */
 
 			updateMarkerVisibility();
 
@@ -1174,8 +1122,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		locationSharingPermission = Permission.PUBLIC;
 		try {
-			locationSharingPermission = Permission.values()[StaticValues.myInfo
-					.getSettings().getShareLocation()];
+			locationSharingPermission = Permission.values()[StaticValues.myInfo.getSettings().getShareLocation()];
 		} catch (NullPointerException e) {
 
 		} catch (Exception e) {
@@ -1186,8 +1133,7 @@ public class HomeActivity extends FragmentActivity implements
 			locationSharingPermission = Permission.PUBLIC;
 		}
 
-		permissionRadioGroupView = new PermissionRadioGroupLess(context, this,
-				locationSharingPermission);
+		permissionRadioGroupView = new PermissionRadioGroupLess(context, this, locationSharingPermission);
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
@@ -1212,12 +1158,11 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 
-		imageFetcher.setExitTasksEarly(true);
-		imageFetcher.flushCache();
+		// imageFetcher.setExitTasksEarly(true);
+		// imageFetcher.flushCache();
 
 		isRunning = false;
-		Log.i("Home:onPause memory before",
-				"" + Debug.getNativeHeapAllocatedSize());
+		Log.i("Home:onPause memory before", "" + Debug.getNativeHeapAllocatedSize());
 
 		gpsService.stopListener();
 
@@ -1230,13 +1175,12 @@ public class HomeActivity extends FragmentActivity implements
 
 		System.gc();
 
-		Log.i("Home:onPause memory after",
-				"" + Debug.getNativeHeapAllocatedSize());
+		Log.i("Home:onPause memory after", "" + Debug.getNativeHeapAllocatedSize());
 
-		if (markerUpdateTimer != null) {
-			markerUpdateTimer.cancel();
-		}
-		isTimerRunning = false;
+		/*
+		 * if (markerUpdateTimer != null) { markerUpdateTimer.cancel(); }
+		 * isTimerRunning = false;
+		 */
 
 		// Start background service
 		startService(new Intent(HomeActivity.this, LocationUpdateService.class));
@@ -1250,9 +1194,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		if (StaticValues.myInfo == null) {
 			if (Utility.getUserData(context) != null) {
-				StaticValues.myInfo = ServerResponseParser
-						.parseUserProfileInfo(Utility.getUserData(context),
-								false);
+				StaticValues.myInfo = ServerResponseParser.parseUserProfileInfo(Utility.getUserData(context), false);
 			}
 
 			if (StaticValues.myInfo == null) {
@@ -1271,79 +1213,55 @@ public class HomeActivity extends FragmentActivity implements
 				PushData pushData = (PushData) extras.get("pushData");
 				if (pushData != null) {
 
-					if (pushData.getReceiverId().equals(
-							StaticValues.myInfo.getId())) {
+					if (pushData.getReceiverId().equals(StaticValues.myInfo.getId())) {
 						Log.i("Home:PushData:Type", pushData.getObjectType());
-						if (pushData.getObjectType().equals(
-								Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
-							Intent i = new Intent(
-									context,
-									MessageConversationFromNotificationActivity.class);
+						if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
+							Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
 							i.putExtra("itemThreadId", pushData.getObjectId());
 							i.putExtra("itemMessageId", pushData.getObjectId());
 
 							startActivity(i);
 
-						} else if (pushData.getObjectType().equals(
-								Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
+						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
 
-							Intent i = new Intent(
-									context,
-									MessageConversationFromNotificationActivity.class);
+							Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
 							i.putExtra("itemThreadId", pushData.getObjectId());
 							i.putExtra("itemMessageId", pushData.getObjectId());
 							i.putExtra("status", true);
 							startActivity(i);
-						} else if (pushData.getObjectType().equals(
-								Constant.PUSH_NOTIFICATION_EVENT)) {
-							Intent intent2 = new Intent(context,
-									EventListActivity.class);
+						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_EVENT)) {
+							Intent intent2 = new Intent(context, EventListActivity.class);
 							startActivity(intent2);
-						} else if (pushData.getObjectType().equals(
-								Constant.PUSH_NOTIFICATION_FRIEND_REQUEST)) {
-							Intent intent2 = new Intent(context,
-									NotificationActivity.class);
-							intent2.putExtra("selectedTab",
-									Constant.PUSH_NOTIFICATION_FRIEND_REQUEST);
+						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_FRIEND_REQUEST)) {
+							Intent intent2 = new Intent(context, NotificationActivity.class);
+							intent2.putExtra("selectedTab", Constant.PUSH_NOTIFICATION_FRIEND_REQUEST);
 							startActivity(intent2);
-						} else if (pushData
-								.getObjectType()
-								.equals(Constant.PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT)) {
+						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT)) {
 
 							updateFriendList();
-							Intent intent2 = new Intent(context,
-									ProfileActivity2.class);
+							Intent intent2 = new Intent(context, ProfileActivity2.class);
 							intent2.putExtra("peopleId", pushData.getObjectId());
 							startActivity(intent2);
 
-						} else if (pushData.getObjectType().equals(
-								Constant.PUSH_NOTIFICATION_MEETUP)) {
-							Intent intent2 = new Intent(context,
-									MessageActivity.class);
-							intent2.putExtra("selectedTab",
-									Constant.PUSH_NOTIFICATION_MEETUP);
+						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_MEETUP)) {
+							Intent intent2 = new Intent(context, MessageActivity.class);
+							intent2.putExtra("selectedTab", Constant.PUSH_NOTIFICATION_MEETUP);
 							startActivity(intent2);
-						} else if (pushData.getObjectType().equals(
-								Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
+						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
 							if (StaticValues.searchResult != null) {
 								if (isSearchEnabled) {
 									disableSearch();
 									doSearch();
 								}
 
-								People people = Utility.getPeopleById(
-										pushData.getObjectId(),
-										StaticValues.searchResult.getPeoples());
+								People people = Utility.getPeopleById(pushData.getObjectId(), StaticValues.searchResult.getPeoples());
 								if (people != null) {
 									StaticValues.isHighlightAnnotation = true;
 									StaticValues.highlightAnnotationItem = people;
 									// highlightAnnotation();
 
-									LatLng selectedLatLng = Utility
-											.getLatLngFromObject(StaticValues.highlightAnnotationItem);
-									mapView.animateCamera(CameraUpdateFactory
-											.newLatLngZoom(selectedLatLng,
-													intialZoomLevel));
+									LatLng selectedLatLng = Utility.getLatLngFromObject(StaticValues.highlightAnnotationItem);
+									mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, intialZoomLevel));
 
 								}
 							}
@@ -1371,8 +1289,7 @@ public class HomeActivity extends FragmentActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smFriendList);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.GET);
@@ -1382,16 +1299,12 @@ public class HomeActivity extends FragmentActivity implements
 
 			if (restClient.getResponseCode() == Constant.STATUS_SUCCESS) {
 
-				if (restClient.getResponse() != null
-						&& !restClient.getResponse().equals("")) {
-					CirclesAndFriends circlesAndFriends = ServerResponseParser
-							.parseCircleAndFriends(restClient.getResponse());
+				if (restClient.getResponse() != null && !restClient.getResponse().equals("")) {
+					CirclesAndFriends circlesAndFriends = ServerResponseParser.parseCircleAndFriends(restClient.getResponse());
 
 					if (circlesAndFriends != null) {
-						StaticValues.myInfo.setCircleList(circlesAndFriends
-								.getCircles());
-						StaticValues.myInfo.setFriendList(circlesAndFriends
-								.getFriends());
+						StaticValues.myInfo.setCircleList(circlesAndFriends.getCircles());
+						StaticValues.myInfo.setFriendList(circlesAndFriends.getFriends());
 					}
 
 				}
@@ -1416,8 +1329,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		validateFacebookSession();
 
-		int resultCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(getApplicationContext());
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 
 		if (resultCode == ConnectionResult.SUCCESS) {
 
@@ -1426,8 +1338,7 @@ public class HomeActivity extends FragmentActivity implements
 		}
 
 		isRunning = true;
-		Log.i("Home:onResume memory before",
-				"" + Debug.getNativeHeapAllocatedSize());
+		Log.i("Home:onResume memory before", "" + Debug.getNativeHeapAllocatedSize());
 
 		if (getIntent().getBooleanExtra("LOGOUT", false)) {
 			finish();
@@ -1450,30 +1361,26 @@ public class HomeActivity extends FragmentActivity implements
 		 * updateMapDisplay(listContent); }
 		 */
 
-		if (StaticValues.isHighlightAnnotation
-				&& StaticValues.highlightAnnotationItem != null) {
+		if (StaticValues.isHighlightAnnotation && StaticValues.highlightAnnotationItem != null) {
 
 			circleMenu.setVisibility(View.GONE);
 
 			isMoveToAnotherPoint = true;
 
-			LatLng selectedLatLng = Utility
-					.getLatLngFromObject(StaticValues.highlightAnnotationItem);
-			mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(
-					selectedLatLng, intialZoomLevel));
+			LatLng selectedLatLng = Utility.getLatLngFromObject(StaticValues.highlightAnnotationItem);
+			mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, intialZoomLevel));
 
 		}
 
 		startGpsService();
 
-		Log.i("Home:onResume memory after",
-				"" + Debug.getNativeHeapAllocatedSize());
+		Log.i("Home:onResume memory after", "" + Debug.getNativeHeapAllocatedSize());
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 		// Stop background service
 		stopService(new Intent(this, LocationUpdateService.class));
 
-		imageFetcher.setExitTasksEarly(false);
+		// imageFetcher.setExitTasksEarly(false);
 
 	}
 
@@ -1484,8 +1391,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
 		broadcastReceiver.setCallback(this);
-		registerReceiver(broadcastReceiver, new IntentFilter(
-				CommonUtilities.DISPLAY_MESSAGE_ACTION));
+		registerReceiver(broadcastReceiver, new IntentFilter(CommonUtilities.DISPLAY_MESSAGE_ACTION));
 	}
 
 	@Override
@@ -1552,14 +1458,10 @@ public class HomeActivity extends FragmentActivity implements
 	private void setCheckBoxSelection() {
 		// TODO Auto-generated method stub
 
-		peopleCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PEOPLE, true));
-		placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PLACE, false));
-		eventCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.EVENT, false));
-		dealCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.DEAL, false));
+		peopleCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true));
+		placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false));
+		eventCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.EVENT, false));
+		dealCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.DEAL, false));
 
 	}
 
@@ -1567,16 +1469,13 @@ public class HomeActivity extends FragmentActivity implements
 
 		Log.i("HomeActivity", "facebookAuthentication");
 
-		if (StaticValues.myInfo != null
-				&& !Utility.getFacebookInvitationDisplayStatus(context)
-				&& StaticValues.myInfo.getLogInCount() == 1) {
+		if (StaticValues.myInfo != null && !Utility.getFacebookInvitationDisplayStatus(context) && StaticValues.myInfo.getLogInCount() == 1) {
 
 			Utility.setFacebookInvitationDisplayStatus(context, true);
 
 			Log.i("HomeActivity", "inside facebookAuthentication");
 
-			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase(
-					Constant.sourceFacebook)) {
+			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase(Constant.sourceFacebook)) {
 				initInviteFriends();
 			} else {
 				askForFacebookAccount();
@@ -1594,17 +1493,14 @@ public class HomeActivity extends FragmentActivity implements
 			showInvitationDialog();
 
 		} else {
-			Toast.makeText(getApplicationContext(),
-					"Internet Connection Unavailable", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getApplicationContext(), "Internet Connection Unavailable", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private void showInvitationDialog() {
 		Bundle params = new Bundle();
 		params.putString("message", "Checkout the app.");
-		FBUtility.mFacebook.dialog(context, "apprequests", params,
-				new AppRequestsListener());
+		FBUtility.mFacebook.dialog(context, "apprequests", params, new AppRequestsListener());
 	}
 
 	private void askForFacebookAccount() {
@@ -1655,20 +1551,18 @@ public class HomeActivity extends FragmentActivity implements
 				adb.setTitle("Exit");
 				adb.setIcon(R.drawable.icon_alert);
 				adb.setMessage("Are you sure you want to exit from this application?");
-				adb.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								finish();
-							}
-						});
-				adb.setNegativeButton("No",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
+				adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						finish();
+					}
+				});
+				adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 				adb.show();
 			}
 
@@ -1684,8 +1578,7 @@ public class HomeActivity extends FragmentActivity implements
 		protected Bitmap doInBackground(String... arg0) {
 			Bitmap b = null;
 			try {
-				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-						.getContent());
+				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0]).getContent());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1716,8 +1609,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void showPlacePopUpDetails(final Place item) {
 		// TODO Auto-generated method stub
-		d = DialogsAndToasts.showExtendedInfoDialog(context,
-				R.layout.dialog_on_map_place_extended);
+		d = DialogsAndToasts.showExtendedInfoDialog(context, R.layout.dialog_on_map_place_extended);
 
 		TextView titleText = (TextView) d.findViewById(R.id.title_text);
 		String title = item.getName();
@@ -1733,8 +1625,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
 		double distanceValue = item.getDistance();
-		distance.setText(Utility.getFormatedDistance(distanceValue,
-				StaticValues.myInfo.getSettings().getUnit()) + " away");
+		distance.setText(Utility.getFormatedDistance(distanceValue, StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
 		closeBtn.setOnClickListener(new OnClickListener() {
@@ -1750,7 +1641,9 @@ public class HomeActivity extends FragmentActivity implements
 		String iconUrl = item.getIconUrl();
 		if (Utility.isValidString(iconUrl)) {
 
-			imageFetcher.loadImage(iconUrl, placeIconImage, this, item.getId());
+			// imageFetcher.loadImage(iconUrl, placeIconImage, this,
+			// item.getId());
+			Utility.setImage(item.getId(), iconUrl, placeIconImage, remoteImageCache);
 
 		}
 
@@ -1762,8 +1655,7 @@ public class HomeActivity extends FragmentActivity implements
 				// TODO Auto-generated method stub
 
 				Place place = item;
-				Intent peopleIntent = new Intent(context,
-						PlaceEditSaveActivity.class);
+				Intent peopleIntent = new Intent(context, PlaceEditSaveActivity.class);
 				peopleIntent.putExtra("ISHOME", true);
 				peopleIntent.putExtra("PLACE_OBJECT", place);
 
@@ -1778,11 +1670,9 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Log.d("PLACE MEET UP", String.valueOf(item.getLatitude()) + " "
-						+ String.valueOf(item.getLongitude()));
+				Log.d("PLACE MEET UP", String.valueOf(item.getLatitude()) + " " + String.valueOf(item.getLongitude()));
 
-				Intent intentForMeetup = new Intent(context,
-						MeetupRequestNewActivity.class);
+				Intent intentForMeetup = new Intent(context, MeetupRequestNewActivity.class);
 				intentForMeetup.putExtra("destLat", item.getLatitude());
 				intentForMeetup.putExtra("destLng", item.getLongitude());
 				intentForMeetup.putExtra("destAddress", item.getVicinity());
@@ -1798,11 +1688,9 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Log.d("PLACE MEET UP", String.valueOf(item.getLatitude()) + " "
-						+ String.valueOf(item.getLongitude()));
+				Log.d("PLACE MEET UP", String.valueOf(item.getLatitude()) + " " + String.valueOf(item.getLongitude()));
 
-				Intent intentForEvent = new Intent(context,
-						EventNewActivity.class);
+				Intent intentForEvent = new Intent(context, EventNewActivity.class);
 				intentForEvent.putExtra("flag", 1);
 				intentForEvent.putExtra("selectedPlace", item);
 				startActivity(intentForEvent);
@@ -1818,8 +1706,7 @@ public class HomeActivity extends FragmentActivity implements
 
 				Place place = item;
 
-				Intent intent = new Intent(context,
-						RecommendationActivity.class);
+				Intent intent = new Intent(context, RecommendationActivity.class);
 				intent.putExtra("place", place);
 				startActivity(intent);
 			}
@@ -1848,8 +1735,7 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Toast.makeText(context, "Review feature is coming soon",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Review feature is coming soon", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -1862,8 +1748,7 @@ public class HomeActivity extends FragmentActivity implements
 
 				Intent intent = new Intent(context, DirectionActivity.class);
 				intent.putExtra("selectedItem", item);
-				Log.d("Place Check", item.getName() + " " + item.getVicinity()
-						+ " " + item.getLatitude() + " " + item.getLongitude());
+				Log.d("Place Check", item.getName() + " " + item.getVicinity() + " " + item.getLatitude() + " " + item.getLongitude());
 				startActivity(intent);
 			}
 		});
@@ -1874,8 +1759,7 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Toast.makeText(context, "Check In feature is coming soon",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Check In feature is coming soon", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -1884,8 +1768,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void showPeoplePopUpDetails(final People people) {
 		// TODO Auto-generated method stub
-		d = DialogsAndToasts.showExtendedInfoDialog(context,
-				R.layout.dialog_on_map_extended);
+		d = DialogsAndToasts.showExtendedInfoDialog(context, R.layout.dialog_on_map_extended);
 
 		currentBubbleDialog = d;
 
@@ -1894,14 +1777,10 @@ public class HomeActivity extends FragmentActivity implements
 		TextView firstName = (TextView) d.findViewById(R.id.first_name_text);
 		firstName.setText(Utility.getItemTitle(people));
 
-		LinearLayout genderInfoContainer = (LinearLayout) d
-				.findViewById(R.id.genderInfoContainer);
-		LinearLayout relationshipInfoContainer = (LinearLayout) d
-				.findViewById(R.id.relationshipInfoContainer);
-		LinearLayout cityInfoContainer = (LinearLayout) d
-				.findViewById(R.id.cityInfoContainer);
-		LinearLayout workInfoContainer = (LinearLayout) d
-				.findViewById(R.id.workInfoContainer);
+		LinearLayout genderInfoContainer = (LinearLayout) d.findViewById(R.id.genderInfoContainer);
+		LinearLayout relationshipInfoContainer = (LinearLayout) d.findViewById(R.id.relationshipInfoContainer);
+		LinearLayout cityInfoContainer = (LinearLayout) d.findViewById(R.id.cityInfoContainer);
+		LinearLayout workInfoContainer = (LinearLayout) d.findViewById(R.id.workInfoContainer);
 
 		TextView tvStatus = (TextView) d.findViewById(R.id.status_text);
 		TextView age = (TextView) d.findViewById(R.id.age_text);
@@ -1922,8 +1801,7 @@ public class HomeActivity extends FragmentActivity implements
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
 		double distanceValue = people.getDistance();
 
-		distance.setText(Utility.getFormatedDistance(distanceValue,
-				StaticValues.myInfo.getSettings().getUnit()) + " away");
+		distance.setText(Utility.getFormatedDistance(distanceValue, StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		TextView street = (TextView) d.findViewById(R.id.street_text);
 		String sName = people.getCurrentAddress();
@@ -1940,11 +1818,9 @@ public class HomeActivity extends FragmentActivity implements
 			genderInfoContainer.setVisibility(View.GONE);
 		}
 
-		TextView relationshipSatus = (TextView) d
-				.findViewById(R.id.relationship_text);
+		TextView relationshipSatus = (TextView) d.findViewById(R.id.relationship_text);
 		String relationshipValue = people.getRelationshipStatus();
-		if (relationshipValue != null && !relationshipValue.equals("")
-				&& !relationshipValue.equalsIgnoreCase("select...")) {
+		if (relationshipValue != null && !relationshipValue.equals("") && !relationshipValue.equalsIgnoreCase("select...")) {
 			relationshipSatus.setText(relationshipValue);
 		} else {
 			relationshipInfoContainer.setVisibility(View.GONE);
@@ -1976,7 +1852,8 @@ public class HomeActivity extends FragmentActivity implements
 		String avatarUrl = people.getAvatar();
 		if (Utility.isValidString(avatarUrl)) {
 
-			imageFetcher.loadImage(avatarUrl, avatar, this, people.getId());
+			// imageFetcher.loadImage(avatarUrl, avatar, this, people.getId());
+			Utility.setImage(people.getId(), avatarUrl, avatar, remoteImageCache);
 		}
 
 		avatar.setOnClickListener(new OnClickListener() {
@@ -1991,31 +1868,26 @@ public class HomeActivity extends FragmentActivity implements
 		});
 
 		Button meetupBtn = (Button) d.findViewById(R.id.meet_up_btn);
-		Button meetupBtnDisabled = (Button) d
-				.findViewById(R.id.meet_up_btn_disabled);
+		Button meetupBtnDisabled = (Button) d.findViewById(R.id.meet_up_btn_disabled);
 		Button sendMessageBtn = (Button) d.findViewById(R.id.message_btn);
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
 		Button addFrndBtn = (Button) d.findViewById(R.id.add_frnd_btn);
 		Button directionBtn = (Button) d.findViewById(R.id.directions_btn);
 
-		TextView tvFriendshipStatus = (TextView) d
-				.findViewById(R.id.tvFriendshipStatus);
+		TextView tvFriendshipStatus = (TextView) d.findViewById(R.id.tvFriendshipStatus);
 
 		String friendshipStatus = people.getFriendshipStatus();
 
 		Log.e("friendshipStatus", friendshipStatus);
 
 		if (friendRequestSentList.contains(userId)) {
-			tvFriendshipStatus
-					.setText(getString(R.string.status_friend_request_pending));
+			tvFriendshipStatus.setText(getString(R.string.status_friend_request_pending));
 			meetupBtnDisabled.setVisibility(View.VISIBLE);
 		} else {
-			if (friendshipStatus
-					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
+			if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
 				tvFriendshipStatus.setVisibility(View.GONE);
 				addFrndBtn.setVisibility(View.VISIBLE);
-			} else if (friendshipStatus
-					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+			} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
 				tvFriendshipStatus.setVisibility(View.GONE);
 				meetupBtn.setVisibility(View.VISIBLE);
 			} else {
@@ -2023,22 +1895,17 @@ public class HomeActivity extends FragmentActivity implements
 				meetupBtnDisabled.setVisibility(View.VISIBLE);
 
 				String status = "";
-				if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+				if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
 					status = getString(R.string.status_friend_request_friend);
 					meetupBtnDisabled.setVisibility(View.GONE);
 					meetupBtn.setVisibility(View.VISIBLE);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
+				} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
 					status = getString(R.string.status_friend_request_pending);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
+				} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
 					status = getString(R.string.status_friend_request_sent);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
+				} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
 					status = getString(R.string.status_friend_request_declined_by_me);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
+				} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
 					status = getString(R.string.status_friend_request_declined_by_him);
 				} else {
 					status = "";
@@ -2076,8 +1943,7 @@ public class HomeActivity extends FragmentActivity implements
 
 				// showMessageDialog(item);
 
-				Intent messageDetailsIntent = new Intent(context,
-						MessageConversationFromNotificationActivity.class);
+				Intent messageDetailsIntent = new Intent(context, MessageConversationFromNotificationActivity.class);
 
 				messageDetailsIntent.putExtra("recipientId", userId);
 
@@ -2093,14 +1959,11 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				// d.dismiss();
-				Log.d("LAT LNG Meetup People",
-						String.valueOf(people.getCurrentLat()) + " "
-								+ String.valueOf(people.getCurrentLng()));
+				Log.d("LAT LNG Meetup People", String.valueOf(people.getCurrentLat()) + " " + String.valueOf(people.getCurrentLng()));
 
 				// People people = people;
 
-				Intent intent = new Intent(context,
-						MeetupRequestNewActivity.class);
+				Intent intent = new Intent(context, MeetupRequestNewActivity.class);
 				intent.putExtra("selectedPeople", people);
 				startActivity(intent);
 			}
@@ -2112,10 +1975,7 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(
-						context,
-						"To send Meet-up request, recipient should be your friend.",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "To send Meet-up request, recipient should be your friend.", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -2133,11 +1993,9 @@ public class HomeActivity extends FragmentActivity implements
 		d.show();
 	}
 
-	private void showSecondDegreePeoplePopUpDetails(
-			final SecondDegreePeople item) {
+	private void showSecondDegreePeoplePopUpDetails(final SecondDegreePeople item) {
 		// TODO Auto-generated method stub
-		d = DialogsAndToasts.showExtendedInfoDialog(context,
-				R.layout.dialog_on_map_second_degree_extended);
+		d = DialogsAndToasts.showExtendedInfoDialog(context, R.layout.dialog_on_map_second_degree_extended);
 
 		currentBubbleDialog = d;
 
@@ -2149,8 +2007,7 @@ public class HomeActivity extends FragmentActivity implements
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
 		double distanceValue = secondDegreePeople.getDistance();
 
-		distance.setText(Utility.getFormatedDistance(distanceValue,
-				StaticValues.myInfo.getSettings().getUnit()) + " away");
+		distance.setText(Utility.getFormatedDistance(distanceValue, StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		TextView street = (TextView) d.findViewById(R.id.street_text);
 		String sName = secondDegreePeople.getCurrentAddress();
@@ -2162,8 +2019,9 @@ public class HomeActivity extends FragmentActivity implements
 		avatar = (ImageView) d.findViewById(R.id.avater_image);
 		String avatarUrl = secondDegreePeople.getAvatar();
 		if (Utility.isValidString(avatarUrl)) {
-			imageFetcher.loadImage(avatarUrl, avatar, this,
-					secondDegreePeople.getRefId());
+			// imageFetcher.loadImage(avatarUrl, avatar,
+			// this,secondDegreePeople.getRefId());
+			Utility.setImage(secondDegreePeople.getRefId(), avatarUrl, avatar, remoteImageCache);
 		}
 
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
@@ -2182,8 +2040,7 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(context,
-						MeetupRequestNewActivity.class);
+				Intent intent = new Intent(context, MeetupRequestNewActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -2205,8 +2062,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void showEventPopUpDetails(final Event event) {
 		// TODO Auto-generated method stub
-		d = DialogsAndToasts.showExtendedInfoDialog(context,
-				R.layout.dialog_on_map_event_extended);
+		d = DialogsAndToasts.showExtendedInfoDialog(context, R.layout.dialog_on_map_event_extended);
 
 		currentBubbleDialog = d;
 
@@ -2231,8 +2087,7 @@ public class HomeActivity extends FragmentActivity implements
 		}
 
 		if (event.getEventTime() != null) {
-			tvDate.setText(Utility.getFormattedDisplayDateForMap(event
-					.getEventTime()));
+			tvDate.setText(Utility.getFormattedDisplayDateForMap(event.getEventTime()));
 		} else {
 			tvDate.setVisibility(View.GONE);
 		}
@@ -2242,8 +2097,7 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent eventDetailsIntent = new Intent(context,
-						EventDetailsActivity.class);
+				Intent eventDetailsIntent = new Intent(context, EventDetailsActivity.class);
 				eventDetailsIntent.putExtra("selectedEvent", event);
 				eventDetailsIntent.putExtra("source", "map");
 				context.startActivity(eventDetailsIntent);
@@ -2277,8 +2131,7 @@ public class HomeActivity extends FragmentActivity implements
 	private void showFrndRequestDialog(final People item) {
 		// TODO Auto-generated method stub
 		frndRequestDialog = DialogsAndToasts.showAddFrnd(context);
-		final EditText msgEditText = (EditText) frndRequestDialog
-				.findViewById(R.id.message_body_text);
+		final EditText msgEditText = (EditText) frndRequestDialog.findViewById(R.id.message_body_text);
 
 		Button send = (Button) frndRequestDialog.findViewById(R.id.btnSend);
 		Button cancel = (Button) frndRequestDialog.findViewById(R.id.btnCancel);
@@ -2288,8 +2141,7 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				sendFriendRequest(item.getId(), msgEditText.getText()
-						.toString().trim());
+				sendFriendRequest(item.getId(), msgEditText.getText().toString().trim());
 
 			}
 		});
@@ -2307,8 +2159,7 @@ public class HomeActivity extends FragmentActivity implements
 	private void showMessageDialog(final People item) {
 		// TODO Auto-generated method stub
 		msgDialog = DialogsAndToasts.showSendMessage(context);
-		final EditText msgEditText = (EditText) msgDialog
-				.findViewById(R.id.message_body_text);
+		final EditText msgEditText = (EditText) msgDialog.findViewById(R.id.message_body_text);
 		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
 		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
 		send.setOnClickListener(new OnClickListener() {
@@ -2317,8 +2168,7 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if (!msgEditText.getText().toString().trim().equals("")) {
-					sendMessage(item.getId(), "Message", msgEditText.getText()
-							.toString().trim());
+					sendMessage(item.getId(), "Message", msgEditText.getText().toString().trim());
 
 				} else {
 					msgEditText.setError("Please enter your message!!");
@@ -2339,8 +2189,7 @@ public class HomeActivity extends FragmentActivity implements
 	private void sendSelfLocationToServer() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
-			Thread thread = new Thread(null, updateLocationThread,
-					"Start update location");
+			Thread thread = new Thread(null, updateLocationThread, "Start update location");
 			thread.start();
 
 			// show progress dialog if needed
@@ -2356,8 +2205,7 @@ public class HomeActivity extends FragmentActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smUpdateLocationUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			restClient.AddParam("lat", "" + myLat);
 			restClient.AddParam("lng", "" + myLng);
@@ -2380,8 +2228,7 @@ public class HomeActivity extends FragmentActivity implements
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleResponseUpdateLocation(responseStatusUpdateLocation,
-					responseStringUpdateLocation);
+			handleResponseUpdateLocation(responseStatusUpdateLocation, responseStringUpdateLocation);
 
 			responseStringUpdateLocation = null;
 
@@ -2390,11 +2237,9 @@ public class HomeActivity extends FragmentActivity implements
 
 	};
 
-	private void handleResponseUpdateLocation(int responseStatusUpdateLocation,
-			String responseStringUpdateLocation) {
+	private void handleResponseUpdateLocation(int responseStatusUpdateLocation, String responseStringUpdateLocation) {
 		// TODO Auto-generated method stub
-		Log.e("Update Location", responseStatusUpdateLocation + " "
-				+ responseStringUpdateLocation);
+		Log.e("Update Location", responseStatusUpdateLocation + " " + responseStringUpdateLocation);
 	}
 
 	private void sendFriendRequest(String friendId, String message) {
@@ -2403,14 +2248,11 @@ public class HomeActivity extends FragmentActivity implements
 			friendRequestFriendId = friendId;
 			friendRequestMessage = message;
 
-			Thread thread = new Thread(null, friendRequestThread,
-					"Start send message");
+			Thread thread = new Thread(null, friendRequestThread, "Start send message");
 			thread.start();
 
 			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true, true);
+			m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -2422,10 +2264,8 @@ public class HomeActivity extends FragmentActivity implements
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
-					+ "/" + friendRequestFriendId);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			RestClient restClient = new RestClient(Constant.smFriendRequestUrl + "/" + friendRequestFriendId);
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			restClient.AddParam("message", friendRequestMessage);
 
@@ -2447,8 +2287,7 @@ public class HomeActivity extends FragmentActivity implements
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleResponseFriendRequest(friendRequestStatus,
-					friendRequestResponse);
+			handleResponseFriendRequest(friendRequestStatus, friendRequestResponse);
 
 			// dismiss progress dialog if needed
 			if (m_ProgressDialog != null) {
@@ -2465,23 +2304,18 @@ public class HomeActivity extends FragmentActivity implements
 		case Constant.STATUS_SUCCESS:
 			handleSuccssfulFriendRequest();
 
-			Toast.makeText(context, "Request sent successfully.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Request sent successfully.", Toast.LENGTH_SHORT).show();
 			frndRequestDialog.dismiss();
 
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(context,
-					"Friend request already sent to this user.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Friend request already sent to this user.", Toast.LENGTH_SHORT).show();
 			frndRequestDialog.dismiss();
 
 			break;
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -2498,8 +2332,7 @@ public class HomeActivity extends FragmentActivity implements
 		for (int i = 0; i < peopleList.size(); i++) {
 			String userId = peopleList.get(i).getId();
 			if (friendRequestSentList.contains(userId)) {
-				peopleList.get(i).setFriendshipStatus(
-						Constant.STATUS_FRIENDSHIP_PENDING);
+				peopleList.get(i).setFriendshipStatus(Constant.STATUS_FRIENDSHIP_PENDING);
 			}
 		}
 
@@ -2515,15 +2348,11 @@ public class HomeActivity extends FragmentActivity implements
 			sendMessageSubject = subject;
 			sendMessageContent = content;
 
-			Thread thread = new Thread(null, sendMessageThread,
-					"Start send message");
+			Thread thread = new Thread(null, sendMessageThread, "Start send message");
 			thread.start();
 
 			// show progress dialog if needed m_ProgressDialog =
-			ProgressDialog.show(context,
-					getResources().getString(R.string.please_wait_text),
-					getResources().getString(R.string.sending_request_text),
-					true, true);
+			ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -2537,8 +2366,7 @@ public class HomeActivity extends FragmentActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smMessagesUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			restClient.AddParam("recipients[]", sendMessageFriendId);
 			restClient.AddParam("subject", sendMessageSubject);
@@ -2576,24 +2404,19 @@ public class HomeActivity extends FragmentActivity implements
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			Toast.makeText(context, "Message sent successfully.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Message sent successfully.", Toast.LENGTH_SHORT).show();
 			msgDialog.dismiss();
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
 
 	}
 
-	private static final class TopDrawerListener implements
-			MultiDirectionSlidingDrawer.OnDrawerOpenListener,
-			MultiDirectionSlidingDrawer.OnDrawerCloseListener {
+	private static final class TopDrawerListener implements MultiDirectionSlidingDrawer.OnDrawerOpenListener, MultiDirectionSlidingDrawer.OnDrawerCloseListener {
 
 		@Override
 		public void onDrawerClosed() {
@@ -2615,15 +2438,12 @@ public class HomeActivity extends FragmentActivity implements
 
 	}
 
-	private static class BottomDrawerListener implements
-			MultiDirectionSlidingDrawer.OnDrawerOpenListener,
-			MultiDirectionSlidingDrawer.OnDrawerCloseListener {
+	private static class BottomDrawerListener implements MultiDirectionSlidingDrawer.OnDrawerOpenListener, MultiDirectionSlidingDrawer.OnDrawerCloseListener {
 		@Override
 		public void onDrawerClosed() {
 			// TODO Auto-generated method stub
 
-			bottomCloseButton
-					.setBackgroundResource(R.drawable.btn_footer_slider_open);
+			bottomCloseButton.setBackgroundResource(R.drawable.btn_footer_slider_open);
 		}
 
 		@Override
@@ -2634,8 +2454,7 @@ public class HomeActivity extends FragmentActivity implements
 				topDrawer.animateClose();
 			}
 
-			bottomCloseButton
-					.setBackgroundResource(R.drawable.btn_footer_slider_close);
+			bottomCloseButton.setBackgroundResource(R.drawable.btn_footer_slider_close);
 		}
 
 	}
@@ -2645,31 +2464,27 @@ public class HomeActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 
 		if (buttonView == peopleCheckBox) {
-			SharedPreferencesHelper.getInstance(context).setBoolean(
-					Constant.PEOPLE, isChecked);
+			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.PEOPLE, isChecked);
 
 			updateMapDisplay(listContent);
 			// setMarkerVisibility(Constant.FLAG_PEOPLE, isChecked);
 		}
 		if (buttonView == placeCheckBox) {
 
-			SharedPreferencesHelper.getInstance(context).setBoolean(
-					Constant.PLACE, isChecked);
+			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.PLACE, isChecked);
 
 			updateMapDisplay(listContent);
 			// setMarkerVisibility(Constant.FLAG_PLACE, isChecked);
 		}
 		if (buttonView == eventCheckBox) {
 
-			SharedPreferencesHelper.getInstance(context).setBoolean(
-					Constant.EVENT, isChecked);
+			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.EVENT, isChecked);
 
 			updateMapDisplay(listContent);
 			// setMarkerVisibility(Constant.FLAG_EVENT, isChecked);
 		}
 		if (buttonView == dealCheckBox) {
-			SharedPreferencesHelper.getInstance(context).setBoolean(
-					Constant.DEAL, isChecked);
+			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.DEAL, isChecked);
 		}
 	}
 
@@ -2681,12 +2496,10 @@ public class HomeActivity extends FragmentActivity implements
 
 		if (v == btnListView || v == tvListView) {
 			if (StaticValues.searchResult != null) {
-				Intent showListIntent = new Intent(context,
-						ListViewActivity.class);
+				Intent showListIntent = new Intent(context, ListViewActivity.class);
 				startActivity(showListIntent);
 			} else
-				Toast.makeText(context, "No data found yet.",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "No data found yet.", Toast.LENGTH_SHORT).show();
 		} else if (v == btnCircle) {
 			if (bottomDrawer.isOpened()) {
 				bottomDrawer.animateClose();
@@ -2726,37 +2539,30 @@ public class HomeActivity extends FragmentActivity implements
 
 		} else if (v == btnCircleMenuItemFriends) {
 
-			Intent messageIntent = new Intent(getApplicationContext(),
-					FriendListActivity.class);
+			Intent messageIntent = new Intent(getApplicationContext(), FriendListActivity.class);
 			startActivity(messageIntent);
 
 		} else if (v == btnCircleMenuItemMessages) {
-			Intent messageIntent = new Intent(getApplicationContext(),
-					MessageActivity.class);
+			Intent messageIntent = new Intent(getApplicationContext(), MessageActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
 
-			Intent messageIntent = new Intent(getApplicationContext(),
-					NewsFeedActivity.class);
+			Intent messageIntent = new Intent(getApplicationContext(), NewsFeedActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemPeople) {
 
-			Intent peopleIntent = new Intent(getApplicationContext(),
-					PeopleListActivity.class);
+			Intent peopleIntent = new Intent(getApplicationContext(), PeopleListActivity.class);
 			startActivity(peopleIntent);
 
 		} else if (v == btnCircleMenuItemPlaces) {
 
-			Intent placeIntent = new Intent(getApplicationContext(),
-					PlacesListActivity.class);
+			Intent placeIntent = new Intent(getApplicationContext(), PlacesListActivity.class);
 			startActivity(placeIntent);
 		} else if (v == btnCircleMenuItemProfile) {
-			Intent profileIntent = new Intent(getApplicationContext(),
-					ProfileActivity.class);
+			Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
 			startActivity(profileIntent);
 		} else if (v == btnCircleMenuItemSettings) {
-			Intent settingsIntent = new Intent(getApplicationContext(),
-					SettingsActivity.class);
+			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
 			startActivity(settingsIntent);
 		}
 
@@ -2766,8 +2572,7 @@ public class HomeActivity extends FragmentActivity implements
 
 			// Log.i("btnDoSearch", "pressed");
 
-			if (listMasterContent.size() > 0
-					&& !etSearchField.getText().toString().equalsIgnoreCase("")) {
+			if (listMasterContent.size() > 0 && !etSearchField.getText().toString().equalsIgnoreCase("")) {
 				isSearchEnabled = true;
 				doSearch();
 			}
@@ -2793,8 +2598,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		isNewSearch = true;
 
-		List<Object> list = Utility.getSearchResult(listMasterContent,
-				etSearchField.getText().toString());
+		List<Object> list = Utility.getSearchResult(listMasterContent, etSearchField.getText().toString());
 
 		listContent.clear();
 		listContent.addAll(list);
@@ -2819,8 +2623,7 @@ public class HomeActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onPermissionChanged(RadioGroup group, RadioButton radio,
-			Permission selectedItem) {
+	public void onPermissionChanged(RadioGroup group, RadioButton radio, Permission selectedItem) {
 		// TODO Auto-generated method stub
 
 		if (locationSharingPermission != selectedItem) {
@@ -2842,13 +2645,10 @@ public class HomeActivity extends FragmentActivity implements
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(
-					Constant.smLocationSharingUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			RestClient restClient = new RestClient(Constant.smLocationSharingUrl);
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
-			restClient.AddParam("shareLocation",
-					"" + locationSharingPermission.ordinal());
+			restClient.AddParam("shareLocation", "" + locationSharingPermission.ordinal());
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.PUT);
@@ -2857,12 +2657,10 @@ public class HomeActivity extends FragmentActivity implements
 			}
 
 			if (restClient.getResponseCode() == Constant.STATUS_SUCCESS) {
-				StaticValues.myInfo.getSettings().setShareLocation(
-						locationSharingPermission.ordinal());
+				StaticValues.myInfo.getSettings().setShareLocation(locationSharingPermission.ordinal());
 			}
 
-			Log.i("LocationSharing update", restClient.getResponseCode() + ":"
-					+ restClient.getResponse());
+			Log.i("LocationSharing update", restClient.getResponseCode() + ":" + restClient.getResponse());
 		}
 	};
 
@@ -2871,11 +2669,9 @@ public class HomeActivity extends FragmentActivity implements
 		isFirstTimeFbdialog = new Dialog(c, R.style.CustomDialogTheme);
 		isFirstTimeFbdialog.setContentView(R.layout.first_time_dialog);
 
-		isFirstTimeFbdialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT);
+		isFirstTimeFbdialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
-		btnFBLogin = (Button) isFirstTimeFbdialog
-				.findViewById(R.id.btnFBLoginDialog);
+		btnFBLogin = (Button) isFirstTimeFbdialog.findViewById(R.id.btnFBLoginDialog);
 
 		// Create the Facebook Object using the app id.
 		FBUtility.mFacebook = new Facebook(Constant.FB_APP_ID);
@@ -2891,13 +2687,11 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				FBUtility.mFacebook.authorize(HomeActivity.this,
-						Constant.facebookPermissions, HomeActivity.this);
+				FBUtility.mFacebook.authorize(HomeActivity.this, Constant.facebookPermissions, HomeActivity.this);
 			}
 		});
 
-		Button btnCrossFb = (Button) isFirstTimeFbdialog
-				.findViewById(R.id.btnCrossFb);
+		Button btnCrossFb = (Button) isFirstTimeFbdialog.findViewById(R.id.btnCrossFb);
 		// if button is clicked, close the custom dialog
 		btnCrossFb.setOnClickListener(new OnClickListener() {
 			@Override
@@ -2937,8 +2731,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		Utility.setFacebookImage(context, null);
 
-		FBUtility.mFacebook.authorize(HomeActivity.this,
-				Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH, this);
+		FBUtility.mFacebook.authorize(HomeActivity.this, Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH, this);
 	}
 
 	@Override
@@ -3069,7 +2862,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		} else if (item instanceof SecondDegreePeople) {
 
-			showSecondDegreePeoplePopUpDetails((SecondDegreePeople) item);
+			// showSecondDegreePeoplePopUpDetails((SecondDegreePeople) item);
 
 		} else if (item instanceof Place) {
 
@@ -3082,37 +2875,6 @@ public class HomeActivity extends FragmentActivity implements
 		} else if (item instanceof MeetupRequest) {
 
 		}
-
-	}
-
-	@Override
-	public void onDownloadComplete(final String itemId, final Bitmap bitmap,
-			final String imageUrl) {
-		// TODO Auto-generated method stub
-		Log.i("ImageDownloaded:" + itemId, imageUrl);
-
-		// Log.i("ImageDownloaded:>>"+itemId, imageUrl);
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				Log.i("ImageDownloaded:>>" + itemId, imageUrl);
-				if (markerUpdateList.containsKey(itemId)) {
-					if (!markerUpdateList.get(itemId)) {
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								updateMarker(itemId, bitmap);
-							}
-						});
-
-					}
-				}
-			}
-		}, 1000);
 
 	}
 
@@ -3146,9 +2908,11 @@ public class HomeActivity extends FragmentActivity implements
 				visibleMarkers.put(itemId, marker);
 				markerUpdateList.put(itemId, true);
 
-				customInfoWindowAdapter = new CustomInfoWindowAdapter(context,
-						getLayoutInflater(), visibleItemsOnMap, imageFetcher,
-						this);
+				// customInfoWindowAdapter = new
+				// CustomInfoWindowAdapter(context,getLayoutInflater(),
+				// visibleItemsOnMap, imageFetcher, this);
+
+				customInfoWindowAdapter = new CustomInfoWindowAdapter(context, getLayoutInflater(), visibleItemsOnMap, remoteImageCache, imageCacheListener);
 
 				mapView.setInfoWindowAdapter(customInfoWindowAdapter);
 				if (!isVisible) {
@@ -3164,20 +2928,16 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void updateMarkerVisibility() {
 
-		boolean isPeople = SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PEOPLE, true);
+		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
 
-		boolean isPlace = SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PLACE, false);
+		boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
 
-		boolean isEvent = SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.EVENT, false);
+		boolean isEvent = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.EVENT, false);
 
 		if (objectList != null) {
 			for (String itemId : objectList.keySet()) {
 				Object item = objectList.get(itemId);
-				if (item instanceof People
-						|| item instanceof SecondDegreePeople) {
+				if (item instanceof People || item instanceof SecondDegreePeople) {
 					visibleMarkers.get(itemId).setVisible(isPeople);
 				} else if (item instanceof Place) {
 					visibleMarkers.get(itemId).setVisible(isPlace);
@@ -3196,14 +2956,11 @@ public class HomeActivity extends FragmentActivity implements
 		if (objectList != null) {
 			for (String itemId : objectList.keySet()) {
 				Object item = objectList.get(itemId);
-				if ((flag == Constant.FLAG_PEOPLE)
-						&& (item instanceof People || item instanceof SecondDegreePeople)) {
+				if ((flag == Constant.FLAG_PEOPLE) && (item instanceof People || item instanceof SecondDegreePeople)) {
 					visibleMarkers.get(itemId).setVisible(isChecked);
-				} else if ((flag == Constant.FLAG_PLACE)
-						&& item instanceof Place) {
+				} else if ((flag == Constant.FLAG_PLACE) && item instanceof Place) {
 					visibleMarkers.get(itemId).setVisible(isChecked);
-				} else if ((flag == Constant.FLAG_EVENT)
-						&& item instanceof Event) {
+				} else if ((flag == Constant.FLAG_EVENT) && item instanceof Event) {
 					Marker marker = visibleMarkers.get(itemId);
 					if (marker != null) {
 						marker.setVisible(isChecked);
@@ -3215,11 +2972,6 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void validateExistingMarkers() {
 		// TODO Auto-generated method stub
-		// listMasterContent
-		// objectList
-
-		// visibleItemsOnMap
-		// visibleMarkers
 
 		List<String> itemIdList = new ArrayList<String>();
 
@@ -3233,8 +2985,7 @@ public class HomeActivity extends FragmentActivity implements
 				LatLng newLatLng = Utility.getLatLngFromObject(oldItem);
 				LatLng oldLatLng = Utility.getLatLngFromObject(listItem);
 
-				if (newLatLng.latitude != oldLatLng.latitude
-						|| newLatLng.longitude != oldLatLng.longitude) {
+				if (newLatLng.latitude != oldLatLng.latitude || newLatLng.longitude != oldLatLng.longitude) {
 					// update visibleItemsOnMap
 					// update visibleMarkers
 					// update objectList
@@ -3264,8 +3015,7 @@ public class HomeActivity extends FragmentActivity implements
 			}
 		}
 
-		for (String itemId : ((HashMap<String, Object>) objectList.clone())
-				.keySet()) {
+		for (String itemId : ((HashMap<String, Object>) objectList.clone()).keySet()) {
 			if (!itemIdList.contains(itemId)) {
 				Marker oldMarker = visibleMarkers.get(itemId);
 				String oldMarkerId = null;
@@ -3282,53 +3032,38 @@ public class HomeActivity extends FragmentActivity implements
 
 	}
 
-	boolean isTimerRunning = false;
-	Timer markerUpdateTimer = new Timer();
-
-	private class MarkerUpdateTask extends TimerTask {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					validateMarkers();
-				}
-			});
-		}
-	}
-
-	private void validateMarkers() {
-
-		Log.i("HomeActivity", "validateMarkers");
-		HashMap<String, Boolean> tempMap = (HashMap<String, Boolean>) markerUpdateList
-				.clone();
-
-		ImageView imageView = new ImageView(context);
-		imageView.setVisibility(View.GONE);
-		for (String itemId : tempMap.keySet()) {
-			if (!tempMap.get(itemId)) {
-				Object object = objectList.get(itemId);
-				if (object != null) {
-					String imageUrl = Utility.getItemImageUrl(object);
-					if (Utility.isValidString(imageUrl)) {
-						Log.i("HomeActivity:validateMarkers", "retrying:"+imageUrl);
-						imageFetcher.loadImage(imageUrl, imageView,
-								HomeActivity.this, itemId);
-					}
-				}
-
-			}
-		}
-
-	}
+	/*
+	 * boolean isTimerRunning = false; Timer markerUpdateTimer = new Timer();
+	 * 
+	 * private class MarkerUpdateTask extends TimerTask {
+	 * 
+	 * @Override public void run() { // TODO Auto-generated method stub
+	 * runOnUiThread(new Runnable() {
+	 * 
+	 * @Override public void run() { // TODO Auto-generated method stub
+	 * validateMarkers(); } }); } }
+	 * 
+	 * private void validateMarkers() {
+	 * 
+	 * Log.i("HomeActivity", "validateMarkers"); HashMap<String, Boolean>
+	 * tempMap = (HashMap<String, Boolean>) markerUpdateList .clone();
+	 * 
+	 * ImageView imageView = new ImageView(context);
+	 * imageView.setVisibility(View.GONE); for (String itemId :
+	 * tempMap.keySet()) { if (!tempMap.get(itemId)) { Object object =
+	 * objectList.get(itemId); if (object != null) { String imageUrl =
+	 * Utility.getItemImageUrl(object); if (Utility.isValidString(imageUrl)) {
+	 * Log.i("HomeActivity:validateMarkers", "retrying:" + imageUrl);
+	 * imageFetcher.loadImage(imageUrl, imageView, HomeActivity.this, itemId); }
+	 * }
+	 * 
+	 * } }
+	 * 
+	 * }
+	 */
 
 	private void validateFacebookSession() {
-		if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook)
-				&& !Utility.isFacebookSessionValid(context)) {
+		if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook) && !Utility.isFacebookSessionValid(context)) {
 
 			finish();
 			startActivity(new Intent(context, LoginActivity.class));
@@ -3336,5 +3071,62 @@ public class HomeActivity extends FragmentActivity implements
 		}
 
 	}
+
+	/*
+	 * @Override public void onDownloadComplete(final String itemId, final
+	 * Bitmap bitmap, final String imageUrl) { // TODO Auto-generated method
+	 * stub Log.i("ImageDownloaded:" + itemId, imageUrl);
+	 * 
+	 * // Log.i("ImageDownloaded:>>"+itemId, imageUrl); Timer timer = new
+	 * Timer(); timer.schedule(new TimerTask() {
+	 * 
+	 * @Override public void run() { Log.i("ImageDownloaded:>>" + itemId,
+	 * imageUrl); if (markerUpdateList.containsKey(itemId)) { if
+	 * (!markerUpdateList.get(itemId)) { runOnUiThread(new Runnable() {
+	 * 
+	 * @Override public void run() { // TODO Auto-generated method stub
+	 * updateMarker(itemId, bitmap); } });
+	 * 
+	 * } } } }, 1000);
+	 * 
+	 * }
+	 */
+
+	ImageCacheListener imageCacheListener = new ImageCacheListener() {
+
+		@Override
+		public void onSuccess(final ImageInfo imageInfo, final Bitmap bitmap) {
+			Log.i("imageCacheListener:onSuccess", imageInfo.imageUrl);
+
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+
+					if (markerUpdateList.containsKey(imageInfo.id)) {
+						if (!markerUpdateList.get(imageInfo.id)) {
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									updateMarker(imageInfo.id, bitmap);
+								}
+							});
+
+						}
+					}
+				}
+			}, 1000);
+
+		}
+
+		@Override
+		public void onFailure(Throwable error, ImageInfo imageInfo) {
+			Log.i("imageCacheListener:onFailure", imageInfo.id + ":" + imageInfo.imageUrl);
+			// remoteImageCache.getImage(imageInfo);
+		}
+	};
 
 }

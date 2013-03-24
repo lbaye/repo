@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -49,7 +50,7 @@ import com.socmaps.widget.PermissionRadioGroupListener;
  * PhotoUploadNewPhotoActivity class is used to upload new photos to the web server. 
  */
 
-public class PhotoUploadNewPhotoActivity extends Activity implements
+public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 		PeoplePickerListener {
 
 	private Context context;

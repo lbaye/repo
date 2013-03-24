@@ -303,7 +303,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10dip"
-                            android:text="Invite people"
+                            android:text="Tag people"
                             android:textColor="#000000"
                             android:textSize="14dip"
                             android:textStyle="normal" />
