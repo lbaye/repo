@@ -9,10 +9,12 @@
 #import "PushNotification.h"
 
 @implementation PushNotification
+
 @synthesize message;
 @synthesize badgeCount;
 @synthesize objectIds;
 @synthesize notifType;
+@synthesize receiverId;
 
 //
 // Payload
@@ -51,6 +53,7 @@
     NSLog(@"type = %@", type);
     // Keep provision for comma separated list
     NSString *objectIds = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"objectId"];
+    NSString *receiverId = [[[payload objectForKey:@"aps"] objectForKey:@"receiverId"] objectForKey:@"$id"];
     NSArray *users = nil;
     
     // ObjectIds is null for multiple friend notification
@@ -80,7 +83,11 @@
     } else {
         newNotif.notifType = PushNotificationShareBreadcrumb;
     }
-    NSLog(@"parsePayload - Push notification: alert=%@,badge=%d,ids=%@",newNotif.message, newNotif.badgeCount, newNotif.objectIds);
+    
+    newNotif.receiverId = receiverId;
+    
+    NSLog(@"parsePayload - Push notification: alert=%@,badge=%d,ids=%@, receiverId=%@",newNotif.message, newNotif.badgeCount, newNotif.objectIds, receiverId);
+    
     return newNotif;
 }
 

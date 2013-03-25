@@ -275,6 +275,9 @@
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
     PushNotification *newNotif = [PushNotification parsePayload:userInfo];
+    
+    if ([self.userId isEqualToString:newNotif.receiverId]) return;
+    
     NSLog(@"Received notification: count:%d, data:%@  id:%@ type:%d", newNotif.badgeCount, userInfo, newNotif.objectIds, newNotif.notifType);
     notifBadgeFlag=TRUE;
     badgeCount= newNotif.badgeCount;

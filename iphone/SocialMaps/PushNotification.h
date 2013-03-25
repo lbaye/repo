@@ -27,11 +27,13 @@ typedef enum _PUSH_NOTIFICATION_TYPE {
     int       badgeCount;
     PUSH_NOTIFICATION_TYPE notifType;
     NSArray   *objectIds;
+    NSString  *receiverId;
 }
 @property (nonatomic, retain) NSString  *message;
 @property (nonatomic, retain) NSArray   *objectIds;
 @property (nonatomic) int badgeCount;
 @property (nonatomic) PUSH_NOTIFICATION_TYPE notifType;
+@property (nonatomic, retain)NSString *receiverId;
 
 + (PushNotification*) parsePayload:(NSDictionary*) payload;
 @end
