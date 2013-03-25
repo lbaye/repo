@@ -53,7 +53,7 @@
     NSLog(@"type = %@", type);
     // Keep provision for comma separated list
     NSString *objectIds = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"objectId"];
-    NSString *receiverId = [[[payload objectForKey:@"aps"] objectForKey:@"receiverId"] objectForKey:@"$id"];
+    NSString *receiverId = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"receiverId"];
     NSArray *users = nil;
     
     // ObjectIds is null for multiple friend notification
