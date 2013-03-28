@@ -29,6 +29,7 @@
 #import "MapViewController.h"
 #import "LoadingView.h"
 #import "RestClient.h"
+#import "GoogleConversionPing.h"
 
 @implementation AppDelegate
 
@@ -230,6 +231,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGeofence:) name:NOTIF_GET_GEOFENCE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotShareLoc:) name:NOTIF_GET_SHARELOC_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifications:) name:NOTIF_GET_NOTIFS_DONE object:nil];
+    
+    [GoogleConversionPing pingWithConversionId:@"999663340" label:@"A2W1CPykpQUQ7M3W3AM" value:@"0" isRepeatable:NO idfaOnly:NO];
     
     return YES;
 }
