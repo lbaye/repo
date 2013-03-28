@@ -17,15 +17,12 @@
 {
     IBOutlet UIWebView *newsFeedView;
     IBOutlet UILabel *totalNotifCount;
-    IBOutlet UIScrollView *newsFeedScroller;
 }
 @property(nonatomic,retain) IBOutlet UIWebView *newsFeedView;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
-@property(nonatomic,retain) IBOutlet UIScrollView *newsFeedScroller;
 
 @property(nonatomic,retain) IBOutlet UIImageView *newsfeedImgView;
 @property(nonatomic,retain) IBOutlet UIView *newsfeedImgFullView;
-@property(nonatomic,retain) NSMutableData *activeDownload;
 @property(nonatomic,retain) IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
 
 /**

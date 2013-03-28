@@ -21,30 +21,18 @@
 @end
 
 @implementation NewsFeedViewController
-@synthesize newsFeedView,totalNotifCount,newsFeedScroller;
 
+@synthesize newsFeedView,totalNotifCount;
 @synthesize newsfeedImgView;
 @synthesize newsfeedImgFullView;
-@synthesize activeDownload;
 @synthesize newsFeedImageIndicator;
 
 AppDelegate *smAppDelegate;
-int newsFeedscrollHeight, reloadNewsFeedCounter=0;
-UILabel *statusLabel;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:newsFeedScroller] autorelease];
+    ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:newsFeedView.scrollView] autorelease];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     // Do any additional setup after loading the view from its nib.
 }
@@ -154,13 +142,12 @@ UILabel *statusLabel;
     CGSize fittingSize = [newsFeedView sizeThatFits:CGSizeZero];
     frame.size = fittingSize;
     newsFeedView.frame = frame;
-    newsFeedscrollHeight=newsFeedView.frame.size.height;
+    //newsFeedscrollHeight=newsFeedView.frame.size.height;
     NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
     [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
     [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
     [smAppDelegate hideActivityViewer];
-    [newsFeedScroller setContentSize:CGSizeMake(320, fittingSize.height)];
-    NSLog(@"Frame %@ %@",NSStringFromCGSize(newsFeedScroller.contentSize),NSStringFromCGRect(newsFeedView.frame));
+    NSLog(@"Frame %@ ",NSStringFromCGRect(newsFeedView.frame));
 
 }
 
@@ -192,21 +179,23 @@ UILabel *statusLabel;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
-    reloadNewsFeedCounter=0;
+    //reloadNewsFeedCounter=0;
     [smAppDelegate hideActivityViewer];
+    /*
     CGRect frame = aWebView.frame;
     frame.size.height = 1;
-    aWebView.frame = frame;
+    //aWebView.frame = frame;
     CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
     frame.size = fittingSize;
-    aWebView.frame = frame;
+    //aWebView.frame = frame;
+     
     newsFeedscrollHeight=newsFeedView.frame.size.height;
-    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    */
     [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
     [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
     [smAppDelegate hideActivityViewer];
-    [newsFeedScroller setContentSize:CGSizeMake(320, fittingSize.height)];
-    NSLog(@"Frame %@ %@",NSStringFromCGSize(newsFeedScroller.contentSize),NSStringFromCGRect(newsFeedView.frame));
+    //[newsFeedScroller setContentSize:CGSizeMake(320, fittingSize.height)];
+    //NSLog(@"Frame %@ %@",NSStringFromCGSize(newsFeedScroller.contentSize),NSStringFromCGRect(newsFeedView.frame));
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -225,6 +214,7 @@ UILabel *statusLabel;
 
 -(IBAction)backButton:(id)sender
 {
+    [newsFeedView stopLoading];
     [self dismissModalViewControllerAnimated:YES];
 }
 
