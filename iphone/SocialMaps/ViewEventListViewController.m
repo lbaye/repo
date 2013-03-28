@@ -286,10 +286,11 @@ bool searchFlags=true;
 -(IBAction)distanceAction:(id)sender
 {
     NSLog(@"distance");
-        [self.eventSearchBar resignFirstResponder];
+    [self.eventSearchBar resignFirstResponder];
+
     filteredList = [[eventListArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [(Event*)a eventDistance];
-        NSString *second = [(Event*)b eventDistance];
+        NSNumber *first = [NSNumber numberWithDouble:[[(Event*)a eventDistance] doubleValue]];
+        NSNumber *second = [NSNumber numberWithDouble:[[(Event*)b eventDistance] doubleValue]];
         return [first compare:second];
     }] mutableCopy];
     
