@@ -172,6 +172,8 @@ bool searchFlags=true;
             aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"blank" ofType:@"png"];
         }
         
+        aEvent.eventDistance = [NSString stringWithFormat:@"%f", [UtilityClass getDistanceWithoutFormattingFromLocation:aEvent.eventLocation]];
+        
         NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
     }
     return eventListGlobalArray;
