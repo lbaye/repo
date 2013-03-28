@@ -123,9 +123,8 @@
     picBtn.layer.borderWidth=1.0;
     picBtn.layer.masksToBounds = YES;
     [picBtn.layer setCornerRadius:5.0];
-    [picBtn addTarget:self
-                  action:@selector(picButtonClicked:)
-        forControlEvents:UIControlEventTouchUpInside];
+    if (![smAppDelegate.userAccountPrefs.regMedia isEqualToString:@"fb"])
+        [picBtn addTarget:self action:@selector(picButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     if (smAppDelegate.userAccountPrefs.icon == nil)
         [picBtn setImage:[UIImage imageNamed:@"thum.png"]
                forState:UIControlStateNormal];
@@ -142,7 +141,8 @@
     itemFrame = CGRectMake(10+PIC_WIDTH+20+20, 5+(PIC_HEIGHT-TEXT_HEIGHT)/2, TEXT_WIDTH, TEXT_HEIGHT);
     UILabel *lbl = [[UILabel alloc] initWithFrame:itemFrame];
     lbl.backgroundColor = [UIColor clearColor];
-    lbl.text = @"Choose a profile picture...";
+    if (![smAppDelegate.userAccountPrefs.regMedia isEqualToString:@"fb"])
+        lbl.text = @"Choose a profile picture...";
     lbl.font = [UIFont fontWithName:@"Helvetica" size:12.0];
     [self addSubview:lbl];
     [lbl release];

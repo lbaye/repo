@@ -456,10 +456,14 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         if ([userInfo.regMedia isEqualToString:@"fb"]) 
         {
             [regStatus setImage:[UIImage imageNamed:@"transparent_icon.png"] forState:UIControlStateNormal];
+            editCoverPicButton.hidden = YES;
+            editProfilePicButton.hidden = YES;
         }
         else
         {
             [regStatus setImage:[UIImage imageNamed:@"transparent_icon.png"] forState:UIControlStateNormal];
+            editCoverPicButton.hidden = NO;
+            editProfilePicButton.hidden = NO;
         }
         regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
         regStatus.userInteractionEnabled=YES;
@@ -956,6 +960,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 - (void)viewDidUnload
 {
+    [editProfilePicButton release];
+    editProfilePicButton = nil;
+    [editCoverPicButton release];
+    editCoverPicButton = nil;
     [super viewDidUnload];
     
     // Release any retained subviews of the main view.
@@ -1103,6 +1111,8 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 - (void)dealloc {
     
+    [editProfilePicButton release];
+    [editCoverPicButton release];
     [super dealloc];
 }
 

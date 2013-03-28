@@ -809,7 +809,7 @@
 							</object>
 							<object class="IBUIButton" id="859757097">
 								<reference key="NSNextResponder" ref="957796693"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{294, 8}, {18, 17}}</string>
 								<reference key="NSSuperview" ref="957796693"/>
 								<reference key="NSWindow"/>
@@ -947,7 +947,7 @@
 							</object>
 							<object class="IBUIButton" id="44596088">
 								<reference key="NSNextResponder" ref="957796693"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{87, 30}, {18, 17}}</string>
 								<reference key="NSSuperview" ref="957796693"/>
 								<reference key="NSWindow"/>
@@ -1427,6 +1427,22 @@
 						<reference key="destination" ref="896520604"/>
 					</object>
 					<int key="connectionID">203</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">editProfilePicButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="44596088"/>
+					</object>
+					<int key="connectionID">206</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">editCoverPicButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="859757097"/>
+					</object>
+					<int key="connectionID">207</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -2106,7 +2122,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">205</int>
+			<int key="maxID">207</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2222,6 +2238,8 @@
 						<string key="ageLabel">UILabel</string>
 						<string key="coverImageView">UIImageView</string>
 						<string key="distanceLabel">UILabel</string>
+						<string key="editCoverPicButton">UIButton</string>
+						<string key="editProfilePicButton">UIButton</string>
 						<string key="entityTextField">UITextField</string>
 						<string key="fullImageView">UIImageView</string>
 						<string key="lastSeenat">UILabel</string>
@@ -2262,6 +2280,14 @@
 						<object class="IBToOneOutletInfo" key="distanceLabel">
 							<string key="name">distanceLabel</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="editCoverPicButton">
+							<string key="name">editCoverPicButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="editProfilePicButton">
+							<string key="name">editProfilePicButton</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="entityTextField">
 							<string key="name">entityTextField</string>

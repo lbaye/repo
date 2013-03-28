@@ -56,6 +56,8 @@
     IBOutlet UIView *newsfeedImgFullView;
     NSMutableData *activeDownload;
     IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
+    IBOutlet UIButton *editProfilePicButton;
+    IBOutlet UIButton *editCoverPicButton;
 }
 
 @property(nonatomic,retain) IBOutlet UIImageView *fullImageView;
