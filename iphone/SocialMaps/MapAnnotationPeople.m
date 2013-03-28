@@ -227,6 +227,9 @@
     detailView.delegate = self;
     [infoView addSubview:detailView];
     [detailView setUserInteractionEnabled:YES];
+    
+    [detailView.scrollView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:1];
+    
     // Buttons
     UIView *profilePicture = [annoView viewWithTag:11000];
     [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
