@@ -435,10 +435,10 @@
 		4FF09BF615CFE6E600F8AD19 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FF09BF515CFE6E600F8AD19 /* SettingsController.m */; };
 		4FF1E8BC160C6808004A63D3 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F03B64E1609D6E2002C1636 /* PushNotification.m */; };
 		4FF81C6C15D6C7260097759A /* cal-48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF81C6B15D6C7250097759A /* cal-48x48.png */; };
-		B000233C170442D9006DB843 /* libGoogleConversionTracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B000233B170442D9006DB843 /* libGoogleConversionTracking.a */; };
 		B000233F17044350006DB843 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B000233E17044350006DB843 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B003243316E4D1580070F83F /* transparent_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B003243216E4D1540070F83F /* transparent_icon.png */; };
 		B0044AB716B7A6B8004C6A57 /* CustomSaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0044AB616B7A6B8004C6A57 /* CustomSaveView.m */; };
+		B0187E6317094BA700DFD84C /* libGoogleConversionTracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0187E6217094BA700DFD84C /* libGoogleConversionTracking.a */; };
 		B01C860416DE37E000438C0E /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = B01C860316DE37E000438C0E /* icon_event.png */; };
 		B01DFC4615F5E61000020D49 /* MessageReply.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4515F5E61000020D49 /* MessageReply.m */; };
 		B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4915F5E61F00020D49 /* MessageListViewController.m */; };
@@ -1132,12 +1132,12 @@
 		4FF09BF415CFE6E500F8AD19 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsController.h; sourceTree = "<group>"; };
 		4FF09BF515CFE6E600F8AD19 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsController.m; sourceTree = "<group>"; };
 		4FF81C6B15D6C7250097759A /* cal-48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cal-48x48.png"; path = "Images/cal-48x48.png"; sourceTree = SOURCE_ROOT; };
-		B000233A170442D9006DB843 /* GoogleConversionPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleConversionPing.h; sourceTree = "<group>"; };
-		B000233B170442D9006DB843 /* libGoogleConversionTracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleConversionTracking.a; sourceTree = "<group>"; };
 		B000233E17044350006DB843 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		B003243216E4D1540070F83F /* transparent_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transparent_icon.png; path = Images/transparent_icon.png; sourceTree = SOURCE_ROOT; };
 		B0044AB516B7A6B8004C6A57 /* CustomSaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSaveView.h; sourceTree = "<group>"; };
 		B0044AB616B7A6B8004C6A57 /* CustomSaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSaveView.m; sourceTree = "<group>"; };
+		B0187E6117094BA700DFD84C /* GoogleConversionPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleConversionPing.h; sourceTree = "<group>"; };
+		B0187E6217094BA700DFD84C /* libGoogleConversionTracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleConversionTracking.a; sourceTree = "<group>"; };
 		B01C860316DE37E000438C0E /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		B01DFC4415F5E61000020D49 /* MessageReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageReply.h; sourceTree = "<group>"; };
 		B01DFC4515F5E61000020D49 /* MessageReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageReply.m; sourceTree = "<group>"; };
@@ -1251,7 +1251,7 @@
 				4F98A2D015BB387D000B3124 /* CoreGraphics.framework in Frameworks */,
 				4FE9607115BC93A80007327A /* MapKit.framework in Frameworks */,
 				4FE425C615C06A4C00A6B6A3 /* FBiOSSDK.framework in Frameworks */,
-				B000233C170442D9006DB843 /* libGoogleConversionTracking.a in Frameworks */,
+				B0187E6317094BA700DFD84C /* libGoogleConversionTracking.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1512,9 +1512,9 @@
 				4F8257C315BDD24900760CE1 /* SBJson */,
 				4F82578C15BD823200760CE1 /* AsiHTTP */,
 				4F98A2D115BB387D000B3124 /* SocialMaps */,
-				B0002339170442D9006DB843 /* GoogleConversionTrackingSDK */,
 				4F98A2CA15BB387D000B3124 /* Frameworks */,
 				4F98A2C815BB387D000B3124 /* Products */,
+				B0187E6017094BA700DFD84C /* GoogleConversionTrackingSDK */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2093,14 +2093,13 @@
 			path = FBiOSSDK.pmdoc;
 			sourceTree = "<group>";
 		};
-		B0002339170442D9006DB843 /* GoogleConversionTrackingSDK */ = {
+		B0187E6017094BA700DFD84C /* GoogleConversionTrackingSDK */ = {
 			isa = PBXGroup;
 			children = (
-				B000233A170442D9006DB843 /* GoogleConversionPing.h */,
-				B000233B170442D9006DB843 /* libGoogleConversionTracking.a */,
+				B0187E6117094BA700DFD84C /* GoogleConversionPing.h */,
+				B0187E6217094BA700DFD84C /* libGoogleConversionTracking.a */,
 			);
-			name = GoogleConversionTrackingSDK;
-			path = ../../../Downloads/GoogleConversionTrackingSDK;
+			path = GoogleConversionTrackingSDK;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2746,6 +2745,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Downloads/GoogleConversionTrackingSDK\"",
+					"\"$(SRCROOT)/GoogleConversionTrackingSDK\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2777,6 +2777,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Downloads/GoogleConversionTrackingSDK\"",
+					"\"$(SRCROOT)/GoogleConversionTrackingSDK\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
