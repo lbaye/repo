@@ -605,7 +605,7 @@
     <string name="fbInviteDialogDesc">This is your first login to Socialmaps app, to get a better experience, we recommand you to invite Facebook friends:</string>
     <string name="detailsLabel">Details</string>
     <string name="directionLabel">Directions</string>
-    <string name="getDirectionLabel">Get direction</string>
+    <string name="getDirectionLabel">Get directions</string>
     <string name="errorMessageGallery">An error occured during select image from Gallery. Please try again with Camera.</string>
 
     <string-array name="geoTagListOption">

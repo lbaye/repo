@@ -2984,8 +2984,26 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 				LatLng newLatLng = Utility.getLatLngFromObject(oldItem);
 				LatLng oldLatLng = Utility.getLatLngFromObject(listItem);
+				
+				boolean isStatusChanged = false;
+				
+				if(listItem instanceof People)
+				{
+					try {
+						People peopleOld = (People) oldItem;
+						People peopleNew = (People) listItem;
+						if(peopleOld.isOnline() != peopleNew.isOnline())
+						{
+							isStatusChanged = true;
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
+					
+				}
 
-				if (newLatLng.latitude != oldLatLng.latitude || newLatLng.longitude != oldLatLng.longitude) {
+				if (newLatLng.latitude != oldLatLng.latitude || newLatLng.longitude != oldLatLng.longitude || isStatusChanged) {
 					// update visibleItemsOnMap
 					// update visibleMarkers
 					// update objectList
