@@ -185,7 +185,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     NSLog(@"place id = %@", self.place.placeID);
     
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    textViewMsg.text = [NSString stringWithFormat:@"%@ has recommended you at \"%@\"", smAppDelegate.userAccountPrefs.firstName, place.name];
+    textViewMsg.text = [NSString stringWithFormat:@"%@ recommends \"%@\"", smAppDelegate.userAccountPrefs.firstName, place.name];
 }
 
 -(void) handleTapGesture:(UIGestureRecognizer *)sender

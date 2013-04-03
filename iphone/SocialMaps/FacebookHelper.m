@@ -89,6 +89,7 @@ UserDefault *userDefault;
 // Facebook delegates
 
 - (void)fbDidLogin {
+    [FBSession setActiveSession:[FBSession activeSession]];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSLog(@"Access Token is %@", facebookApi.accessToken );
     NSLog(@"Expiration Date is %@", facebookApi.expirationDate );
