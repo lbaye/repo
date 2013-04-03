@@ -672,7 +672,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             if (![cell viewWithTag:10001]) {
                 UIButton *buttonGotoDirection = [UIButton buttonWithType:UIButtonTypeCustom];
                 [buttonGotoDirection setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [buttonGotoDirection setTitle:@"Get Direction" forState:UIControlStateNormal];
+                [buttonGotoDirection setTitle:@"Get Directions" forState:UIControlStateNormal];
                 [buttonGotoDirection.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
                 [buttonGotoDirection addTarget:self action:@selector(actionGotoDirectionButton:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:buttonGotoDirection];

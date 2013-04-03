@@ -4695,6 +4695,11 @@ AppDelegate *smAppDelegate;
                 messageReply.msgId = msgId;
                 NSLog(@"sender msgId is: %@",msgId);
                 
+                messageReply.metaType = [self getNestedKeyVal:item key1:@"metaType" key2:nil key3:nil];
+                messageReply.address = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"address"];
+                messageReply.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
+                messageReply.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
+                
                 [messageReplies addObject:messageReply];
                 [messageReply release];
                 messageReply = nil;

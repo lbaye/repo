@@ -173,7 +173,7 @@ LocationItem *locationItem;
     [dirBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [dirBtn setBackgroundImage:dirImg forState:UIControlStateNormal];
     [dirBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
-    [dirBtn setTitle:@"Direction" forState:UIControlStateNormal];
+    [dirBtn setTitle:@"Directions" forState:UIControlStateNormal];
     [dirBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     dirBtn.backgroundColor = [UIColor clearColor];
     dirBtn.tag = 11005;

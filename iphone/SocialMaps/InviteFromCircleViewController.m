@@ -575,7 +575,7 @@ bool searchFlag4=true;
         filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
     }
     else
-        for (LocationItemPeople *sTemp in smAppDelegate.peopleList)
+        for (LocationItemPeople *sTemp in [self loadDummyData])
         {
             NSRange titleResultsRange = [sTemp.itemName rangeOfString:searchText4 options:NSCaseInsensitiveSearch];	
             if (titleResultsRange.length > 0)
