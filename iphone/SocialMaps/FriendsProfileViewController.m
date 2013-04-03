@@ -36,6 +36,7 @@
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
 #import "Plan.h"
+#import "ReportContent.h"
 
 @interface FriendsProfileViewController ()
 
@@ -289,6 +290,9 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         NSLog(@"Tag String: %@",tagStr);
         if ([tagStr isEqualToString:@"image"])
         {
+            //Needed for report
+            //[ReportContent reportContentId:@"testId" withContentType:ReportContentGeotag authTokenValue:smAppDelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view];
+            
             NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
             CGFloat xpos = self.view.frame.origin.x;
             CGFloat ypos = self.view.frame.origin.y;
@@ -347,14 +351,19 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     reloadFeedCounter=0;
     //[smAppDelegate hideActivityViewer];
-    CGRect frame = aWebView.frame;
-    frame.size.height = 1;
-    aWebView.frame = frame;
+    //CGRect frame = aWebView.frame;
+    //frame.size.height = 1;
+    //aWebView.frame = frame;
     CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
-    frame.size = fittingSize;
-    aWebView.frame = frame;
+    //frame.size = fittingSize;
+    //aWebView.frame = frame;
+    aWebView.scrollView.bounces = NO;
+    profileScrollView.bounces = NO;
     
-    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    //aWebView.scrollView.scrollEnabled = false;
+    
+    
+    //NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
     newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
     [self reloadProfileScrollView];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];

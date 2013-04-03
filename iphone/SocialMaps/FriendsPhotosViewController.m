@@ -17,6 +17,7 @@
 #import "Globals.h"
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
+#import "ReportContent.h"
 
 @interface FriendsPhotosViewController ()
 -(void)scrollToPage:(int)page:(BOOL)animated;
@@ -336,4 +337,9 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (IBAction)actionReportButton:(id)sender
+{
+    Photo *photo = [photoList objectAtIndex:zoomIndex];
+    [ReportContent reportContentId:photo.photoId withContentType:ReportContentPhoto authTokenValue:smAppdelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view];
+}
 @end

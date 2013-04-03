@@ -830,15 +830,18 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
     reloadCounter=0;
-    CGRect frame = aWebView.frame;
-    frame.size.height = 1;
-    aWebView.frame = frame;
+    //CGRect frame = aWebView.frame;
+    //frame.size.height = 1;
+    //aWebView.frame = frame;
     CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
-    frame.size = fittingSize;
-    aWebView.frame = frame;
+    //frame.size = fittingSize;
+    //aWebView.frame = frame;
     
     NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
     newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
+    
+    aWebView.scrollView.bounces = NO;
+    profileScrollView.bounces = NO;
     
     [self reloadProfileScrollView];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];

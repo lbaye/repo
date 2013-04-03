@@ -48,6 +48,8 @@
 @property(nonatomic,retain) IBOutlet UIButton *prevButton;    
 @property (nonatomic, retain) NSMutableArray *photoList;
 
+- (IBAction)actionReportButton:(id)sender;
+
 /**
  * @brief Closes full screen view of a photo
  * @param (id) - action sender

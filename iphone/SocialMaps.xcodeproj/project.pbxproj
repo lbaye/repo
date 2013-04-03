@@ -500,6 +500,8 @@
 		B0B73C221654F5CE00DDF6E5 /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C211654F5CD00DDF6E5 /* UITextView+PlaceHolder.m */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
+		B0D172FA170C112600AFE506 /* ReportContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D172F9170C112600AFE506 /* ReportContent.m */; };
+		B0D172FD170C3CF900AFE506 /* flag_red.png in Resources */ = {isa = PBXBuildFile; fileRef = B0D172FC170C3CF900AFE506 /* flag_red.png */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
 		B0D648E915FC4F460006DF0E /* MeetUpRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */; };
 		B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */; };
@@ -1219,6 +1221,9 @@
 		B0C206AD15FB26C900177132 /* ShowOnMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowOnMapController.h; sourceTree = "<group>"; };
 		B0C206AE15FB26C900177132 /* ShowOnMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowOnMapController.m; sourceTree = "<group>"; };
 		B0C206AF15FB26C900177132 /* ShowOnMapController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowOnMapController.xib; sourceTree = "<group>"; };
+		B0D172F8170C112500AFE506 /* ReportContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportContent.h; sourceTree = "<group>"; };
+		B0D172F9170C112600AFE506 /* ReportContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportContent.m; sourceTree = "<group>"; };
+		B0D172FC170C3CF900AFE506 /* flag_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flag_red.png; path = Images/flag_red.png; sourceTree = SOURCE_ROOT; };
 		B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequestController.h; sourceTree = "<group>"; };
 		B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequestController.m; sourceTree = "<group>"; };
 		B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestController.xib; sourceTree = "<group>"; };
@@ -1436,6 +1441,8 @@
 				B08B6C5F1646A2F900279EDD /* UIImageView+Cached.m */,
 				B04EFA2F16591358002C2D6B /* EachFriendInList.h */,
 				B04EFA3016591358002C2D6B /* EachFriendInList.m */,
+				B0D172F8170C112500AFE506 /* ReportContent.h */,
+				B0D172F9170C112600AFE506 /* ReportContent.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1681,6 +1688,7 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B0D172FC170C3CF900AFE506 /* flag_red.png */,
 				B003243216E4D1540070F83F /* transparent_icon.png */,
 				B01C860316DE37E000438C0E /* icon_event.png */,
 				2041AC1D168360DE002BDCB0 /* lock.png */,
@@ -2450,6 +2458,7 @@
 				B0FE823216E712CF00BEEDD8 /* tab_arrow_gray_left.png in Resources */,
 				B0FE823316E712CF00BEEDD8 /* tab_arrow_gray_right.png in Resources */,
 				B0FE823516E751A400BEEDD8 /* top_curve_bg.png in Resources */,
+				B0D172FD170C3CF900AFE506 /* flag_red.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2650,6 +2659,7 @@
 				20D86236165E11D70005EE1B /* FriendsPlanListViewController.m in Sources */,
 				B04EFA3116591358002C2D6B /* EachFriendInList.m in Sources */,
 				B0044AB716B7A6B8004C6A57 /* CustomSaveView.m in Sources */,
+				B0D172FA170C112600AFE506 /* ReportContent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

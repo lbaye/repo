@@ -6511,7 +6511,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-          NSString *responseString = [request responseString];
+        NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7608,5 +7608,41 @@ AppDelegate *smAppDelegate;
     
 }
 
+- (void)reportContentId:(NSString*)contentId withContentType:(NSString*)contentType authTokenValue:(NSString*)authTokenValue authTokenKey:(NSString*)authTokenKey callBack:(void(^)(NSString *message))block
+{
+    NSString *route = [NSString stringWithFormat:@"%@/report",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authTokenKey value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^
+    {
+        int responseStatus = [request responseStatusCode];
+
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+       
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) block([jsonObjects objectForKey:@"message"]);
+        
+        else block(nil);
+        
+        [jsonParser release];
+        jsonParser = nil;
+    }];
+    
+    [request setFailedBlock:^{
+        block (nil);
+    }];
+    
+    [request startAsynchronous];
+}
 
 @end

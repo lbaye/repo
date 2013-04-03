@@ -790,4 +790,6 @@
  */
 -(void)getEventsByUserId:(NSString*)userId authToken:(NSString *)authToken authTokenValue:(NSString *)authTokenValue;
 
+- (void)reportContentId:(NSString*)contentId withContentType:(NSString*)contentType authTokenValue:(NSString*)authTokenValue authTokenKey:(NSString*)authTokenKey callBack:(void(^)(NSString *message))block;
+
 @end
