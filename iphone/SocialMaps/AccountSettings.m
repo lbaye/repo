@@ -404,8 +404,8 @@
     smAppDelegate.fbId = [prefs stringForKey:@"FBUserId"];
     smAppDelegate.fbAccessToken = [prefs stringForKey:@"FBAccessTokenKey"];
     smAppDelegate.loginCount = [prefs integerForKey:@"loginCount"];
-    smAppDelegate.deviceTokenId = [prefs stringForKey:@"deviceTokenId"];
-    smAppDelegate.deviceTokenChanged = FALSE;
+    //smAppDelegate.deviceTokenId = [prefs stringForKey:@"deviceTokenId"];
+    //smAppDelegate.deviceTokenChanged = FALSE;
     [prefs removeObjectForKey:@"authToken"];
     [prefs synchronize];
     [userFriendslistArray removeAllObjects];
