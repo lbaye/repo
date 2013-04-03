@@ -779,7 +779,7 @@ ButtonClickCallbackData callBackData;
         _mapView.showsUserLocation=NO;
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
-    [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters];
+    [locationManager setDistanceFilter:kCLLocationAccuracyNearestTenMeters];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
