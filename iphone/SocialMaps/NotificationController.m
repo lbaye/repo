@@ -17,6 +17,7 @@
 #import "UtilityClass.h"
 #import "ODRefreshControl.h"
 #import "Globals.h"
+#import "FriendsProfileViewController.h"
 
 @implementation NotificationController
 
@@ -444,7 +445,19 @@
 // NotifRequestDelegate methods
 - (void) buttonClicked:(NSString*)name cellRow:(int)row {
     NSLog(@"Delegate button %@ clicked for row %d", name, row);
+    
     NotifRequest *req = [smAppDelegate.friendRequests objectAtIndex:row];
+    
+    if ([name isEqualToString:@"Profile"])
+    {
+        FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] initWithNibName:@"FriendsProfileViewController" bundle:nil];
+        controller.friendsId = req.notifSenderId;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];
+        return;
+    }
+    
     [smAppDelegate.friendRequests removeObjectAtIndex:row];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
     [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];

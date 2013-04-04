@@ -42,17 +42,16 @@ static NSString *_authTokenKey;
 
 + (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"acitonSheet Button index = %d", buttonIndex);
-    
     if (buttonIndex) return;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     
     [restClient reportContentId:_contentId withContentType:_contentType authTokenValue:_authTokenValue authTokenKey:_authTokenKey callBack:^(NSString *message)
     {
+        //Report sent!
         if (message) [UtilityClass showAlert:@"" : message];
         
-        else [UtilityClass showAlert:@"" :@"Please try again"];
+        else [UtilityClass showAlert:@"" :@"Report not sent, try again!"];
         
     }];
 }

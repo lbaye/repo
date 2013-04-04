@@ -35,7 +35,7 @@
     tv.backgroundColor = [UIColor clearColor];
 	tv.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	
-	UILabel *lblSender;
+	UIButton *btnSender;
     UILabel *lblFixed; // "are near you:"
 	UILabel *lblTime;
     UILabel *lblCount;
@@ -58,12 +58,11 @@
 		cell.selectedBackgroundView = [[[UIImageView alloc] init] autorelease];
 		
 		// Message sender
-		lblSender = [[[UILabel alloc] initWithFrame:senderFrame] autorelease];
-		lblSender.tag = 2002;
-		lblSender.font = [UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize];
-		lblSender.textColor = [UIColor blackColor];
-		lblSender.backgroundColor = [UIColor clearColor];
-		[cell.contentView addSubview:lblSender];
+		btnSender = [UIButton buttonWithType:UIButtonTypeCustom];
+		btnSender.tag = 2002;
+        btnSender.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize];
+        [btnSender setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[cell.contentView addSubview:btnSender];
         
         // Fixed text "says:"
 		lblFixed = [[[UILabel alloc] initWithFrame:fixedFrame] autorelease];
@@ -169,7 +168,7 @@
         [cell.contentView addSubview:line];
 		
     } else {
-		lblSender  = (UILabel*) [cell viewWithTag:2002];
+		btnSender  = (UIButton*) [cell viewWithTag:2002];
         lblFixed  = (UILabel*) [cell viewWithTag:2003];
 		lblTime    = (UILabel*) [cell viewWithTag:2004];
 		txtMsg     = (UITextView*) [cell viewWithTag:2005];
@@ -184,8 +183,8 @@
 	}
     
 	// Sender
-    lblSender.frame = senderFrame;
-	lblSender.text = notifSender;
+    btnSender.frame = senderFrame;
+    [btnSender setTitle:notifSender forState:UIControlStateNormal];
     
     lblFixed.frame = fixedFrame;
     lblFixed.text  = @"wants to be your friend.";
@@ -221,6 +220,7 @@
     [accept addTarget:self action:@selector(requestAccepted:) forControlEvents:UIControlEventTouchUpInside];
     [decline addTarget:self action:@selector(requestDeclined:) forControlEvents:UIControlEventTouchUpInside];
     [ignore addTarget:self action:@selector(requestIgnored:) forControlEvents:UIControlEventTouchUpInside];
+    [btnSender addTarget:self action:@selector(actionSenderBtn:) forControlEvents:UIControlEventTouchUpInside];
     
     if (ignored == TRUE)
         [ignore setEnabled:FALSE];
@@ -283,4 +283,13 @@
         [delegate buttonClicked:@"Ignore" cellRow:row];
     }
 }
+
+- (void)actionSenderBtn:(id)sender
+{
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(buttonClicked:cellRow:)]) {
+        int row = [self getCellRow:sender];
+        [delegate buttonClicked:@"Profile" cellRow:row];
+    }
+}
+
 @end
