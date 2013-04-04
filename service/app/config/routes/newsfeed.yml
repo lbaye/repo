@@ -59,3 +59,8 @@ feed_likes_html:
   pattern: /newsfeed/{id}/likes.html
   defaults: { _controller: Controller\UserActivities::getLikesById, type: html }
   requirements: { _method: GET }
+
+report_email:
+  pattern: /report
+  defaults: { _controller: Controller\UserActivities::sentReport }
+  requirements: { _method: POST }

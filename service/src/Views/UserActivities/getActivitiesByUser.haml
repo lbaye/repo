@@ -66,6 +66,12 @@
                                            data-objecttype=$activity->getObjectType()
                                            data-liked=$liked)
                         Unlike
+
+                      - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+                      %a(href=$reportLink)
+
+                        Report
+
                       %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
                                     data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                         = $activity->getLikesCount()
@@ -129,6 +135,12 @@
                                            data-objecttype=$activity->getObjectType()
                                            data-liked=$liked)
                         Unlike
+
+                      - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+                      %a(href=$reportLink)
+
+                        Report
+
                       %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
                                     data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                         = $activity->getLikesCount()
@@ -237,6 +249,11 @@
                                    data-objecttype=$activity->getObjectType()
                                    data-liked=$liked)
                 Unlike
+
+              - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+              %a(href=$reportLink)
+
+                Report
               %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
                             data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                 = $activity->getLikesCount()
@@ -303,6 +320,11 @@
                                    data-objecttype=$activity->getObjectType()
                                    data-liked=$liked)
                 Unlike
+
+              - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+              %a(href=$reportLink)
+
+                Report
               %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
                             data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                 = $activity->getLikesCount()

@@ -403,4 +403,24 @@ class UserActivities extends Base
         }
 
     }
+
+    /**
+     * POST /report
+     *
+     * @throws \Exception\ResourceNotFoundException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function sentReport()
+    {
+
+        $data = $this->request->request->all();
+        $message = "objectType: " . $data['objectType'] . " objectId: " . $data['objectId'];
+        EmailHelper::sendMail("islam.rafiqul@genweb2.com", $message);
+
+        $this->response->setContent(json_encode(array('message' => "Report sent!")));
+        $this->response->setStatusCode(Status::OK);
+
+        return $this->response;
+    }
 }
