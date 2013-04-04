@@ -30,7 +30,6 @@
 #import "LoadingView.h"
 #import "RestClient.h"
 #import "GoogleConversionPing.h"
-#import "UtilityClass.h"
 
 @implementation AppDelegate
 
@@ -260,7 +259,6 @@
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
 	NSLog(@"Failed to get token, error: %@", error);
-    [UtilityClass showCustomAlert:@"Failed to get token" subTitle:[error localizedDescription] bgColor:[UIColor redColor] strokeColor:[UIColor grayColor] btnText:@"OK"];
 }
 
 -(void)initData

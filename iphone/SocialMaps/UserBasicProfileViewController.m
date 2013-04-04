@@ -29,6 +29,7 @@
 #import "NSData+Base64.h"
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
+#import "ReportContent.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -821,8 +822,17 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         {
             [self performSelector:@selector(reloadProfileScrollView) withObject:nil afterDelay:3.0];
         }
+        else if ([tagStr isEqualToString:@"report"])
+        {
+            NSString *contentType = [[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSString *contentId = [[dataStr componentsSeparatedByString:@":"] objectAtIndex:4];
+            
+            [ReportContent reportContentId:contentId withContentType:contentType authTokenValue:smAppDelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view title:@"Report this post"];
+        }
+        
         return NO;
-        [[UIApplication sharedApplication] openURL: [request URL]];
+        
+        //[[UIApplication sharedApplication] openURL: [request URL]]; //why
     }
     
     return YES;

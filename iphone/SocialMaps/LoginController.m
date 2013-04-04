@@ -470,7 +470,7 @@ int fbRegCounter=0;
         [smAppDelegate hideActivityViewer];
         if (fbRegCounter==0) 
         {
-            [UtilityClass showAlert:@"" :@"Can not regigter/login, try again."];
+            [UtilityClass showAlert:@"" :@"Cannot register/login, try again."];
         }
     }
     fbRegCounter++;

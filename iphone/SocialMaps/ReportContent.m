@@ -17,24 +17,14 @@ static NSString *_authTokenKey;
 
 @implementation ReportContent
 
-+ (void)reportContentId:(NSString*)contentId withContentType:(ReportContentType)contentType authTokenValue:(NSString*)authTokenValue authTokenKey:(NSString*)authTokenKey parentView:(UIView*)parentView
++ (void)reportContentId:(NSString*)contentId withContentType:(NSString*)contentType authTokenValue:(NSString*)authTokenValue authTokenKey:(NSString*)authTokenKey parentView:(UIView*)parentView title:(NSString*)title
 {
-    _contentId = contentId;
-    _authTokenValue = authTokenValue;
-    _authTokenKey = authTokenKey;
+    _contentId = [contentId copy];
+    _authTokenValue = [authTokenValue copy];
+    _authTokenKey = [authTokenKey copy];
+    _contentType = [contentType copy];
     
-    switch (contentType)
-    {
-        case ReportContentPhoto:
-            _contentType = @"photo";
-            break;
-        
-        default:
-            _contentType = @"geotag";
-            break;
-    }
-    
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Report this %@?", _contentType] delegate:(id<UIActionSheetDelegate>)self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Report" otherButtonTitles:nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:(id<UIActionSheetDelegate>)self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Report" otherButtonTitles:nil];
     [actionSheet showInView:parentView];
     [actionSheet release];
     
@@ -52,6 +42,11 @@ static NSString *_authTokenKey;
         if (message) [UtilityClass showAlert:@"" : message];
         
         else [UtilityClass showAlert:@"" :@"Report not sent, try again!"];
+        
+        [_contentType release];
+        [_contentId release];
+        [_authTokenValue release];
+        [_authTokenKey release];
         
     }];
 }

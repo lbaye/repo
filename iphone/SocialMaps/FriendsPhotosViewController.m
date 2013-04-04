@@ -340,6 +340,6 @@
 - (IBAction)actionReportButton:(id)sender
 {
     Photo *photo = [photoList objectAtIndex:zoomIndex];
-    [ReportContent reportContentId:photo.photoId withContentType:ReportContentPhoto authTokenValue:smAppdelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view];
+    [ReportContent reportContentId:photo.photoId withContentType:@"photo" authTokenValue:smAppdelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view title:@"Report this photo?"];
 }
 @end

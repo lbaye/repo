@@ -7615,9 +7615,12 @@ AppDelegate *smAppDelegate;
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     
-    [request setRequestMethod:@"GET"];
+    [request setRequestMethod:@"POST"];
     [request addRequestHeader:authTokenKey value:authTokenValue];
+    [request addPostValue:contentType forKey:@"objectType"];
+    [request addPostValue:contentId forKey:@"objectId"];
     
+
     // Handle successful REST call
     [request setCompletionBlock:^
     {

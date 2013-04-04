@@ -288,11 +288,9 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         NSLog(@"Data String: %@",dataStr);
         NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
         NSLog(@"Tag String: %@",tagStr);
+        
         if ([tagStr isEqualToString:@"image"])
         {
-            //Needed for report
-            //[ReportContent reportContentId:@"testId" withContentType:ReportContentGeotag authTokenValue:smAppDelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view];
-            
             NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
             CGFloat xpos = self.view.frame.origin.x;
             CGFloat ypos = self.view.frame.origin.y;
@@ -341,8 +339,17 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         {
             [self performSelector:@selector(reloadProfileScrollView) withObject:nil afterDelay:3.0];
         }
+        else if ([tagStr isEqualToString:@"report"])
+        {
+            NSString *contentType = [[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSString *contentId = [[dataStr componentsSeparatedByString:@":"] objectAtIndex:4];
+            
+            [ReportContent reportContentId:contentId withContentType:contentType authTokenValue:smAppDelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view title:@"Report this post"];
+        }
+        
+        
         return NO;
-        [[UIApplication sharedApplication] openURL: [request URL]];
+        ///[[UIApplication sharedApplication] openURL: [request URL]]; //why?
     }
     
     return YES;
