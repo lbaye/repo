@@ -1302,10 +1302,11 @@ class UserRepo extends Base
 
     public function resetDuplicateDeviceId($deviceId)
     {
+        $userId = $this->currentUser->getId();
         $this->createQueryBuilder('Document\User')
             ->update()
-            ->field('pushSettings.device_id')->equals($deviceId)
-            ->field('pushSettings.device_id')->set(null)
+            ->field('_id')->equals($userId)
+            ->field('pushSettings.device_id')->set($deviceId)
             ->getQuery()->execute();
         $this->dm->flush();
     }
