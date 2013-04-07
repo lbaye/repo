@@ -33,10 +33,14 @@ class Reverse extends Base
         return $this->getFreshOrCachedAddress($cacheApi, $cacheKey, $params, $lat, $lng, $type);
     }
 
-    private function getFreshOrCachedAddress($cacheApi, $cacheKey, $params, $lat, $lng, $type) {
+    private function getFreshOrCachedAddress($cacheApi, $cacheKey, $params, $lat, $lng, $type)
+    {
         $data = $cacheApi->get($cacheKey);
+        $address = $this->getAddressFromReverseGeo($lat, $lng);
+        $this->logger->debug('Get reversegeocode with new API - ' . $address);
+        return $address;
 
-        if ($data) {    // Found in Cache(db)
+        if ($data) { // Found in Cache(db)
             $this->logger->debug('Found address from cache - ' . $data->getData());
             return $data->getData();
         } else {
@@ -55,7 +59,8 @@ class Reverse extends Base
         }
     }
 
-    private function getFreshAddress($params) {
+    private function getFreshAddress($params)
+    {
         $target = $this->endpoint . "?" . http_build_query($params);
         list($responseCode, $responseBody) = \Helper\Remote::sendGetRequest($target);
 
@@ -71,11 +76,33 @@ class Reverse extends Base
 //        } else {
 //            throw new \Exception("Service Unavailable (Google Maps API said: '{$content->Status->code}')", 503);
 //        }
-        if (!empty($content)) {    // Save in Cache for future use
+        if (!empty($content)) { // Save in Cache for future use
             $this->logger->debug('Get reversegeocode pos[0] - ' . $content);
             return $content->results[0]->formatted_address;
         } else {
             throw new \Exception("Service Unavailable (Google Maps API said: '{$content->results[0]->formatted_address}')", 503);
         }
+    }
+
+    private function getAddressFromReverseGeo($lat, $lng)
+    {
+        // set your API key here
+        $api_key = "AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw";
+        // format this string with the appropriate latitude longitude
+
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' . $lat . ',' . $lng . '&sensor=false';
+        // make the HTTP request
+        $data = @file_get_contents($url);
+        // parse the json response
+        $jsondata = json_decode($data, true);
+
+        if (is_array($jsondata) && !empty($jsondata ['results'][0]['formatted_address'])) {
+            $address = $jsondata ['results'][0]['formatted_address'];
+        } else {
+            $address = "";
+        }
+
+        return $address;
+
     }
 }
