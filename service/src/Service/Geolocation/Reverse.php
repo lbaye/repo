@@ -41,6 +41,7 @@ class Reverse extends Base
             return $data->getData();
         } else {
             $address = $this->getFreshAddress($params);
+            $this->logger->debug('Get Address From reversegeocode - ' . $address);
             $data = new \Document\CachedData();
             $data->setLat($lat);
             $data->setLng($lng);
@@ -71,6 +72,7 @@ class Reverse extends Base
 //            throw new \Exception("Service Unavailable (Google Maps API said: '{$content->Status->code}')", 503);
 //        }
         if (!empty($content)) {    // Save in Cache for future use
+            $this->logger->debug('Get reversegeocode pos[0] - ' . $content->results[0]);
             return $content->results[0]->formatted_address;
         } else {
             throw new \Exception("Service Unavailable (Google Maps API said: '{$content->results[0]->formatted_address}')", 503);
