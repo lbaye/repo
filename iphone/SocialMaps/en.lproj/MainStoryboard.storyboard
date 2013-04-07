@@ -345,11 +345,11 @@
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                             </mapView>
                             <view autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" id="uG7-vJ-l6r" userLabel="mapPullDownMenu">
-                                <rect key="frame" x="0.0" y="45" width="320" height="219"/>
+                                <rect key="frame" x="0.0" y="45" width="320" height="260"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="DhY-Jv-4aq">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="207"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="248"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -658,7 +658,7 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="O8f-kZ-LZ8" userLabel="PeoplePlaceDealFilter">
-                                        <rect key="frame" x="3" y="148" width="313" height="40"/>
+                                        <rect key="frame" x="3" y="148" width="313" height="86"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Show on map:" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="ZhP-xP-RlB">
@@ -754,7 +754,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" id="QSS-ri-hWs" userLabel="mapDividerThree">
-                                        <rect key="frame" x="5" y="218" width="310" height="1"/>
+                                        <rect key="frame" x="5" y="200" width="310" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.89019614459999996" green="0.89411771299999998" blue="0.8980392814" alpha="1" colorSpace="deviceRGB"/>
                                     </imageView>
@@ -894,7 +894,7 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6aC-lm-jRr" userLabel="mapHidePulldown">
-                                        <rect key="frame" x="0.0" y="194" width="320" height="25"/>
+                                        <rect key="frame" x="0.0" y="235" width="320" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="btn_slider_close.png">
@@ -1420,6 +1420,7 @@
                         <outlet property="mapPullupMenu" destination="kcB-6s-zIo" id="VTg-Je-EEd"/>
                         <outlet property="mapView" destination="vAv-Wy-i1h" id="HND-Do-dYe"/>
                         <outlet property="mapViewImg" destination="p5z-DU-2sw" id="Fh1-3G-y7a"/>
+                        <outlet property="peopleFilterMapPulldown" destination="O8f-kZ-LZ8" id="0BV-fj-ABa"/>
                         <outlet property="searchBar" destination="XaY-PU-jl7" id="nrP-Zc-EjM"/>
                         <outlet property="selSavedFilter" destination="MZq-TI-ng3" id="fZS-0W-5Mf"/>
                         <outlet property="selectedFilter" destination="Uj4-fE-2vB" id="BYf-Ig-dyY"/>
@@ -1508,11 +1509,11 @@
                                 <rect key="frame" x="20" y="98" width="285" height="284"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <mutableString key="text">Depending on your choices, Socialmaps might share your location with other Socialmaps users. However at any time, you can disable your location sharing via the drop-down menu in map view or via settings. You can also customize sharing to friends only, or to a subgroup of friends by creating circles. Social Maps AB accepts no liability for the consequences of sharing your information with others users, or for the consequences of any actions taken on the basis of the information provided. 
+                                <string key="text">Depending on your choices, Socialmaps might share your location with other Socialmaps users. However at any time, you can disable your location sharing via the drop-down menu in map view or via settings. You can also customize sharing to friends only, or to a subgroup of friends by creating circles. Social Maps AB accepts no liability for the consequences of sharing your information with others users, or for the consequences of any actions taken on the basis of the information provided. 
 
 Socialmaps enforces a zero tolerance policy regarding uploading of objectionable content. Socialmaps reserves the right to block or remove any user from the system who uploads objectionable content.
 
-By clicking on "Accept and login" below, you agree to these terms.</mutableString>
+By clicking on "Accept and login" below, you agree to these terms.</string>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -5555,6 +5556,7 @@ By clicking on "Accept and login" below, you agree to these terms.</mutableStrin
         <class className="MapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
             <relationships>
+                <relationship kind="action" name="actionSearchButton:"/>
                 <relationship kind="action" name="actionShowHideSearchBtn:"/>
                 <relationship kind="action" name="addCircleView:"/>
                 <relationship kind="action" name="applyFilter:"/>
@@ -5606,6 +5608,7 @@ By clicking on "Accept and login" below, you agree to these terms.</mutableStrin
                 <relationship kind="outlet" name="mapPullupMenu" candidateClass="UIView"/>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
                 <relationship kind="outlet" name="mapViewImg" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="peopleFilterMapPulldown" candidateClass="UIView"/>
                 <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
                 <relationship kind="outlet" name="selSavedFilter" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="selectedFilter" candidateClass="UILabel"/>
@@ -5660,6 +5663,9 @@ By clicking on "Accept and login" below, you agree to these terms.</mutableStrin
                 <relationship kind="outlet" name="viewCircleList" candidateClass="UIView"/>
                 <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
             </relationships>
+        </class>
+        <class className="NSDictionary" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
         </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>

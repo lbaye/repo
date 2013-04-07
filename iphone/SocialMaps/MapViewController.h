@@ -77,6 +77,9 @@ typedef enum _SHARING_TYPES {
                                     
     NSMutableArray *displayListForMap;
     BOOL shouldMainDisplayListChange;
+    CustomRadioButton *peopleFilter;
+    CustomRadioButton *onlineFilter;
+    IBOutlet UIView *peopleFilterMapPulldown;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;

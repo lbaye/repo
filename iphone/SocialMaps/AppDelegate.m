@@ -93,6 +93,8 @@
 @synthesize myPhotoList;
 @synthesize currZoom;
 @synthesize mapDrawnFirstTime;
+@synthesize showOffline;
+@synthesize showAllUsers;
 
 //static AppDelegate *sharedInstance=nil;
 
@@ -191,6 +193,8 @@
     showEvents = FALSE;
     resetZoom  = TRUE;
     mapDrawnFirstTime = TRUE;
+    showAllUsers = FALSE;
+    showOffline  = FALSE;
     
     msgRead = FALSE;
     notifRead = FALSE;
