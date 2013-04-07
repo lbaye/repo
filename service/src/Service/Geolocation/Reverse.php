@@ -72,7 +72,7 @@ class Reverse extends Base
 //            throw new \Exception("Service Unavailable (Google Maps API said: '{$content->Status->code}')", 503);
 //        }
         if (!empty($content)) {    // Save in Cache for future use
-            $this->logger->debug('Get reversegeocode pos[0] - ' . $content->results[0]);
+            $this->logger->debug('Get reversegeocode pos[0] - ' . $content);
             return $content->results[0]->formatted_address;
         } else {
             throw new \Exception("Service Unavailable (Google Maps API said: '{$content->results[0]->formatted_address}')", 503);
