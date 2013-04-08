@@ -36,15 +36,17 @@ class Reverse extends Base
     private function getFreshOrCachedAddress($cacheApi, $cacheKey, $params, $lat, $lng, $type)
     {
         $data = $cacheApi->get($cacheKey);
-        $address = $this->getAddressFromReverseGeo($lat, $lng);
-        $this->logger->debug('Get reversegeocode with new API - ' . $address);
-        return $address;
+//        $address = $this->getAddressFromReverseGeo($lat, $lng);
+//        $this->logger->debug('Get reversegeocode with new API - ' . $address);
+//        return $address;
 
         if ($data) { // Found in Cache(db)
             $this->logger->debug('Found address from cache - ' . $data->getData());
             return $data->getData();
         } else {
-            $address = $this->getFreshAddress($params);
+//            $address = $this->getFreshAddress($params);
+            $address = $this->getAddressFromReverseGeo($lat, $lng);
+            $this->logger->debug('Get reversegeocode with new API - ' . $address);
             $this->logger->debug('Get Address From reversegeocode - ' . $address);
             $data = new \Document\CachedData();
             $data->setLat($lat);
