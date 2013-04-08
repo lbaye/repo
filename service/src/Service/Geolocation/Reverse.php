@@ -98,8 +98,10 @@ class Reverse extends Base
         // parse the json response
         $jsondata = json_decode($data, true);
 
+        $this->logger->debug('After jsondecode - ' . $jsondata);
         if (is_array($jsondata) && !empty($jsondata ['results'][0]['formatted_address'])) {
             $address = $jsondata ['results'][0]['formatted_address'];
+            $this->logger->debug('After extract resultSet - ' . $jsondata ['results'][0]['formatted_address']);
         } else {
             $address = "";
         }
