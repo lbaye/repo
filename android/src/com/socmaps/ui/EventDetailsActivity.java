@@ -321,9 +321,9 @@ public class EventDetailsActivity extends FragmentActivity implements OnClickLis
 				rsvpPanel.setVisibility(View.GONE);
 
 			// set distance
+			double distance = Utility.calculateDistanceFromCurrentLocation(selectedEvent.getPoint());
 			distanceText
-					.setText(Utility.getFormatedDistance(selectedEvent
-							.getDistance(), StaticValues.myInfo.getSettings()
+					.setText(Utility.getFormatedDistance(distance, StaticValues.myInfo.getSettings()
 							.getUnit()));
 			// set description
 			if (selectedEvent.getDescription() != null)

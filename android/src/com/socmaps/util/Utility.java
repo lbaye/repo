@@ -1848,6 +1848,16 @@ public class Utility {
 		return calculateDistance(lat1, lng1, lat2, lng2);
 	}
 
+	public static double calculateDistanceFromCurrentLocation(LatLng p1) {
+
+		double lat1 = p1.latitude;
+		double lng1 = p1.longitude;
+		double lat2 = StaticValues.myPoint.latitude;
+		double lng2 = StaticValues.myPoint.longitude;
+
+		return calculateDistance(lat1, lng1, lat2, lng2);
+	}
+
 	/**
 	 * calculate distance between two locations.
 	 * 
@@ -2184,11 +2194,11 @@ public class Utility {
 				ImageInfo imageInfo = new ImageInfo();
 				imageInfo.id = StringUtils.lowerCase(Utility.getItemId(item));
 				imageInfo.imageUrl = avatarUrl;
-				//imageInfo.width = 50;
-				//imageInfo.height = 50;
-				//imageInfo.format = Bitmap.CompressFormat.JPEG;
-				//imageInfo.quality = 60;
-				//imageInfo.sample = false;
+				// imageInfo.width = 50;
+				// imageInfo.height = 50;
+				// imageInfo.format = Bitmap.CompressFormat.JPEG;
+				// imageInfo.quality = 60;
+				// imageInfo.sample = false;
 				imageInfo.listener = imageCacheListener;
 				profilePic = remoteImageCache.getImage(imageInfo);
 				if (profilePic != null) {

@@ -155,7 +155,7 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 
 		title.setText(item.getName());
 		address.setText(item.getVicinity());
-		distance.setText(Utility.getFormatedDistance(item.getDistance(),
+		distance.setText(Utility.getFormatedDistance(Utility.calculateDistanceFromCurrentLocation(item.getPoint()),
 				StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		image.setImageResource(R.drawable.img_blank);
@@ -182,9 +182,14 @@ public class CustomInfoWindowAdapter implements InfoWindowAdapter {
 			status.setText(item.getStatusMsg());
 			status.setVisibility(View.VISIBLE);
 		} else
+		{
 			status.setVisibility(View.GONE);
-		if (Utility.isValidString(String.format("%.2f", item.getDistance()))) {
-			distance.setText(Utility.getFormatedDistance(item.getDistance(),
+		}
+		
+		double distanceValue =  Utility.calculateDistanceFromCurrentLocation(item.getPoint());
+			
+		if (Utility.isValidString(String.format("%.2f",distanceValue))) {
+			distance.setText(Utility.getFormatedDistance(distanceValue,
 					StaticValues.myInfo.getSettings().getUnit()) + " away");
 			distance.setVisibility(View.VISIBLE);
 		} else

@@ -2091,13 +2091,14 @@ com.socmaps.entity.Circle:
     42:42:public java.lang.String getType()
 com.socmaps.entity.Event:
     private com.socmaps.entity.RSVP rsvp
-    91:91:public com.socmaps.entity.TimeEntity getCreateDate()
-    99:99:public java.lang.String getOwner()
-    139:139:public com.socmaps.entity.RSVP getRsvp()
-    143:144:public void setRsvp(com.socmaps.entity.RSVP)
-    155:155:public java.util.List getCircleList()
-    171:171:public java.util.List getPermittedUserList()
-    179:179:public java.util.List getPermittedCircleList()
+    93:93:public com.socmaps.entity.TimeEntity getCreateDate()
+    101:101:public java.lang.String getOwner()
+    109:109:public double getDistance()
+    141:141:public com.socmaps.entity.RSVP getRsvp()
+    145:146:public void setRsvp(com.socmaps.entity.RSVP)
+    157:157:public java.util.List getCircleList()
+    173:173:public java.util.List getPermittedUserList()
+    181:181:public java.util.List getPermittedCircleList()
 com.socmaps.entity.FacebookErrorResponse:
     26:26:public java.lang.String getType()
     34:34:public int getCode()
@@ -2107,11 +2108,12 @@ com.socmaps.entity.FriendRequest:
     50:50:public java.lang.String getRecipientId()
     58:58:public java.lang.String getAccepted()
 com.socmaps.entity.GeoTag:
-    36:36:public java.lang.String getCategory()
-    44:44:public java.lang.String getDescription()
-    52:52:public java.lang.String getPhoto()
-    60:60:public com.socmaps.entity.TimeEntity getCreateDate()
-    104:105:public void setDistance(double)
+    38:38:public java.lang.String getCategory()
+    46:46:public java.lang.String getDescription()
+    54:54:public java.lang.String getPhoto()
+    62:62:public com.socmaps.entity.TimeEntity getCreateDate()
+    107:107:public double getDistance()
+    111:112:public void setDistance(double)
 com.socmaps.entity.Information
 com.socmaps.entity.LSFriendsAndCircles:
     13:13:public java.util.ArrayList getFriends()
@@ -2164,17 +2166,18 @@ com.socmaps.entity.NotificationPreferences:
     54:54:public boolean isProximityAlerts()
 com.socmaps.entity.People:
     private java.lang.String authToken
-    93:93:public java.lang.String getEmail()
-    137:137:public java.lang.String getAuthToken()
-    141:142:public void setAuthToken(java.lang.String)
-    157:157:public java.lang.String getDateOfBirth()
-    189:189:public java.lang.String getCountry()
-    197:197:public java.lang.String getPostCode()
-    229:229:public java.lang.String getBio()
-    233:233:public java.lang.String getInterests()
-    269:269:public int getLogInCount()
-    277:277:public java.lang.String getState()
-    281:281:public boolean getIsFrnd()
+    94:94:public java.lang.String getEmail()
+    110:110:public double getDistance()
+    138:138:public java.lang.String getAuthToken()
+    142:143:public void setAuthToken(java.lang.String)
+    158:158:public java.lang.String getDateOfBirth()
+    190:190:public java.lang.String getCountry()
+    198:198:public java.lang.String getPostCode()
+    230:230:public java.lang.String getBio()
+    234:234:public java.lang.String getInterests()
+    274:274:public int getLogInCount()
+    282:282:public java.lang.String getState()
+    286:286:public boolean getIsFrnd()
 com.socmaps.entity.Photo:
     private com.socmaps.entity.People owner
     33:33:public java.lang.String getDescription()
@@ -2192,15 +2195,16 @@ com.socmaps.entity.Photo:
 com.socmaps.entity.Place:
     private java.lang.String venue
     private com.socmaps.entity.People owner
-    48:49:public void setAddress(java.lang.String)
-    80:80:public java.lang.String getReference()
-    104:104:public java.util.ArrayList getTypes()
-    116:116:public java.lang.String getVenue()
-    120:121:public void setVenue(java.lang.String)
-    140:140:public com.socmaps.entity.TimeEntity getCreateDate()
-    148:148:public com.socmaps.entity.People getOwner()
-    152:153:public void setOwner(com.socmaps.entity.People)
-    156:156:public java.lang.String getType()
+    55:56:public void setAddress(java.lang.String)
+    87:87:public java.lang.String getReference()
+    103:103:public double getDistance()
+    111:111:public java.util.ArrayList getTypes()
+    123:123:public java.lang.String getVenue()
+    127:128:public void setVenue(java.lang.String)
+    147:147:public com.socmaps.entity.TimeEntity getCreateDate()
+    155:155:public com.socmaps.entity.People getOwner()
+    159:160:public void setOwner(com.socmaps.entity.People)
+    163:163:public java.lang.String getType()
 com.socmaps.entity.Plan:
     68:68:public com.socmaps.entity.TimeEntity getCreateDate()
     76:76:public double getDistance()
@@ -2221,9 +2225,10 @@ com.socmaps.entity.RSVP:
     20:20:public java.util.List getNoList()
     28:28:public java.util.List getMaybeList()
 com.socmaps.entity.SecondDegreePeople:
-    47:47:public java.lang.String getRefType()
-    103:103:public java.util.List getSmFriends()
-    123:124:public void setCoverPhoto(java.lang.String)
+    49:49:public java.lang.String getRefType()
+    88:88:public double getDistance()
+    112:112:public java.util.List getSmFriends()
+    132:133:public void setCoverPhoto(java.lang.String)
 com.socmaps.entity.TimeEntity:
     20:20:public int getTimeZoneType()
 com.socmaps.entity.UserSettings:
@@ -2438,7 +2443,7 @@ com.socmaps.listrow.PeopleRowFactoryInvite$3
 com.socmaps.listrow.PeopleRowFactoryInvite$ViewHolder
 com.socmaps.listrow.PlaceRowFactory:
     23:23:public PlaceRowFactory()
-    131:131:public int getViewType()
+    132:132:public int getViewType()
 com.socmaps.listrow.PlaceRowFactoryForSavedPlace:
     26:26:public PlaceRowFactoryForSavedPlace()
     150:150:public int getViewType()
@@ -2446,7 +2451,7 @@ com.socmaps.listrow.PlanRowFactory:
     25:25:public PlanRowFactory()
 com.socmaps.listrow.Row
 com.socmaps.listrow.SecondDegreePeopleRowFactory:
-    21:21:public SecondDegreePeopleRowFactory()
+    22:22:public SecondDegreePeopleRowFactory()
 com.socmaps.listrow.SecondDegreePeopleRowFactory2:
     21:21:public SecondDegreePeopleRowFactory2()
 com.socmaps.listrow.SecondDegreePeopleRowFactoryBlockUnblock
@@ -2685,10 +2690,10 @@ com.socmaps.ui.ProfileActivity2:
     java.lang.String getRelationshipStatus
     java.lang.String getCity
     java.lang.String getWorkInfo
-    608:635:private void showMessageDialog(com.socmaps.entity.People)
-    638:658:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
-    637:637:static synthetic void access$16(com.socmaps.ui.ProfileActivity2,java.lang.String,java.lang.String,java.lang.String)
-    100:100:static synthetic android.app.Dialog access$17(com.socmaps.ui.ProfileActivity2)
+    568:593:private void showMessageDialog(com.socmaps.entity.People)
+    596:612:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
+    595:595:static synthetic void access$17(com.socmaps.ui.ProfileActivity2,java.lang.String,java.lang.String,java.lang.String)
+    99:99:static synthetic android.app.Dialog access$18(com.socmaps.ui.ProfileActivity2)
 com.socmaps.ui.ProfileActivity2$10
 com.socmaps.ui.ProfileActivity2$11
 com.socmaps.ui.R:
@@ -2907,10 +2912,10 @@ com.socmaps.util.Utility:
     1473:1502:public static void getAddressFromLocation(android.content.Context,double,double,android.os.Handler)
     1694:1703:public static void removeAllChildrenFromView(android.view.View)
     1717:1729:public static int getMessageCount(java.util.List,java.lang.String)
-    1972:2046:public static android.graphics.Bitmap generateMarker(android.widget.LinearLayout,java.lang.Object,com.socmaps.images.ImageFetcher,com.socmaps.widget.ImageDownloadListener)
-    2246:2256:public static android.util.Pair getMapCorners(com.google.android.maps.MapView)
-    2260:2263:public static android.util.Pair getMapCornerPoints(com.google.android.maps.MapView)
-    2317:2317:public static int convertDipToPixels(android.content.Context,float)
+    1982:2056:public static android.graphics.Bitmap generateMarker(android.widget.LinearLayout,java.lang.Object,com.socmaps.images.ImageFetcher,com.socmaps.widget.ImageDownloadListener)
+    2256:2266:public static android.util.Pair getMapCorners(com.google.android.maps.MapView)
+    2270:2273:public static android.util.Pair getMapCornerPoints(com.google.android.maps.MapView)
+    2327:2327:public static int convertDipToPixels(android.content.Context,float)
 com.socmaps.util.Utility$1
 com.socmaps.util.Utility$2
 com.socmaps.widget.DateTimePicker:
@@ -2960,8 +2965,8 @@ com.socmaps.widget.NewsFeedPhotoZoomDialogPicker:
     android.widget.LinearLayout photoContainer
     java.util.List itemViewList
 com.socmaps.widget.PeopleCircleFriendsPrefaranceItemView:
-    232:243:private void toggle()
-    265:269:protected void hideMessageDialogKeybord(android.widget.EditText)
+    218:229:private void toggle()
+    249:252:protected void hideMessageDialogKeybord(android.widget.EditText)
 com.socmaps.widget.PeopleCirclePrefaranceItemView:
     java.lang.String itemId
     android.widget.LinearLayout llCirclePanel

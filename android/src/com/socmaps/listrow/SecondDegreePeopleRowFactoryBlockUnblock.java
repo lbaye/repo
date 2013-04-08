@@ -123,8 +123,8 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 			holder.coverPhoto
 					.setImageResource(R.drawable.cover_pic_default);
 
-		holder.distanceText.setText(Utility.getFormatedDistance(people
-				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+		double distance = Utility.calculateDistanceFromCurrentLocation(people.getPoint());
+		holder.distanceText.setText(Utility.getFormatedDistance(distance, StaticValues.myInfo.getSettings().getUnit()));
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 

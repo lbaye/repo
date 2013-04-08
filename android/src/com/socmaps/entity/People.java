@@ -2,6 +2,8 @@ package com.socmaps.entity;
 
 import java.io.Serializable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class People implements Serializable {
 
 	private String id;
@@ -35,7 +37,6 @@ public class People implements Serializable {
 	private String statusMsg;
 	private String coverPhoto;
 	private boolean isOnline;
-	
 
 	private TimeEntity lastLogIn;
 
@@ -259,6 +260,10 @@ public class People implements Serializable {
 
 	public void setCurrentLng(double lng) {
 		this.currentLng = lng;
+	}
+
+	public LatLng getPoint() {
+		return new LatLng(currentLat, currentLng);
 	}
 
 	public void setLogInCount(int count) {

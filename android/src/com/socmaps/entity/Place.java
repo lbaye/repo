@@ -3,6 +3,8 @@ package com.socmaps.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Place implements Serializable {
 
 	private String id;
@@ -34,6 +36,11 @@ public class Place implements Serializable {
 
 	public double getLongitude() {
 		return longitude;
+	}
+	
+	public LatLng getPoint()
+	{
+		return new LatLng(latitude, longitude);
 	}
 
 	public void setLongitude(double longitude) {

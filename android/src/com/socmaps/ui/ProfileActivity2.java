@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -37,12 +41,15 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageFetcher;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
 
 /**
@@ -58,16 +65,12 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	Button btnBack, btnNotification;
 
 	ImageView ivProfilePic, ivCoverPic, ivRegMedia, ivOnline;
-	ImageView btnEditProfilePic, btnEditCoverPic, btnEditStatus,
-			btnNavigateToMap, btnEvent;
-	ImageView photos_icon_image, friends_icon_image, places_icon_image,
-			interest_icon_image, plan_icon_image;
+	ImageView btnEditProfilePic, btnEditCoverPic, btnEditStatus, btnNavigateToMap, btnEvent;
+	ImageView photos_icon_image, friends_icon_image, places_icon_image, interest_icon_image, plan_icon_image;
 
-	TextView tvName, tvStatusMessage, tvAddress, tvTime, tvDistance, tvAge,
-			tvCity, tvCompany, tvRelationshipStatus;
+	TextView tvName, tvStatusMessage, tvAddress, tvTime, tvDistance, tvAge, tvCity, tvCompany, tvRelationshipStatus;
 
-	LinearLayout age_layout, relationship_layout, living_in_layout,
-			work_at_layout;
+	LinearLayout age_layout, relationship_layout, living_in_layout, work_at_layout;
 	LinearLayout layEditProfilePic;
 	LinearLayout lenearLayoutFirstMeetUp, linearLayoutFirstPlan;
 
@@ -88,13 +91,9 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	private People peopleUpdate;
 	private String peopleId;
 
-	String getAvater, getCoverPhoto, getRegMedia, getFirstName, getLastName,
-			userName, getStatusMsg, getStreetAdd, getLastLog, getAge,
-			getRelationshipStatus, getCity, getWorkInfo;
+	String getAvater, getCoverPhoto, getRegMedia, getFirstName, getLastName, userName, getStatusMsg, getStreetAdd, getLastLog, getAge, getRelationshipStatus, getCity, getWorkInfo;
 
-	RelativeLayout relativeLayoutFriendshipStatus, relativeLayoutFriend,
-			relativeLayoutMeetUp, relativeLayoutMessage,
-			relativeLayoutDirection;
+	RelativeLayout relativeLayoutFriendshipStatus, relativeLayoutFriend, relativeLayoutMeetUp, relativeLayoutMessage, relativeLayoutDirection;
 	TextView tvFriendshipStatus, tvFriendshipCheck;
 
 	private Dialog msgDialog, frndRequestDialog;
@@ -152,19 +151,19 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		super.onResume();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
+
 		imageFetcher.setExitTasksEarly(false);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		
+
 		imageFetcher.setExitTasksEarly(true);
-	    imageFetcher.flushCache();
+		imageFetcher.flushCache();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -265,14 +264,9 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		webViewNewsFeed.setHorizontalScrollBarEnabled(false);
 		webViewNewsFeed.getSettings().setBuiltInZoomControls(false);
 
-		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" + peopleId
-				+ "/newsfeed.html?authToken="
-				+ StaticValues.myInfo.getAuthToken());
+		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" + peopleId + "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken());
 
-		Log.d("Friend NF URL",
-				Constant.smServerUrl + "/" + peopleId
-						+ "/newsfeed.html?authToken="
-						+ StaticValues.myInfo.getAuthToken());
+		Log.d("Friend NF URL", Constant.smServerUrl + "/" + peopleId + "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken());
 
 		webViewNewsFeed.setWebViewClient(new MyWebViewClient());
 
@@ -295,7 +289,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
-			
+
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = peopleUpdate;
 			Intent intent = new Intent(context, HomeActivity.class);
@@ -310,18 +304,15 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		} else if (v == btnBack) {
 			finish();
 		} else if (v == btnNotification) {
-			Intent notificationIntent = new Intent(context,
-					NotificationActivity.class);
+			Intent notificationIntent = new Intent(context, NotificationActivity.class);
 			startActivity(notificationIntent);
 		} else if (v == photos_icon_image) {
 			showOtherPeoplePhoto();
 		} else if (v == friends_icon_image) {
 
-			Intent friendIntent = new Intent(getApplicationContext(),
-					FriendListActivity.class);
+			Intent friendIntent = new Intent(getApplicationContext(), FriendListActivity.class);
 			friendIntent.putExtra("PERSON_ID", peopleUpdate.getId());
-			friendIntent.putExtra("PERSON_NAME",
-					Utility.getItemTitle(peopleUpdate));
+			friendIntent.putExtra("PERSON_NAME", Utility.getItemTitle(peopleUpdate));
 			startActivity(friendIntent);
 
 		} else if (v == places_icon_image) {
@@ -349,8 +340,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	private void sendToMessageDetails(People peopleUpdate2) {
 		// TODO Auto-generated method stub
 
-		Intent messageDetailsIntent = new Intent(context,
-				MessageConversationFromNotificationActivity.class);
+		Intent messageDetailsIntent = new Intent(context, MessageConversationFromNotificationActivity.class);
 
 		messageDetailsIntent.putExtra("recipientId", peopleUpdate2.getId());
 
@@ -367,37 +357,30 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	}
 
 	private void showOtherPeoplePhoto() {
-		Intent intent = new Intent(getApplicationContext(),
-				PhotoListActivity.class);
+		Intent intent = new Intent(getApplicationContext(), PhotoListActivity.class);
 		intent.putExtra("user", peopleUpdate);
 		startActivity(intent);
 	}
 
 	private void goToShowPlaces() {
 		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
-		Log.d("People Name & ID", Utility.getItemTitle(peopleUpdate) + " "
-				+ peopleUpdate.getId());
+		Log.d("People Name & ID", Utility.getItemTitle(peopleUpdate) + " " + peopleUpdate.getId());
 		intentToGoPlace.putExtra("personID", peopleUpdate.getId());
-		intentToGoPlace.putExtra("PERSON_NAME",
-				Utility.getItemTitle(peopleUpdate));
+		intentToGoPlace.putExtra("PERSON_NAME", Utility.getItemTitle(peopleUpdate));
 		startActivity(intentToGoPlace);
 	}
 
 	private void goToMeetUp() {
-		Log.d("LAT LNG Meetup People",
-				String.valueOf(peopleUpdate.getCurrentLat()) + " "
-						+ String.valueOf(peopleUpdate.getCurrentLng()));
+		Log.d("LAT LNG Meetup People", String.valueOf(peopleUpdate.getCurrentLat()) + " " + String.valueOf(peopleUpdate.getCurrentLng()));
 
-		Intent intentToShowMeetUp = new Intent(context,
-				MeetupRequestNewActivity.class);
+		Intent intentToShowMeetUp = new Intent(context, MeetupRequestNewActivity.class);
 		intentToShowMeetUp.putExtra("selectedPeople", peopleUpdate);
 		startActivity(intentToShowMeetUp);
 	}
 
 	private void goToDirection() {
 
-		Intent intentToGoDirection = new Intent(context,
-				DirectionActivity.class);
+		Intent intentToGoDirection = new Intent(context, DirectionActivity.class);
 
 		intentToGoDirection.putExtra("selectedItem", peopleUpdate);
 		startActivity(intentToGoDirection);
@@ -406,8 +389,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	private void setButtonForDisplay() {
 		String userId = peopleUpdate.getId();
 		String friendshipStatus = peopleUpdate.getFriendshipStatus();
-		Log.d("User ID & Friendship Status Check", userId + " "
-				+ friendshipStatus);
+		Log.d("User ID & Friendship Status Check", userId + " " + friendshipStatus);
 
 		if (friendRequestSentList.contains(userId)) {
 			tvFriendshipStatus.setText("Pending");
@@ -415,15 +397,13 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 
 			if (friendshipStatus != null) {
 
-				if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
+				if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
 
 					relativeLayoutMeetUp.setVisibility(View.GONE);
 					relativeLayoutFriendshipStatus.setVisibility(View.GONE);
 					relativeLayoutFriend.setVisibility(View.VISIBLE);
 
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+				} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
 
 					relativeLayoutFriend.setVisibility(View.GONE);
 					relativeLayoutFriendshipStatus.setVisibility(View.GONE);
@@ -435,24 +415,19 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 					relativeLayoutMeetUp.setVisibility(View.GONE);
 
 					String status = "";
-					if (friendshipStatus
-							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+					if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
 						status = getString(R.string.status_friend_request_friend);
 						relativeLayoutMeetUp.setVisibility(View.VISIBLE);
 
 						relativeLayoutFriend.setVisibility(View.GONE);
 						relativeLayoutFriendshipStatus.setVisibility(View.GONE);
-					} else if (friendshipStatus
-							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
+					} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
 						status = getString(R.string.status_friend_request_pending);
-					} else if (friendshipStatus
-							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
+					} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
 						status = getString(R.string.status_friend_request_sent);
-					} else if (friendshipStatus
-							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
+					} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
 						status = getString(R.string.status_friend_request_declined_by_me);
-					} else if (friendshipStatus
-							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
+					} else if (friendshipStatus.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
 						status = getString(R.string.status_friend_request_declined_by_him);
 					}
 					tvFriendshipStatus.setText(status);
@@ -465,8 +440,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	private void showFrndRequestDialog(final People people) {
 		// TODO Auto-generated method stub
 		frndRequestDialog = DialogsAndToasts.showAddFrnd(context);
-		final EditText msgEditText = (EditText) frndRequestDialog
-				.findViewById(R.id.message_body_text);
+		final EditText msgEditText = (EditText) frndRequestDialog.findViewById(R.id.message_body_text);
 
 		Button send = (Button) frndRequestDialog.findViewById(R.id.btnSend);
 		Button cancel = (Button) frndRequestDialog.findViewById(R.id.btnCancel);
@@ -476,8 +450,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				sendFriendRequest(people.getId(), msgEditText.getText()
-						.toString().trim());
+				sendFriendRequest(people.getId(), msgEditText.getText().toString().trim());
 
 			}
 		});
@@ -498,19 +471,15 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			friendRequestFriendId = friendId;
 			friendRequestMessage = message;
 
-			Thread thread = new Thread(null, friendRequestThread,
-					"Start send message");
+			Thread thread = new Thread(null, friendRequestThread, "Start send message");
 			thread.start();
 
 			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true, true);
+			m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.sending_request_text), true, true);
 
 		} else {
 
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(context);
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -518,10 +487,8 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
-					+ "/" + friendRequestFriendId);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			RestClient restClient = new RestClient(Constant.smFriendRequestUrl + "/" + friendRequestFriendId);
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			restClient.AddParam("message", friendRequestMessage);
 
@@ -543,8 +510,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleResponseFriendRequest(friendRequestStatus,
-					friendRequestResponse);
+			handleResponseFriendRequest(friendRequestStatus, friendRequestResponse);
 
 			// dismiss progress dialog if needed
 			if (m_ProgressDialog != null) {
@@ -563,23 +529,18 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		case Constant.STATUS_SUCCESS:
 			handleSuccssfulFriendRequest();
 
-			Toast.makeText(context, "Request sent successfully.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Request sent successfully.", Toast.LENGTH_SHORT).show();
 			frndRequestDialog.dismiss();
 
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(context,
-					"Friend request already sent to this user.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Friend request already sent to this user.", Toast.LENGTH_SHORT).show();
 			frndRequestDialog.dismiss();
 
 			break;
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -596,8 +557,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		for (int i = 0; i < peopleList.size(); i++) {
 			String userId = peopleList.get(i).getId();
 			if (friendRequestSentList.contains(userId)) {
-				peopleList.get(i).setFriendshipStatus(
-						Constant.STATUS_FRIENDSHIP_PENDING);
+				peopleList.get(i).setFriendshipStatus(Constant.STATUS_FRIENDSHIP_PENDING);
 			}
 		}
 		StaticValues.searchResult.setPeoples(peopleList);
@@ -606,8 +566,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	private void showMessageDialog(final People people) {
 		// TODO Auto-generated method stub
 		msgDialog = DialogsAndToasts.showSendMessage(context);
-		final EditText msgEditText = (EditText) msgDialog
-				.findViewById(R.id.message_body_text);
+		final EditText msgEditText = (EditText) msgDialog.findViewById(R.id.message_body_text);
 		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
 		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
 		send.setOnClickListener(new OnClickListener() {
@@ -616,8 +575,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if (!msgEditText.getText().toString().trim().equals("")) {
-					sendMessage(people.getId(), "Message", msgEditText
-							.getText().toString().trim());
+					sendMessage(people.getId(), "Message", msgEditText.getText().toString().trim());
 				} else {
 					msgEditText.setError("Please enter your message!!");
 				}
@@ -641,19 +599,15 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			sendMessageSubject = subject;
 			sendMessageContent = content;
 
-			Thread thread = new Thread(null, sendMessageThread,
-					"Start send message");
+			Thread thread = new Thread(null, sendMessageThread, "Start send message");
 			thread.start();
 
 			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true, true);
+			m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.sending_request_text), true, true);
 
 		} else {
 
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(context);
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -662,8 +616,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smMessagesUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			restClient.AddParam("recipients[]", sendMessageFriendId);
 			restClient.AddParam("subject", sendMessageSubject);
@@ -703,15 +656,12 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			Toast.makeText(context, "Message sent successfully.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Message sent successfully.", Toast.LENGTH_SHORT).show();
 			msgDialog.dismiss();
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -723,21 +673,18 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		public void onPageFinished(final WebView view, final String url) {
 			Log.d("web status", "onPageFinished");
 
-			webViewNewsFeed
-					.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+			webViewNewsFeed.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
 
 		}
 
 		@Override
-		public void onPageStarted(final WebView view, final String url,
-				final Bitmap favicon) {
+		public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
 			Log.d("web status", "onPageStarted");
 
 		}
 
 		@Override
-		public boolean shouldOverrideUrlLoading(final WebView view,
-				final String url) {
+		public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
 
 			Log.i("URL URL URL ", url);
 
@@ -765,31 +712,93 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
 
 				context, imageURL, imageFetcher);
-				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
-						LayoutParams.FILL_PARENT);
+				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 				photoZoomPicker.show();
 			} else if (subURL.startsWith("geotag")) {
+			} else if (subURL.startsWith("report")) {
+
+				final String[] typeId = subURL.split(":");
+
+				if (typeId.length > 2) {
+
+					AlertDialog.Builder adb = new AlertDialog.Builder(context);
+					adb.setTitle("Report");
+					// adb.setIcon(R.drawable.icon_alert);
+					adb.setMessage("Do you want to report this post?");
+					adb.setPositiveButton("Report", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							// server call
+							dialog.dismiss();
+							reportToServer(typeId[1], typeId[2]);
+							
+
+						}
+					});
+					adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.dismiss();
+						}
+					});
+					adb.show();
+
+				}
+
 			}
 
 			return true;
+
+		}
+	}
+
+	private void reportToServer(String type, String id) {
+
+		String url = Constant.smServerUrl + "/report";
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("objectType", type));
+		params.add(new BasicNameValuePair("objectId", id));
+
+		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, false, null, null, new BackProcessCallBackListener(), false);
+
+		backProcess.execute(RestClient.RequestMethod.POST);
+	}
+
+	private class BackProcessCallBackListener implements BackProcessCallback {
+
+		@Override
+		public void onFinish(int status, String result, int type) {
+
+			// TODO Auto-generated method stub
+			Log.w("Got places response from server callback process >> :", status + ":" + result);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
+
+				Toast.makeText(getApplicationContext(), "Report sent successfully.", Toast.LENGTH_SHORT).show();
+				break;
+
+			default:
+				Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+
+				break;
+
+			}
+
 		}
 
 	}
 
 	private void getFriendInfo() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
-			Thread thread = new Thread(null, friendsThread,
-					"Start get friend's info from server");
+			Thread thread = new Thread(null, friendsThread, "Start get friend's info from server");
 			thread.start();
 
 			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true, true);
+			m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.fetching_data_text), true, true);
 		} else {
 
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(context);
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
 	}
 
@@ -798,10 +807,8 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		public void run() {
 			RestClient restClient;
 			Log.d("sending people id", peopleId);
-			restClient = new RestClient(Constant.smServerUrl + "/users/"
-					+ peopleId);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient = new RestClient(Constant.smServerUrl + "/users/" + peopleId);
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.GET);
@@ -845,9 +852,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 					peopleUpdate = ServerResponseParser.parsePeople(jsonObject);
 
 					if (peopleUpdate != null) {
-						Log.d("Update People",
-								Utility.getItemTitle(peopleUpdate) + " id: "
-										+ peopleUpdate.getId());
+						Log.d("Update People", Utility.getItemTitle(peopleUpdate) + " id: " + peopleUpdate.getId());
 
 						setDefaultValues();
 						setButtonForDisplay();
@@ -863,9 +868,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}
@@ -873,10 +876,9 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	private void setDefaultValues() {
 
 		if (peopleUpdate.getFriendshipStatus() != null) {
-			if (peopleUpdate.getFriendshipStatus().equalsIgnoreCase(
-					Constant.STATUS_FRIENDSHIP_FRIEND)) {
+			if (peopleUpdate.getFriendshipStatus().equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
 				layEditProfilePic.setVisibility(View.VISIBLE);
-				//lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
+				// lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
 			}
 		}
 
@@ -891,11 +893,10 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			Log.i("CoverPic", peopleUpdate.getCoverPhoto());
 			ivCoverPic.setImageResource(R.drawable.img_blank);
 			imageFetcher.loadImage(peopleUpdate.getCoverPhoto(), ivCoverPic);
-		}else{
+		} else {
 			ivCoverPic.setImageResource(R.drawable.cover_pic_default);
 		}
-		
-		
+
 		if (peopleUpdate.getRegMedia() != null) {
 			if (peopleUpdate.getRegMedia().equals("fb")) {
 				ivRegMedia.setVisibility(View.VISIBLE);
@@ -927,17 +928,13 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 			tvAddress.setVisibility(View.INVISIBLE);
 		}
 
-		if (Utility.getFormatedDistance(peopleUpdate.getDistance()) != null) {
-			tvDistance.setText(Utility.getFormatedDistance(Utility
-					.calculateDistance(StaticValues.myPoint,
-							new LatLng(peopleUpdate.getCurrentLat(),
-									peopleUpdate.getCurrentLng())),
-					StaticValues.myInfo.getSettings().getUnit()));
+		double distance = Utility.calculateDistanceFromCurrentLocation(peopleUpdate.getPoint());
+		if (Utility.getFormatedDistance(distance) != null) {
+			tvDistance.setText(Utility.getFormatedDistance(distance, StaticValues.myInfo.getSettings().getUnit()));
 		}
 
 		if (peopleUpdate.getLastLogIn() != null) {
-			tvTime.setText(Utility.getFormattedDisplayDate(peopleUpdate
-					.getLastLogIn()));
+			tvTime.setText(Utility.getFormattedDisplayDate(peopleUpdate.getLastLogIn()));
 		}
 
 		if (peopleUpdate.getAge() > 0) {

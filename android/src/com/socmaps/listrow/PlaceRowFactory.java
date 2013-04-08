@@ -100,9 +100,10 @@ public class PlaceRowFactory {
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
-		if (place.getDistance() < Constant.MAX_ITEM_DISTANCE) {
+		double distance = Utility.calculateDistanceFromCurrentLocation(place.getPoint());
+		if (distance < Constant.MAX_ITEM_DISTANCE) {
 			holder.distanceText
-					.setText(Utility.getFormatedDistance(place.getDistance(),
+					.setText(Utility.getFormatedDistance(distance,
 							StaticValues.myInfo.getSettings().getUnit()));
 		} else {
 			holder.distanceText.setVisibility(View.INVISIBLE);

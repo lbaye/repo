@@ -48,7 +48,7 @@ public class Constant {
 	//final static public String smServerUrl = "http://192.168.1.212:8888";
 	//final static public String smServerUrl = "http://192.168.1.19/social_maps/web";
 
-	final static public String smServerUrl ="http://services.socialmapsapp.com/v2_2";
+	final static public String smServerUrl ="http://services.socialmapsapp.com/v2_3";
 
 	// production server
 	// final static public String smServerUrl = "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6";

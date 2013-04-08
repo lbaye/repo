@@ -2,6 +2,8 @@ package com.socmaps.entity;
 
 import java.io.Serializable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class GeoTag implements Serializable {
 
 	private String id = "";
@@ -82,6 +84,11 @@ public class GeoTag implements Serializable {
 
 	public double getLongitude() {
 		return longitude;
+	}
+	
+	public LatLng getPoint()
+	{
+		return new LatLng(latitude, longitude);
 	}
 
 	public void setLongitude(double longitude) {

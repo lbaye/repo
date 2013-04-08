@@ -26,8 +26,7 @@ import com.socmaps.util.Utility;
  * PeopleCircleFriendsPrefaranceItemView class for displaying friends list item
  * corresponding circle.
  */
-public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
-		implements View.OnClickListener {
+public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout implements View.OnClickListener {
 
 	private Context context;
 
@@ -68,8 +67,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 	 * @see #setDefaultValues()
 	 */
 
-	public PeopleCircleFriendsPrefaranceItemView(Context context,
-			People people, ImageFetcher imageDownloader) {
+	public PeopleCircleFriendsPrefaranceItemView(Context context, People people, ImageFetcher imageDownloader) {
 		super(context, null);
 
 		this.context = context;
@@ -77,11 +75,9 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 		this.imageDownloader = imageDownloader;
 
 		// Get LayoutInflater instance
-		final LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		// Inflate myself
-		inflater.inflate(R.layout.row_in_row_people_circle_preference_item,
-				this, true);
+		inflater.inflate(R.layout.row_in_row_people_circle_preference_item, this, true);
 
 		init();
 		setDefaultValues();
@@ -120,10 +116,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 		if (people != null) {
 
 			Log.i("Peple PeopleCircleFriendsPrefaranceItemView::::::::::::::::",
-					"FirstName: " + Utility.getItemTitle(people)+ " Address: "
-							+ people.getCurrentAddress() + " Avater:"
-							+ people.getAvatar() + " cov pic: "
-							+ people.getCoverPhoto() + " RegMedia: "
+					"FirstName: " + Utility.getItemTitle(people) + " Address: " + people.getCurrentAddress() + " Avater:" + people.getAvatar() + " cov pic: " + people.getCoverPhoto() + " RegMedia: "
 							+ people.getRegMedia());
 
 			first_name_text.setText(Utility.getItemTitle(people));
@@ -132,14 +125,12 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 				address_text.setText(people.getCurrentAddress());
 			}
 
-			distance_text
-					.setText(Utility.getFormatedDistance(people.getDistance(),
-							StaticValues.myInfo.getSettings().getUnit()));
+			double distance = Utility.calculateDistanceFromCurrentLocation(people.getPoint());
+			distance_text.setText(Utility.getFormatedDistance(distance, StaticValues.myInfo.getSettings().getUnit()));
 
 			if (people.getRegMedia() != null) {
 
-				if (people.getRegMedia().equalsIgnoreCase(
-						Constant.sourceFacebook)) {
+				if (people.getRegMedia().equalsIgnoreCase(Constant.sourceFacebook)) {
 					ivSource.setImageResource(R.drawable.facebookicon);
 				}
 			}
@@ -149,11 +140,9 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 				imageDownloader.loadImage(people.getAvatar(), people_icon_image);
 			}
 
-			if (people.getCoverPhoto() != null
-					&& !people.getCoverPhoto().equals("")) {
+			if (people.getCoverPhoto() != null && !people.getCoverPhoto().equals("")) {
 				cover_image_view.setImageResource(R.drawable.img_blank);
-				imageDownloader.loadImage(people.getCoverPhoto(),
-						cover_image_view);
+				imageDownloader.loadImage(people.getCoverPhoto(), cover_image_view);
 			} else
 				cover_image_view.setImageResource(R.drawable.cover_pic_default);
 
@@ -190,13 +179,10 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 			List<Circle> circleList = StaticValues.myInfo.getCircleList();
 
 			if (id != null) {
-				selectedCircleList = Utility.getCircleIdsForPeople(id,
-						circleList);
+				selectedCircleList = Utility.getCircleIdsForPeople(id, circleList);
 			}
 
-			CircleAddMoveToPicker createCirclePicker = new CircleAddMoveToPicker(
-					context, new CircleAddMoveToPickerHandler(), "CIRCLE LIST",
-					circleList, selectedCircleList, people);
+			CircleAddMoveToPicker createCirclePicker = new CircleAddMoveToPicker(context, new CircleAddMoveToPickerHandler(), "CIRCLE LIST", circleList, selectedCircleList, people);
 
 			createCirclePicker.show();
 			break;
@@ -205,7 +191,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 			break;
 
 		case R.id.map_image_btn:
-			
+
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = people;
 
@@ -243,16 +229,14 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 	}
 
 	// Listener
-	private class CircleAddMoveToPickerHandler implements
-			CircleAddMoveToPickerListener {
+	private class CircleAddMoveToPickerHandler implements CircleAddMoveToPickerListener {
 
 		@Override
 		public void onCircleSelect(String pickerName, Circle selectedCircle) {
 			// TODO Auto-generated method stub
 			if (selectedCircle != null) {
 
-				Log.w("CircleAddMoveToPickerHandler in onCircleSelect >>>",
-						selectedCircle.toString());
+				Log.w("CircleAddMoveToPickerHandler in onCircleSelect >>>", selectedCircle.toString());
 
 			}
 		}
@@ -262,8 +246,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 	protected void hideMessageDialogKeybord(EditText msgEditText) {
 		// TODO Auto-generated method stub
 
-		InputMethodManager mgr = (InputMethodManager) context
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager mgr = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
 
 	}

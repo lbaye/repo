@@ -1624,7 +1624,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		}
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
-		double distanceValue = item.getDistance();
+		double distanceValue = Utility.calculateDistanceFromCurrentLocation(item.getPoint());
 		distance.setText(Utility.getFormatedDistance(distanceValue, StaticValues.myInfo.getSettings().getUnit()) + " away");
 
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
@@ -1799,7 +1799,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			age.setVisibility(View.GONE);
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
-		double distanceValue = people.getDistance();
+		double distanceValue = Utility.calculateDistanceFromCurrentLocation(people.getPoint());
 
 		distance.setText(Utility.getFormatedDistance(distanceValue, StaticValues.myInfo.getSettings().getUnit()) + " away");
 
@@ -2005,7 +2005,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		firstName.setText(Utility.getItemTitle(secondDegreePeople));
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
-		double distanceValue = secondDegreePeople.getDistance();
+		double distanceValue = Utility.calculateDistanceFromCurrentLocation(secondDegreePeople.getPoint());
 
 		distance.setText(Utility.getFormatedDistance(distanceValue, StaticValues.myInfo.getSettings().getUnit()) + " away");
 

@@ -3,6 +3,8 @@ package com.socmaps.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Event implements Serializable {
 
 	private String eventId;
@@ -197,6 +199,11 @@ public class Event implements Serializable {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+	
+	public LatLng getPoint()
+	{
+		return new LatLng(latitude, longitude);
 	}
 
 	public String getAddress() {

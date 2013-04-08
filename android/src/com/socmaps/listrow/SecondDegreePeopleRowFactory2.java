@@ -106,8 +106,8 @@ public class SecondDegreePeopleRowFactory2 {
 
 		}
 
-		holder.distanceText.setText(Utility.getFormatedDistance(people
-				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+		double distance = Utility.calculateDistanceFromCurrentLocation(people.getPoint());
+		holder.distanceText.setText(Utility.getFormatedDistance(distance, StaticValues.myInfo.getSettings().getUnit()));
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 

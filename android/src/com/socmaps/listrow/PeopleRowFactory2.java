@@ -166,9 +166,10 @@ public class PeopleRowFactory2 {
 
 		}
 
-		if (people.getDistance() < Constant.MAX_ITEM_DISTANCE) {
+		double distance = Utility.calculateDistanceFromCurrentLocation(people.getPoint());
+		if (distance < Constant.MAX_ITEM_DISTANCE) {
 			holder.distanceText
-					.setText(Utility.getFormatedDistance(people.getDistance(),
+					.setText(Utility.getFormatedDistance(distance,
 							StaticValues.myInfo.getSettings().getUnit()));
 		} else {
 			holder.distanceText.setVisibility(View.INVISIBLE);

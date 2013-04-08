@@ -148,8 +148,9 @@ public class EventRowFactory {
 			}
 		}
 
+		double distance = Utility.calculateDistanceFromCurrentLocation(event.getPoint());
 		holder.distanceText.setText(Utility.getFormatedDistance(
-				event.getDistance(), unit));
+				distance, unit));
 
 		// set arrowClicklistener
 		holder.rightArrow.setOnClickListener(new OnClickListener() {

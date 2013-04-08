@@ -3,6 +3,8 @@ package com.socmaps.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class SecondDegreePeople implements Serializable {
 
 	private String refId;
@@ -70,9 +72,16 @@ public class SecondDegreePeople implements Serializable {
 	public double getCurrentLng() {
 		return currentLng;
 	}
+	
+	
 
 	public void setCurrentLng(double currentLng) {
 		this.currentLng = currentLng;
+	}
+	
+	public LatLng getPoint()
+	{
+		return new LatLng(currentLat, currentLng);
 	}
 
 	public double getDistance() {

@@ -71,16 +71,19 @@ public class ListComparator implements Comparator<Object> {
 			}
 			return Utility.calculateDistance(refLatLng, itemPostion);
 		} else {
+			
+			double distance = 0;
+			
 			if (object instanceof People)
-				return ((People) object).getDistance();
+				return Utility.calculateDistanceFromCurrentLocation(((People) object).getPoint()) ;
 			else if (object instanceof Place)
-				return ((Place) object).getDistance();
+				return Utility.calculateDistanceFromCurrentLocation(((Place) object).getPoint());
 			else if (object instanceof SecondDegreePeople)
-				return ((SecondDegreePeople) object).getDistance();
+				return Utility.calculateDistanceFromCurrentLocation(((SecondDegreePeople) object).getPoint());
 			else if (object instanceof Event)
-				return ((Event) object).getDistance();
+				return Utility.calculateDistanceFromCurrentLocation(((Event) object).getPoint());
 			else if (object instanceof GeoTag)
-				return ((GeoTag) object).getDistance();
+				return Utility.calculateDistanceFromCurrentLocation(((GeoTag) object).getPoint());
 
 		}
 
