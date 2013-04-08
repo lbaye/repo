@@ -86,6 +86,8 @@
     NSTimer         *timerGotListing;
     MKCoordinateSpan    currZoom;
     bool            mapDrawnFirstTime;
+    bool            showAllUsers;
+    bool            showOffline;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -143,6 +145,8 @@
 @property (nonatomic, assign) int shareLocationOption;
 @property (nonatomic, retain) NSTimer *timerGotListing;
 @property (atomic) bool mapDrawnFirstTime;
+@property (atomic) bool showAllUsers;
+@property (atomic) bool showOffline;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

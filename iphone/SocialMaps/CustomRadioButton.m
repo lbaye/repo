@@ -69,7 +69,7 @@
     int offset = 0;
     if (numRadio == 1)
         offset = (self.frame.size.width-CELL_PADDING*2-radioSize.width)/2;
-    int startTag = 1000;
+    int startTag = self.tag+1;
     for (int i=0; i < numRadio; i++) {
         radioFrame = CGRectMake(offset + CELL_PADDING+i*(self.frame.size.width-CELL_PADDING*2)/(numRadio == 0 ? 1 : numRadio-1)-radioSize.width/2, (self.frame.size.height-radioSize.height)/2, radioSize.width, radioSize.height);
         
@@ -142,7 +142,7 @@
         radioFrame = CGRectMake(0 + CELL_PADDING+i*(self.frame.size.width-CELL_PADDING*2)/(numRadio == 0 ? 1 : numRadio-1)-21/2, (self.frame.size.height-21)/2, 21, 21);
         int diffTempX = radioFrame.origin.x - [touch locationInView:self].x;
         if (abs(diffTempX) < self.frame.size.width / numRadio / 1.5) {
-            [self buttonClicked: [self viewWithTag: 1000 + i]];
+            [self buttonClicked: [self viewWithTag: self.tag + i +1]];
             break;
         }
     }
@@ -183,8 +183,8 @@
      
     UIButton *newSel = (UIButton*) sender;
     NSLog(@"CustomRadioButton:buttonClicked %d", newSel.tag);
-    if ((newSel.tag - 1000) != selIndex) {
-        selIndex = newSel.tag - 1000;
+    if ((newSel.tag - self.tag - 1) != selIndex) {
+        selIndex = newSel.tag - self.tag -1;
         if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(radioButtonClicked:sender:)]) {
             [self.delegate radioButtonClicked:selIndex sender:[sender superview]];
         }

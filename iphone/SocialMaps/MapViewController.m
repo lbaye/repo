@@ -864,6 +864,14 @@ ButtonClickCallbackData callBackData;
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
+    peopleFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5, 13+25, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",nil]  default:1 sender:self tag:3000 color:[UIColor whiteColor]];
+    peopleFilter.delegate = self;
+    [peopleFilterMapPulldown addSubview:peopleFilter];
+    
+    onlineFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5 + (310 - 30) / 2 + 20, 13+25, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"Show offline",@"Online only",nil]  default:1 sender:self tag:4000 color:[UIColor whiteColor]];
+    onlineFilter.delegate = self;
+    [peopleFilterMapPulldown addSubview:onlineFilter];
+
     if (smAppDelegate.gotListing == FALSE) {
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:smAppDelegate.window];
@@ -905,19 +913,58 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
-    NSLog(@"radioButtonClicked index = %d", indx);
+    UIButton *btn = (UIButton*) sender;
+    NSLog(@"radioButtonClicked index = %d, sender tag=%d", indx, btn.tag);
     
-    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame) {
-        [UtilityClass showAlert:@"" :@"Location sharing is switched off in settings, enable it to share your location."];
-        [self setRadioButton];
-    } else {
-        if (indx == 0) {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to share your location with everyone?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-            [alertView show];
-            [alertView release];
+    if (btn.tag == 2000) { // Location sharing prefs
+        if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame) {
+            [UtilityClass showAlert:@"" :@"Location sharing is switched off in settings, enable it to share your location."];
+            [self setRadioButton];
         } else {
-            RestClient *restClient = [[[RestClient alloc] init] autorelease];
-            [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+            if (indx == 0) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to share your location with everyone?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+                [alertView show];
+                [alertView release];
+            } else {
+                RestClient *restClient = [[[RestClient alloc] init] autorelease];
+                [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+            }
+        }
+    } else if (btn.tag == 3000) { // People filter - All or friends only
+        if (indx == 0) { // All users
+            if (smAppDelegate.showAllUsers == FALSE) {
+                smAppDelegate.showAllUsers = TRUE;
+                [self getSortedDisplayList];
+                shouldMainDisplayListChange = YES;
+                [self loadAnnotations:YES];
+                [self.view setNeedsDisplay];
+            }
+        } else {
+            if (smAppDelegate.showAllUsers == TRUE) {
+                smAppDelegate.showAllUsers = FALSE;
+                [self getSortedDisplayList];
+                shouldMainDisplayListChange = YES;
+                [self loadAnnotations:YES];
+                [self.view setNeedsDisplay];
+            }
+        }
+    } else if (btn.tag == 4000) { // Show offline or online only
+        if (indx == 0) { // Show offline users also
+            if (smAppDelegate.showOffline == FALSE) {
+                smAppDelegate.showOffline = TRUE;
+                [self getSortedDisplayList];
+                shouldMainDisplayListChange = YES;
+                [self loadAnnotations:YES];
+                [self.view setNeedsDisplay];
+            }
+        } else {
+            if (smAppDelegate.showOffline == TRUE) {
+                smAppDelegate.showOffline = FALSE;
+                [self getSortedDisplayList];
+                shouldMainDisplayListChange = YES;
+                [self loadAnnotations:YES];
+                [self.view setNeedsDisplay];
+            }
         }
     }
 }
@@ -1009,6 +1056,7 @@ ButtonClickCallbackData callBackData;
             smAppDelegate.mapDrawnFirstTime = FALSE;
         else
             smAppDelegate.currZoom = _mapView.region.span;
+        
         
         if (viewSearch.frame.origin.y >= 44) {
          
@@ -1195,6 +1243,8 @@ ButtonClickCallbackData callBackData;
     searchBar = nil;
     [viewSharingPrefMapPullDown release];
     viewSharingPrefMapPullDown = nil;
+    [peopleFilterMapPulldown release];
+    peopleFilterMapPulldown = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -1500,6 +1550,7 @@ ButtonClickCallbackData callBackData;
     [searchBar release];
     [_mapView release]; _mapView = nil;
     
+    [peopleFilterMapPulldown release];
     [super dealloc];
 }
 
@@ -1969,9 +2020,9 @@ ButtonClickCallbackData callBackData;
     [imageViewFooterSliderOpen release];
     
     
-    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 219)];
-    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 - 35);
-    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 + 34);
+    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 260)];
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 +16 - 35);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 -20 + 34);
     pullDownView.center = pullDownView.closedCenter;
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
     pullDownView.delegate = self;
@@ -2070,6 +2121,18 @@ ButtonClickCallbackData callBackData;
     NSMutableArray *tempList = [[NSMutableArray alloc] init];
     if (smAppDelegate.showPeople == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
+    
+    // Check to see if we are showing all users or friends only. Also, check for online/offline setting
+    if (smAppDelegate.showOffline == FALSE || smAppDelegate.showAllUsers == FALSE) {
+        // Build items to discard
+        for (LocationItemPeople *aPerson in smAppDelegate.peopleList) {
+            if ((!aPerson.userInfo.isFriend && smAppDelegate.showAllUsers ==FALSE) ||
+                (!aPerson.userInfo.isOnline && smAppDelegate.showOffline  == FALSE)) {
+                [tempList removeObject:aPerson];
+            }
+        }
+    }
+    
     if (smAppDelegate.showPlaces == TRUE)
         [tempList addObjectsFromArray:smAppDelegate.placeList];
     if (smAppDelegate.showEvents == TRUE) 

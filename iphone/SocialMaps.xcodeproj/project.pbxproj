@@ -2741,8 +2741,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2759,8 +2759,8 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
+				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2773,8 +2773,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2791,8 +2791,8 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
+				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

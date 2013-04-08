@@ -4,55 +4,16 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "383072908.302939"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1766"
-         endingLineNumber = "1766"
-         landmarkName = "-peopleClicked:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "383072908.302939"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1754"
-         endingLineNumber = "1754"
-         landmarkName = "-peopleClicked:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "383072908.302939"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1760"
-         endingLineNumber = "1760"
-         landmarkName = "-peopleClicked:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "383112057.838405"
+         timestampString = "387061758.857373"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1252"
-         endingLineNumber = "1252"
-         landmarkName = "-viewWillAppear:"
+         startingLineNumber = "1292"
+         endingLineNumber = "1292"
+         landmarkName = "-loadAnnotations:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
