@@ -164,7 +164,7 @@ class Image
             }
 
             $target_file = $thumbImagePath . "/" . $filename;
-            self::imageResize(25, 25, $image, $target_file, 1);
+            self::imageResize(50, 50, $image, $target_file, 1);
         }
     }
 
