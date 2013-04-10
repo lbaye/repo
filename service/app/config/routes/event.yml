@@ -3,6 +3,11 @@ all_events:
   defaults: { _controller: Controller\Gathering::getActiveEvent, type: event }
   requirements: { _method: GET }
 
+all_events_by_location:
+  pattern: /events/bylocation
+  defaults: { _controller: Controller\Gathering::getActiveEvent, type: event }
+  requirements: { _method: POST }
+
 a_event:
   pattern:  /events/{id}
   defaults: { _controller: Controller\Gathering::getById, type: event }

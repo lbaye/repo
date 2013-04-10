@@ -790,9 +790,9 @@ class UserRepo extends Base
 
             ImageHelper::saveResizeAvatarOriginFromBase64(
                 $avatar, ROOTDIR . $filePath,
-                $thumbPath . DIRECTORY_SEPARATOR . $user->getId(), $originalPath. DIRECTORY_SEPARATOR . $user->getId());
+                $thumbPath . DIRECTORY_SEPARATOR . $user->getId(), $originalPath . DIRECTORY_SEPARATOR . $user->getId());
             $user->setAvatar($filePath . "?" . $timeStamp);
-            $user->setAvatarOriginal($fileOriginalPath. "?" . $timeStamp);
+            $user->setAvatarOriginal($fileOriginalPath . "?" . $timeStamp);
         }
 
         $this->dm->persist($user);
@@ -919,6 +919,9 @@ class UserRepo extends Base
             $query->field('id')->notIn($excludedUserIds)
                 ->field('visible')->equals(true)
                 ->field('enabled')->equals(true)
+//            ->field('currentLocation')->withinBox($location['ne'][0], $location['ne'][1], $location['sw'][0], $location['sw'][1])
+                ->field('currentLocation')->near($location['lat'], $location['lng'])
+
                 ->field('currentLocation.lat')->notEqual(0)
                 ->field('currentLocation.lng')->notEqual(0)
                 ->hydrate(false)
@@ -936,13 +939,13 @@ class UserRepo extends Base
 
         //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
 
-        if (isset($location['sw']) && isset($location['ne'])) {
-            $query->field('currentLocation');
-            $locationParams = array();
-            foreach (array_merge($location['ne'], $location['sw']) as $position)
-                $locationParams[] = (float)$position;
-            call_user_func_array(array($query, 'withinBox'), $locationParams);
-        }
+//        if (isset($location['sw']) && isset($location['ne'])) {
+//            $query->field('currentLocation');
+//            $locationParams = array();
+//            foreach (array_merge($location['ne'], $location['sw']) as $position)
+//                $locationParams[] = (float)$position;
+//            call_user_func_array(array($query, 'withinBox'), $locationParams);
+//        }
 
         return $query->getQuery()->execute();
     }

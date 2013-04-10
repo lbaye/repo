@@ -89,4 +89,26 @@ class Search extends Base
     {
         return array();
     }
+
+    /**
+     * POST /search/keyword
+     *
+     * Retrieve people, places and external users from the given location.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function byKeyword()
+    {
+        $this->debug('Preparing search result');
+        $data = $this->request->request->all();
+
+        if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
+            $this->userRepository->updateUserPulse($this->user);
+
+            return $this->_generateResponse($this->performSearch($data));
+        } else {
+            $this->warn('Invalid request with missing required fields');
+            return $this->_generateMissingFieldsError();
+        }
+    }
 }

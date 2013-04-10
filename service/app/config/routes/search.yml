@@ -7,3 +7,8 @@ search_people:
   pattern: /search/people
   defaults: { _controller: Controller\Search::allPeopleList}
   requirements: { _method: POST}
+
+search_by_keyword:
+  pattern: /search/keyword
+  defaults: { _controller: Controller\Search::byKeyword }
+  requirements: { _method: POST }

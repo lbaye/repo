@@ -88,9 +88,10 @@ class ApplicationSearch implements ApplicationSearchInterface
             $this->dm->createQueryBuilder('Document\ExternalUser')
                 ->field('smFriends')->equals($this->user->getId())
                 ->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
+                ->field('currentLocation')->near($data['lat'], $data['lng'])
                 ->hydrate(false)
                 ->skip(0)
-                ->limit(200)
+                ->limit(40)
                 ->getQuery()->execute()->toArray());
 
         foreach ($users as &$user) {
@@ -130,6 +131,8 @@ class ApplicationSearch implements ApplicationSearchInterface
     {
         $customPlaces = $this->dm->createQueryBuilder('Document\CustomPlace')
             ->field('type')->equals('custom_place')
+            ->field('location')->near($location['lat'], $location['lng'])
+            ->limit(20)
             ->getQuery()->execute();
 
         $result = array();
