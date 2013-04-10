@@ -17,12 +17,13 @@
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
 #import "PullableView.h"
+#import "CustomRadioButton.h"
 
 @class OverlayViewController;
 
 #define SECTION_HEADER_HEIGHT   44
 
-@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate, PullableViewDelegate> {
+@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
     OBJECT_TYPES   selectedType;
     int             selectedItemIndex;
     AppDelegate     *smAppDelegate;

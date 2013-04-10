@@ -79,7 +79,7 @@ PullableView *pullUpView;
     NSString *lblStr = @"Show in list:";
     CGSize   strSize = [lblStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14.0f]];
     
-    CGRect labelFrame = CGRectMake(2, (listViewfilter.frame.size.height-strSize.height)/2, strSize.width, strSize.height);
+    CGRect labelFrame = CGRectMake(10, 45, strSize.width, strSize.height);
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
     label.text = @"Show in list:";
     label.font = [UIFont fontWithName:@"Helvetica" size:14.0f];
@@ -88,11 +88,19 @@ PullableView *pullUpView;
     [listViewfilter addSubview:label];
     [label release];
     
-    CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
+    CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 25, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height / 2);
     CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
+    
+    CustomRadioButton *peopleFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5, 70, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",nil]  default:!smAppDelegate.showAllUsers sender:self tag:3000];
+    peopleFilter.delegate = self;
+    [listViewfilter addSubview:peopleFilter];
+    
+    CustomRadioButton *onlineFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5 + (310 - 30) / 2 + 20, 70, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"Show offline",@"Online only",nil]  default:!smAppDelegate.showOffline sender:self tag:4000];
+    onlineFilter.delegate = self;
+    [listViewfilter addSubview:onlineFilter];
     
     itemList.delegate = self;
     itemList.dataSource = self;
@@ -176,9 +184,9 @@ PullableView *pullUpView;
     imageViewFooterSliderOpen.tag = 420;    
     [imageViewFooterSliderOpen release];
     
-    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 70)];
+    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 140)];
     pullDownView.openedCenter = CGPointMake(160 + xOffset, 80);
-    pullDownView.closedCenter = CGPointMake(160 + xOffset, 35);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, 0);
     pullDownView.center = pullDownView.closedCenter;
     
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
@@ -219,8 +227,20 @@ PullableView *pullUpView;
     [copyDisplayListArray removeAllObjects];
     [smAppDelegate.displayList removeAllObjects];
     NSMutableArray *tempList = [[NSMutableArray alloc] init];
-    if (smAppDelegate.showPeople == TRUE) 
+    if (smAppDelegate.showPeople == TRUE) {
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
+        
+        // Check to see if we are showing all users or friends only. Also, check for online/offline setting
+        if (smAppDelegate.showOffline == FALSE || smAppDelegate.showAllUsers == FALSE) {
+            // Build items to discard
+            for (LocationItemPeople *aPerson in smAppDelegate.peopleList) {
+                if ((!aPerson.userInfo.isFriend && smAppDelegate.showAllUsers ==FALSE) ||
+                    (!aPerson.userInfo.isOnline && smAppDelegate.showOffline  == FALSE)) {
+                    [tempList removeObject:aPerson];
+                }
+            }
+        }
+    }
     if (smAppDelegate.showPlaces == TRUE) 
     {
         [tempList addObjectsFromArray:smAppDelegate.placeList];
@@ -621,12 +641,47 @@ PullableView *pullUpView;
         default:
             break;
     }
+    
+    [self refreshTableView];
+}
+
+- (void)refreshTableView
+{
     [self getSortedDisplayList];
     if (viewSearch.frame.origin.y > 44) {
         [self searchTableView];
     }
     [itemList reloadData];
     [self loadImagesForOnscreenRows];
+}
+
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    UIButton *btn = (UIButton*) sender;
+    NSLog(@"radioButtonClicked index = %d, sender tag=%d", indx, btn.tag);
+    
+    if (btn.tag == 3000) { // People filter - All or friends only
+        if (indx == 0) { // All users
+            if (smAppDelegate.showAllUsers == FALSE) {
+                smAppDelegate.showAllUsers = TRUE;
+            }
+        } else {
+            if (smAppDelegate.showAllUsers == TRUE) {
+                smAppDelegate.showAllUsers = FALSE;
+            }
+        }
+    } else if (btn.tag == 4000) { // Show offline or online only
+        if (indx == 0) { // Show offline users also
+            if (smAppDelegate.showOffline == FALSE) {
+                smAppDelegate.showOffline = TRUE;
+            }
+        } else {
+            if (smAppDelegate.showOffline == TRUE) {
+                smAppDelegate.showOffline = FALSE;
+            }
+        }
+    }
+    
+    [self refreshTableView];
 }
 
 // LocationItem delegate
@@ -769,12 +824,12 @@ PullableView *pullUpView;
         [self moveSearchBarAnimation:-44];
         [self doneSearching_Clicked:nil];
         pullDownView.openedCenter = CGPointMake(160, 80);
-        pullDownView.closedCenter = CGPointMake(160, 35);
+        pullDownView.closedCenter = CGPointMake(160, 0);
     } else {
         [self moveSearchBarAnimation:44];
         [searchBar becomeFirstResponder];
         pullDownView.openedCenter = CGPointMake(160, 80 + 44);
-        pullDownView.closedCenter = CGPointMake(160, 80);
+        pullDownView.closedCenter = CGPointMake(160, 44);
     }
     
 }
@@ -825,6 +880,5 @@ PullableView *pullUpView;
     [self loadImagesForOnscreenRows];
     
 }
-
 
 @end

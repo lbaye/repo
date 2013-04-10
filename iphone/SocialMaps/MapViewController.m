@@ -888,6 +888,12 @@ ButtonClickCallbackData callBackData;
     displayListForMap = [[NSMutableArray alloc] init];
 }
 
+- (void)setShowOnMapFilterRadioButtons
+{
+    [peopleFilter gotoButton:!smAppDelegate.showAllUsers];
+    [onlineFilter gotoButton:!smAppDelegate.showOffline];
+}
+
 - (void)setCheckUncheckButton
 {
     if (smAppDelegate.showPeople == TRUE)
@@ -1439,6 +1445,7 @@ ButtonClickCallbackData callBackData;
     if (smAppDelegate.gotListing) [self setRadioButton];
     
     [self setCheckUncheckButton];
+    [self setShowOnMapFilterRadioButtons];
     
     NSLog(@"viewDidAppear finished");
 }
