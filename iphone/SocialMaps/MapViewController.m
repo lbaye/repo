@@ -289,13 +289,13 @@ ButtonClickCallbackData callBackData;
         [self moveSearchBarAnimation:-44];
         searchBar.text = @"";
         [self searchAnnotations];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 35);
-        pullDownView.closedCenter = CGPointMake(160, -5 - 69 + 34);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 + 16 - 35);
+        pullDownView.closedCenter = CGPointMake(160, -5 - 69 - 20 + 34);
     } else {
         [self moveSearchBarAnimation:44];
         [searchBar becomeFirstResponder];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 35 + 44);
-        pullDownView.closedCenter = CGPointMake(160, -5 + 44 - 69 + 34);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 + 16 - 35 + 44);
+        pullDownView.closedCenter = CGPointMake(160, -5 + 44 - 20 - 69 + 34);
     }
 }
 
