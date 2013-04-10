@@ -8,7 +8,7 @@
 
 #import "Constants.h"
 
-NSString * const WS_URL = @"http://services.socialmapsapp.com/v2_3";
+NSString * const WS_URL = @"http://192.168.1.71/social_maps/web";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
@@ -97,4 +97,4 @@ float const kNumberRGBRed			= 0.44;
 float const kNumberRGBGreen			= 0.67;
 float const kNumberRGBBlue			= 0.0;
 
-int const MAX_VISIBLE_ANNO          = 40;
+int const MAX_VISIBLE_ANNO          = 400;

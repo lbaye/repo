@@ -72,6 +72,8 @@
     Geolocation         *currPosition;
     Geolocation         *lastPosition;
     Geolocation         *screenCenterPosition;
+    Geolocation         *screenSWPosition;
+    Geolocation         *screenNEPosition;
     bool            showPeople;
     bool            showPlaces;
     bool            showDeals;
@@ -129,6 +131,8 @@
 @property (nonatomic, retain)NotificationPref    *notifPrefs;
 @property (nonatomic, retain) Geolocation        *currPosition;
 @property (nonatomic, retain) Geolocation        *lastPosition;
+@property (nonatomic, retain) Geolocation        *screenSWPosition;
+@property (nonatomic, retain) Geolocation        *screenNEPosition;
 @property (nonatomic, retain) Geolocation        *screenCenterPosition;
 @property (nonatomic, retain) NSMutableArray    *meetUpRequests;
 @property (atomic) bool showPeople;

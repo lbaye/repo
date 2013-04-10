@@ -1622,24 +1622,33 @@ AppDelegate *smAppDelegate;
     return val;
 }
 
--(void)getLocation:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue
+-(void)getLocation:(Geolocation *)geolocation:(Geolocation *)nelocation:(Geolocation *)swlocation:(NSString *)authToken:(NSString *)authTokenValue
 {
-    static BOOL isInProgress = FALSE;
+    //static BOOL isInProgress = FALSE;
     
-    if (isInProgress) 
-        return;
+    static ASIFormDataRequest *request = nil;
     
-    isInProgress = TRUE;
+    if (request)
+    {
+        [request clearDelegatesAndCancel];
+        [request release];
+    }
+    
+    //if (isInProgress)
+        //return;
+    
+    //isInProgress = TRUE;
     
     NSString *route = [NSString stringWithFormat:@"%@/search",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     
-    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    request = [[ASIFormDataRequest requestWithURL:url] retain];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:authToken value:authTokenValue];
     [request addPostValue:geolocation.latitude forKey:@"lat"];
     [request addPostValue:geolocation.longitude forKey:@"lng"];
-    
+    [request addPostValue:[NSString stringWithFormat:@"%@,%@", nelocation.latitude, nelocation.longitude] forKey:@"ne-position"];
+    [request addPostValue:[NSString stringWithFormat:@"%@,%@", swlocation.latitude, swlocation.longitude] forKey:@"sw-position"];
     // Handle successful REST call
     [request setCompletionBlock:^{
         
@@ -1825,14 +1834,14 @@ AppDelegate *smAppDelegate;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:[searchLocation autorelease]];
-                    isInProgress = FALSE;
+                    //isInProgress = FALSE;
                 });
             });
         }
         else 
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:nil];
-            isInProgress = FALSE;
+            //isInProgress = FALSE;
         }
         [jsonParser release];
         jsonParser = nil;
@@ -1841,7 +1850,7 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:nil];
-        isInProgress = FALSE;
+        //isInProgress = FALSE;
     }];
     
     [request startAsynchronous];

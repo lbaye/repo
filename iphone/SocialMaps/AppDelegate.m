@@ -72,6 +72,8 @@
 @synthesize currPosition;
 @synthesize lastPosition;
 @synthesize screenCenterPosition;
+@synthesize screenNEPosition;
+@synthesize screenSWPosition;
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
@@ -177,6 +179,8 @@
     currPosition = [[Geolocation alloc] init];
     lastPosition = [[Geolocation alloc] init];
     screenCenterPosition = [[Geolocation alloc] init];
+    screenNEPosition = [[Geolocation alloc] init];
+    screenSWPosition = [[Geolocation alloc] init];
     currZoom.latitudeDelta = .02;
     currZoom.longitudeDelta = .02;
     

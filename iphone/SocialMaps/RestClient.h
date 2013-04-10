@@ -117,7 +117,7 @@
  * @param (NSString) - Auth Token Value
  * @retval none
  */
--(void) getLocation:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getLocation:(Geolocation *)geolocation:(Geolocation *)nelocation:(Geolocation *)swlocation:(NSString *)authToken:(NSString *)authTokenValue;
 
 /**
  * @brief Get notification from service

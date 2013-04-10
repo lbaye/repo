@@ -906,10 +906,12 @@ ButtonClickCallbackData callBackData;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
 }
 
-- (void)startGetLocation:(NSTimer*)timer
+- (void)startGetLocation
 {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getLocation:smAppDelegate.screenCenterPosition: smAppDelegate.screenNEPosition: smAppDelegate.screenSWPosition :@"Auth-Token" :smAppDelegate.authToken];
+    
+    [self performSelector:@selector(startGetLocation) withObject:nil afterDelay:60];
 }
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
@@ -1045,8 +1047,33 @@ ButtonClickCallbackData callBackData;
     }
     return YES; // handle the touch
 }
-		
-- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+
+- (void)prepareForLocaitons
+{
+    MKMapRect mRect = self.mapView.visibleMapRect;
+    MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
+                                               mRect.origin.y+(MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
+    CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
+    smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f", centerCoord.latitude];
+    smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f", centerCoord.longitude];
+    
+    MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
+    MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
+    CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
+    CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+    smAppDelegate.screenNEPosition.latitude = [NSString stringWithFormat:@"%f",neCoord.latitude];
+    smAppDelegate.screenNEPosition.longitude = [NSString stringWithFormat:@"%f",neCoord.longitude];
+    smAppDelegate.screenSWPosition.latitude = [NSString stringWithFormat:@"%f",swCoord.latitude];
+    smAppDelegate.screenSWPosition.longitude = [NSString stringWithFormat:@"%f",swCoord.longitude];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startGetLocation) object:nil];
+    [self performSelector:@selector(startGetLocation) withObject:nil afterDelay:1];
+}
+
+- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startGetLocation) object:nil];
+    
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"Map drag ended");
         smAppDelegate.needToCenterMap = FALSE;
@@ -1057,7 +1084,7 @@ ButtonClickCallbackData callBackData;
         else
             smAppDelegate.currZoom = _mapView.region.span;
         
-        
+        //Search is on
         if (viewSearch.frame.origin.y >= 44) {
          
             for (id<MKAnnotation> annotation in _mapView.annotations) {
@@ -1077,81 +1104,83 @@ ButtonClickCallbackData callBackData;
             }
             
             return;
-            
         }
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            
-            MKMapRect mRect = self.mapView.visibleMapRect;
-            MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
-                                                       mRect.origin.y+(MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
-            MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
-            MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
-            CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
-            CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
-            CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
-            smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f",centerCoord.latitude];
-            smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f",centerCoord.longitude];
-            
-            NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
-            NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
-            NSLog(@"Center     point = %f,%f", centerCoord.latitude, centerCoord.longitude);
-            NSLog(@"originX = %f, originY = %f, maxX = %f, maxY = %f, minX = %f, minY = %f",
-                  mRect.origin.x, mRect.origin.y,
-                  MKMapRectGetMaxX(mRect), MKMapRectGetMaxY(mRect),
-                  MKMapRectGetMinX(mRect), MKMapRectGetMinY(mRect));
-            
-            // Update distance from center of map
-            if (smAppDelegate.showPeople == TRUE) {
-                for (LocationItem *item in smAppDelegate.peopleList) {
-                    [item updateDistance:centerCoord];
-                }
-            }
-            if (smAppDelegate.showPlaces == TRUE) {
-                for (LocationItem *item in smAppDelegate.placeList) {
-                    [item updateDistance:centerCoord];
-                }
-            }
-            
-            if (smAppDelegate.showEvents == TRUE) {
-                for (LocationItem *item in smAppDelegate.eventList) {
-                    [item updateDistance:centerCoord];
-                }
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [self getSortedDisplayList];
-                
-                //if (smAppDelegate.showPlaces)
-                    //[displayListForMap addObjectsFromArray:smAppDelegate.geotagList];
-                
-                [self loadAnnotations:TRUE];
-                
-                [_mapView setNeedsDisplay];
-                
-            
-                for (id<MKAnnotation> annotation in _mapView.annotations) {
-                    if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(self.mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
-                    {
-                        LocationItem *selLocation = (LocationItem*) annotation;
-                        MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:annotation];
-                        UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
-                        if (avaterImageView.image == nil ) {
-                            if (selLocation.itemAvaterURL && [selLocation.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
-                                [avaterImageView loadFromURL:[NSURL fileURLWithPath:selLocation.itemAvaterURL isDirectory:NO]];
-                            } else {
-                                [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
-                            }
-                        }
-                    } else if ([annotation isKindOfClass:[MKUserLocation class]]) {
-                        MKAnnotationView *view = [_mapView viewForAnnotation:(MKUserLocation *)annotation];
-                        [[view superview] bringSubviewToFront:view];
-                    }
-                }
-                
-            });
-        });
+        
+        [self prepareForLocaitons];
+        
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+//            
+//            MKMapRect mRect = self.mapView.visibleMapRect;
+//            MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
+//                                                       mRect.origin.y+(MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
+//            MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
+//            MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
+//            CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
+//            CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+//            CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
+//            smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f",centerCoord.latitude];
+//            smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f",centerCoord.longitude];
+//            
+//            NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
+//            NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
+//            NSLog(@"Center     point = %f,%f", centerCoord.latitude, centerCoord.longitude);
+//            NSLog(@"originX = %f, originY = %f, maxX = %f, maxY = %f, minX = %f, minY = %f",
+//                  mRect.origin.x, mRect.origin.y,
+//                  MKMapRectGetMaxX(mRect), MKMapRectGetMaxY(mRect),
+//                  MKMapRectGetMinX(mRect), MKMapRectGetMinY(mRect));
+//            
+//            // Update distance from center of map
+//            if (smAppDelegate.showPeople == TRUE) {
+//                for (LocationItem *item in smAppDelegate.peopleList) {
+//                    [item updateDistance:centerCoord];
+//                }
+//            }
+//            if (smAppDelegate.showPlaces == TRUE) {
+//                for (LocationItem *item in smAppDelegate.placeList) {
+//                    [item updateDistance:centerCoord];
+//                }
+//            }
+//            
+//            if (smAppDelegate.showEvents == TRUE) {
+//                for (LocationItem *item in smAppDelegate.eventList) {
+//                    [item updateDistance:centerCoord];
+//                }
+//            }
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                
+//                [self getSortedDisplayList];
+//                
+//                //if (smAppDelegate.showPlaces)
+//                    //[displayListForMap addObjectsFromArray:smAppDelegate.geotagList];
+//                
+//                [self loadAnnotations:TRUE];
+//                
+//                [_mapView setNeedsDisplay];
+//                
+//            
+//                for (id<MKAnnotation> annotation in _mapView.annotations) {
+//                    if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(self.mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
+//                    {
+//                        LocationItem *selLocation = (LocationItem*) annotation;
+//                        MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:annotation];
+//                        UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+//                        if (avaterImageView.image == nil ) {
+//                            if (selLocation.itemAvaterURL && [selLocation.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
+//                                [avaterImageView loadFromURL:[NSURL fileURLWithPath:selLocation.itemAvaterURL isDirectory:NO]];
+//                            } else {
+//                                [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
+//                            }
+//                        }
+//                    } else if ([annotation isKindOfClass:[MKUserLocation class]]) {
+//                        MKAnnotationView *view = [_mapView viewForAnnotation:(MKUserLocation *)annotation];
+//                        [[view superview] bringSubviewToFront:view];
+//                    }
+//                }
+//                
+//            });
+//        });
     }
 }
 
@@ -1288,19 +1317,10 @@ ButtonClickCallbackData callBackData;
             {
                 if (![_mapView.annotations containsObject:anno]) {
                     [_mapView addAnnotation:anno];
-                    MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
-                    UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
-                    if (avaterImageView.image == nil ) {
-                        if (anno.itemAvaterURL && [anno.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
-                            [avaterImageView loadFromURL:[NSURL fileURLWithPath:anno.itemAvaterURL isDirectory:NO]];
-                        } else {
-                            [avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
-                        }
-                    }
                 }
+                [self loadAvaterImage:anno];
             }
         }
-        
         // 4
         if (smAppDelegate.needToCenterMap == TRUE) {
             NSLog(@"MapViewController:loadAnnotations centering map %f %f",adjustedRegion.center.latitude,zoomLocation.latitude);
@@ -1312,6 +1332,18 @@ ButtonClickCallbackData callBackData;
     }
 }
 
+- (void)loadAvaterImage:(LocationItem*)anno
+{
+    MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
+    UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+    if (avaterImageView.image == nil ) {
+        if (anno.itemAvaterURL && [anno.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
+            [avaterImageView loadFromURL:[NSURL fileURLWithPath:anno.itemAvaterURL isDirectory:NO]];
+        } else {
+            [avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
+        }
+    }
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -1380,9 +1412,10 @@ ButtonClickCallbackData callBackData;
     if (!smAppDelegate.timerGotListing)
     {
         NSLog(@"!smAppDelegate.timerGotListing %d", !smAppDelegate.timerGotListing);
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        smAppDelegate.timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+        //RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        //[restClient getLocation:smAppDelegate.screenCenterPosition :smAppDelegate.screenNEPosition: smAppDelegate.screenNEPosition :@"Auth-Token" :smAppDelegate.authToken];
+        //smAppDelegate.timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+        [self performSelector:@selector(prepareForLocaitons) withObject:nil afterDelay:3];
     }
     
     shouldTimerStop = YES;
@@ -2061,6 +2094,7 @@ ButtonClickCallbackData callBackData;
     }
 }
 
+/*
 - (void) updateLocation:(id) sender {
     smAppDelegate.resetZoom = TRUE;
     CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
@@ -2113,7 +2147,45 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.needToCenterMap = TRUE;
     [self loadAnnotations:TRUE];
     [_mapView setNeedsDisplay];
+}
+*/
 
+- (void) updateLocation:(id) sender
+{
+    smAppDelegate.resetZoom = TRUE;
+    CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
+    _mapView.centerCoordinate = lastPos;
+    smAppDelegate.screenCenterPosition.latitude = [NSString stringWithString:smAppDelegate.currPosition.latitude];
+    smAppDelegate.screenCenterPosition.longitude = [NSString stringWithString:smAppDelegate.currPosition.longitude];
+    [smAppDelegate setCurrZoom:MKCoordinateSpanMake(0.02, 0.02)];
+    
+    NSLog(@"MapViewController: updateLocation lat:%f lng:%f", lastPos.latitude, lastPos.longitude);
+    
+    if ([CLLocationManager locationServicesEnabled])
+    {
+        _mapView.showsUserLocation=YES;
+        // Send new location to server
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    } else
+    {
+        _mapView.showsUserLocation=NO;
+    }
+    
+    // 1
+    CLLocationCoordinate2D zoomLocation;
+    
+    // Current location
+    zoomLocation.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+    
+    // 2
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMake(zoomLocation, MKCoordinateSpanMake(0.02, 0.02));
+    MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+    [_mapView setRegion:adjustedRegion animated:NO];
+    smAppDelegate.needToCenterMap = TRUE;
+    
+    [self prepareForLocaitons];
 }
 
 - (void) getSortedDisplayList {
@@ -2187,7 +2259,7 @@ ButtonClickCallbackData callBackData;
         
         //block start
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
             if (listings.peopleArr != nil) {
                 NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
@@ -2203,7 +2275,7 @@ ButtonClickCallbackData callBackData;
                         [discardedItems addObject:[NSNumber numberWithInt: indx]];
                     }
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
+                //dispatch_async(dispatch_get_main_queue(), ^{
                     
                     if (discardedItems.count > 0) {
                         // Sort the discarded items in descending order
@@ -2226,7 +2298,7 @@ ButtonClickCallbackData callBackData;
                     }
                     [newItems release];
                     [discardedItems release];
-                });
+                //});
             }
         ////});
         
@@ -2410,7 +2482,7 @@ ButtonClickCallbackData callBackData;
 
         }
             
-        dispatch_async(dispatch_get_main_queue(), ^{
+       // dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (smAppDelegate.gotListing == FALSE) {
                     smAppDelegate.gotListing = TRUE;
@@ -2422,20 +2494,22 @@ ButtonClickCallbackData callBackData;
                 
                 
                 //by Rishi
-                if (!isFirstTimeDownloading) {
+                //if (!isFirstTimeDownloading)
+        {
                     //for first time
                     [self loadAnnotationForEvents];
                     [self loadAnnotationForGeotag];
                     [self getSortedDisplayList];
                     [self loadAnnotations:YES];
+            [self.mapView setNeedsDisplay];
                     [self.view setNeedsDisplay];
                     isFirstTimeDownloading = YES;
                 }
             
                 gotListingIsInProgress = FALSE;
-            });
+            //});
     
-        });
+        //});
     }
 }
 
