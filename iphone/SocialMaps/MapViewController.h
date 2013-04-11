@@ -23,6 +23,8 @@
 #import "PullableView.h"
 #import "CustomRadioButton.h"
 #import "Plan.h"
+#import "SearchListViewController.h"
+
 #define METERS_PER_MILE 1609.344
 
 typedef enum _SHARING_TYPES {
@@ -37,7 +39,7 @@ typedef enum _SHARING_TYPES {
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
                                 MapAnnotationDelegate,
-                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate>
+                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate, SearchViewProtocol>
 {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
@@ -80,6 +82,7 @@ typedef enum _SHARING_TYPES {
     CustomRadioButton *peopleFilter;
     CustomRadioButton *onlineFilter;
     IBOutlet UIView *peopleFilterMapPulldown;
+    SearchListViewController *searchListViewController;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -116,7 +119,7 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UIView *connectToFBView;
 @property(nonatomic,retain) IBOutlet UIImageView *mapViewImg;
 @property(nonatomic,retain) IBOutlet UIImageView *listViewImg;
-
+@property(nonatomic,retain) SearchListViewController *searchListViewController;
 
 /**
  * @brief Show pull down menu

@@ -792,4 +792,6 @@
 
 - (void)reportContentId:(NSString*)contentId withContentType:(NSString*)contentType authTokenValue:(NSString*)authTokenValue authTokenKey:(NSString*)authTokenKey callBack:(void(^)(NSString *message))block;
 
+- (void)getSearchResultWithKeyWord:(NSString*)keyWord authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+
 @end

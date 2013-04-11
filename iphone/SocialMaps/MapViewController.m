@@ -85,6 +85,7 @@
 @synthesize mapAnnoEvent,connectToFBView;
 @synthesize mapViewImg;
 @synthesize listViewImg;
+@synthesize searchListViewController;
 
 UserFriends *afriend;
 __strong NSString *searchText;
@@ -280,15 +281,60 @@ ButtonClickCallbackData callBackData;
     [self.view setNeedsDisplay];
 }
 
-- (IBAction)actionSearchButton:(id)sender {
-    [self searchAnnotations];
+- (IBAction)actionSearchButton:(id)sender
+{
+//    [self searchAnnotations];
+    [self getSearchResult:searchBar.text];
+}
+
+-(void)navigateToSearchView:(NSMutableArray *)dataSource
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    searchListViewController =[storybrd instantiateViewControllerWithIdentifier:@"searchListViewController"];
+    //    [controller.view setFrame:CGRectMake(0, 50, 320, 370)];
+    searchListViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    searchListViewController.searchText = searchBar.text;
+    searchListViewController.filteredList = dataSource;
+    searchListViewController.delegate = self;
+    [self presentModalViewController:searchListViewController animated:YES];
+
+}
+
+-(void)getSearchResult:(NSString *)searchString
+{
+    [searchBar resignFirstResponder];
+    if(searchString.length >= 3)
+    {
+        [smAppDelegate showActivityViewer:self.view];
+        RestClient *rc = [[RestClient alloc] init];
+        [rc getSearchResultWithKeyWord:searchString authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [rc release];
+    }
+    else
+    {
+        [UtilityClass showAlert:@"" :@"Please enter atleast 3 characters"];
+    }
+}
+
+-(void)getSearchResultDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    if ([[notif object] count] == 0)
+    {
+        [UtilityClass showAlert:@"" :@"No search result found"];
+    }
+    else
+    {
+        [self navigateToSearchView:[notif object]];
+    }
 }
 
 - (IBAction)actionShowHideSearchBtn:(id)sender {
     if (viewSearch.frame.origin.y >= 44) {
         [self moveSearchBarAnimation:-44];
         searchBar.text = @"";
-        [self searchAnnotations];
+        [searchBar resignFirstResponder];
+//        [self searchAnnotations];
         pullDownView.openedCenter = CGPointMake(160, 120 + 69 + 16 - 35);
         pullDownView.closedCenter = CGPointMake(160, -5 - 69 - 20 + 34);
     } else {
@@ -770,6 +816,8 @@ ButtonClickCallbackData callBackData;
     [_mapView addGestureRecognizer:tapRec];
     tapRec.delegate = self;
     [tapRec release];
+    
+    searchListViewController.delegate = self;
 
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
@@ -1243,6 +1291,7 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GET_SEARCH_RESULT_DONE object:nil];
     userFriendslistArray=[[NSMutableArray alloc] init]; //why
 
 }
@@ -1422,7 +1471,8 @@ ButtonClickCallbackData callBackData;
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSearchResultDone:) name:GET_SEARCH_RESULT_DONE object:nil];
+    
     if (!smAppDelegate.timerGotListing)
     {
         NSLog(@"!smAppDelegate.timerGotListing %d", !smAppDelegate.timerGotListing);
@@ -2723,10 +2773,20 @@ ButtonClickCallbackData callBackData;
 - (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar 
 {
     if ([theSearchBar isEqual:searchBar]) {
-        [self searchAnnotations];
+        [self getSearchResult:searchBar.text];
         [searchBar resignFirstResponder];
         return;
     }
+}
+
+-(void)removeSearchViewWithLocation:(LocationItem *)item
+{
+    NSLog(@"searched location Item %@   %@",item,searchListViewController.delegate);
+}
+
+-(void)removeSearchView
+{
+    NSLog(@"removeSearchView");
 }
 
 @end

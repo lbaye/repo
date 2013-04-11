@@ -80,6 +80,7 @@ extern NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE;
 extern NSString * const NOTIF_SEND_REPLY_DONE;
 extern NSString * const NOTIF_GET_NEW_THREAD_DONE;
 extern NSString * const SET_SHARE_LOCATION_DONE;
+extern NSString * const GET_SEARCH_RESULT_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;
