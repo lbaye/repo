@@ -304,8 +304,8 @@
     for (int i = 0; i < [searchArray count]; i++) {
         
         EachFriendInList *eachFriend = [searchArray objectAtIndex:i];
-        NSString *firstLetter = [eachFriend.friendName substringToIndex:1];
-        
+        NSString *firstLetter = [[eachFriend.friendName substringToIndex:1] capitalizedString];
+
         if(i == 0) 
         {
             if (filter_by == AtoZ)
