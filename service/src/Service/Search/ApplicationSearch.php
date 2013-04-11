@@ -177,13 +177,15 @@ class ApplicationSearch implements ApplicationSearchInterface
         if (!is_null($user)) $this->user = $user;
 
         $results = array();
-        if ((!empty($params['place']) && $params['place'] == "no") || (!empty($params['people']) && $params['people'] == "yes"))
+        if (!empty($params['people']) && $params['people'] == "yes")
             $results['people'] = $this->searchPeopleByKeyword($params, $options);
         if (!empty($params['people']) && ($params['people'] == "no" || $params['people'] == "yes"))
 //            $results['places'] = $this->searchPlacesByKeyword($params, $options);
             $results['places'] = array();
-        if ((!empty($params['place']) && $params['place'] == "no") || (!empty($params['people']) && $params['people'] == "yes"))
+        if (!empty($params['people']) && $params['people'] == "yes")
             $results['facebookFriends'] = $this->searchSecondDegreeFriendsByKeyword($params, $options);
+        if (!empty($params['people']) && $params['people'] == "no")
+            $results['people'] = array();
 
         return $results;
     }
