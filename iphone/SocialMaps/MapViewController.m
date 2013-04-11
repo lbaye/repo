@@ -1008,15 +1008,12 @@ ButtonClickCallbackData callBackData;
         switch (smAppDelegate.shareLocationOption) {
             case 0:
                 [UtilityClass showAlert:@"" :@"Location sharing is now set to: All users."];
-                smAppDelegate.locSharingPrefs.status = @"on";
                 break;
             case 1:
                 [UtilityClass showAlert:@"" :@"Location sharing is now set to: Friends only."];
-                smAppDelegate.locSharingPrefs.status = @"on";
                 break;
             default:
                 [UtilityClass showAlert:@"" :@"Location sharing is now set to: No one."];
-                smAppDelegate.locSharingPrefs.status = @"off";
                 break;
         }
         
@@ -2009,31 +2006,26 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)shareWithAll:(id)sender {
     [self resetShareButton:All];
-    smAppDelegate.locSharingPrefs.status = @"On";
     selSharingType = All;
 }
 
 - (IBAction)shareWithFriends:(id)sender {
     [self resetShareButton:Friends];
-    smAppDelegate.locSharingPrefs.status = @"On";
     selSharingType = Friends;
 }
 
 - (IBAction)shareWithNone:(id)sender {
     [self resetShareButton:None];
-    smAppDelegate.locSharingPrefs.status = @"Off";
     selSharingType = None;
 }
 
 - (IBAction)shareWithCircles:(id)sender {
     [self resetShareButton:Circles];
-    smAppDelegate.locSharingPrefs.status = @"On";
     selSharingType = Circles;
 }
 
 - (IBAction)shareWithCustom:(id)sender {
     [self resetShareButton:Custom];
-    smAppDelegate.locSharingPrefs.status = @"On";
     selSharingType = Custom;
 }
 
