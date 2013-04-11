@@ -138,13 +138,25 @@
     
     CGRect radioFrame;
     
-    for (int i=0; i < numRadio; i++) {
+    int i = 0;
+    for (i = 0; i < numRadio; i++) {
         radioFrame = CGRectMake(0 + CELL_PADDING+i*(self.frame.size.width-CELL_PADDING*2)/(numRadio == 0 ? 1 : numRadio-1)-21/2, (self.frame.size.height-21)/2, 21, 21);
         int diffTempX = radioFrame.origin.x - [touch locationInView:self].x;
         if (abs(diffTempX) < self.frame.size.width / numRadio / 1.5) {
             [self buttonClicked: [self viewWithTag: self.tag + i +1]];
             break;
         }
+    }
+    
+    if (i == numRadio) {
+        
+        if ([touch locationInView:self].x < 0) {
+            i = 0;
+        } else {
+            i = numRadio - 1;
+        }
+        
+        [self buttonClicked: [self viewWithTag: self.tag + i +1]];
     }
 }
 
