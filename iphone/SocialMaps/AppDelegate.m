@@ -198,7 +198,7 @@
     resetZoom  = TRUE;
     mapDrawnFirstTime = TRUE;
     showAllUsers = FALSE;
-    showOffline  = FALSE;
+    showOffline  = TRUE;
     
     msgRead = FALSE;
     notifRead = FALSE;

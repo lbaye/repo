@@ -1649,6 +1649,9 @@ AppDelegate *smAppDelegate;
     [request addPostValue:geolocation.longitude forKey:@"lng"];
     [request addPostValue:[NSString stringWithFormat:@"%@,%@", nelocation.latitude, nelocation.longitude] forKey:@"ne-position"];
     [request addPostValue:[NSString stringWithFormat:@"%@,%@", swlocation.latitude, swlocation.longitude] forKey:@"sw-position"];
+    
+    request.timeOutSeconds = 30;
+    
     // Handle successful REST call
     [request setCompletionBlock:^{
         

@@ -864,11 +864,11 @@ ButtonClickCallbackData callBackData;
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
-    peopleFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5, 13+25, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",nil]  default:1 sender:self tag:3000 color:[UIColor whiteColor]];
+    peopleFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5, 13+25, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",nil]  default:!smAppDelegate.showAllUsers sender:self tag:3000 color:[UIColor whiteColor]];
     peopleFilter.delegate = self;
     [peopleFilterMapPulldown addSubview:peopleFilter];
     
-    onlineFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5 + (310 - 30) / 2 + 20, 13+25, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"Show offline",@"Online only",nil]  default:1 sender:self tag:4000 color:[UIColor whiteColor]];
+    onlineFilter = [[CustomRadioButton alloc] initWithFrame:CGRectMake(5 + (310 - 30) / 2 + 20, 13+25, (310 - 30) / 2, 41) numButtons:2 labels:[NSArray arrayWithObjects:@"Show offline",@"Online only",nil]  default:!smAppDelegate.showOffline sender:self tag:4000 color:[UIColor whiteColor]];
     onlineFilter.delegate = self;
     [peopleFilterMapPulldown addSubview:onlineFilter];
 
