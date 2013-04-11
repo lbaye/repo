@@ -556,7 +556,7 @@
 - (void) getUserInformation:(NSString*) token {
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:token];
-    //[restClient getInbox:@"Auth-Token" authTokenVal:token];   //called in appDidBecomeActive
+    [restClient getInbox:@"Auth-Token" authTokenVal:token];   //called in appDidBecomeActive
     //[restClient getMeetUpRequest:@"Auth-Token" authTokenVal:token]; //don't need it for notification conter
 }
 
