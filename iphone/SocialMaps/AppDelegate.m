@@ -556,21 +556,22 @@
 - (void) getUserInformation:(NSString*) token {
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:token];
-    [restClient getInbox:@"Auth-Token" authTokenVal:token];
-    [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:token];
+    //[restClient getInbox:@"Auth-Token" authTokenVal:token];   //called in appDidBecomeActive
+    //[restClient getMeetUpRequest:@"Auth-Token" authTokenVal:token]; //don't need it for notification conter
 }
 
 // Get preferences settings
 //
 - (void) getPreferenceSettings:(NSString*) token {
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getPlatForm:@"Auth-Token" :token];
-    [restClient getLayer:@"Auth-Token" :token];
+    //[restClient getPlatForm:@"Auth-Token" :token];
+    //[restClient getLayer:@"Auth-Token" :token];
     [restClient getSharingPreference:@"Auth-Token" :token];
     [restClient getAccountSettings:@"Auth-Token" :token];
     [restClient getShareLocation:@"Auth-Token" :token];
-    [restClient getGeofence:@"Auth-Token" :token];
-    [restClient getNotifications:@"Auth-Token" :token];
+    
+    //[restClient getGeofence:@"Auth-Token" :token];
+    //[restClient getNotifications:@"Auth-Token" :token];
 }
 
 // Async call notifications

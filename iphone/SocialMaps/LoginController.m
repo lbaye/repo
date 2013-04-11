@@ -430,7 +430,8 @@ int fbRegCounter=0;
                     [smAppDelegate getPreferenceSettings:regInfo.authToken];            
                 }
                 
-                [smAppDelegate getUserInformation:regInfo.authToken];
+                //get user information is already on map viewDidLoad
+                //[smAppDelegate getUserInformation:regInfo.authToken];
                 
                 // Always Register device token. This takes care of multiple user using same device
                 RestClient *restClient = [[[RestClient alloc] init] autorelease];

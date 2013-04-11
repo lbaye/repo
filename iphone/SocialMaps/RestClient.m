@@ -5205,7 +5205,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_CIRCLES_DONE object:nil];
     }];
     
-     NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getAllCircle");
     [request startAsynchronous];
     
 }
@@ -5619,7 +5619,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:nil];
     }];
     
-     NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getBlockUserList");
     [request startAsynchronous];
 }
 
@@ -5710,7 +5710,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_BLOCKED_USERS_DONE object:nil];
     }];
     
-     NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt blockUserList");
     [request startAsynchronous];
 }
 
@@ -5801,7 +5801,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
     }];
     
-     NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt unBlockUserList");
     [request startAsynchronous];
 }
 
@@ -7428,7 +7428,7 @@ AppDelegate *smAppDelegate;
     [request setFailedBlock:^{
     }];
     
-     NSLog(@"asyn srt getFriendList");
+     NSLog(@"asyn srt getUserFriendList");
     [request startAsynchronous];
 }
 
