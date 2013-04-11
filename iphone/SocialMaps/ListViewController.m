@@ -27,6 +27,7 @@
 #import "FriendListViewController.h"
 #import "Globals.h"
 #import "ODRefreshControl.h"
+#import "RestClient.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -42,6 +43,7 @@
 @synthesize totalNotifCount;
 @synthesize circleView;
 @synthesize mapViewImg,listViewImg;
+@synthesize searchListViewController;
 
 PullableView *pullUpView;
 
@@ -75,6 +77,7 @@ PullableView *pullUpView;
     listPullupMenu.backgroundColor   = [UIColor clearColor];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    searchListViewController.delegate = self;
     
     NSString *lblStr = @"Show in list:";
     CGSize   strSize = [lblStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14.0f]];
@@ -133,6 +136,7 @@ PullableView *pullUpView;
 {
     [super viewDidAppear:animated];
     [self loadImagesForOnscreenRows];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSearchResultDone:) name:GET_SEARCH_RESULT_DONE object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -745,11 +749,12 @@ PullableView *pullUpView;
     
     if([searchBar.text length] > 0) {
 		
-		[ovController.view removeFromSuperview];
-		searching = YES;
-		letUserSelectRow = YES;
-		itemList.scrollEnabled = YES;
-		[self searchTableView];
+//		[ovController.view removeFromSuperview];
+//		searching = NO;
+//		letUserSelectRow = YES;
+//		itemList.scrollEnabled = YES;
+//		[self searchTableView];
+        [self getSearchResult:searchBar.text];
 	}
 	else {
 		
@@ -835,7 +840,8 @@ PullableView *pullUpView;
 }
 
 - (IBAction)actionSearchOkButton:(id)sender {
-    [self searchBarSearchButtonClicked:searchBar];
+//    [self searchBarSearchButtonClicked:searchBar];
+    [self getSearchResult:searchBar.text];
 }
 
 - (void)loadImagesForOnscreenRows {
@@ -879,6 +885,71 @@ PullableView *pullUpView;
     
     [self loadImagesForOnscreenRows];
     
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GET_SEARCH_RESULT_DONE object:nil];
+}
+
+-(void)navigateToSearchView:(NSMutableArray *)dataSource
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    searchListViewController =[storybrd instantiateViewControllerWithIdentifier:@"searchListViewController"];
+    //    [controller.view setFrame:CGRectMake(0, 50, 320, 370)];
+    searchListViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    searchListViewController.searchText = searchBar.text;
+    searchListViewController.filteredList = dataSource;
+    searchListViewController.delegate = self;
+    [self presentModalViewController:searchListViewController animated:YES];
+    
+}
+
+-(void)getSearchResult:(NSString *)searchString
+{
+    [searchBar resignFirstResponder];
+    if(searchString.length >= 3)
+    {
+        [smAppDelegate showActivityViewer:self.view];
+        RestClient *rc = [[RestClient alloc] init];
+        [rc getSearchResultWithKeyWord:searchString authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [rc release];
+    }
+    else
+    {
+        [UtilityClass showAlert:@"" :@"Please enter atleast 3 characters"];
+    }
+}
+
+-(void)getSearchResultDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    if ([[notif object] count] == 0)
+    {
+        [UtilityClass showAlert:@"" :@"No search result found"];
+    }
+    else
+    {
+        [self navigateToSearchView:[notif object]];
+    }
+}
+
+-(void)removeSearchViewWithLocation:(LocationItem *)item
+{
+    NSLog(@"searched location Item listview %@   %@",item,searchListViewController.delegate);
+    [self performSelector:@selector(showOnMap:) withObject:item afterDelay:1];
+}
+
+- (void)showOnMap:(LocationItem *)item
+{
+    [self.presentingViewController performSelector:@selector(showAnnotationDetailView:) withObject:item afterDelay:.8];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)removeSearchView
+{
+    NSLog(@"removeSearchView listview");
 }
 
 @end

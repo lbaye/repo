@@ -78,7 +78,7 @@ NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE=@"com.genweb2.socialmaps.notifge
 NSString * const NOTIF_SEND_REPLY_DONE=@"com.genweb2.socialmaps.notifsendreplydone";
 NSString * const NOTIF_GET_NEW_THREAD_DONE=@"com.genweb2.socialmaps.notifgetnewthread";
 NSString * const SET_SHARE_LOCATION_DONE=@"com.genweb2.socialmaps.setsharelocation";
-
+NSString * const GET_SEARCH_RESULT_DONE=@"com.genweb2.socialmaps.getsearchresult";
 
 NSString * const FB_APPID = @"343783602384766"; // Social Maps
 

@@ -18,12 +18,13 @@
 #import "AppDelegate.h"
 #import "PullableView.h"
 #import "CustomRadioButton.h"
+#import "SearchListViewController.h"
 
 @class OverlayViewController;
 
 #define SECTION_HEADER_HEIGHT   44
 
-@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
+@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate, PullableViewDelegate, CustomRadioButtonDelegate, SearchViewProtocol> {
     OBJECT_TYPES   selectedType;
     int             selectedItemIndex;
     AppDelegate     *smAppDelegate;
@@ -40,6 +41,7 @@
     NSMutableArray *copyDisplayListArray;
     IBOutlet UIImageView *mapViewImg;
     IBOutlet UIImageView *listViewImg;
+    SearchListViewController *searchListViewController;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
 @property (nonatomic) int selectedItemIndex;
@@ -56,6 +58,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 @property(nonatomic,retain) IBOutlet UIImageView *mapViewImg;
 @property(nonatomic,retain) IBOutlet UIImageView *listViewImg;
+@property(nonatomic,retain) SearchListViewController *searchListViewController;
 
 /**
  * @brief Navigate user to map screen

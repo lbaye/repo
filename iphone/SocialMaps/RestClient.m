@@ -34,6 +34,8 @@
 #import "EachFriendInList.h"
 #import "MessageListViewController.h"
 #import "MapViewController.h"
+#import "LocationItemPeople.h"
+#import "LocationItemPlace.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -7659,5 +7661,250 @@ AppDelegate *smAppDelegate;
     
     [request startAsynchronous];
 }
+
+- (void)getSearchResultWithKeyWord:(NSString*)keyWord authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+{
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSString *route = [NSString stringWithFormat:@"%@/search/keyword",WS_URL];
+    NSLog(@"route = %@", route);
+    NSLog(@"keyWord = %@", keyWord);
+    NSArray *boolArray = [[NSArray alloc] initWithObjects:@"no",@"yes", nil];
+    NSURL *url = [NSURL URLWithString:route];
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:keyWord forKey:@"keyword"];
+    [request addPostValue:[boolArray objectAtIndex:[[NSNumber numberWithBool:smAppDelegate.showPeople] intValue]] forKey:@"people"];
+    [request addPostValue:[boolArray objectAtIndex:[[NSNumber numberWithBool:smAppDelegate.showPlaces] intValue]] forKey:@"place"];
+    [request addPostValue:smAppDelegate.currPosition.latitude forKey:@"lat"];
+    [request addPostValue:smAppDelegate.currPosition.longitude forKey:@"lng"];
+    
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204)
+        {
+            SearchLocation *searchLocation=[[SearchLocation alloc] init];
+            NSMutableArray *peopleArr = [[NSMutableArray alloc] init];
+            NSMutableArray *placeArr  = [[NSMutableArray alloc] init];
+            NSMutableArray *dataArr = [[NSMutableArray alloc] init];
+            
+            for (NSDictionary *item in [jsonObjects  objectForKey:@"people"])
+            {
+                People *people=[[People alloc] init];
+                
+                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                people.userName = [self getNestedKeyVal:item key1:@"username" key2:nil key3:nil];
+                if ([people.userName isKindOfClass:[NSString class]])
+                {
+                    people.firstName=people.userName;
+                    people.lastName=@"";
+                }
+                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
+                people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
+                people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
+                people.city = [self getNestedKeyVal:item key1:@"address" key2:@"city" key3:nil];
+                people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
+                people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
+                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                people.friendshipStatus = friendship;
+                people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                if (people.isFriend)
+                    NSLog(@"people name = %@ isFriend = %d", people.firstName, people.isFriend);
+                
+                people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
+                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                
+                people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
+                [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
+                
+                people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+                people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
+                
+                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                
+                people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+                people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
+                people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
+                
+                people.coverPhotoUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
+                
+                people.isOnline = [[self getNestedKeyVal:item key1:@"online" key2:nil key3:nil] boolValue];
+                
+                if (people.isOnline)
+                {
+                    NSLog(@"people name = %@ isOnline = %d", people.firstName, people.isOnline);
+                }
+                [peopleArr addObject:people];
+                
+                CLLocationCoordinate2D loc;
+                loc.latitude = [people.currentLocationLat doubleValue];
+                loc.longitude = [people.currentLocationLng doubleValue];
+                
+                CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+                
+                LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", people.firstName, people.lastName] address:people.lastSeenAt type:ObjectTypePeople category:people.gender coordinate:loc dist:distanceFromMe icon:nil bg:nil itemCoverPhotoUrl:[NSURL URLWithString:people.coverPhotoUrl]];
+                //[bg release];
+                people.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
+                aPerson.userInfo = people;
+                aPerson.itemAvaterURL = people.avatar;
+                [dataArr addObject:aPerson];
+                [people release];
+                people = nil;
+                
+            }
+            
+            if ([jsonObjects  objectForKey:@"places"])
+            {
+                //get all places
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
+                {
+                    Places *place=[[Places alloc] init];
+                    
+                    Geolocation *location = [[Geolocation alloc] init];
+                    location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
+                    location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
+                    Geolocation *northeast = [[Geolocation alloc] init];
+                    northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
+                    northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
+                    
+                    Geolocation *southwest = [[Geolocation alloc] init];
+                    southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
+                    southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
+                    place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                    [place setIcon:[item objectForKey:@"icon"] ];
+                    [place setID:[item objectForKey:@"id"] ];
+                    [place setName:[item objectForKey:@"name"] ];
+                    [place setReference:[item objectForKey:@"reference"]];
+                    [place setTypeArr:[item objectForKey:@"types"]];
+                    [place setVicinity:[item objectForKey:@"vicinity"] ];
+                    [place setCoverPhotoUrl:[item objectForKey:@"streetViewImage"]];
+                    
+                    place.location = location;
+                    place.northeast = northeast;
+                    place.southwest = southwest;
+                    
+                    CLLocationCoordinate2D loc;
+                    loc.latitude = [place.location.latitude doubleValue];
+                    loc.longitude = [place.location.longitude doubleValue];
+                    CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+                    NSLog(@"Name=%@ Location=%f,%f, distance=%f",place.name, loc.latitude,loc.longitude, distanceFromMe);
+                    
+                    
+                    LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:place.name address:place.vicinity type:ObjectTypePlace category:[place.typeArr lastObject] coordinate:loc dist:distanceFromMe icon:nil bg:nil itemCoverPhotoUrl:[NSURL URLWithString:place.coverPhotoUrl]];
+                    aPlace.placeInfo = place;
+                    aPlace.itemAvaterURL = place.icon;
+                    [dataArr addObject:aPlace];
+                    [placeArr addObject:place];
+                    
+                    [southwest release];
+                    southwest = nil;
+                    [northeast release];
+                    northeast = nil;
+                    [location release];
+                    location = nil;
+                    [place release];
+                    place = nil;
+                }
+            }
+            for (NSDictionary *item in [jsonObjects  objectForKey:@"facebookFriends"])
+            {
+                People *people=[[People alloc] init];
+                
+                people.userId = [self getNestedKeyVal:item key1:@"refId" key2:nil key3:nil];
+                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                people.coverPhotoUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
+                people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
+                people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
+                people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
+                people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
+                people.external = true;
+                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                people.friendshipStatus = friendship;
+                people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
+                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                
+                people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
+                [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
+                
+                people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+                people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
+                
+                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                
+                people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+                people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
+                people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
+                people.source=[self getNestedKeyVal:item key1:@"refType" key2:nil key3:nil];
+                people.lastSeenAtDate=[self getNestedKeyVal:item key1:@"createdAt" key2:@"date" key3:@"date"];
+                people.lastSeenAt=people.lastSeenAt;
+                [peopleArr addObject:people];
+                [people release];
+                people = nil;
+                
+            }
+            
+            searchLocation.peopleArr = peopleArr;
+            searchLocation.placeArr = placeArr;
+            
+            [peopleArr release];
+            [placeArr release];
+            NSLog(@"data arr count = %d",[dataArr count]);
+            [[NSNotificationCenter defaultCenter] postNotificationName:GET_SEARCH_RESULT_DONE object:dataArr];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:GET_SEARCH_RESULT_DONE object:nil];
+        }
+        [jsonParser release];
+        jsonParser = nil;
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:GET_SEARCH_RESULT_DONE object:nil];
+    }];
+    
+    NSLog(@"asyn srt getReplies");
+    [request startAsynchronous];
+    
+}
+
+- (CLLocationDistance) getDistanceFromMe:(CLLocationCoordinate2D) loc {
+    Geolocation *myPos = smAppDelegate.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithCoordinate:loc altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
+    
+    [myLoc release];
+    [userLoc release];
+    
+    return distanceFromMe;
+}
+
 
 @end
