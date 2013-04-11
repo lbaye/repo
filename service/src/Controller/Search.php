@@ -89,4 +89,36 @@ class Search extends Base
     {
         return array();
     }
+
+    /**
+     * POST /search/keyword
+     *
+     * Retrieve people, places and external users from the given location.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function byKeyword()
+    {
+        $this->debug('Preparing search result');
+        $data = $this->request->request->all();
+
+        if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
+            $this->userRepository->updateUserPulse($this->user);
+
+            return $this->_generateResponse($this->performKeywordSearch($data));
+        } else {
+            $this->warn('Invalid request with missing required fields');
+            return $this->_generateMissingFieldsError();
+        }
+    }
+
+    protected function performKeywordSearch($data)
+    {
+        $this->debug('No cache found, Creating cache search cache');
+        $appSearch = ApplicationSearchFactory::getInstance(
+            ApplicationSearchFactory::AS_DEFAULT, $this->user, $this->dm, $this->config);
+
+        return $appSearch->searchAllByKeyword(
+            $data, array('user' => $this->user, 'limit' => \Helper\Constants::PEOPLE_LIMIT));
+    }
 }

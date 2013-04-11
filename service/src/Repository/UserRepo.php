@@ -790,9 +790,9 @@ class UserRepo extends Base
 
             ImageHelper::saveResizeAvatarOriginFromBase64(
                 $avatar, ROOTDIR . $filePath,
-                $thumbPath . DIRECTORY_SEPARATOR . $user->getId(), $originalPath. DIRECTORY_SEPARATOR . $user->getId());
+                $thumbPath . DIRECTORY_SEPARATOR . $user->getId(), $originalPath . DIRECTORY_SEPARATOR . $user->getId());
             $user->setAvatar($filePath . "?" . $timeStamp);
-            $user->setAvatarOriginal($fileOriginalPath. "?" . $timeStamp);
+            $user->setAvatarOriginal($fileOriginalPath . "?" . $timeStamp);
         }
 
         $this->dm->persist($user);
@@ -919,6 +919,9 @@ class UserRepo extends Base
             $query->field('id')->notIn($excludedUserIds)
                 ->field('visible')->equals(true)
                 ->field('enabled')->equals(true)
+//            ->field('currentLocation')->withinBox($location['ne'][0], $location['ne'][1], $location['sw'][0], $location['sw'][1])
+                ->field('currentLocation')->near($location['lat'], $location['lng'])
+
                 ->field('currentLocation.lat')->notEqual(0)
                 ->field('currentLocation.lng')->notEqual(0)
                 ->hydrate(false)
@@ -936,13 +939,13 @@ class UserRepo extends Base
 
         //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
 
-        if (isset($location['sw']) && isset($location['ne'])) {
-            $query->field('currentLocation');
-            $locationParams = array();
-            foreach (array_merge($location['ne'], $location['sw']) as $position)
-                $locationParams[] = (float)$position;
-            call_user_func_array(array($query, 'withinBox'), $locationParams);
-        }
+//        if (isset($location['sw']) && isset($location['ne'])) {
+//            $query->field('currentLocation');
+//            $locationParams = array();
+//            foreach (array_merge($location['ne'], $location['sw']) as $position)
+//                $locationParams[] = (float)$position;
+//            call_user_func_array(array($query, 'withinBox'), $locationParams);
+//        }
 
         return $query->getQuery()->execute();
     }
@@ -1309,5 +1312,122 @@ class UserRepo extends Base
             ->field('pushSettings.device_id')->set($deviceId)
             ->getQuery()->execute();
         $this->dm->flush();
+    }
+
+    public function searchWithPrivacyPreferenceWithKeyword($keyword = null, $location = array(), $limit = 20, $key = null, $hour, $minute)
+    {
+
+        $people_around = $this->searchByKeyword($keyword, $location, $limit, $key, $hour, $minute);
+        $visible_people = array();
+
+        # TODO: How to fix less than $limit items
+        foreach ($people_around as $target_user_hash) {
+            if (isset($target_user_hash['lastSeenAt']) && !empty($target_user_hash['lastSeenAt'])) {
+                $target_user_hash['lastSeenAt'] = "Last seen at " . \Helper\Util::formatAddress($target_user_hash['lastSeenAt']);
+                if (!$target_user_hash['online'] && !empty($target_user_hash['lastPulse'])) {
+
+                    $time = ((array)time());
+                    $now = $time[0];
+                    $then = (array)$target_user_hash['lastPulse'];
+                    $then = (int)($then['sec']);
+                    $diff = $now - $then;
+
+                    $target_user_hash['lastSeenAt'] .= " about " . Util::humanizeTimeDiff($diff);
+                }
+            }
+
+            $target_user = $this->find($target_user_hash['id']);
+            if ($target_user->isVisibleTo($this->currentUser)) {
+                $visible_people[] = $target_user_hash;
+            }
+        }
+
+        return $visible_people;
+    }
+
+    public function searchByKeyword($keyword = null, $location = array(),
+                                    $limit = Constants::PEOPLE_LIMIT_KEYWORD, $key = null, $hour = null, $minute = null)
+    {
+
+        $users = $this->searchNearByPeopleByKeyword($keyword, $location, array('limit' => $limit, 'offset' => 0), $hour, $minute);
+        $filteredUsers = array();
+
+        if (!empty($users)) {
+            foreach ($users as $userHash) {
+                $this->prepareUserData($userHash, $location, $key, 1);
+                $filteredUsers[] = $userHash;
+            }
+
+            return $filteredUsers;
+        }
+
+        return array();
+    }
+
+    public function searchNearByPeopleByKeyword($keywords, array $location, array $options = array(), $hour = null, $minute = null)
+    {
+        // Set all required parameters
+        $limit = $options['limit'];
+        $offset = $options['offset'];
+
+        // Determine selectable fields based on options
+        $selectableFields = isset($options['select']) ? $options['select'] : self::$DEFAULT_USER_FIELDS;
+
+        // Include current user in excluded users list
+        $excludedUserIds = array($this->currentUser->getId());
+
+        // Include blocked users in excluded users list
+        if ($this->currentUser->getBlockedBy())
+            $excludedUserIds = array_merge($excludedUserIds, $this->currentUser->getBlockedBy());
+
+        // Retrieve all users
+        $query = $this->createQueryBuilder('Document\User');
+        call_user_func_array(array($query, 'select'), $selectableFields);
+
+        if (isset($hour) || isset($minute))
+            $_dateTime = new \DateTime($hour . 'hours ' . $minute . ' minutes ago');
+
+        if (!isset($_dateTime)) {
+            $query->field('id')->notIn($excludedUserIds)
+                ->field('visible')->equals(true)
+                ->field('enabled')->equals(true)
+                ->addOr($query->expr()->field('firstName')->equals(new \MongoRegex("/{$keywords}/i")))
+                ->addOr($query->expr()->field('lastName')->equals(new \MongoRegex("/{$keywords}/i")))
+                ->addOr($query->expr()->field('email')->equals(new \MongoRegex("/{$keywords}/i")))
+                ->field('currentLocation.lat')->notEqual(0)
+                ->field('currentLocation.lng')->notEqual(0)
+                ->hydrate(false)
+                ->limit($limit);
+
+        } else {
+            $query->field('id')->notIn($excludedUserIds)
+                ->field('visible')->equals(true)
+                ->field('enabled')->equals(true)
+                ->addOr($query->expr()->field('firstName')->equals(new \MongoRegex("/{$keywords}/i")))
+                ->addOr($query->expr()->field('lastName')->equals(new \MongoRegex("/{$keywords}/i")))
+                ->addOr($query->expr()->field('email')->equals(new \MongoRegex("/{$keywords}/i")))
+                ->field('currentLocation.lat')->notEqual(0)
+                ->field('currentLocation.lng')->notEqual(0)
+                ->field('updateDate')->gte($_dateTime)
+                ->hydrate(false)
+                ->limit($limit);
+        }
+
+        return $query->getQuery()->execute();
+    }
+
+    public function getSecondDegreeFriendsByKeyword($keywords)
+    {
+        $query = $this->createQueryBuilder('Document\ExternalUser');
+        $results = $query->field('smFriends')->equals($this->currentUser->getId())
+            ->field('createdAt')->gte(new \DateTime(Constants::GLOBAL_MAX_ALLOWED_OLDER_CHECKINS))
+            ->addOr($query->expr()->field('firstName')->equals(new \MongoRegex("/{$keywords}/i")))
+            ->addOr($query->expr()->field('lastName')->equals(new \MongoRegex("/{$keywords}/i")))
+            ->hydrate(false)
+            ->skip(0)
+            ->limit(\Helper\Constants::PEOPLE_LIMIT_KEYWORD)
+            ->getQuery()->execute()->toArray();
+
+        return $results;
     }
 }
