@@ -24,6 +24,7 @@
     NSMutableArray *peopleListArray;
     NSString *searchText;
     IBOutlet UISearchBar *searchBar;
+    LocationItem *itemDistance;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *searchTableView;
@@ -31,6 +32,7 @@
 @property(nonatomic,retain) NSString *searchText;
 @property(nonatomic,retain) IBOutlet UISearchBar *searchBar;
 @property(nonatomic,retain) NSMutableArray *filteredList;
+@property(nonatomic,retain)    LocationItem *itemDistance;
 
 -(IBAction)cancelSearchAction:(id)sender;
 
