@@ -22,6 +22,7 @@
 @synthesize searchTableView, delegate;
 @synthesize searchText, searchBar;
 @synthesize filteredList;
+@synthesize itemDistance;
 
 AppDelegate *smAppDelegate;
 
@@ -37,7 +38,7 @@ AppDelegate *smAppDelegate;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    filteredList=[[self loadDummyData] mutableCopy];
+    filteredList=[[filteredList sortedArrayUsingSelector:@selector(compareDistance:)] mutableCopy];
 //    peopleListArray=[[self loadDummyData] mutableCopy];
     NSLog(@"count: %d %d",[filteredList count],[peopleListArray count]);
     searchBar.text = searchText;
@@ -173,7 +174,7 @@ AppDelegate *smAppDelegate;
         cell1.addressLabel.text=item.itemAddress;
         Geolocation *geoLocation=[[Geolocation alloc] init];
         geoLocation.latitude=[NSString stringWithFormat:@"%lf",item.coordinate.latitude];
-        geoLocation.latitude=[NSString stringWithFormat:@"%lf",item.coordinate.longitude];
+        geoLocation.longitude=[NSString stringWithFormat:@"%lf",item.coordinate.longitude];
         cell1.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
         [geoLocation release];
         // Only load cached images; defer new downloads until scrolling ends
