@@ -88,7 +88,8 @@
     if (locItem.itemAvaterURL && [locItem.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
         [locImageSquare loadFromURL:[NSURL fileURLWithPath:locItem.itemAvaterURL isDirectory:NO]];
     } else {
-        [locImageSquare setImageForUrlIfAvailable:[NSURL URLWithString:locItem.itemAvaterURL]];
+        //[locImageSquare setImageForUrlIfAvailable:[NSURL URLWithString:locItem.itemAvaterURL]];
+        [locImageSquare loadFromURL:[NSURL URLWithString:locItem.itemAvaterURL]];
     }
     
     [locImageSquare.layer setCornerRadius:4.0f];

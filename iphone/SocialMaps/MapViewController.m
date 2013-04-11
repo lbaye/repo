@@ -356,7 +356,17 @@ ButtonClickCallbackData callBackData;
     [searchBar resignFirstResponder];
 }
 
-- (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
+- (void) showAnnotationDetailView:(id <MKAnnotation>) anno
+{
+    if (![self.mapView.annotations containsObject:anno])
+    {
+        [self.mapView addAnnotation:anno];
+        
+        if ([anno isKindOfClass:[LocationItemPeople class]])
+             [smAppDelegate.peopleList addObject:anno];
+        else if ([anno isKindOfClass:[LocationItemPlace class]])
+            [smAppDelegate.placeList addObject:anno];
+    }
 
     self.selectedAnno = anno;
     LocationItem *selLocation = (LocationItem*) anno;
@@ -880,9 +890,9 @@ ButtonClickCallbackData callBackData;
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
         [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
         
-        if (!smAppDelegate.timerGotListing) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
-        }
+//        if (!smAppDelegate.timerGotListing) {
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
+//        }
     }
     
     displayListForMap = [[NSMutableArray alloc] init];
@@ -1089,7 +1099,7 @@ ButtonClickCallbackData callBackData;
             smAppDelegate.mapDrawnFirstTime = FALSE;
         else
             smAppDelegate.currZoom = _mapView.region.span;
-        
+        /*
         //Search is on
         if (viewSearch.frame.origin.y >= 44) {
          
@@ -1111,7 +1121,7 @@ ButtonClickCallbackData callBackData;
             
             return;
         }
-        
+        */
         
         [self prepareForLocaitons];
         
@@ -1235,8 +1245,8 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
-
-    userFriendslistArray=[[NSMutableArray alloc] init];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    userFriendslistArray=[[NSMutableArray alloc] init]; //why
 
 }
 
@@ -1324,7 +1334,7 @@ ButtonClickCallbackData callBackData;
                 if (![_mapView.annotations containsObject:anno]) {
                     [_mapView addAnnotation:anno];
                 }
-                [self loadAvaterImage:anno];
+                /////[self loadAvaterImage:anno];
             }
         }
         // 4
@@ -1337,7 +1347,7 @@ ButtonClickCallbackData callBackData;
         }
     }
 }
-
+/*
 - (void)loadAvaterImage:(LocationItem*)anno
 {
     MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
@@ -1350,6 +1360,7 @@ ButtonClickCallbackData callBackData;
         }
     }
 }
+*/
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -1446,6 +1457,8 @@ ButtonClickCallbackData callBackData;
     
     [self setCheckUncheckButton];
     [self setShowOnMapFilterRadioButtons];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     NSLog(@"viewDidAppear finished");
 }
@@ -2253,13 +2266,13 @@ ButtonClickCallbackData callBackData;
 
 - (void)gotListings:(NSNotification *)notif
 {
-    static BOOL gotListingIsInProgress = FALSE;
+    //static BOOL gotListingIsInProgress = FALSE;
     
-    if (gotListingIsInProgress) return;
+    //if (gotListingIsInProgress) return;
     
      NSLog(@"got listing");
     
-    gotListingIsInProgress = TRUE;
+    //gotListingIsInProgress = TRUE;
     
     SearchLocation * listings = [notif object];
     if (listings != nil) {
@@ -2513,11 +2526,12 @@ ButtonClickCallbackData callBackData;
                     isFirstTimeDownloading = YES;
                 }
             
-                gotListingIsInProgress = FALSE;
+                
             //});
     
         //});
     }
+    //gotListingIsInProgress = FALSE;
 }
 
 // GCD async notifications
