@@ -404,6 +404,8 @@ ButtonClickCallbackData callBackData;
 
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno
 {
+    smAppDelegate.needToCenterMap = FALSE;
+    
     if (![self.mapView.annotations containsObject:anno])
     {
         [self.mapView addAnnotation:anno];
@@ -2782,6 +2784,7 @@ ButtonClickCallbackData callBackData;
 -(void)removeSearchViewWithLocation:(LocationItem *)item
 {
     NSLog(@"searched location Item %@   %@",item,searchListViewController.delegate);
+    [self showAnnotationDetailView:item];
 }
 
 -(void)removeSearchView

@@ -938,6 +938,13 @@ PullableView *pullUpView;
 -(void)removeSearchViewWithLocation:(LocationItem *)item
 {
     NSLog(@"searched location Item listview %@   %@",item,searchListViewController.delegate);
+    [self performSelector:@selector(showOnMap:) withObject:item afterDelay:1];
+}
+
+- (void)showOnMap:(LocationItem *)item
+{
+    [self.presentingViewController performSelector:@selector(showAnnotationDetailView:) withObject:item afterDelay:.8];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(void)removeSearchView
