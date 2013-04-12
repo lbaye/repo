@@ -6,7 +6,7 @@ package com.socmaps.util;
  */
 public class Constant {
 
-	final static public String APP_SHARED_PREFS = "com.socmap.socmaps_preferences";
+	final static public String APP_SHARED_PREFS = "com.socmaps.socmaps_preferences";
 
 	/*
 	 * App ID: 260432304058696 App Secret: 5b08deeee59a2228ac3a29dadfa4438b
@@ -48,7 +48,7 @@ public class Constant {
 	//final static public String smServerUrl = "http://192.168.1.212:8888";
 	//final static public String smServerUrl = "http://192.168.1.19/social_maps/web";
 
-	final static public String smServerUrl ="http://services.socialmapsapp.com/v2_3";
+	final static public String smServerUrl ="http://services.socialmapsapp.com/v2_4";
 
 	// production server
 	// final static public String smServerUrl = "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6";
@@ -215,5 +215,11 @@ public class Constant {
 	public static enum Permission  {NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM};
 	
 	public static final String IMAGE_CACHE_DIR = "thumbs";
+	
+	
+	//April 10
+	
+	public static enum OnlineOffline  {ONLINE, OFFLINE};
+	public static enum ALLUSER_FRIENDS {ALLUSER, FRIENDSONLY};
 
 }

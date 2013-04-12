@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dip"
+    android:gravity="center" >
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="10dip"
+        android:background="#6B696B" />
+
+    <RadioGroup
+        android:id="@+id/rgPermission"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rbOffline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radiobutton_selector_mid"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingTop="28dip"
+            android:text="Show offline"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+
+        <RadioButton
+            android:id="@+id/rbOnline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radiobutton_selector_mid"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:paddingTop="28dip"
+            android:text="Online Only"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+    </RadioGroup>
+
+</RelativeLayout>

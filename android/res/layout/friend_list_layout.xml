@@ -97,39 +97,6 @@
             android:textSize="20dp" />
     </LinearLayout>
 
-    <!--
-    <RelativeLayout
-        android:id="@+id/searchContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        android:layout_below="@+id/layoutHeader"
-        android:background="@color/offwhite"
-        android:visibility="visible" >
-
-        <EditText
-            android:id="@+id/etFriendSearch"
-            android:layout_width="220dip"
-            android:layout_height="40dip"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="20dip"
-            android:ems="10"
-            android:hint="@string/search_label_event"
-            android:textSize="12dip" />
-
-        <Button
-            android:id="@+id/doSearchBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="40dip"
-            android:layout_alignParentBottom="true"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/etFriendSearch"
-            android:text="Ok" >
-        </Button>
-    </RelativeLayout>
-    -->
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dip"
@@ -198,77 +165,7 @@
         android:layout_below="@+id/filterPanel"
         android:background="@color/gray_light" />
 
-    <!--
-    <LinearLayout
-        android:id="@+id/filterPanel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/searchEventContainer"
-        android:background="@color/offwhite"
-        android:gravity="center_horizontal" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="40dip"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/atozBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
-                android:paddingBottom="5dip"
-                android:paddingLeft="20dip"
-                android:paddingRight="20dip"
-                android:paddingTop="5dip"
-                android:text="@string/atoz"
-                android:textColor="@color/black"
-                android:textSize="11dip" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="40dip"
-                android:scaleType="centerInside"
-                android:src="@drawable/seperator" />
-
-            <Button
-                android:id="@+id/distanceFilterBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
-                android:paddingBottom="5dip"
-                android:paddingLeft="20dip"
-                android:paddingRight="20dip"
-                android:paddingTop="5dip"
-                android:text="@string/distance_filter_label"
-                android:textColor="@color/black"
-                android:textSize="11dip" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="40dip"
-                android:scaleType="centerInside"
-                android:src="@drawable/seperator" />
-
-            <Button
-                android:id="@+id/circleFilterBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
-                android:paddingBottom="5dip"
-                android:paddingLeft="20dip"
-                android:paddingRight="20dip"
-                android:paddingTop="5dip"
-                android:text="@string/circlesLabel"
-                android:textColor="@color/black"
-                android:textSize="11dip" />
-        </LinearLayout>
-    </LinearLayout>
-    -->
-
+    
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

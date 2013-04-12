@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,10 +31,14 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
@@ -43,20 +49,33 @@ import com.socmaps.listrow.PeopleRowFactory;
 import com.socmaps.listrow.PlaceRowFactory;
 import com.socmaps.listrow.RowType;
 import com.socmaps.listrow.SecondDegreePeopleRowFactory;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
+import com.socmaps.util.Constant.ALLUSER_FRIENDS;
+import com.socmaps.util.Constant.OnlineOffline;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
+import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.AlluserFriendsOnlyRadioGroup;
 import com.socmaps.widget.ListComparator;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
+import com.socmaps.widget.NearByPlacesPickerListener;
+import com.socmaps.widget.OnlineOfflineRadioGroup;
+import com.socmaps.widget.OnlineOfflineRadioGroupListener;
+import com.socmaps.widget.SearchResultDialog;
+import com.socmaps.widget.SearchResultDialogListener;
+import com.socmaps.widget.ListComparator.COMPARATOR;
 
 /**
  * LayerPreferencesActivity class for generating all users and places list view
  * and some user interaction.
  * 
  */
-public class ListViewActivity extends FragmentActivity implements
-		OnCheckedChangeListener, OnClickListener, ListItemClickListenerPeople {
+public class ListViewActivity extends FragmentActivity implements OnCheckedChangeListener, OnlineOfflineRadioGroupListener, OnClickListener, ListItemClickListenerPeople {
 
 	Button btnNotification;
 	Button topCloseButton, bottomCloseButton;
@@ -69,8 +88,7 @@ public class ListViewActivity extends FragmentActivity implements
 	private ListView contentListView;
 	private ContentListAdapter contentAdapter;
 	private SearchResult peoplesAndPlacesEntity;
-	private Button btnMapView, btnListView, btnCircle, btnToggleSearchPanel,
-			btnDoSearch, btnClearSearch;
+	private Button btnMapView, btnListView, btnCircle, btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 	private TextView tvMapView;
 	private boolean checkBoxFlag = false;
 	private CheckBox peopleCheckBox, placeCheckBox, dealCheckBox;
@@ -85,10 +103,8 @@ public class ListViewActivity extends FragmentActivity implements
 
 	RelativeLayout circleMenu;
 	LinearLayout btnCloseCircleMenu;
-	Button btnCircleMenuItemPeople, btnCircleMenuItemProfile,
-			btnCircleMenuItemMessages, btnCircleMenuItemFriends,
-			btnCircleMenuItemDeals, btnCircleMenuItemPlaces,
-			btnCircleMenuItemNewsfeed, btnCircleMenuItemSettings;
+	Button btnCircleMenuItemPeople, btnCircleMenuItemProfile, btnCircleMenuItemMessages, btnCircleMenuItemFriends, btnCircleMenuItemDeals, btnCircleMenuItemPlaces, btnCircleMenuItemNewsfeed,
+			btnCircleMenuItemSettings;
 
 	double lat;
 	double lng;
@@ -96,6 +112,13 @@ public class ListViewActivity extends FragmentActivity implements
 
 	private ImageFetcher mImageFetcher;
 	private ListComparator listComparator;
+
+	private LinearLayout onlineOfflineRadioGroupContainer;
+	private OnlineOfflineRadioGroup OnlineOfflineRadioGroupView;
+	private LinearLayout allUserFriendsOnlyRadioGroupContainer;
+	private AlluserFriendsOnlyRadioGroup alluserFriendsOnlyRadioGroup;
+	private boolean isOffline = true;
+	private boolean isAllUser = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +128,9 @@ public class ListViewActivity extends FragmentActivity implements
 		initialize();
 		getIntentData();
 		setListParameters();
+
+		addOnLineOffLineRadioGroup();
+		addAllUserFriendsOnlyRadioGroup();
 
 	}
 
@@ -136,8 +162,7 @@ public class ListViewActivity extends FragmentActivity implements
 
 		contentListView.setAdapter(contentAdapter);
 		int[] colors = { 0xFFFFFFFF, 0xFFFFFFFF };
-		contentListView.setDivider(new GradientDrawable(Orientation.TOP_BOTTOM,
-				colors));
+		contentListView.setDivider(new GradientDrawable(Orientation.TOP_BOTTOM, colors));
 		contentListView.setDividerHeight(2);
 	}
 
@@ -181,19 +206,16 @@ public class ListViewActivity extends FragmentActivity implements
 		btnCircle.setOnClickListener(this);
 
 		btnListView = (Button) vBottom.findViewById(R.id.btnListView);
-		btnListView.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.icon_list_view_selected));
+		btnListView.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_list_view_selected));
 
 		topCloseButton = (Button) topDrawer.findViewById(R.id.topHandle);
-		bottomCloseButton = (Button) bottomDrawer
-				.findViewById(R.id.bottomHandle);
+		bottomCloseButton = (Button) bottomDrawer.findViewById(R.id.bottomHandle);
 
 		contentListView = (ListView) findViewById(R.id.content_list);
 		listMasterContent = new ArrayList<Object>();
 		listContent = new ArrayList<Object>();
 		listDisplayableContent = new ArrayList<Object>();
-		contentAdapter = new ContentListAdapter(getApplicationContext(),
-				listDisplayableContent);
+		contentAdapter = new ContentListAdapter(getApplicationContext(), listDisplayableContent);
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -209,8 +231,7 @@ public class ListViewActivity extends FragmentActivity implements
 		circleMenu = (RelativeLayout) findViewById(R.id.circleMenu);
 		circleMenu.setOnClickListener(this);
 
-		btnCloseCircleMenu = (LinearLayout) circleMenu
-				.findViewById(R.id.btnCloseCircleMenu);
+		btnCloseCircleMenu = (LinearLayout) circleMenu.findViewById(R.id.btnCloseCircleMenu);
 		btnCloseCircleMenu.setOnClickListener(this);
 
 		btnCircleMenuItemPeople = (Button) findViewById(R.id.btnCircleMenuItemPeople);
@@ -231,6 +252,9 @@ public class ListViewActivity extends FragmentActivity implements
 		btnCircleMenuItemSettings.setOnClickListener(this);
 
 		mImageFetcher = new ImageFetcher(context);
+
+		onlineOfflineRadioGroupContainer = (LinearLayout) v.findViewById(R.id.onlineOfflineRadioGroupContainer);
+		allUserFriendsOnlyRadioGroupContainer = (LinearLayout) v.findViewById(R.id.allUserFriendsOnlyRadioGroupContainer);
 
 	}
 
@@ -255,7 +279,6 @@ public class ListViewActivity extends FragmentActivity implements
 		super.onDestroy();
 
 		mImageFetcher.closeCache();
-		
 
 		peoplesAndPlacesEntity = null;
 		listMasterContent = null;
@@ -274,6 +297,7 @@ public class ListViewActivity extends FragmentActivity implements
 	}
 
 	public static void unbindReferences(FragmentActivity activity, int viewID) {
+
 		try {
 			View view = activity.findViewById(viewID);
 			if (view != null) {
@@ -316,26 +340,37 @@ public class ListViewActivity extends FragmentActivity implements
 
 		int displayedItemCounter = 0;
 
+		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
+		boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
+
 		listDisplayableContent.clear();
 		for (int i = 0; i < list.size(); i++) {
 
 			Object item = list.get(i);
-			if (item instanceof People
-					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PEOPLE, true)) {
-				listDisplayableContent.add(item);
-				displayedItemCounter++;
+			if (item instanceof People) {
+
+				People people = (People) item;
+				boolean isPeopleVisible = isPeople;
+				if (isPeople) {
+					if (people.isOnline() == false && isOffline == false) {
+						isPeopleVisible = false;
+					} else if (!people.getFriendshipStatus().equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND) && isAllUser == false) {
+						isPeopleVisible = false;
+					}
+				}
+
+				if (isPeopleVisible) {
+					listDisplayableContent.add(item);
+					displayedItemCounter++;
+				}
+
 			}
-			if (item instanceof SecondDegreePeople
-					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PEOPLE, true)) {
+			if (item instanceof SecondDegreePeople && isPeople) {
 				listDisplayableContent.add(item);
 				displayedItemCounter++;
 			}
 
-			else if (item instanceof Place
-					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PLACE, false)) {
+			else if (item instanceof Place && isPlace) {
 				listDisplayableContent.add(item);
 				displayedItemCounter++;
 			}
@@ -346,8 +381,7 @@ public class ListViewActivity extends FragmentActivity implements
 		updateListView();
 
 		if (isSearchEnabled && displayedItemCounter == 0) {
-			Toast.makeText(context, "No search result found.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No search result found.", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -374,8 +408,7 @@ public class ListViewActivity extends FragmentActivity implements
 
 		if (peoplesAndPlacesEntity.getPlaces() != null) {
 			for (int i = 0; i < peoplesAndPlacesEntity.getPlaces().size(); i++) {
-				listMasterContent
-						.add(peoplesAndPlacesEntity.getPlaces().get(i));
+				listMasterContent.add(peoplesAndPlacesEntity.getPlaces().get(i));
 			}
 		}
 	}
@@ -385,8 +418,7 @@ public class ListViewActivity extends FragmentActivity implements
 		if (peoplesAndPlacesEntity.getPeoples() != null) {
 
 			for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
-				listMasterContent.add(peoplesAndPlacesEntity.getPeoples()
-						.get(i));
+				listMasterContent.add(peoplesAndPlacesEntity.getPeoples().get(i));
 			}
 		}
 	}
@@ -394,21 +426,16 @@ public class ListViewActivity extends FragmentActivity implements
 	private void addSecondDegreePeoplesToMasterList() {
 
 		if (peoplesAndPlacesEntity.getSecondDegreePeoples() != null) {
-			for (int i = 0; i < peoplesAndPlacesEntity.getSecondDegreePeoples()
-					.size(); i++) {
-				listMasterContent.add(peoplesAndPlacesEntity
-						.getSecondDegreePeoples().get(i));
+			for (int i = 0; i < peoplesAndPlacesEntity.getSecondDegreePeoples().size(); i++) {
+				listMasterContent.add(peoplesAndPlacesEntity.getSecondDegreePeoples().get(i));
 			}
 		}
 	}
 
 	private void setCheckBoxSelection() {
-		peopleCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PEOPLE, true));
-		placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PLACE, false));
-		dealCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.DEAL, false));
+		peopleCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true));
+		placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false));
+		dealCheckBox.setChecked(SharedPreferencesHelper.getInstance(context).getBoolean(Constant.DEAL, false));
 
 	}
 
@@ -422,15 +449,12 @@ public class ListViewActivity extends FragmentActivity implements
 
 	}
 
-	private class TopDrawerListener implements
-			MultiDirectionSlidingDrawer.OnDrawerOpenListener,
-			MultiDirectionSlidingDrawer.OnDrawerCloseListener {
+	private class TopDrawerListener implements MultiDirectionSlidingDrawer.OnDrawerOpenListener, MultiDirectionSlidingDrawer.OnDrawerCloseListener {
 
 		@Override
 		public void onDrawerClosed() {
 			// TODO Auto-generated method stub
-			Drawable openIcon = getResources().getDrawable(
-					R.drawable.btn_slider_open);
+			Drawable openIcon = getResources().getDrawable(R.drawable.btn_slider_open);
 			topCloseButton.setBackgroundDrawable(openIcon);
 		}
 
@@ -442,21 +466,17 @@ public class ListViewActivity extends FragmentActivity implements
 				bottomDrawer.animateClose();
 			}
 
-			Drawable closeIcon = getResources().getDrawable(
-					R.drawable.btn_slider_close);
+			Drawable closeIcon = getResources().getDrawable(R.drawable.btn_slider_close);
 			topCloseButton.setBackgroundDrawable(closeIcon);
 		}
 
 	}
 
-	private class BottomDrawerListener implements
-			MultiDirectionSlidingDrawer.OnDrawerOpenListener,
-			MultiDirectionSlidingDrawer.OnDrawerCloseListener {
+	private class BottomDrawerListener implements MultiDirectionSlidingDrawer.OnDrawerOpenListener, MultiDirectionSlidingDrawer.OnDrawerCloseListener {
 		@Override
 		public void onDrawerClosed() {
 			// TODO Auto-generated method stub
-			Drawable openIcon = getResources().getDrawable(
-					R.drawable.btn_footer_slider_open);
+			Drawable openIcon = getResources().getDrawable(R.drawable.btn_footer_slider_open);
 			bottomCloseButton.setBackgroundDrawable(openIcon);
 		}
 
@@ -468,8 +488,7 @@ public class ListViewActivity extends FragmentActivity implements
 				topDrawer.animateClose();
 			}
 
-			Drawable closeIcon = getResources().getDrawable(
-					R.drawable.btn_footer_slider_close);
+			Drawable closeIcon = getResources().getDrawable(R.drawable.btn_footer_slider_close);
 			bottomCloseButton.setBackgroundDrawable(closeIcon);
 		}
 
@@ -479,13 +498,11 @@ public class ListViewActivity extends FragmentActivity implements
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (!checkBoxFlag) {
 			if (buttonView == peopleCheckBox) {
-				SharedPreferencesHelper.getInstance(context).setBoolean(
-						Constant.PEOPLE, isChecked);
+				SharedPreferencesHelper.getInstance(context).setBoolean(Constant.PEOPLE, isChecked);
 
 			}
 			if (buttonView == placeCheckBox) {
-				SharedPreferencesHelper.getInstance(context).setBoolean(
-						Constant.PLACE, isChecked);
+				SharedPreferencesHelper.getInstance(context).setBoolean(Constant.PLACE, isChecked);
 
 			}
 			if (buttonView == dealCheckBox) {
@@ -545,19 +562,11 @@ public class ListViewActivity extends FragmentActivity implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
-				return PeopleRowFactory.getView(LayoutInflater.from(context),
-						items.get(position), context, convertView,
-						mImageFetcher, ListViewActivity.this);
-			} else if (getItemViewType(position) == RowType.SECOND_DEGREE
-					.ordinal()) {
-				return SecondDegreePeopleRowFactory.getView(
-						LayoutInflater.from(context), items.get(position),
-						context, convertView, mImageFetcher,
-						ListViewActivity.this);
+				return PeopleRowFactory.getView(LayoutInflater.from(context), items.get(position), context, convertView, mImageFetcher, ListViewActivity.this);
+			} else if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal()) {
+				return SecondDegreePeopleRowFactory.getView(LayoutInflater.from(context), items.get(position), context, convertView, mImageFetcher, ListViewActivity.this);
 			} else if (getItemViewType(position) == RowType.PLACE.ordinal()) {
-				return PlaceRowFactory.getView(LayoutInflater.from(context),
-						items.get(position), context, convertView,
-						mImageFetcher, ListViewActivity.this);
+				return PlaceRowFactory.getView(LayoutInflater.from(context), items.get(position), context, convertView, mImageFetcher, ListViewActivity.this);
 			} else {
 				return null;
 			}
@@ -608,12 +617,21 @@ public class ListViewActivity extends FragmentActivity implements
 		} else if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
-			isSearchEnabled = true;
-			doSearch();
+
+			if (etSearchField.getText().toString().trim().length() > 2) {
+				// isSearchEnabled = true;
+				doSearchFromServer(etSearchField.getText().toString().trim());
+				// // doSearch();
+			} else {
+				Toast.makeText(context, "Please enter atleast 3 characters.", Toast.LENGTH_SHORT).show();
+			}
+			// isSearchEnabled = true;
+			// doSearch();
+
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
-			doSearch();
+			// doSearch();
 		} else if (v == circleMenu) {
 			// do nothing. but keep it.
 		} else if (v == btnCloseCircleMenu) {
@@ -623,8 +641,7 @@ public class ListViewActivity extends FragmentActivity implements
 
 		} else if (v == btnCircleMenuItemFriends) {
 
-			Intent friendIntent = new Intent(getApplicationContext(),
-					FriendListActivity.class);
+			Intent friendIntent = new Intent(getApplicationContext(), FriendListActivity.class);
 			startActivity(friendIntent);
 
 		} else if (v == btnCircleMenuItemMessages) {
@@ -632,24 +649,20 @@ public class ListViewActivity extends FragmentActivity implements
 			finish();
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
-			Intent messageIntent = new Intent(getApplicationContext(),
-					NewsFeedActivity.class);
+			Intent messageIntent = new Intent(getApplicationContext(), NewsFeedActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemPeople) {
-			Intent peopleIntent = new Intent(getApplicationContext(),
-					PeopleListActivity.class);
+			Intent peopleIntent = new Intent(getApplicationContext(), PeopleListActivity.class);
 			startActivity(peopleIntent);
 
 		} else if (v == btnCircleMenuItemPlaces) {
 			getLocationLatLong();
 
-			Intent directionIntent = new Intent(context,
-					DirectionActivity.class);
+			Intent directionIntent = new Intent(context, DirectionActivity.class);
 
 			directionIntent.putExtra("sourceLat", latitude);
 			directionIntent.putExtra("sourceLng", longitude);
-			directionIntent
-					.putExtra("sourceAddress", "R#1, H#2, Banani, Dhaka");
+			directionIntent.putExtra("sourceAddress", "R#1, H#2, Banani, Dhaka");
 
 			directionIntent.putExtra("destLat", 23.74866);
 			directionIntent.putExtra("destLng", 90.37388);
@@ -660,8 +673,7 @@ public class ListViewActivity extends FragmentActivity implements
 
 		} else if (v == btnCircleMenuItemPlaces) {
 
-			Intent placeIntent = new Intent(getApplicationContext(),
-					PlacesListActivity.class);
+			Intent placeIntent = new Intent(getApplicationContext(), PlacesListActivity.class);
 			startActivity(placeIntent);
 
 		} else if (v == btnCircleMenuItemProfile) {
@@ -678,10 +690,8 @@ public class ListViewActivity extends FragmentActivity implements
 	private void getLocationLatLong() {
 		LocationManager locManager;
 		locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L,
-				500.0f, locationListener);
-		Location location = locManager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, locationListener);
+		Location location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (location != null) {
 			latitude = location.getLatitude();
 			longitude = location.getLongitude();
@@ -716,8 +726,7 @@ public class ListViewActivity extends FragmentActivity implements
 	};
 
 	private void doSearch() {
-		List<Object> list = (Utility.getSearchResult(listMasterContent,
-				etSearchField.getText().toString()));
+		List<Object> list = (Utility.getSearchResult(listMasterContent, etSearchField.getText().toString()));
 
 		listContent.clear();
 		listContent.addAll(list);
@@ -807,6 +816,139 @@ public class ListViewActivity extends FragmentActivity implements
 	public void onCheckChange(String itemId, boolean isChecked) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private void doSearchFromServer(String keyWord) {
+
+		String url = Constant.smGetUserUrl + "/keyword";
+
+		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
+		boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
+
+		String people = "yes";
+		if (!isPeople) {
+			people = "no";
+		}
+
+		String place = "yes";
+		if (!isPlace) {
+			place = "no";
+		}
+
+		final String sw_position = getIntent().getStringExtra("sw-position");
+		final String ne_position = getIntent().getStringExtra("ne-position");
+		final String lat = getIntent().getStringExtra("lat");
+		final String lng = getIntent().getStringExtra("lng");
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("sw-position", sw_position));
+		params.add(new BasicNameValuePair("ne-position", ne_position));
+		params.add(new BasicNameValuePair("lat", lat));
+		params.add(new BasicNameValuePair("lng", lng));
+
+		params.add(new BasicNameValuePair("keyword", keyWord));
+		params.add(new BasicNameValuePair("people", people));
+		params.add(new BasicNameValuePair("place", place));
+
+		Log.e("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
+
+		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
+		backProcess.execute(RestClient.RequestMethod.POST);
+	}
+
+	private class BackProcessCallBackListener implements BackProcessCallback {
+
+		@Override
+		public void onFinish(int status, String result, int type) {
+
+			// TODO Auto-generated method stub
+			Log.w("Got Search list from server callback process >> :", status + ":" + result);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
+
+				SearchResult tempSearchResult = ServerResponseParser.parseSeachResult(result);
+
+				List<Object> tempMasterContent = new ArrayList<Object>();
+
+				for (int i = 0; i < tempSearchResult.getPeoples().size(); i++) {
+					tempMasterContent.add(tempSearchResult.getPeoples().get(i));
+				}
+
+				for (int i = 0; i < tempSearchResult.getPlaces().size(); i++) {
+					tempMasterContent.add(tempSearchResult.getPlaces().get(i));
+				}
+
+				for (int i = 0; i < tempSearchResult.getSecondDegreePeoples().size(); i++) {
+					tempMasterContent.add(tempSearchResult.getSecondDegreePeoples().get(i));
+				}
+
+				listComparator.setType(COMPARATOR.DISTANCE);
+				Collections.sort(tempMasterContent, listComparator);
+
+				if (tempMasterContent.size() != 0) {
+					SearchResultDialog searchResultDialog = new SearchResultDialog(context, new SearchResultDialoghandler(), "SEARCH_Result", tempMasterContent);
+					searchResultDialog.show();
+				}
+
+				break;
+
+			default:
+				Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+
+				break;
+
+			}
+
+		}
+
+	}
+
+	private class SearchResultDialoghandler implements SearchResultDialogListener {
+
+		@Override
+		public void onPlaceSelect(String pickerName, Object selectedObject) {
+			// TODO Auto-generated method stub
+
+			StaticValues.highlightAnnotationItem = selectedObject;
+			StaticValues.isHighlightAnnotation = true;
+
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			finish();
+
+		}
+
+	}
+
+	private void addOnLineOffLineRadioGroup() {
+
+		OnlineOfflineRadioGroupView = new OnlineOfflineRadioGroup(context, this, OnlineOffline.OFFLINE);
+		onlineOfflineRadioGroupContainer.addView(OnlineOfflineRadioGroupView);
+
+	}
+
+	private void addAllUserFriendsOnlyRadioGroup() {
+
+		alluserFriendsOnlyRadioGroup = new AlluserFriendsOnlyRadioGroup(context, this, ALLUSER_FRIENDS.ALLUSER);
+		allUserFriendsOnlyRadioGroupContainer.addView(alluserFriendsOnlyRadioGroup);
+
+	}
+
+	@Override
+	public void onOnlineOfflineChanged(RadioGroup group, RadioButton radio, boolean isOfflineSelected) {
+		// TODO Auto-generated method stub
+		isOffline = isOfflineSelected;
+		updateDisplayList(listContent);
+		// updateMarkerVisibility();
+	}
+
+	@Override
+	public void onAlluserFriendsOnlyChanged(RadioGroup group, RadioButton radio, boolean isAllUserSelected) {
+		// TODO Auto-generated method stub
+		isAllUser = isAllUserSelected;
+		updateDisplayList(listContent);
+		// updateMarkerVisibility();
 	}
 
 }

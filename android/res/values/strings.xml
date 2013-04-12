@@ -710,5 +710,9 @@
     <string name="uploadPhotos">Upload photos</string>
     <string name="deleteSelectedPhotos">Delete selected photos</string>
      <string name="dateLabel">Date:</string>
+     <string name="closeLabel">Close</string>
+      <string name="searchResultLabel">Search Result</string>
+     
+     
 
 </resources>

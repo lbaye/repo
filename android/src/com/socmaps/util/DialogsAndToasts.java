@@ -12,14 +12,15 @@ import com.socmaps.ui.R;
 
 /**
  * DialogsAndToasts generates custom dialog and toast.
- *
+ * 
  */
 public class DialogsAndToasts {
 
 	/**
 	 * Shows appropriate Dialog if Internet connection is unavailable.
 	 * 
-	 * @param context Currently active Context
+	 * @param context
+	 *            Currently active Context
 	 */
 	public static void showNoInternetConnectionDialog(final Context context) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -45,16 +46,20 @@ public class DialogsAndToasts {
 		alert.show();
 	}
 
+
+
 	/**
 	 * Generate Dialog with custom layout.
 	 * 
-	 * @param context Currently active Context
-	 * @param layoutResId Resource ID of the layout
+	 * @param context
+	 *            Currently active Context
+	 * @param layoutResId
+	 *            Resource ID of the layout
 	 * @return Dialog with custom layout
 	 */
 	public static Dialog showExtendedInfoDialog(Context context, int layoutResId) {
-		
-		Dialog dialog = new Dialog(context,R.style.CustomDialogTheme);
+
+		Dialog dialog = new Dialog(context, R.style.CustomDialogTheme);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(layoutResId);
 
@@ -65,7 +70,9 @@ public class DialogsAndToasts {
 
 	/**
 	 * Create custom Dialog for sending message.
-	 * @param context Currently active Context
+	 * 
+	 * @param context
+	 *            Currently active Context
 	 * @return Custom Dialog for sending message
 	 */
 	public static Dialog showSendMessage(final Context context) {
@@ -81,7 +88,8 @@ public class DialogsAndToasts {
 	/**
 	 * Create custom Dialog for sending friend request.
 	 * 
-	 * @param context Currently active Context
+	 * @param context
+	 *            Currently active Context
 	 * @return Custom Dialog for sending friend request
 	 */
 	public static Dialog showAddFrnd(final Context context) {

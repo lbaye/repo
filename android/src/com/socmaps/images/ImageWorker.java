@@ -29,6 +29,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.socmaps.ui.BuildConfig;
+import com.socmaps.ui.R;
 import com.socmaps.widget.ImageDownloadListener;
 
 import java.lang.ref.WeakReference;
@@ -131,11 +132,28 @@ public abstract class ImageWorker {
 		}
 
 		Bitmap bitmap = null;
+		
+		/*just for temporary solution
+		 * 
+		 * Sometimes server does not response during a call for default cover picture. In that case,
+		 * I'm reading the image from local storage.
+		 */
+		boolean isSuccess = false;		
+		if(String.valueOf(data).contains("default-cover-photo"))
+		{
+			imageView.setImageResource(R.drawable.cover_pic_default);
+			isSuccess = true;
+		}
 
 		if (mImageCache != null) {
 			bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data));
 		}
-		if(bitmap!=null)
+		
+		if(isSuccess)
+		{
+			//do nothing
+		}
+		else if(bitmap!=null)
 		{
 			imageView.setImageBitmap(bitmap);
 		}

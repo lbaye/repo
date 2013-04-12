@@ -40,8 +40,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -57,9 +55,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.View.MeasureSpec;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -68,7 +66,6 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.socmaps.entity.Circle;
@@ -1873,7 +1870,7 @@ public class Utility {
 	 */
 	public static double calculateDistance(double sourceLat, double sourceLng, double destLat, double destLng) {
 		float[] dist = new float[1];
-		Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
+		android.location.Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
 		return dist[0];
 	}
 

@@ -9,4 +9,6 @@ public interface PermissionRadioGroupListener {
 
 	public void onPermissionChanged(RadioGroup group, RadioButton radio,
 			Constant.Permission selectedItem);
+	
+	
 }

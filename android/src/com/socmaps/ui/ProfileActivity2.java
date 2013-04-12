@@ -38,10 +38,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageFetcher;
 import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
@@ -49,7 +49,8 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
-import com.socmaps.util.BackProcess.REQUEST_TYPE;
+import com.socmaps.widget.LocationPicker;
+import com.socmaps.widget.LocationPickerProfile;
 import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
 
 /**
@@ -289,6 +290,8 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
+
+			// getLocationFromMap();
 
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = peopleUpdate;
@@ -731,7 +734,6 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 							// server call
 							dialog.dismiss();
 							reportToServer(typeId[1], typeId[2]);
-							
 
 						}
 					});
@@ -959,6 +961,37 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		if (peopleUpdate.isOnline()) {
 			ivOnline.setImageResource(R.drawable.online);
 		}
+	}
+
+	// Show on map button click new way
+
+	private void getLocationFromMap() {
+		double currentLat = 0;
+		double currentLng = 0;
+
+		if (peopleUpdate.getCurrentLat() != 0.0) {
+
+			currentLat = peopleUpdate.getCurrentLat();
+		}
+
+		if (peopleUpdate.getCurrentLng() != 0.0) {
+
+			currentLng = peopleUpdate.getCurrentLng();
+		}
+
+		// if (StaticValues.myPoint != null) {
+		// currentLat = StaticValues.myPoint.latitude;
+		// currentLng = StaticValues.myPoint.longitude;
+		//
+		// }
+
+		Intent intent = new Intent(context, LocationPickerProfile.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("LAT", currentLat);
+		intent.putExtra("LNG", currentLng);
+		startActivity(intent);
+
+		// startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
 	}
 
 }

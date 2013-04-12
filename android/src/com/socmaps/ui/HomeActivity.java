@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -35,12 +38,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -73,6 +79,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.socmaps.entity.CirclesAndFriends;
@@ -99,7 +106,12 @@ import com.socmaps.notificationBroadcast.NotificationCountBroadcastReciever;
 import com.socmaps.pushNotification.CommonUtilities;
 import com.socmaps.pushNotification.ServerUtilities;
 import com.socmaps.service.LocationUpdateService;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
+import com.socmaps.util.Constant.ALLUSER_FRIENDS;
+import com.socmaps.util.Constant.OnlineOffline;
 import com.socmaps.util.Constant.Permission;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -107,19 +119,24 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.AlluserFriendsOnlyRadioGroup;
 import com.socmaps.widget.CustomInfoWindowAdapter;
 import com.socmaps.widget.ListComparator;
+import com.socmaps.widget.ListComparator.COMPARATOR;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
+import com.socmaps.widget.OnlineOfflineRadioGroup;
+import com.socmaps.widget.OnlineOfflineRadioGroupListener;
 import com.socmaps.widget.PermissionRadioGroupLess;
 import com.socmaps.widget.PermissionRadioGroupListener;
+import com.socmaps.widget.SearchResultDialog;
+import com.socmaps.widget.SearchResultDialogListener;
 
 /**
  * HomeActivity class responsible for displaying all users, places, geo tags on
  * map and some user interaction.
- * 
  */
 public class HomeActivity extends FragmentActivity implements ILocationUpdateIndicator, OnCheckedChangeListener, OnClickListener, OnMarkerClickListener, OnCameraChangeListener, OnMapClickListener,
-		OnMapLongClickListener, OnInfoWindowClickListener, BroadcastListener, PermissionRadioGroupListener, LogoutListener, AuthListener, DialogListener {
+		OnMapLongClickListener, OnInfoWindowClickListener, BroadcastListener, OnlineOfflineRadioGroupListener, PermissionRadioGroupListener, LogoutListener, AuthListener, DialogListener {
 
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
@@ -217,6 +234,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private Timer mapUpdateTimer;
 	private float intialZoomLevel = 16.0f;
 	private int mapUpdateInterval = 2000; // milliseconds
+	private Timer timerGetLocations;
 
 	// private Marker lastClickedMarker;
 	private HashMap<String, Object> visibleItemsOnMap = new HashMap<String, Object>();
@@ -236,6 +254,19 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private ListComparator listComparator;
 
 	public RemoteImageCache remoteImageCache;
+
+	private LatLng swPostion, nePosition, centerPosition;
+
+	private Object activeItem;
+
+	// April 10
+	private LinearLayout onlineOfflineRadioGroupContainer;
+	private OnlineOfflineRadioGroup OnlineOfflineRadioGroupView;
+	private LinearLayout allUserFriendsOnlyRadioGroupContainer;
+	private AlluserFriendsOnlyRadioGroup alluserFriendsOnlyRadioGroup;
+
+	private boolean isOffline = true;
+	private boolean isAllUser = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -264,6 +295,10 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		initializeNotificationBroadcast();
 
 		centerToMyPosition();
+
+		// April 10
+		addOnLineOffLineRadioGroup();
+		addAllUserFriendsOnlyRadioGroup();
 
 	}
 
@@ -392,6 +427,9 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		sessionEvents = new SessionEvents();
 
+		// April 10
+		onlineOfflineRadioGroupContainer = (LinearLayout) vTop.findViewById(R.id.onlineOfflineRadioGroupContainer);
+		allUserFriendsOnlyRadioGroupContainer = (LinearLayout) vTop.findViewById(R.id.allUserFriendsOnlyRadioGroupContainer);
 	}
 
 	private void centerToMyPosition() {
@@ -438,25 +476,20 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	};
 
 	private void getMapDataFromServer() {
+
+		Log.i("HomeActivity:getMapDataFromServer", "New request");
+
 		getSearchResult();
 		getEventList();
 		getGeotagList();
 	}
 
-	private void initTimeTask() {
-		task = new TimerTask() {
-			public void run() {
-				if (isLocationFound && isRunning) {
-					getMapDataFromServer();
-				}
-			}
-		};
-		if (timer != null) {
-			timer.cancel();
-		}
-		timer = new Timer();
-		timer.schedule(task, 500, updateInterval);
-	}
+	/*
+	 * private void initTimeTask() { task = new TimerTask() { public void run()
+	 * { if (isLocationFound && isRunning) { getMapDataFromServer(); } } }; if
+	 * (timer != null) { timer.cancel(); } timer = new Timer();
+	 * timer.schedule(task, 500, updateInterval); }
+	 */
 
 	private void checkNotNull(Object reference, String name) {
 		if (reference == null) {
@@ -600,12 +633,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		// "self","", StaticValues.myInfo);
 		// itemizedOverlaySelf.addOverlay(overlayItem);
 
-		if (isFirstLocationUpdate) {
-			// relocationCurrentPosition();
-			isFirstLocationUpdate = false;
-
-			initTimeTask();
-		}
+		/*
+		 * if (isFirstLocationUpdate) { // relocationCurrentPosition();
+		 * isFirstLocationUpdate = false;
+		 * 
+		 * initTimeTask(); }
+		 */
 		// mapView.invalidate();
 
 		sendSelfLocationToServer();
@@ -626,21 +659,33 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	};
 
 	private void sendServerRequestToGetSearchResult() {
-		RestClient restClient = new RestClient(Constant.smGetUserUrl);
-		restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
-		restClient.AddParam("lat", myLat + "");
-		restClient.AddParam("lng", myLng + "");
-		try {
-			restClient.Execute(RestClient.RequestMethod.POST);
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		if (mapView != null) {
+
+			RestClient restClient = new RestClient(Constant.smGetUserUrl);
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
+			// restClient.AddParam("lat", myLat + "");
+			// restClient.AddParam("lng", myLng + "");
+
+			restClient.AddParam("sw-position", swPostion.latitude + "," + swPostion.longitude);
+			restClient.AddParam("ne-position", nePosition.latitude + "," + nePosition.longitude);
+			restClient.AddParam("lat", centerPosition.latitude + "");
+			restClient.AddParam("lng", centerPosition.longitude + "");
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.POST);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			responseString = restClient.getResponse();
+
+			responseStatus = restClient.getResponseCode();
+
+			runOnUiThread(returnResGetSearchResult);
+
 		}
 
-		responseString = restClient.getResponse();
-
-		responseStatus = restClient.getResponseCode();
-
-		runOnUiThread(returnResGetSearchResult);
 	}
 
 	private Runnable returnResGetSearchResult = new Runnable() {
@@ -665,13 +710,16 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 					StaticValues.searchResult = tempSearchResult;
 
 					populateMasterList();
+					updateContentList(listMasterContent);
+					updateMapDisplay(listContent);
 
-					if (isSearchEnabled == false) {
-
-						Log.e("UpdateMap", "Inside it");
-						updateContentList(listMasterContent);
-						updateMapDisplay(listContent);
-					}
+					/*
+					 * if (isSearchEnabled == false) {
+					 * 
+					 * Log.e("UpdateMap", "Inside it");
+					 * updateContentList(listMasterContent);
+					 * updateMapDisplay(listContent); }
+					 */
 				}
 			}
 
@@ -707,8 +755,13 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	};
 
 	private void sendServerRequestToGetGeotagList() {
-		RestClient restClient = new RestClient(Constant.smGeoTag);
+
+		RestClient restClient = new RestClient(Constant.smGeoTag + "/bylocation");
 		restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
+		restClient.AddParam("sw-position", swPostion.latitude + "," + swPostion.longitude);
+		restClient.AddParam("ne-position", nePosition.latitude + "," + nePosition.longitude);
+		restClient.AddParam("lat", centerPosition.latitude + "");
+		restClient.AddParam("lng", centerPosition.longitude + "");
 
 		try {
 			restClient.Execute(RestClient.RequestMethod.GET);
@@ -719,6 +772,8 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		responseGeotagString = restClient.getResponse();
 
 		responseGeotagStatus = restClient.getResponseCode();
+		
+		Log.i("GeoTags", responseGeotagString);
 
 		runOnUiThread(returnResGetGeotagList);
 	}
@@ -750,12 +805,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			//Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			//Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -779,18 +834,22 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	};
 
 	private void sendServerRequestToGetEventList() {
-		RestClient getUserClient = new RestClient(Constant.smEventUrl);
-		getUserClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
+		RestClient restClient = new RestClient(Constant.smEventUrl + "/bylocation");
+		restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
+		restClient.AddParam("sw-position", swPostion.latitude + "," + swPostion.longitude);
+		restClient.AddParam("ne-position", nePosition.latitude + "," + nePosition.longitude);
+		restClient.AddParam("lat", centerPosition.latitude + "");
+		restClient.AddParam("lng", centerPosition.longitude + "");
 
 		try {
-			getUserClient.Execute(RestClient.RequestMethod.GET);
+			restClient.Execute(RestClient.RequestMethod.POST);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		responseEventString = getUserClient.getResponse();
+		responseEventString = restClient.getResponse();
 
-		responseEventStatus = getUserClient.getResponseCode();
+		responseEventStatus = restClient.getResponseCode();
 
 		runOnUiThread(returnResGetEventList);
 	}
@@ -857,7 +916,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		sortMasterListData();
 
-		validateExistingMarkers();
+		// validateExistingMarkers();
 	}
 
 	private void addPlacesToMasterList() {
@@ -911,10 +970,15 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	}
 
 	private MarkerOptions getMarkerOptions(Object item) {
+		return getMarkerOptions(item, true);
+	}
+
+	private MarkerOptions getMarkerOptions(Object item, boolean isVisible) {
 		MarkerOptions markerOptions = new MarkerOptions();
 		String title = Utility.getItemTitle(item);
 		markerOptions.title(title);
 		markerOptions.icon(null);
+		markerOptions.visible(isVisible);
 
 		try {
 
@@ -972,18 +1036,151 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		return null;
 	}
 
+	/*
+	 * private synchronized void updateMapDisplay(final List<Object> list) {
+	 * 
+	 * Log.i("HomeActivity", "updateMapDisplay"); if (list != null) {
+	 * 
+	 * int totalItemDisplayed = 0; String firstItemIdOnList = null;
+	 * 
+	 * if (!isSearchEnabled || !isNewSearch) {
+	 * listComparator.setLatLng(mapView.getCameraPosition().target);
+	 * Collections.sort(list, listComparator); }
+	 * 
+	 * boolean isPeople =
+	 * SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE,
+	 * true);
+	 * 
+	 * boolean isPlace =
+	 * SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE,
+	 * false);
+	 * 
+	 * boolean isEvent =
+	 * SharedPreferencesHelper.getInstance(context).getBoolean(Constant.EVENT,
+	 * true);
+	 * 
+	 * for (int i = 0; i < list.size(); i++) {
+	 * 
+	 * Object item = list.get(i); String itemId = Utility.getItemId(item);
+	 * 
+	 * LatLng latLng = Utility.getLatLngFromObject(item);
+	 * 
+	 * // boolean isSelectedMarker = false;
+	 * 
+	 * if (firstItemIdOnList == null && visibleMarkers.containsKey(itemId)) {
+	 * firstItemIdOnList = itemId; }
+	 * 
+	 * if ((Utility.isLocationVisibleOnMap(mapView, latLng) || isSearchEnabled)
+	 * && !visibleMarkers.containsKey(itemId)) {
+	 * 
+	 * MarkerOptions markerOptions = null;
+	 * 
+	 * if (item instanceof People && isPeople) {
+	 * 
+	 * markerOptions = getMarkerOptions(item);
+	 * 
+	 * } else if (item instanceof Place && isPlace) {
+	 * 
+	 * markerOptions = getMarkerOptions(item);
+	 * 
+	 * // displayedItemCounter++; } else if (item instanceof SecondDegreePeople
+	 * && isPeople) {
+	 * 
+	 * markerOptions = getMarkerOptions(item);
+	 * 
+	 * } else if (item instanceof Event && isEvent) { markerOptions =
+	 * getMarkerOptions(item);
+	 * 
+	 * } else if (item instanceof GeoTag && isPeople) { markerOptions =
+	 * getMarkerOptions(item); }
+	 * 
+	 * if (markerOptions != null) {
+	 * 
+	 * try { Marker marker = mapView.addMarker(markerOptions);
+	 * visibleItemsOnMap.put(marker.getId(), item); visibleMarkers.put(itemId,
+	 * marker); objectList.put(itemId, item);
+	 * 
+	 * markerUpdateList.put(Utility.getItemId(item), false);
+	 * 
+	 * totalItemDisplayed++;
+	 * 
+	 * if (firstItemIdOnList == null) { firstItemIdOnList = itemId; }
+	 * 
+	 * } catch (NullPointerException e) {
+	 * 
+	 * } catch (Exception e) { // TODO: handle exception }
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * if (totalItemDisplayed == 10) { // break; } }
+	 * 
+	 * // list.clear();
+	 * 
+	 * // customInfoWindowAdapter = new //
+	 * CustomInfoWindowAdapter(context,getLayoutInflater(), //
+	 * visibleItemsOnMap, imageFetcher,HomeActivity.this);
+	 * customInfoWindowAdapter = new CustomInfoWindowAdapter(context,
+	 * getLayoutInflater(), visibleItemsOnMap, remoteImageCache,
+	 * imageCacheListener);
+	 * 
+	 * mapView.setInfoWindowAdapter(customInfoWindowAdapter);
+	 * 
+	 * Marker markerToHighlight = null;
+	 * 
+	 * if (isSearchEnabled && isNewSearch) {
+	 * 
+	 * if (visibleMarkers.size() > 0) { markerToHighlight =
+	 * visibleMarkers.get(firstItemIdOnList);
+	 * 
+	 * } if (markerToHighlight == null) { Toast.makeText(context,
+	 * "No search result found.", Toast.LENGTH_SHORT).show(); } isNewSearch =
+	 * false; } else if (StaticValues.isHighlightAnnotation &&
+	 * StaticValues.highlightAnnotationItem != null) {
+	 * 
+	 * if (visibleMarkers.size() > 0) { markerToHighlight =
+	 * visibleMarkers.get(Utility
+	 * .getItemId(StaticValues.highlightAnnotationItem)); }
+	 * 
+	 * StaticValues.isHighlightAnnotation = false;
+	 * StaticValues.highlightAnnotationItem = null;
+	 * 
+	 * }
+	 * 
+	 * if (markerToHighlight != null) {
+	 * mapView.animateCamera(CameraUpdateFactory
+	 * .newLatLng(markerToHighlight.getPosition()));
+	 * markerToHighlight.showInfoWindow(); }
+	 * 
+	 * 
+	 * 
+	 * updateMarkerVisibility();
+	 * 
+	 * System.gc(); }
+	 * 
+	 * }
+	 */
+
 	private synchronized void updateMapDisplay(final List<Object> list) {
 
 		Log.i("HomeActivity", "updateMapDisplay");
 		if (list != null) {
 
+			mapView.clear();
+			visibleItemsOnMap.clear();
+			visibleMarkers.clear();
+			objectList.clear();
+			markerUpdateList.clear();
+
 			int totalItemDisplayed = 0;
 			String firstItemIdOnList = null;
 
-			if (!isSearchEnabled || !isNewSearch) {
-				listComparator.setLatLng(mapView.getCameraPosition().target);
-				Collections.sort(list, listComparator);
-			}
+			/*
+			 * if (!isSearchEnabled || !isNewSearch) {
+			 * listComparator.setLatLng(mapView.getCameraPosition().target);
+			 * Collections.sort(list, listComparator); }
+			 */
 
 			boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
 
@@ -1008,24 +1205,25 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 					MarkerOptions markerOptions = null;
 
-					if (item instanceof People && isPeople) {
+					// if (item instanceof People && isPeople) {
+					if (item instanceof People) {
 
-						markerOptions = getMarkerOptions(item);
+						markerOptions = getMarkerOptions(item, isPeople);
 
-					} else if (item instanceof Place && isPlace) {
+					} else if (item instanceof Place) {
 
-						markerOptions = getMarkerOptions(item);
+						markerOptions = getMarkerOptions(item, isPlace);
 
 						// displayedItemCounter++;
-					} else if (item instanceof SecondDegreePeople && isPeople) {
+					} else if (item instanceof SecondDegreePeople) {
 
-						markerOptions = getMarkerOptions(item);
+						markerOptions = getMarkerOptions(item, isPeople);
 
-					} else if (item instanceof Event && isEvent) {
-						markerOptions = getMarkerOptions(item);
+					} else if (item instanceof Event) {
+						markerOptions = getMarkerOptions(item, isEvent);
 
-					} else if (item instanceof GeoTag && isPeople) {
-						markerOptions = getMarkerOptions(item);
+					} else if (item instanceof GeoTag) {
+						markerOptions = getMarkerOptions(item, isPeople);
 					}
 
 					if (markerOptions != null) {
@@ -1055,7 +1253,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				}
 
 				if (totalItemDisplayed == 10) {
-					break;
+					// break;
 				}
 			}
 
@@ -1068,19 +1266,43 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 			mapView.setInfoWindowAdapter(customInfoWindowAdapter);
 
+			/*
+			 * Marker markerToHighlight = null;
+			 * 
+			 * if (isSearchEnabled && isNewSearch) {
+			 * 
+			 * if (visibleMarkers.size() > 0) { markerToHighlight =
+			 * visibleMarkers.get(firstItemIdOnList);
+			 * 
+			 * } if (markerToHighlight == null) { Toast.makeText(context,
+			 * "No search result found.", Toast.LENGTH_SHORT).show(); }
+			 * isNewSearch = false; } else if
+			 * (StaticValues.isHighlightAnnotation &&
+			 * StaticValues.highlightAnnotationItem != null) {
+			 * 
+			 * if (visibleMarkers.size() > 0) { markerToHighlight =
+			 * visibleMarkers
+			 * .get(Utility.getItemId(StaticValues.highlightAnnotationItem)); }
+			 * 
+			 * StaticValues.isHighlightAnnotation = false;
+			 * StaticValues.highlightAnnotationItem = null;
+			 * 
+			 * }
+			 * 
+			 * if (markerToHighlight != null) {
+			 * mapView.animateCamera(CameraUpdateFactory
+			 * .newLatLng(markerToHighlight.getPosition()));
+			 * markerToHighlight.showInfoWindow(); }
+			 */
+
+			/*
+			 * if (!isTimerRunning) { markerUpdateTimer = new
+			 * Timer("MarkerUpdate", true); markerUpdateTimer .schedule(new
+			 * MarkerUpdateTask(), 10000, 15000); isTimerRunning = true; }
+			 */
+
 			Marker markerToHighlight = null;
-
-			if (isSearchEnabled && isNewSearch) {
-
-				if (visibleMarkers.size() > 0) {
-					markerToHighlight = visibleMarkers.get(firstItemIdOnList);
-
-				}
-				if (markerToHighlight == null) {
-					Toast.makeText(context, "No search result found.", Toast.LENGTH_SHORT).show();
-				}
-				isNewSearch = false;
-			} else if (StaticValues.isHighlightAnnotation && StaticValues.highlightAnnotationItem != null) {
+			if (StaticValues.isHighlightAnnotation && StaticValues.highlightAnnotationItem != null) {
 
 				if (visibleMarkers.size() > 0) {
 					markerToHighlight = visibleMarkers.get(Utility.getItemId(StaticValues.highlightAnnotationItem));
@@ -1089,18 +1311,17 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				StaticValues.isHighlightAnnotation = false;
 				StaticValues.highlightAnnotationItem = null;
 
+			} else if (activeItem != null) {
+				if (visibleMarkers.size() > 0) {
+					markerToHighlight = visibleMarkers.get(Utility.getItemId(activeItem));
+				}
+				activeItem = null;
 			}
 
 			if (markerToHighlight != null) {
 				mapView.animateCamera(CameraUpdateFactory.newLatLng(markerToHighlight.getPosition()));
 				markerToHighlight.showInfoWindow();
 			}
-
-			/*
-			 * if (!isTimerRunning) { markerUpdateTimer = new
-			 * Timer("MarkerUpdate", true); markerUpdateTimer .schedule(new
-			 * MarkerUpdateTask(), 10000, 15000); isTimerRunning = true; }
-			 */
 
 			updateMarkerVisibility();
 
@@ -2466,21 +2687,24 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		if (buttonView == peopleCheckBox) {
 			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.PEOPLE, isChecked);
 
-			updateMapDisplay(listContent);
+			// updateMapDisplay(listContent);
+			updateMarkerVisibility();
 			// setMarkerVisibility(Constant.FLAG_PEOPLE, isChecked);
 		}
 		if (buttonView == placeCheckBox) {
 
 			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.PLACE, isChecked);
 
-			updateMapDisplay(listContent);
+			// updateMapDisplay(listContent);
+			updateMarkerVisibility();
 			// setMarkerVisibility(Constant.FLAG_PLACE, isChecked);
 		}
 		if (buttonView == eventCheckBox) {
 
 			SharedPreferencesHelper.getInstance(context).setBoolean(Constant.EVENT, isChecked);
 
-			updateMapDisplay(listContent);
+			// updateMapDisplay(listContent);
+			updateMarkerVisibility();
 			// setMarkerVisibility(Constant.FLAG_EVENT, isChecked);
 		}
 		if (buttonView == dealCheckBox) {
@@ -2496,7 +2720,13 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		if (v == btnListView || v == tvListView) {
 			if (StaticValues.searchResult != null) {
+
 				Intent showListIntent = new Intent(context, ListViewActivity.class);
+				showListIntent.putExtra("sw-position", swPostion.latitude + "," + swPostion.longitude);
+				showListIntent.putExtra("ne-position", nePosition.latitude + "," + nePosition.longitude);
+				showListIntent.putExtra("lat", centerPosition.latitude + "");
+				showListIntent.putExtra("lng", centerPosition.longitude + "");
+
 				startActivity(showListIntent);
 			} else
 				Toast.makeText(context, "No data found yet.", Toast.LENGTH_SHORT).show();
@@ -2572,9 +2802,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 			// Log.i("btnDoSearch", "pressed");
 
-			if (listMasterContent.size() > 0 && !etSearchField.getText().toString().equalsIgnoreCase("")) {
-				isSearchEnabled = true;
-				doSearch();
+			if (etSearchField.getText().toString().trim().length() > 2) {
+				// isSearchEnabled = true;
+				doSearchFromServer(etSearchField.getText().toString().trim());
+				// // doSearch();
+			} else {
+				Toast.makeText(context, "Please enter atleast 3 characters.", Toast.LENGTH_SHORT).show();
 			}
 
 		} else if (v == btnClearSearch) {
@@ -2583,7 +2816,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				isSearchEnabled = false;
 
 				if (listMasterContent.size() > 0) {
-					doSearch();
+					// doSearch();
 				}
 
 			}
@@ -2768,39 +3001,74 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
-	private void updateMapDisplayOnRegionChange() {
+	/*
+	 * private void updateMapDisplayOnRegionChange() {
+	 * 
+	 * if (mapUpdateTimer != null) { mapUpdateTimer.cancel(); }
+	 * 
+	 * TimerTask timerTask = new TimerTask() { public void run() {
+	 * 
+	 * runOnUiThread(mapUpdateTimerTask);
+	 * 
+	 * } }; mapUpdateTimer = new Timer(); mapUpdateTimer.schedule(timerTask,
+	 * mapUpdateInterval);
+	 * 
+	 * }
+	 */
 
-		if (mapUpdateTimer != null) {
-			mapUpdateTimer.cancel();
+	/*
+	 * private Runnable mapUpdateTimerTask = new Runnable() {
+	 * 
+	 * @Override public void run() { // TODO Auto-generated method stub
+	 * updateMapDisplay(listContent); } };
+	 */
+
+	/*
+	 * @Override public void onCameraChange(CameraPosition position) { // TODO
+	 * Auto-generated method stub Log.i("HomeActivity", "onCameraChange");
+	 * 
+	 * updateMapDisplayOnRegionChange();
+	 * 
+	 * }
+	 */
+
+	@Override
+	public void onCameraChange(CameraPosition position) {
+		// TODO Auto-generated method stub
+
+		Log.i("Home", "onCameraChange");
+		/*
+		 * if (isFirstLocationUpdate) { // relocationCurrentPosition();
+		 * isFirstLocationUpdate = false;
+		 * 
+		 * } else {
+		 */
+		LatLngBounds latLngBounds = mapView.getProjection().getVisibleRegion().latLngBounds;
+		swPostion = latLngBounds.southwest;
+		nePosition = latLngBounds.northeast;
+		centerPosition = position.target;
+
+		Log.i("HomeActivity:onCameraChange", "sw: " + swPostion.latitude + "," + swPostion.longitude + "  ne: " + nePosition.latitude + "," + nePosition.longitude);
+
+		if (timerGetLocations != null) {
+			timerGetLocations.cancel();
 		}
 
 		TimerTask timerTask = new TimerTask() {
 			public void run() {
 
-				runOnUiThread(mapUpdateTimerTask);
+				runOnUiThread(timerTaskGetLocations);
 
 			}
 		};
-		mapUpdateTimer = new Timer();
-		mapUpdateTimer.schedule(timerTask, mapUpdateInterval);
+		timerGetLocations = new Timer();
+		timerGetLocations.schedule(timerTask, mapUpdateInterval, updateInterval);
 
-	}
-
-	private Runnable mapUpdateTimerTask = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			updateMapDisplay(listContent);
+		if (StaticValues.isHighlightAnnotation && StaticValues.highlightAnnotationItem != null) {
+			highlightPreSelectedMarker();
 		}
-	};
 
-	@Override
-	public void onCameraChange(CameraPosition position) {
-		// TODO Auto-generated method stub
-		Log.i("HomeActivity", "onCameraChange");
-
-		updateMapDisplayOnRegionChange();
+		// }
 
 	}
 
@@ -2812,6 +3080,8 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		if (visibleItemsOnMap != null) {
 
 			Object item = visibleItemsOnMap.get(marker.getId());
+			activeItem = item;
+
 			if (!marker.isVisible()) {
 				return true;
 			} else if (item instanceof Event) {
@@ -2852,6 +3122,10 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			// lastClickedMarker = null;
 			marker.hideInfoWindow();
 		}
+
+		activeItem = null;
+		StaticValues.highlightAnnotationItem = null;
+		StaticValues.isHighlightAnnotation = false;
 	}
 
 	private void getCustomInfoWindow(Object item) {
@@ -2929,15 +3203,29 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private void updateMarkerVisibility() {
 
 		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
-
 		boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
-
 		boolean isEvent = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.EVENT, false);
 
 		if (objectList != null) {
 			for (String itemId : objectList.keySet()) {
 				Object item = objectList.get(itemId);
-				if (item instanceof People || item instanceof SecondDegreePeople) {
+				if (item instanceof People) {
+					
+					People people = (People)item;
+					boolean isPeopleVisible = isPeople;
+					if(isPeople)
+					{
+						if(people.isOnline() == false && isOffline == false)
+						{
+							isPeopleVisible = false;
+						} else if(!people.getFriendshipStatus().equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND) && isAllUser == false)
+						{
+							isPeopleVisible = false;
+						}
+					}
+					
+					visibleMarkers.get(itemId).setVisible(isPeopleVisible);
+				} else if (item instanceof SecondDegreePeople || item instanceof GeoTag) {
 					visibleMarkers.get(itemId).setVisible(isPeople);
 				} else if (item instanceof Place) {
 					visibleMarkers.get(itemId).setVisible(isPlace);
@@ -2970,85 +3258,60 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		}
 	}
 
-	private void validateExistingMarkers() {
-		// TODO Auto-generated method stub
-
-		List<String> itemIdList = new ArrayList<String>();
-
-		for (Object listItem : listMasterContent) {
-			String itemId = Utility.getItemId(listItem);
-			itemIdList.add(itemId);
-
-			if (objectList.containsKey(itemId)) {
-				Object oldItem = objectList.get(itemId);
-
-				LatLng newLatLng = Utility.getLatLngFromObject(oldItem);
-				LatLng oldLatLng = Utility.getLatLngFromObject(listItem);
-				
-				boolean isStatusChanged = false;
-				
-				if(listItem instanceof People)
-				{
-					try {
-						People peopleOld = (People) oldItem;
-						People peopleNew = (People) listItem;
-						if(peopleOld.isOnline() != peopleNew.isOnline())
-						{
-							isStatusChanged = true;
-						}
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-					
-					
-				}
-
-				if (newLatLng.latitude != oldLatLng.latitude || newLatLng.longitude != oldLatLng.longitude || isStatusChanged) {
-					// update visibleItemsOnMap
-					// update visibleMarkers
-					// update objectList
-
-					Marker oldMarker = visibleMarkers.get(itemId);
-					String oldMarkerId = null;
-					if (oldMarker != null) {
-						oldMarkerId = oldMarker.getId();
-						oldMarker.remove();
-						visibleItemsOnMap.remove(oldMarkerId);
-					}
-
-					visibleMarkers.remove(itemId);
-					objectList.remove(itemId);
-
-					MarkerOptions markerOptions = getMarkerOptions(listItem);
-					if (markerOptions != null) {
-						Marker marker = mapView.addMarker(markerOptions);
-						visibleItemsOnMap.put(marker.getId(), listItem);
-						visibleMarkers.put(itemId, marker);
-						objectList.put(itemId, listItem);
-						markerUpdateList.put(itemId, false);
-					}
-
-				}
-
-			}
-		}
-
-		for (String itemId : ((HashMap<String, Object>) objectList.clone()).keySet()) {
-			if (!itemIdList.contains(itemId)) {
-				Marker oldMarker = visibleMarkers.get(itemId);
-				String oldMarkerId = null;
-				if (oldMarker != null) {
-					oldMarkerId = oldMarker.getId();
-					oldMarker.remove();
-					visibleItemsOnMap.remove(oldMarkerId);
-				}
-				visibleMarkers.remove(itemId);
-				objectList.remove(itemId);
-				markerUpdateList.remove(itemId);
-			}
-		}
-
-	}
+	/*
+	 * private void validateExistingMarkers() { // TODO Auto-generated method
+	 * stub
+	 * 
+	 * List<String> itemIdList = new ArrayList<String>();
+	 * 
+	 * for (Object listItem : listMasterContent) { String itemId =
+	 * Utility.getItemId(listItem); itemIdList.add(itemId);
+	 * 
+	 * if (objectList.containsKey(itemId)) { Object oldItem =
+	 * objectList.get(itemId);
+	 * 
+	 * LatLng newLatLng = Utility.getLatLngFromObject(oldItem); LatLng oldLatLng
+	 * = Utility.getLatLngFromObject(listItem);
+	 * 
+	 * boolean isStatusChanged = false;
+	 * 
+	 * if (listItem instanceof People) { try { People peopleOld = (People)
+	 * oldItem; People peopleNew = (People) listItem; if (peopleOld.isOnline()
+	 * != peopleNew.isOnline()) { isStatusChanged = true; } } catch (Exception
+	 * e) { // TODO: handle exception }
+	 * 
+	 * }
+	 * 
+	 * if (newLatLng.latitude != oldLatLng.latitude || newLatLng.longitude !=
+	 * oldLatLng.longitude || isStatusChanged) { // update visibleItemsOnMap //
+	 * update visibleMarkers // update objectList
+	 * 
+	 * Marker oldMarker = visibleMarkers.get(itemId); String oldMarkerId = null;
+	 * if (oldMarker != null) { oldMarkerId = oldMarker.getId();
+	 * oldMarker.remove(); visibleItemsOnMap.remove(oldMarkerId); }
+	 * 
+	 * visibleMarkers.remove(itemId); objectList.remove(itemId);
+	 * 
+	 * MarkerOptions markerOptions = getMarkerOptions(listItem); if
+	 * (markerOptions != null) { Marker marker =
+	 * mapView.addMarker(markerOptions); visibleItemsOnMap.put(marker.getId(),
+	 * listItem); visibleMarkers.put(itemId, marker); objectList.put(itemId,
+	 * listItem); markerUpdateList.put(itemId, false); }
+	 * 
+	 * }
+	 * 
+	 * } }
+	 * 
+	 * for (String itemId : ((HashMap<String, Object>)
+	 * objectList.clone()).keySet()) { if (!itemIdList.contains(itemId)) {
+	 * Marker oldMarker = visibleMarkers.get(itemId); String oldMarkerId = null;
+	 * if (oldMarker != null) { oldMarkerId = oldMarker.getId();
+	 * oldMarker.remove(); visibleItemsOnMap.remove(oldMarkerId); }
+	 * visibleMarkers.remove(itemId); objectList.remove(itemId);
+	 * markerUpdateList.remove(itemId); } }
+	 * 
+	 * }
+	 */
 
 	/*
 	 * boolean isTimerRunning = false; Timer markerUpdateTimer = new Timer();
@@ -3146,5 +3409,185 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			// remoteImageCache.getImage(imageInfo);
 		}
 	};
+
+	private Runnable timerTaskGetLocations = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			if (isLocationFound && isRunning) {
+				getMapDataFromServer();
+			}
+		}
+
+	};
+
+	private void highlightPreSelectedMarker() {
+		if (StaticValues.isHighlightAnnotation && StaticValues.highlightAnnotationItem != null) {
+
+			Marker marker;
+
+			String itemId = Utility.getItemId(StaticValues.highlightAnnotationItem);
+
+			if (visibleMarkers.containsKey(itemId)) {
+				marker = visibleMarkers.get(itemId);
+			} else {
+				// create a marker
+				MarkerOptions markerOptions = getMarkerOptions(StaticValues.highlightAnnotationItem);
+				marker = mapView.addMarker(markerOptions);
+
+				visibleItemsOnMap.put(marker.getId(), StaticValues.highlightAnnotationItem);
+				visibleMarkers.put(itemId, marker);
+				objectList.put(itemId, StaticValues.highlightAnnotationItem);
+
+				markerUpdateList.put(itemId, false);
+
+				customInfoWindowAdapter = new CustomInfoWindowAdapter(context, getLayoutInflater(), visibleItemsOnMap, remoteImageCache, imageCacheListener);
+
+				mapView.setInfoWindowAdapter(customInfoWindowAdapter);
+			}
+
+			if (marker != null) {
+				marker.showInfoWindow();
+
+			}
+
+			// StaticValues.isHighlightAnnotation = false;
+			// StaticValues.highlightAnnotationItem = null;
+
+		}
+	}
+
+	// April 10
+	// ********************************************************************************
+	// April 10
+	// ********************************************************************************
+
+	private void doSearchFromServer(String keyWord) {
+		// TODO Auto-generated method stub
+		String url = Constant.smGetUserUrl + "/keyword";
+
+		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
+		boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
+
+		String people = "yes";
+		if (!isPeople) {
+			people = "no";
+		}
+
+		String place = "yes";
+		if (!isPlace) {
+			place = "no";
+		}
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("sw-position", swPostion.latitude + "," + swPostion.longitude));
+		params.add(new BasicNameValuePair("ne-position", nePosition.latitude + "," + nePosition.longitude));
+		params.add(new BasicNameValuePair("lat", centerPosition.latitude + ""));
+		params.add(new BasicNameValuePair("lng", centerPosition.longitude + ""));
+
+		params.add(new BasicNameValuePair("keyword", keyWord));
+		params.add(new BasicNameValuePair("people", people));
+		params.add(new BasicNameValuePair("place", place));
+		
+		Log.e("Search key also", "Keyword : "+keyWord+"  people: "+people+" place: "+place);
+
+		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
+		backProcess.execute(RestClient.RequestMethod.POST);
+	}
+
+	private class BackProcessCallBackListener implements BackProcessCallback {
+
+		@Override
+		public void onFinish(int status, String result, int type) {
+
+			// TODO Auto-generated method stub
+			Log.w("Got Search list from server callback process >> :", status + ":" + result);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
+
+				SearchResult tempSearchResult = ServerResponseParser.parseSeachResult(result);
+
+				List<Object> tempMasterContent = new ArrayList<Object>();
+
+				for (int i = 0; i < tempSearchResult.getPeoples().size(); i++) {
+					tempMasterContent.add(tempSearchResult.getPeoples().get(i));
+				}
+
+				for (int i = 0; i < tempSearchResult.getPlaces().size(); i++) {
+					tempMasterContent.add(tempSearchResult.getPlaces().get(i));
+				}
+
+				for (int i = 0; i < tempSearchResult.getSecondDegreePeoples().size(); i++) {
+					tempMasterContent.add(tempSearchResult.getSecondDegreePeoples().get(i));
+				}
+
+				listComparator.setType(COMPARATOR.DISTANCE);
+				Collections.sort(tempMasterContent, listComparator);
+				
+				
+				if (tempMasterContent.size() != 0) {
+					SearchResultDialog searchResultDialog = new SearchResultDialog(context, new SearchResultDialoghandler(), "SEARCH_Result", tempMasterContent);
+					searchResultDialog.show();
+				}
+
+				break;
+
+			default:
+				Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+
+				break;
+
+			}
+
+		}
+
+	}
+
+	private class SearchResultDialoghandler implements SearchResultDialogListener {
+
+		@Override
+		public void onPlaceSelect(String pickerName, Object selectedObject) {
+			// TODO Auto-generated method stub
+
+			StaticValues.highlightAnnotationItem = selectedObject;
+			StaticValues.isHighlightAnnotation = true;
+
+			isMoveToAnotherPoint = true;
+
+			LatLng selectedLatLng = Utility.getLatLngFromObject(StaticValues.highlightAnnotationItem);
+			mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, intialZoomLevel));
+
+		}
+
+	}
+
+	private void addOnLineOffLineRadioGroup() {
+
+		OnlineOfflineRadioGroupView = new OnlineOfflineRadioGroup(context, this, OnlineOffline.OFFLINE);
+		onlineOfflineRadioGroupContainer.addView(OnlineOfflineRadioGroupView);
+
+	}
+
+	private void addAllUserFriendsOnlyRadioGroup() {
+
+		alluserFriendsOnlyRadioGroup = new AlluserFriendsOnlyRadioGroup(context, this, ALLUSER_FRIENDS.ALLUSER);
+		allUserFriendsOnlyRadioGroupContainer.addView(alluserFriendsOnlyRadioGroup);
+
+	}
+
+	@Override
+	public void onOnlineOfflineChanged(RadioGroup group, RadioButton radio, boolean isOfflineSelected) {
+		// TODO Auto-generated method stub
+		isOffline = isOfflineSelected;
+		updateMarkerVisibility();
+	}
+
+	@Override
+	public void onAlluserFriendsOnlyChanged(RadioGroup group, RadioButton radio, boolean isAllUserSelected) {
+		// TODO Auto-generated method stub
+		isAllUser = isAllUserSelected;
+		updateMarkerVisibility();
+	}
 
 }

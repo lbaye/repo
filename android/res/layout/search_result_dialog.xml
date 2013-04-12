@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="420dip"
+    android:background="@drawable/pickerbg"
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip" >
+
+    <LinearLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/header"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searchResultLabel"
+            android:textColor="@drawable/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalSeparator"
+        android:layout_below="@+id/layoutHeader"
+        android:cacheColorHint="@color/transparent"
+        android:choiceMode="singleChoice" />
+
+    <View
+        android:id="@+id/horizontalSeparator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_above="@+id/buttonPanel"
+        android:background="@color/highlightGreen" />
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background_light"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="70dip"
+            android:layout_height="35dp"
+            android:background="@drawable/img_blank"
+            android:padding="5dp"
+            android:text="@string/closeLabel"
+            android:textColor="@drawable/black" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -245,6 +245,10 @@ com.socmaps.ui.SplashActivity
 com.socmaps.ui.SplashActivity: SplashActivity()
 com.socmaps.util.BackProcess$REQUEST_TYPE: com.socmaps.util.BackProcess$REQUEST_TYPE[] values()
 com.socmaps.util.BackProcess$REQUEST_TYPE: com.socmaps.util.BackProcess$REQUEST_TYPE valueOf(java.lang.String)
+com.socmaps.util.Constant$ALLUSER_FRIENDS: com.socmaps.util.Constant$ALLUSER_FRIENDS[] values()
+com.socmaps.util.Constant$ALLUSER_FRIENDS: com.socmaps.util.Constant$ALLUSER_FRIENDS valueOf(java.lang.String)
+com.socmaps.util.Constant$OnlineOffline: com.socmaps.util.Constant$OnlineOffline[] values()
+com.socmaps.util.Constant$OnlineOffline: com.socmaps.util.Constant$OnlineOffline valueOf(java.lang.String)
 com.socmaps.util.Constant$Permission: com.socmaps.util.Constant$Permission[] values()
 com.socmaps.util.Constant$Permission: com.socmaps.util.Constant$Permission valueOf(java.lang.String)
 com.socmaps.util.RestClient$RequestMethod: com.socmaps.util.RestClient$RequestMethod[] values()
@@ -261,6 +265,9 @@ com.socmaps.widget.ListComparator$COMPARATOR: com.socmaps.widget.ListComparator$
 com.socmaps.widget.LocationPicker
 com.socmaps.widget.LocationPicker: LocationPicker()
 com.socmaps.widget.LocationPicker: void onClick(android.view.View)
+com.socmaps.widget.LocationPickerProfile
+com.socmaps.widget.LocationPickerProfile: LocationPickerProfile()
+com.socmaps.widget.LocationPickerProfile: void onClick(android.view.View)
 com.socmaps.widget.LocationRadioGroup$SelectedItem: com.socmaps.widget.LocationRadioGroup$SelectedItem[] values()
 com.socmaps.widget.LocationRadioGroup$SelectedItem: com.socmaps.widget.LocationRadioGroup$SelectedItem valueOf(java.lang.String)
 com.socmaps.widget.MapViewDialog
