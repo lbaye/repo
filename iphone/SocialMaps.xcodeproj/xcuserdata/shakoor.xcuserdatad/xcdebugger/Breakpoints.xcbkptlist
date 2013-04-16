@@ -13,7 +13,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1292"
          endingLineNumber = "1292"
-         landmarkName = "-viewDidUnload"
+         landmarkName = "-viewDidDisappear:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
