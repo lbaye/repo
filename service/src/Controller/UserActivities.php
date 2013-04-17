@@ -206,7 +206,6 @@ class UserActivities extends Base
 //            }
 //        }
 
-
         if (self::DEFAULT_CONTENT_TYPE === $type) {
             $items = array();
             if (count($activities) > 0)
@@ -260,6 +259,10 @@ class UserActivities extends Base
                     }
                 }
 
+            } elseif ($activity->getObjectType() == "friend") {
+                if (in_array($activity->getObjectId(), $this->user->getFriends())) {
+                    $allowItems[] = $activity;
+                }
             } else {
                 $allowItems[] = $activity;
             }
@@ -290,6 +293,10 @@ class UserActivities extends Base
                     $allowItems[] = $activity;
                 }
 
+            } elseif ($activity->getObjectType() == "friend") {
+                if (in_array($activity->getObjectId(), $this->user->getFriends())) {
+                    $allowItems[] = $activity;
+                }
             } else {
                 $allowItems[] = $activity;
             }
