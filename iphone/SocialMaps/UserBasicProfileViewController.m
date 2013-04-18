@@ -827,7 +827,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
             NSString *contentType = [[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
             NSString *contentId = [[dataStr componentsSeparatedByString:@":"] objectAtIndex:4];
             
-            [ReportContent reportContentId:contentId withContentType:contentType authTokenValue:smAppDelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view title:@"Report this post"];
+            [ReportContent reportContentId:contentId withContentType:contentType authTokenValue:smAppDelegate.authToken authTokenKey:@"Auth-Token" parentView:self.view title:@"Report this post?"];
         }
         
         return NO;
