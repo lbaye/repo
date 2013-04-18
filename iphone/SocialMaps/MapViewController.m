@@ -1522,7 +1522,7 @@ ButtonClickCallbackData callBackData;
     if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
         return;
     // Calculate move from last position
-    CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
+    CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.currPosition.longitude doubleValue]];
     
     NSDate *now = [NSDate date];
     int elapsedTime = [now timeIntervalSinceDate:smAppDelegate.currPosition.positionTime];
