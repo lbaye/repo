@@ -15,8 +15,8 @@ class GCM extends Notifier
     public function send(array $data, array $deviceIds)
     {
         $fields = array(
-            'registration_ids'  => $deviceIds,
-            'data'              => $this->_createPushData($data),
+            'registration_ids' => $deviceIds,
+            'data' => $this->_createPushData($data),
         );
 
         $headers = array(
@@ -29,14 +29,18 @@ class GCM extends Notifier
 
     private function _createPushData($data)
     {
+        $receiverId = (string)$data['targetUid'];
+
+        if (empty($receiverId)) {
+            $receiverId = $data['receiverId'];
+        }
         $pushData = array(
-            'message'    => $data['title'],
-            'badge'      => $data['badge'],
-            'tabCounts'  => $data['tabCounts'],
+            'message' => $data['title'],
+            'badge' => $data['badge'],
+            'tabCounts' => $data['tabCounts'],
             'objectType' => $data['objectType'],
-            'objectId'   => isset($data['objectId']) ? $data['objectId'] : null,
-            'receiverId' => (string) $data['targetUid'],
-            'testReceive' => "1111222".$data['receiverId']
+            'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
+            'receiverId' => $receiverId
         );
 
         return $pushData;
