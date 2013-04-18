@@ -617,7 +617,7 @@ public class FriendListActivity extends FragmentActivity implements OnClickListe
 
 				double distances = Utility
 						.calculateDistance(StaticValues.myPoint, new LatLng(
-								people.getCurrentLat(), people.getCurrentLng()));
+								people.getLatitude(), people.getLongitude()));
 
 				Log.w("distances:" + distances, "distanceLabel(distances):"
 						+ distanceLabel(distances));

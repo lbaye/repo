@@ -2276,7 +2276,7 @@ public class Utility {
 
 			People user = (People) item;
 
-			latLng = new LatLng(user.getCurrentLat(), user.getCurrentLng());
+			latLng = new LatLng(user.getLatitude(), user.getLongitude());
 		} else if (item instanceof Place) {
 
 			Place place = (Place) item;
@@ -2287,7 +2287,7 @@ public class Utility {
 
 			SecondDegreePeople user = (SecondDegreePeople) item;
 
-			latLng = new LatLng(user.getCurrentLat(), user.getCurrentLng());
+			latLng = new LatLng(user.getLatitude(), user.getLongitude());
 
 		} else if (item instanceof Event) {
 			Event event = (Event) item;
@@ -2350,5 +2350,38 @@ public class Utility {
 
 			Log.i("Utility:setImage:url", imageUrl);
 		}
+	}
+
+	public static boolean isDifferent(Object oldItem, Object newItem) {
+		boolean isDifferent = false;
+
+		try {
+			if (newItem instanceof People) {
+
+				People newPeople = (People) newItem;
+				People oldPeople = (People) oldItem;
+
+				if ((newPeople.isOnline() != oldPeople.isOnline()) || (newPeople.getLatitude() != oldPeople.getLatitude()) || (newPeople.getLongitude() != oldPeople.getLongitude())
+						|| !newPeople.getUserName().equals(oldPeople.getUserName()) || !newPeople.getFriendshipStatus().equals(oldPeople.getFriendshipStatus())
+						|| !newPeople.getFirstName().equals(oldPeople.getFirstName()) || !newPeople.getLastName().equals(oldPeople.getLastName())
+						|| !newPeople.getAvatar().equals(oldPeople.getAvatar())) {
+					isDifferent = true;
+				}
+
+			} else if (newItem instanceof SecondDegreePeople) {
+
+				//SecondDegreePeople newPeople = (SecondDegreePeople) newItem;
+				//SecondDegreePeople oldPeople = (SecondDegreePeople) oldItem;
+
+			} else if (newItem instanceof Place) {
+			} else if (newItem instanceof Event) {
+			} else if (newItem instanceof GeoTag) {
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+
+		return isDifferent;
 	}
 }

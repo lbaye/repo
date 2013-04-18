@@ -85,9 +85,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
 			Log.w("GCM", "Received message");
 			
-			StringBuilder str = new StringBuilder();
+			/*StringBuilder str = new StringBuilder();
 		    Bundle bundle = intent.getExtras();
-		    /*if (bundle != null) {
+		    if (bundle != null) {
 		        Set<String> keys = bundle.keySet();
 		        Iterator<String> it = keys.iterator();
 		        while (it.hasNext()) {
@@ -106,6 +106,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("objectId")!=null)
 				{
 					pushData.setObjectId(intent.getStringExtra("objectId"));
+					Log.i("objectId", intent.getStringExtra("objectId"));
 				}
 				
 			}
@@ -113,6 +114,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("objectType")!=null)
 				{
 					pushData.setObjectType(intent.getStringExtra("objectType"));
+					Log.i("objectType", intent.getStringExtra("objectType"));
 				}				
 			}
 			if (intent.hasExtra("title")) {

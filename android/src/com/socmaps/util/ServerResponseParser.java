@@ -1886,9 +1886,9 @@ public class ServerResponseParser {
 				JSONObject jo = peopleJSONObj.getJSONObject("currentLocation");
 
 				if (!jo.isNull("lat"))
-					people.setCurrentLat(jo.getDouble("lat"));
+					people.setLatitude(jo.getDouble("lat"));
 				if (!jo.isNull("lng"))
-					people.setCurrentLng(jo.getDouble("lng"));
+					people.setLongitude(jo.getDouble("lng"));
 			}
 			if (!peopleJSONObj.isNull("address")) {
 
@@ -2034,9 +2034,9 @@ public class ServerResponseParser {
 				JSONObject jo = peopleJSONObj.getJSONObject("currentLocation");
 
 				if (!jo.isNull("lat"))
-					secondDegreePeople.setCurrentLat(jo.getDouble("lat"));
+					secondDegreePeople.setLatitude(jo.getDouble("lat"));
 				if (!jo.isNull("lng"))
-					secondDegreePeople.setCurrentLng(jo.getDouble("lng"));
+					secondDegreePeople.setLongitude(jo.getDouble("lng"));
 				if (!jo.isNull("address"))
 					secondDegreePeople.setCurrentAddress(jo
 							.getString("address"));

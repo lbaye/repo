@@ -12,8 +12,8 @@ public class SecondDegreePeople implements Serializable {
 	private String lastName;
 	private String refType;
 	private String avatar;
-	private double currentLat;
-	private double currentLng;
+	private double latitude;
+	private double longitude;
 	private double distance;
 	private String currentAddress;
 	private String lastSeenAt;
@@ -61,27 +61,27 @@ public class SecondDegreePeople implements Serializable {
 		this.avatar = avatar;
 	}
 
-	public double getCurrentLat() {
-		return currentLat;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setCurrentLat(double currentLat) {
-		this.currentLat = currentLat;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
-	public double getCurrentLng() {
-		return currentLng;
+	public double getLongitude() {
+		return longitude;
 	}
 	
 	
 
-	public void setCurrentLng(double currentLng) {
-		this.currentLng = currentLng;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 	
 	public LatLng getPoint()
 	{
-		return new LatLng(currentLat, currentLng);
+		return new LatLng(latitude, longitude);
 	}
 
 	public double getDistance() {

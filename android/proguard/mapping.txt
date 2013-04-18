@@ -2498,13 +2498,12 @@ com.google.android.gms.maps.GoogleMap -> com.google.android.gms.maps.c:
     com.google.android.gms.maps.internal.IGoogleMapDelegate ab() -> a
     void animateCamera(com.google.android.gms.maps.CameraUpdate) -> a
     com.google.android.gms.maps.model.Marker addMarker(com.google.android.gms.maps.model.MarkerOptions) -> a
-    void clear() -> b
-    void setMapType$13462e() -> c
-    boolean setIndoorEnabled$138603() -> d
-    void setMyLocationEnabled$1385ff() -> e
-    android.location.Location getMyLocation() -> f
-    com.google.android.gms.maps.UiSettings getUiSettings() -> g
-    com.google.android.gms.maps.Projection getProjection() -> h
+    void setMapType$13462e() -> b
+    boolean setIndoorEnabled$138603() -> c
+    void setMyLocationEnabled$1385ff() -> d
+    android.location.Location getMyLocation() -> e
+    com.google.android.gms.maps.UiSettings getUiSettings() -> f
+    com.google.android.gms.maps.Projection getProjection() -> g
     void setOnCameraChangeListener(com.google.android.gms.maps.GoogleMap$OnCameraChangeListener) -> a
     void setOnMapClickListener(com.google.android.gms.maps.GoogleMap$OnMapClickListener) -> a
     void setOnMapLongClickListener(com.google.android.gms.maps.GoogleMap$OnMapLongClickListener) -> a
@@ -3010,11 +3009,12 @@ com.google.android.gms.maps.model.Marker -> com.google.android.gms.maps.model.h:
     void remove() -> a
     java.lang.String getId() -> b
     com.google.android.gms.maps.model.LatLng getPosition() -> c
-    void showInfoWindow() -> d
-    void hideInfoWindow() -> e
-    boolean isInfoWindowShown() -> f
+    java.lang.String getTitle() -> d
+    void showInfoWindow() -> e
+    void hideInfoWindow() -> f
+    boolean isInfoWindowShown() -> g
     void setVisible(boolean) -> a
-    boolean isVisible() -> g
+    boolean isVisible() -> h
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
 com.google.android.gms.maps.model.MarkerOptions -> com.google.android.gms.maps.model.MarkerOptions:
@@ -3746,8 +3746,8 @@ com.socmaps.entity.People -> m.r:
     java.lang.String interests -> k
     java.lang.String workStatus -> l
     java.lang.String relationshipStatus -> m
-    double currentLat -> n
-    double currentLng -> o
+    double latitude -> n
+    double longitude -> o
     java.lang.String regMedia -> p
     int loginCount -> q
     java.lang.String streetAddress -> r
@@ -3806,10 +3806,10 @@ com.socmaps.entity.People -> m.r:
     void setInterests(java.lang.String) -> t
     java.lang.String getUnit() -> q
     void setUnit(java.lang.String) -> u
-    double getCurrentLat() -> r
-    void setCurrentLat(double) -> b
-    double getCurrentLng() -> s
-    void setCurrentLng(double) -> c
+    double getLatitude() -> r
+    void setLatitude(double) -> b
+    double getLongitude() -> s
+    void setLongitude(double) -> c
     com.google.android.gms.maps.model.LatLng getPoint() -> t
     void setLogInCount(int) -> b
     void setState(java.lang.String) -> v
@@ -3990,8 +3990,8 @@ com.socmaps.entity.SecondDegreePeople -> m.aa:
     java.lang.String lastName -> c
     java.lang.String refType -> d
     java.lang.String avatar -> e
-    double currentLat -> f
-    double currentLng -> g
+    double latitude -> f
+    double longitude -> g
     double distance -> h
     java.lang.String currentAddress -> i
     java.lang.String lastSeenAt -> j
@@ -4007,10 +4007,10 @@ com.socmaps.entity.SecondDegreePeople -> m.aa:
     void setRefType(java.lang.String) -> d
     java.lang.String getAvatar() -> d
     void setAvatar(java.lang.String) -> e
-    double getCurrentLat() -> e
-    void setCurrentLat(double) -> a
-    double getCurrentLng() -> f
-    void setCurrentLng(double) -> b
+    double getLatitude() -> e
+    void setLatitude(double) -> a
+    double getLongitude() -> f
+    void setLongitude(double) -> b
     com.google.android.gms.maps.model.LatLng getPoint() -> g
     void setDistance(double) -> c
     java.lang.String getCurrentAddress() -> h
@@ -5996,61 +5996,60 @@ com.socmaps.ui.HomeActivity -> com.socmaps.ui.HomeActivity:
     android.widget.Button btnClearSearch -> aF
     android.widget.RelativeLayout searchPanel -> aG
     android.widget.EditText etSearchField -> aH
-    boolean isSearchEnabled -> aI
-    java.util.List listMasterContent -> aJ
-    java.util.List listContent -> aK
-    int responseEventStatus -> aL
-    java.lang.String responseEventString -> aM
-    int responseGeotagStatus -> aN
-    java.lang.String responseGeotagString -> aO
-    java.util.List eventList -> aP
-    java.util.List geotagList -> aQ
-    android.app.Dialog isFirstTimeFbdialog -> aR
-    com.socmaps.fb.SessionEvents sessionEvents -> aS
-    java.util.Timer timer -> aT
-    boolean isRunning -> aU
-    long updateInterval -> aV
-    com.google.android.gms.maps.GoogleMap mapView -> aW
-    float intialZoomLevel -> aX
-    int mapUpdateInterval -> aY
-    java.util.Timer timerGetLocations -> aZ
-    java.util.HashMap visibleItemsOnMap -> ba
-    java.util.HashMap visibleMarkers -> bb
-    java.util.HashMap markerUpdateList -> bc
-    java.util.HashMap objectList -> bd
-    com.socmaps.widget.CustomInfoWindowAdapter customInfoWindowAdapter -> be
-    boolean isMoveToAnotherPoint -> bf
-    android.widget.LinearLayout markerLayout -> bg
-    boolean isNewSearch -> bh
-    com.socmaps.widget.ListComparator listComparator -> bi
+    java.util.List listMasterContent -> aI
+    java.util.List listContent -> aJ
+    int responseEventStatus -> aK
+    java.lang.String responseEventString -> aL
+    int responseGeotagStatus -> aM
+    java.lang.String responseGeotagString -> aN
+    java.util.List eventList -> aO
+    java.util.List geotagList -> aP
+    android.app.Dialog isFirstTimeFbdialog -> aQ
+    com.socmaps.fb.SessionEvents sessionEvents -> aR
+    java.util.Timer timer -> aS
+    boolean isRunning -> aT
+    long updateInterval -> aU
+    com.google.android.gms.maps.GoogleMap mapView -> aV
+    float intialZoomLevel -> aW
+    int mapUpdateInterval -> aX
+    java.util.Timer timerGetLocations -> aY
+    java.util.HashMap visibleItemsOnMap -> aZ
+    java.util.HashMap visibleMarkers -> ba
+    java.util.HashMap markerUpdateList -> bb
+    java.util.HashMap objectList -> bc
+    com.socmaps.widget.CustomInfoWindowAdapter customInfoWindowAdapter -> bd
+    boolean isMoveToAnotherPoint -> be
+    android.widget.LinearLayout markerLayout -> bf
+    boolean isNewSearch -> bg
+    com.socmaps.widget.ListComparator listComparator -> bh
     com.socmaps.images.singly.RemoteImageCache remoteImageCache -> m
-    com.google.android.gms.maps.model.LatLng swPostion -> bj
-    com.google.android.gms.maps.model.LatLng nePosition -> bk
-    com.google.android.gms.maps.model.LatLng centerPosition -> bl
-    java.lang.Object activeItem -> bm
-    android.widget.LinearLayout onlineOfflineRadioGroupContainer -> bn
-    com.socmaps.widget.OnlineOfflineRadioGroup OnlineOfflineRadioGroupView -> bo
-    android.widget.LinearLayout allUserFriendsOnlyRadioGroupContainer -> bp
-    com.socmaps.widget.AlluserFriendsOnlyRadioGroup alluserFriendsOnlyRadioGroup -> bq
-    boolean isOffline -> br
-    boolean isAllUser -> bs
-    java.lang.Runnable displayMyPosition -> bt
-    java.lang.Runnable getSearchResultThread -> bu
-    java.lang.Runnable returnResGetSearchResult -> bv
-    java.lang.Runnable getGeotagListThread -> bw
-    java.lang.Runnable returnResGetGeotagList -> bx
-    java.lang.Runnable getEventListThread -> by
-    java.lang.Runnable returnResGetEventList -> bz
+    com.google.android.gms.maps.model.LatLng swPostion -> bi
+    com.google.android.gms.maps.model.LatLng nePosition -> bj
+    com.google.android.gms.maps.model.LatLng centerPosition -> bk
+    java.lang.Object activeItem -> bl
+    android.widget.LinearLayout onlineOfflineRadioGroupContainer -> bm
+    com.socmaps.widget.OnlineOfflineRadioGroup OnlineOfflineRadioGroupView -> bn
+    android.widget.LinearLayout allUserFriendsOnlyRadioGroupContainer -> bo
+    com.socmaps.widget.AlluserFriendsOnlyRadioGroup alluserFriendsOnlyRadioGroup -> bp
+    boolean isOffline -> bq
+    boolean isAllUser -> br
+    java.lang.Runnable displayMyPosition -> bs
+    java.lang.Runnable getSearchResultThread -> bt
+    java.lang.Runnable returnResGetSearchResult -> bu
+    java.lang.Runnable getGeotagListThread -> bv
+    java.lang.Runnable returnResGetGeotagList -> bw
+    java.lang.Runnable getEventListThread -> bx
+    java.lang.Runnable returnResGetEventList -> by
     java.lang.Runnable friendListUpdateRunnable -> n
-    java.lang.Runnable updateLocationThread -> bA
-    java.lang.Runnable returnResponseUpdateLocation -> bB
-    java.lang.Runnable friendRequestThread -> bC
-    java.lang.Runnable friendRequestReturnResponse -> bD
-    java.lang.Runnable sendMessageThread -> bE
-    java.lang.Runnable sendMessageReturnResponse -> bF
+    java.lang.Runnable updateLocationThread -> bz
+    java.lang.Runnable returnResponseUpdateLocation -> bA
+    java.lang.Runnable friendRequestThread -> bB
+    java.lang.Runnable friendRequestReturnResponse -> bC
+    java.lang.Runnable sendMessageThread -> bD
+    java.lang.Runnable sendMessageReturnResponse -> bE
     java.lang.Runnable sharingUpdateRunnable -> o
     com.socmaps.images.singly.ImageCacheListener imageCacheListener -> p
-    java.lang.Runnable timerTaskGetLocations -> bG
+    java.lang.Runnable timerTaskGetLocations -> bF
     void onCreate(android.os.Bundle) -> onCreate
     void centerToMyPosition() -> i
     void checkNotNull(java.lang.Object,java.lang.String) -> a
@@ -6069,10 +6068,9 @@ com.socmaps.ui.HomeActivity -> com.socmaps.ui.HomeActivity:
     void onNewIntent(android.content.Intent) -> onNewIntent
     void onResume() -> onResume
     void updateNotificationCountBuble(android.content.Intent) -> a
-    void disableSearch() -> k
     void onAttachedToWindow() -> onAttachedToWindow
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-    void handleSuccssfulFriendRequest() -> l
+    void handleSuccssfulFriendRequest() -> k
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
     void onClick(android.view.View) -> onClick
     void showSearchPanel(boolean) -> d
@@ -6087,8 +6085,9 @@ com.socmaps.ui.HomeActivity -> com.socmaps.ui.HomeActivity:
     void onCameraChange(com.google.android.gms.maps.model.CameraPosition) -> a
     boolean onMarkerClick(com.google.android.gms.maps.model.Marker) -> b
     void onInfoWindowClick(com.google.android.gms.maps.model.Marker) -> a
-    void updateMarker(java.lang.String,android.graphics.Bitmap) -> a
-    void updateMarkerVisibility() -> m
+    void updateMarkerImage(java.lang.String,android.graphics.Bitmap) -> a
+    com.google.android.gms.maps.model.Marker replaceMarker(java.lang.Object,java.lang.Object) -> a
+    void updateMarkerVisibility() -> l
     void onOnlineOfflineChanged$2a9ee136(boolean) -> b
     void onAlluserFriendsOnlyChanged$2a9ee136(boolean) -> c
     com.google.android.gms.maps.GoogleMap access$0(com.socmaps.ui.HomeActivity) -> a
@@ -9120,6 +9119,7 @@ com.socmaps.util.Utility -> s.q:
     com.google.android.gms.maps.model.LatLng getLatLngFromObject(java.lang.Object) -> d
     boolean isFacebookSessionValid(android.content.Context) -> n
     void setImage(java.lang.String,java.lang.String,android.widget.ImageView,com.socmaps.images.singly.RemoteImageCache) -> a
+    boolean isDifferent(java.lang.Object,java.lang.Object) -> a
 com.socmaps.util.Utility$3 -> s.r:
     double val$lat -> a
     double val$lng -> b

@@ -7,7 +7,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -205,7 +207,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private RelativeLayout searchPanel;
 	private EditText etSearchField;
 
-	private boolean isSearchEnabled = false;
+	// private boolean isSearchEnabled = false;
 
 	private List<Object> listMasterContent;
 	private List<Object> listContent;
@@ -772,7 +774,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		responseGeotagString = restClient.getResponse();
 
 		responseGeotagStatus = restClient.getResponseCode();
-		
+
 		Log.i("GeoTags", responseGeotagString);
 
 		runOnUiThread(returnResGetGeotagList);
@@ -796,21 +798,28 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 			populateMasterList();
 
-			if (isSearchEnabled == false) {
+			updateContentList(listMasterContent);
 
-				updateContentList(listMasterContent);
-				// updateMapDisplay(listContent);
-			}
+			/*
+			 * if (isSearchEnabled == false) {
+			 * 
+			 * updateContentList(listMasterContent); //
+			 * updateMapDisplay(listContent); }
+			 */
 
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			//Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			// Toast.makeText(getApplicationContext(),
+			// Utility.getJSONStringFromServerResponse(response),
+			// Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			//Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			// Toast.makeText(getApplicationContext(),
+			// Utility.getJSONStringFromServerResponse(response),
+			// Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -871,12 +880,15 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 			populateMasterList();
 
-			if (isSearchEnabled == false) {
+			updateContentList(listMasterContent);
 
-				Log.e("UpdateEventMap", "Inside it");
-				updateContentList(listMasterContent);
-				// updateMapDisplay(listContent);
-			}
+			/*
+			 * if (isSearchEnabled == false) {
+			 * 
+			 * Log.e("UpdateEventMap", "Inside it");
+			 * updateContentList(listMasterContent); //
+			 * updateMapDisplay(listContent); }
+			 */
 
 			break;
 
@@ -1162,16 +1174,35 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	 * }
 	 */
 
+	private void hideExistingMarkers() {
+		Log.i("hideExistingMarkers", "Entered");
+
+		for (Marker marker : visibleMarkers.values()) {
+			marker.setVisible(false);
+		}
+
+		/*
+		 * if (objectList != null) { for (String itemId : objectList.keySet()) {
+		 * // Object item = objectList.get(itemId);
+		 * 
+		 * visibleMarkers.get(itemId).setVisible(false); Log.i("MarkerHide",
+		 * visibleMarkers.get(itemId).getId() + ":" +
+		 * visibleMarkers.get(itemId).getTitle()); } }
+		 */
+	}
+
 	private synchronized void updateMapDisplay(final List<Object> list) {
 
 		Log.i("HomeActivity", "updateMapDisplay");
 		if (list != null) {
 
-			mapView.clear();
-			visibleItemsOnMap.clear();
-			visibleMarkers.clear();
-			objectList.clear();
-			markerUpdateList.clear();
+			// mapView.clear();
+			// visibleItemsOnMap.clear();
+			// visibleMarkers.clear();
+			// objectList.clear();
+			// markerUpdateList.clear();
+
+			hideExistingMarkers();
 
 			int totalItemDisplayed = 0;
 			String firstItemIdOnList = null;
@@ -1201,55 +1232,68 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 					firstItemIdOnList = itemId;
 				}
 
-				if ((Utility.isLocationVisibleOnMap(mapView, latLng) || isSearchEnabled) && !visibleMarkers.containsKey(itemId)) {
+				// if ((Utility.isLocationVisibleOnMap(mapView, latLng) ||
+				// isSearchEnabled) && !visibleMarkers.containsKey(itemId)) {
+				if (Utility.isLocationVisibleOnMap(mapView, latLng)) {
 
-					MarkerOptions markerOptions = null;
+					if (visibleMarkers.containsKey(itemId)) {
+						// check if there is any change on data. If any change,
+						// then update the marker, else update visibility
+						validateMarker(item);
 
-					// if (item instanceof People && isPeople) {
-					if (item instanceof People) {
+					} else {
 
-						markerOptions = getMarkerOptions(item, isPeople);
+						// add new marker
 
-					} else if (item instanceof Place) {
+						MarkerOptions markerOptions = null;
 
-						markerOptions = getMarkerOptions(item, isPlace);
+						// if (item instanceof People && isPeople) {
+						if (item instanceof People) {
 
-						// displayedItemCounter++;
-					} else if (item instanceof SecondDegreePeople) {
+							markerOptions = getMarkerOptions(item, isPeople);
 
-						markerOptions = getMarkerOptions(item, isPeople);
+						} else if (item instanceof Place) {
 
-					} else if (item instanceof Event) {
-						markerOptions = getMarkerOptions(item, isEvent);
+							markerOptions = getMarkerOptions(item, isPlace);
 
-					} else if (item instanceof GeoTag) {
-						markerOptions = getMarkerOptions(item, isPeople);
-					}
+							// displayedItemCounter++;
+						} else if (item instanceof SecondDegreePeople) {
 
-					if (markerOptions != null) {
+							markerOptions = getMarkerOptions(item, isPeople);
 
-						try {
-							Marker marker = mapView.addMarker(markerOptions);
-							visibleItemsOnMap.put(marker.getId(), item);
-							visibleMarkers.put(itemId, marker);
-							objectList.put(itemId, item);
+						} else if (item instanceof Event) {
+							markerOptions = getMarkerOptions(item, isEvent);
 
-							markerUpdateList.put(Utility.getItemId(item), false);
-
-							totalItemDisplayed++;
-
-							if (firstItemIdOnList == null) {
-								firstItemIdOnList = itemId;
-							}
-
-						} catch (NullPointerException e) {
-
-						} catch (Exception e) {
-							// TODO: handle exception
+						} else if (item instanceof GeoTag) {
+							markerOptions = getMarkerOptions(item, isPeople);
 						}
 
-					}
+						if (markerOptions != null) {
 
+							try {
+								Marker marker = mapView.addMarker(markerOptions);
+								visibleItemsOnMap.put(marker.getId(), item);
+								visibleMarkers.put(itemId, marker);
+								objectList.put(itemId, item);
+
+								Log.i("NewMarker", marker.getId() + ":" + marker.getTitle());
+
+								markerUpdateList.put(Utility.getItemId(item), false);
+
+								totalItemDisplayed++;
+
+								if (firstItemIdOnList == null) {
+									firstItemIdOnList = itemId;
+								}
+
+							} catch (NullPointerException e) {
+
+							} catch (Exception e) {
+								// TODO: handle exception
+							}
+
+						}
+					}
 				}
 
 				if (totalItemDisplayed == 10) {
@@ -1323,7 +1367,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				markerToHighlight.showInfoWindow();
 			}
 
-			updateMarkerVisibility();
+			// updateMarkerVisibility();
 
 			System.gc();
 		}
@@ -1470,10 +1514,10 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 							startActivity(intent2);
 						} else if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
 							if (StaticValues.searchResult != null) {
-								if (isSearchEnabled) {
-									disableSearch();
-									doSearch();
-								}
+								/*
+								 * if (isSearchEnabled) { disableSearch();
+								 * doSearch(); }
+								 */
 
 								People people = Utility.getPeopleById(pushData.getObjectId(), StaticValues.searchResult.getPeoples());
 								if (people != null) {
@@ -1664,7 +1708,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private void disableSearch() {
 		etSearchField.setText("");
 		showSearchPanel(false);
-		isSearchEnabled = false;
+		// isSearchEnabled = false;
 	}
 
 	@Override
@@ -2180,7 +2224,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				// d.dismiss();
-				Log.d("LAT LNG Meetup People", String.valueOf(people.getCurrentLat()) + " " + String.valueOf(people.getCurrentLng()));
+				Log.d("LAT LNG Meetup People", String.valueOf(people.getLatitude()) + " " + String.valueOf(people.getLongitude()));
 
 				// People people = people;
 
@@ -2812,14 +2856,13 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		} else if (v == btnClearSearch) {
 			etSearchField.setText("");
-			if (isSearchEnabled) {
-				isSearchEnabled = false;
-
-				if (listMasterContent.size() > 0) {
-					// doSearch();
-				}
-
-			}
+			/*
+			 * if (isSearchEnabled) { isSearchEnabled = false;
+			 * 
+			 * if (listMasterContent.size() > 0) { // doSearch(); }
+			 * 
+			 * }
+			 */
 
 		}
 
@@ -3152,7 +3195,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	}
 
-	public synchronized void updateMarker(String itemId, Bitmap bitmap) {
+	public synchronized void updateMarkerImage(String itemId, Bitmap bitmap) {
 
 		Object item = objectList.get(itemId);
 		if (item != null) {
@@ -3200,6 +3243,62 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	}
 
+	public synchronized Marker replaceMarker(Object oldItem, Object newItem) {
+
+		Marker marker = null;
+
+		if (oldItem != null && newItem != null) {
+
+			String itemId = Utility.getItemId(oldItem);
+
+			boolean isInfoWindowShown = false;
+			boolean isVisible = true;
+
+			if (objectList.containsValue(oldItem)) {
+				objectList.values().remove(oldItem);
+			}
+			
+			if (visibleItemsOnMap.containsValue(oldItem)) {
+				visibleItemsOnMap.values().remove(oldItem);
+			}
+			if (visibleMarkers.containsKey(itemId)) {
+				Marker markerOld = visibleMarkers.get(itemId);
+				if (markerOld != null) {
+					isInfoWindowShown = markerOld.isInfoWindowShown();
+					isVisible = markerOld.isVisible();
+					markerOld.remove();
+				}
+
+			}
+
+			MarkerOptions markerOptions = getMarkerOptions(newItem, isVisible);
+
+			if (markerOptions != null) {
+				marker = mapView.addMarker(markerOptions);
+
+				objectList.put(itemId, newItem);
+				visibleItemsOnMap.put(marker.getId(), newItem);
+				visibleMarkers.put(itemId, marker);
+				markerUpdateList.put(itemId, true);
+
+				// customInfoWindowAdapter = new
+				// CustomInfoWindowAdapter(context,getLayoutInflater(),
+				// visibleItemsOnMap, imageFetcher, this);
+
+				customInfoWindowAdapter = new CustomInfoWindowAdapter(context, getLayoutInflater(), visibleItemsOnMap, remoteImageCache, imageCacheListener);
+
+				mapView.setInfoWindowAdapter(customInfoWindowAdapter);
+				if (isVisible && isInfoWindowShown) {
+					marker.showInfoWindow();
+				}
+			}
+
+		}
+
+		return marker;
+
+	}
+
 	private void updateMarkerVisibility() {
 
 		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
@@ -3209,54 +3308,99 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		if (objectList != null) {
 			for (String itemId : objectList.keySet()) {
 				Object item = objectList.get(itemId);
-				if (item instanceof People) {
-					
-					People people = (People)item;
-					boolean isPeopleVisible = isPeople;
-					if(isPeople)
-					{
-						if(people.isOnline() == false && isOffline == false)
-						{
-							isPeopleVisible = false;
-						} else if(!people.getFriendshipStatus().equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND) && isAllUser == false)
-						{
-							isPeopleVisible = false;
+				Marker marker = visibleMarkers.get(itemId);
+				if (marker != null) {
+					if (item instanceof People) {
+
+						People people = (People) item;
+						boolean isPeopleVisible = isPeople;
+						if (isPeople) {
+							if (people.isOnline() == false && isOffline == false) {
+								isPeopleVisible = false;
+							} else if (!people.getFriendshipStatus().equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND) && isAllUser == false) {
+								isPeopleVisible = false;
+							}
 						}
-					}
-					
-					visibleMarkers.get(itemId).setVisible(isPeopleVisible);
-				} else if (item instanceof SecondDegreePeople || item instanceof GeoTag) {
-					visibleMarkers.get(itemId).setVisible(isPeople);
-				} else if (item instanceof Place) {
-					visibleMarkers.get(itemId).setVisible(isPlace);
-				} else if (item instanceof Event) {
-					Marker marker = visibleMarkers.get(itemId);
-					if (marker != null) {
+						marker.setVisible(isPeopleVisible);
+					} else if (item instanceof SecondDegreePeople || item instanceof GeoTag) {
+						marker.setVisible(isPeople);
+					} else if (item instanceof Place) {
+						marker.setVisible(isPlace);
+					} else if (item instanceof Event) {
 						marker.setVisible(isEvent);
 					}
 				}
+
 			}
 		}
 
 	}
 
-	private void setMarkerVisibility(int flag, boolean isChecked) {
+	private void validateMarker(Object newItem) {
+
+		boolean isPeople = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PEOPLE, true);
+		boolean isPlace = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.PLACE, false);
+		boolean isEvent = SharedPreferencesHelper.getInstance(context).getBoolean(Constant.EVENT, false);
+
+		String itemId = Utility.getItemId(newItem);
 		if (objectList != null) {
-			for (String itemId : objectList.keySet()) {
-				Object item = objectList.get(itemId);
-				if ((flag == Constant.FLAG_PEOPLE) && (item instanceof People || item instanceof SecondDegreePeople)) {
-					visibleMarkers.get(itemId).setVisible(isChecked);
-				} else if ((flag == Constant.FLAG_PLACE) && item instanceof Place) {
-					visibleMarkers.get(itemId).setVisible(isChecked);
-				} else if ((flag == Constant.FLAG_EVENT) && item instanceof Event) {
-					Marker marker = visibleMarkers.get(itemId);
-					if (marker != null) {
-						marker.setVisible(isChecked);
+			Object oldItem = objectList.get(itemId);
+
+			if (oldItem != null) {
+				// compare with new item.
+				// if no change, then update the visibility
+				// otherwise replace the marker and visibility
+
+				Marker marker = visibleMarkers.get(itemId);
+				
+				boolean isDifferent = Utility.isDifferent(oldItem, newItem);
+				
+				
+				if (isDifferent) {
+					// replace the marker
+					marker = replaceMarker(oldItem, newItem);
+
+				}
+
+				if (marker != null) {
+					if (oldItem instanceof People) {
+						People people = (People) oldItem;
+						boolean isPeopleVisible = isPeople;
+						if (isPeople) {
+							if (people.isOnline() == false && isOffline == false) {
+								isPeopleVisible = false;
+							} else if (!people.getFriendshipStatus().equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND) && isAllUser == false) {
+								isPeopleVisible = false;
+							}
+						}
+						marker.setVisible(isPeopleVisible);
+					} else if (oldItem instanceof SecondDegreePeople || oldItem instanceof GeoTag) {
+						marker.setVisible(isPeople);
+					} else if (oldItem instanceof Place) {
+						marker.setVisible(isPlace);
+					} else if (oldItem instanceof Event) {
+						marker.setVisible(isEvent);
 					}
 				}
+
 			}
+
 		}
+
 	}
+
+	/*
+	 * private void setMarkerVisibility(int flag, boolean isChecked) { if
+	 * (objectList != null) { for (String itemId : objectList.keySet()) { Object
+	 * item = objectList.get(itemId); if ((flag == Constant.FLAG_PEOPLE) &&
+	 * (item instanceof People || item instanceof SecondDegreePeople)) {
+	 * visibleMarkers.get(itemId).setVisible(isChecked); } else if ((flag ==
+	 * Constant.FLAG_PLACE) && item instanceof Place) {
+	 * visibleMarkers.get(itemId).setVisible(isChecked); } else if ((flag ==
+	 * Constant.FLAG_EVENT) && item instanceof Event) { Marker marker =
+	 * visibleMarkers.get(itemId); if (marker != null) {
+	 * marker.setVisible(isChecked); } } } } }
+	 */
 
 	/*
 	 * private void validateExistingMarkers() { // TODO Auto-generated method
@@ -3392,7 +3536,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 								@Override
 								public void run() {
 									// TODO Auto-generated method stub
-									updateMarker(imageInfo.id, bitmap);
+									updateMarkerImage(imageInfo.id, bitmap);
 								}
 							});
 
@@ -3460,8 +3604,6 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	// April 10
 	// ********************************************************************************
-	// April 10
-	// ********************************************************************************
 
 	private void doSearchFromServer(String keyWord) {
 		// TODO Auto-generated method stub
@@ -3489,8 +3631,8 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		params.add(new BasicNameValuePair("keyword", keyWord));
 		params.add(new BasicNameValuePair("people", people));
 		params.add(new BasicNameValuePair("place", place));
-		
-		Log.e("Search key also", "Keyword : "+keyWord+"  people: "+people+" place: "+place);
+
+		Log.e("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
 
 		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
 		backProcess.execute(RestClient.RequestMethod.POST);
@@ -3524,8 +3666,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 				listComparator.setType(COMPARATOR.DISTANCE);
 				Collections.sort(tempMasterContent, listComparator);
-				
-				
+
 				if (tempMasterContent.size() != 0) {
 					SearchResultDialog searchResultDialog = new SearchResultDialog(context, new SearchResultDialoghandler(), "SEARCH_Result", tempMasterContent);
 					searchResultDialog.show();

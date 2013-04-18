@@ -21,8 +21,8 @@ public class People implements Serializable {
 	private String interests;
 	private String workStatus;
 	private String relationshipStatus;
-	private double currentLat;
-	private double currentLng;
+	private double latitude;
+	private double longitude;
 	private String regMedia;// sm or fb
 	private int loginCount;
 
@@ -246,24 +246,24 @@ public class People implements Serializable {
 		this.unit = unit;
 	}
 
-	public double getCurrentLat() {
-		return currentLat;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setCurrentLat(double lat) {
-		this.currentLat = lat;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
-	public double getCurrentLng() {
-		return currentLng;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setCurrentLng(double lng) {
-		this.currentLng = lng;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public LatLng getPoint() {
-		return new LatLng(currentLat, currentLng);
+		return new LatLng(latitude, longitude);
 	}
 
 	public void setLogInCount(int count) {

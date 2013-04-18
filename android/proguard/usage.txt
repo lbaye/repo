@@ -1801,6 +1801,7 @@ com.google.android.gms.maps.GoogleMap:
     public final com.google.android.gms.maps.model.Polygon addPolygon(com.google.android.gms.maps.model.PolygonOptions)
     public final com.google.android.gms.maps.model.GroundOverlay addGroundOverlay(com.google.android.gms.maps.model.GroundOverlayOptions)
     public final com.google.android.gms.maps.model.TileOverlay addTileOverlay(com.google.android.gms.maps.model.TileOverlayOptions)
+    public final void clear()
     public final int getMapType()
     public final boolean isTrafficEnabled()
     public final void setTrafficEnabled(boolean)
@@ -1933,7 +1934,6 @@ com.google.android.gms.maps.model.LatLngCreator:
 com.google.android.gms.maps.model.Marker:
     public void setPosition(com.google.android.gms.maps.model.LatLng)
     public void setTitle(java.lang.String)
-    public java.lang.String getTitle()
     public void setSnippet(java.lang.String)
     public java.lang.String getSnippet()
     public void setDraggable(boolean)
@@ -2518,18 +2518,18 @@ com.socmaps.ui.HomeActivity:
     private android.widget.Button btnFBLogin
     private java.util.TimerTask task
     private java.util.Timer mapUpdateTimer
-    1691:1707:private void facebookAuthentication()
-    1730:1736:private void askForFacebookAccount()
-    2219:2282:private void showSecondDegreePeoplePopUpDetails(com.socmaps.entity.SecondDegreePeople)
-    2382:2408:private void showMessageDialog(com.socmaps.entity.People)
-    2566:2583:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
-    2902:2939:private void showFirstTimeDialog(android.content.Context)
-    2957:2958:public void onLogoutBegin()
-    2963:2968:public void onLogoutFinish()
-    3244:3259:private void setMarkerVisibility(int,boolean)
-    2564:2564:static synthetic void access$65(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String,java.lang.String)
-    161:161:static synthetic android.app.Dialog access$66(com.socmaps.ui.HomeActivity)
-    223:223:static synthetic android.app.Dialog access$67(com.socmaps.ui.HomeActivity)
+    1735:1751:private void facebookAuthentication()
+    1774:1780:private void askForFacebookAccount()
+    2263:2326:private void showSecondDegreePeoplePopUpDetails(com.socmaps.entity.SecondDegreePeople)
+    2426:2452:private void showMessageDialog(com.socmaps.entity.People)
+    2610:2627:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
+    2875:2883:private void doSearch()
+    2945:2982:private void showFirstTimeDialog(android.content.Context)
+    3000:3001:public void onLogoutBegin()
+    3006:3011:public void onLogoutFinish()
+    2608:2608:static synthetic void access$65(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String,java.lang.String)
+    163:163:static synthetic android.app.Dialog access$66(com.socmaps.ui.HomeActivity)
+    225:225:static synthetic android.app.Dialog access$67(com.socmaps.ui.HomeActivity)
 com.socmaps.ui.HomeActivity$40
 com.socmaps.ui.HomeActivity$41
 com.socmaps.ui.HomeActivity$42

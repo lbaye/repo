@@ -374,7 +374,7 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 	}
 
 	private void goToMeetUp() {
-		Log.d("LAT LNG Meetup People", String.valueOf(peopleUpdate.getCurrentLat()) + " " + String.valueOf(peopleUpdate.getCurrentLng()));
+		Log.d("LAT LNG Meetup People", String.valueOf(peopleUpdate.getLatitude()) + " " + String.valueOf(peopleUpdate.getLongitude()));
 
 		Intent intentToShowMeetUp = new Intent(context, MeetupRequestNewActivity.class);
 		intentToShowMeetUp.putExtra("selectedPeople", peopleUpdate);
@@ -969,14 +969,14 @@ public class ProfileActivity2 extends FragmentActivity implements OnClickListene
 		double currentLat = 0;
 		double currentLng = 0;
 
-		if (peopleUpdate.getCurrentLat() != 0.0) {
+		if (peopleUpdate.getLatitude() != 0.0) {
 
-			currentLat = peopleUpdate.getCurrentLat();
+			currentLat = peopleUpdate.getLatitude();
 		}
 
-		if (peopleUpdate.getCurrentLng() != 0.0) {
+		if (peopleUpdate.getLongitude() != 0.0) {
 
-			currentLng = peopleUpdate.getCurrentLng();
+			currentLng = peopleUpdate.getLongitude();
 		}
 
 		// if (StaticValues.myPoint != null) {
