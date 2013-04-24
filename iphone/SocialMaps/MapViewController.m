@@ -974,8 +974,11 @@ ButtonClickCallbackData callBackData;
 
 - (void)startGetLocation
 {
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getLocation:smAppDelegate.screenCenterPosition: smAppDelegate.screenNEPosition: smAppDelegate.screenSWPosition :@"Auth-Token" :smAppDelegate.authToken];
+    if (!smAppDelegate.isAppInBackgound)
+    {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient getLocation:smAppDelegate.screenCenterPosition: smAppDelegate.screenNEPosition: smAppDelegate.screenSWPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
     
     [self performSelector:@selector(startGetLocation) withObject:nil afterDelay:60];
 }
@@ -1518,7 +1521,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"location manager update location");
+    NSLog(@"in location manager");
     if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
         return;
     // Calculate move from last position
@@ -1529,10 +1532,7 @@ ButtonClickCallbackData callBackData;
     _mapView.showsUserLocation = YES;
     
     CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
-    NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}, distance moved=%f, elapsed time=%d",
-          oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
-          newLocation.coordinate.latitude, newLocation.coordinate.longitude,
-          distanceMoved, elapsedTime);
+    
     [lastPos release];
 
     // Update location if new position detected and one of the following is true
@@ -1540,8 +1540,14 @@ ButtonClickCallbackData callBackData;
     // 2. 60 seconds has elapsed. This is to get new people around and I am mostly stationary
     // 3. First time - smAppDelegate.gotListing == FALSE
     //
-    if ((distanceMoved >= 10 && elapsedTime > 10) || elapsedTime > 60 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
+    if (((distanceMoved >= 10 && elapsedTime > 10) || elapsedTime > 60 || smAppDelegate.gotListing == FALSE) && smAppDelegate.isAppInBackgound == FALSE) { // TODO : use distance
         // Update the position
+        
+        NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}, distance moved=%f, elapsed time=%d",
+              oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
+              newLocation.coordinate.latitude, newLocation.coordinate.longitude,
+              distanceMoved, elapsedTime);
+        
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
         smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
@@ -1556,7 +1562,7 @@ ButtonClickCallbackData callBackData;
         
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     }
-    if (elapsedTime > 300 && smAppDelegate.isAppInBackgound==TRUE)
+    else if (elapsedTime > 300 && smAppDelegate.isAppInBackgound==TRUE)
     {
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
@@ -1569,7 +1575,6 @@ ButtonClickCallbackData callBackData;
         
         // Send new location to server
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         NSLog(@"update location in background after every 5 mins");
     }
@@ -1585,7 +1590,7 @@ ButtonClickCallbackData callBackData;
     if (smAppDelegate.needToCenterMap == TRUE) {
         [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
     }
-    NSLog(@"update location");
+    NSLog(@"MKMapView update location");
 }
 
 // Keep the selected annotation on top
@@ -2441,6 +2446,7 @@ ButtonClickCallbackData callBackData;
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
                         aPerson.itemDistance = distanceFromMe;
+                    
                         aPerson.userInfo.relationsipStatus = item.relationsipStatus;
                         aPerson.userInfo.workStatus = item.workStatus;
                         aPerson.userInfo.city = item.city;
@@ -2454,12 +2460,16 @@ ButtonClickCallbackData callBackData;
                             if (CLLocationCoordinate2DIsValid(loc))
                             {
                                 aPerson.coordinate = loc;
+                                aPerson.userInfo.currentLocationLat = item.currentLocationLat;
+                                aPerson.userInfo.currentLocationLng = item.currentLocationLng;
                             }
                             
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
                             
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                             aPerson.userInfo.isOnline = item.isOnline;
+                            
+                            
                             
                             if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
                                 
