@@ -395,7 +395,8 @@ class Settings extends Base {
 
             $this->debug('Distance - ' . $distance);
 
-            return $distance > self::ALLOWED_DISTANCE;
+//            return $distance > self::ALLOWED_DISTANCE;
+            return true;
         }
     }
 
