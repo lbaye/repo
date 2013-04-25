@@ -3091,7 +3091,8 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		nePosition = latLngBounds.northeast;
 		centerPosition = position.target;
 
-		Log.i("HomeActivity:onCameraChange", "sw: " + swPostion.latitude + "," + swPostion.longitude + "  ne: " + nePosition.latitude + "," + nePosition.longitude);
+		Log.i("HomeActivity:onCameraChange", "center: " + centerPosition.latitude + "," + centerPosition.longitude);
+		//Log.i("HomeActivity:onCameraChange", "center: " + centerPosition.latitude + "," + centerPosition.longitude + "sw: " + swPostion.latitude + "," + swPostion.longitude + "  ne: " + nePosition.latitude + "," + nePosition.longitude);
 
 		if (timerGetLocations != null) {
 			timerGetLocations.cancel();

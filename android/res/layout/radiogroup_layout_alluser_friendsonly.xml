@@ -28,7 +28,7 @@
             android:button="@null"
             android:gravity="center_horizontal"
             android:paddingTop="28dip"
-            android:text="All User"
+            android:text="@string/menuItemAllUsersLabel"
             android:textColor="@color/white"
             android:textSize="11dp" />
 
