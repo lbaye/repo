@@ -243,13 +243,14 @@ class ProximityAlert extends Base
 
     private function createGroupNotificationMessage(&$friends, \Document\User $user)
     {
+
         if (count($friends) > 2) {
-            $message = $this->getUsername($friends[0]) . ', ' .
-                $this->getUsername($friends[1]) . ' and ' .
+            $message = $this->getUsername($friends[0], true) . ', ' .
+                $this->getUsername($friends[1], true) . ' and ' .
                 (count($friends) - 2) . ' others are';
         } else if (count($friends) == 2) {
-            $message = $this->getUsername($friends[0]) . ' and ' .
-                $this->getUsername($friends[1]) . ' are';
+            $message = $this->getUsername($friends[0], true) . ' and ' .
+                $this->getUsername($friends[1], true) . ' are';
         } else {
             $message = $this->getUsername($friends[0], true) . ' is';
         }
