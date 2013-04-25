@@ -237,7 +237,7 @@ class ProximityAlert extends Base
             'objectId' => $user->getId(),
             'objectType' => 'proximity_alert',
             'message' => $message,
-            'receiverId' => $user->getId()
+            'receiverId' => $friend->getId()
         );
     }
 
