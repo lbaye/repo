@@ -160,7 +160,7 @@ class ProximityAlert extends Base
                 $friend = $this->userRepository->find($friends[0]['_id']->{'$id'});
                 $message = $this->createNotificationMessage($friend, $user);
             } else {
-                $message = $this->createGroupNotificationMessage($friends);
+                $message = $this->createGroupNotificationMessage($friends, $user);
             }
 
             $this->sendNotification($user, $this->addNotificationsCounts($user, $message));
@@ -237,11 +237,11 @@ class ProximityAlert extends Base
             'objectId' => $user->getId(),
             'objectType' => 'proximity_alert',
             'message' => $message,
-            'receiverId' => $friend->getId()
+            'receiverId' => $user->getId()
         );
     }
 
-    private function createGroupNotificationMessage(&$friends)
+    private function createGroupNotificationMessage(&$friends, \Document\User $user)
     {
         if (count($friends) > 2) {
             $message = $this->getUsername($friends[0]) . ', ' .
@@ -259,7 +259,8 @@ class ProximityAlert extends Base
         return array(
             'title' => $message,
             'objectType' => 'proximity_alert',
-            'message' => $message
+            'message' => $message,
+            'receiverId' => $user->getId()
         );
     }
 
