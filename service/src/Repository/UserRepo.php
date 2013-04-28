@@ -1285,7 +1285,14 @@ class UserRepo extends Base
         }
 
         $unread_messages = $messageRepo->getUnreadMessagesByRecipient($user);
-        $unread_messages_count = count($unread_messages);
+        $unreadCountMessages = 0;
+        foreach ($unread_messages as $unread_message) {
+            if (count($unread_message->getReplies()) > 0 || $unread_message->hasContent()) {
+                $unreadCountMessages++;
+            }
+        }
+//        $unread_messages_count = count($unread_messages);
+        $unread_messages_count = $unreadCountMessages;
 
         return array(
             "badge" => $pending_friend_requests_count + $unread_messages_count,
