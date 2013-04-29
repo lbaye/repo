@@ -297,13 +297,14 @@
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
         
-        RestClient *rc=[[[RestClient alloc] init] autorelease];
-        [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
+        //going to the reply thread, no need to call this
+        //RestClient *rc=[[[RestClient alloc] init] autorelease];
+        //[rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
         
         if (newNotif.notifType == PushNotificationMessage || newNotif.notifType == PushNotificationMeetupRequest) {
             
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-            MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+            MessageListViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"messageList"];
             
             
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

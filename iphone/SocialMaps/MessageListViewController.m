@@ -116,12 +116,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 {
     [super viewWillAppear:animated];
     [self displayNotificationCount];
+    
+    //viewDidAppear is being called manually when push notificaiton comes, so addObserver in viewWillAppear
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
 }
 
 - (void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
+    
     if (self.selectedMessage) {
         [self setMsgReplyTableView:self.selectedMessage];
     } 
@@ -911,11 +914,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [self doRightViewAnimation:messageRepiesView];
     }
     
-    if (![selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+    if (![selectedMessage.notifID isEqualToString:@"NewMsg"]) {   // "NewMsg" = come form user profile
         
-        msgParentID = msg.notifID;
+        self.msgParentID = msg.notifID;
         self.timeSinceLastUpdate = @"420";
+        
         [self startReqForReplyMessages];
+        
+        //Stop any previous timer
+        if (replyTimer) {
+            [replyTimer invalidate];
+            replyTimer = nil;
+        }
+        
         if (!replyTimer) {
             replyTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
         }
@@ -925,9 +936,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)startReqForReplyMessages
 {
-    if (!messageRepiesView.hidden) {
+    if (!messageRepiesView.hidden && !smAppDelegate.isAppInBackgound) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:self.timeSinceLastUpdate];
+        [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:self.msgParentID since:self.timeSinceLastUpdate];
     } else {
         if (replyTimer) {
             [replyTimer invalidate];
