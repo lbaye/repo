@@ -294,7 +294,7 @@
     badgeCount= newNotif.badgeCount;
     [self.currentModelViewController viewWillAppear:NO];
     // Temporary - set count to zero
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
         
         //going to the reply thread, no need to call this

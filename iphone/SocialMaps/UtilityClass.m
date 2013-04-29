@@ -249,6 +249,8 @@ CGFloat animatedDistance;
     }
     NSLog(@"[self getUnreadMessage:smAppDelegate.messages].count %d smAppDelegate.notifications.count %d smAppDelegate.meetUpRequests.count %d smAppDelegate.ignoreCount %d ignoreCount %d",[self getUnreadMessage:smAppDelegate.messages].count,smAppDelegate.notifications.count,smAppDelegate.meetUpRequests.count,smAppDelegate.ignoreCount,ignoreCount);
     
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:totalNotif];
+    
     return totalNotif;
 }
 
