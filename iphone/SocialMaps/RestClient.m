@@ -4721,8 +4721,9 @@ AppDelegate *smAppDelegate;
             }
             
             NSLog(@"messageReplies = %@", messageReplies);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:messageReplies userInfo:[NSDictionary dictionaryWithObject:messageId forKey:@"parentMsgId"]];
 
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:messageReplies];
             isReplyInProgress = FALSE;
             [messageReplies release];
             messageReplies = nil;

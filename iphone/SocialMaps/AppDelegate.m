@@ -297,10 +297,6 @@
     //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
         
-        //going to the reply thread, no need to call this
-        //RestClient *rc=[[[RestClient alloc] init] autorelease];
-        //[rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
-        
         if (newNotif.notifType == PushNotificationMessage || newNotif.notifType == PushNotificationMeetupRequest) {
             
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
@@ -310,6 +306,9 @@
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             
             if (newNotif.notifType != PushNotificationMeetupRequest) {
+                
+                RestClient *rc=[[[RestClient alloc] init] autorelease];
+                [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
                 
                 BOOL isParentMsgExist = FALSE;
                 

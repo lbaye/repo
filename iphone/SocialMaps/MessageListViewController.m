@@ -499,7 +499,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NSMutableArray *msgReplies = [notif object];
     
-    if ([msgReplies count] == 0) {
+    if ([msgReplies count] == 0 /*|| ![self.msgParentID isEqualToString:[notif.userInfo valueForKey:@"parentMsgId"]]*/) {
         return;
     }
     
