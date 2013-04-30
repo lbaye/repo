@@ -3,7 +3,6 @@ package com.socmaps.widget;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.CheckedTextView;
 
 import com.socmaps.entity.Circle;
 import com.socmaps.ui.R;
+import com.socmaps.util.Utility;
 
 /**
  * CircleAddMoveToAdapter class for generating circle list item.
@@ -45,7 +45,7 @@ public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 		this.itemList = itemList;
 		this.selectedCircleList = selectedCircleList;
 
-		Log.w("itemList size: " + itemList.size(), "selectedCircleList: "
+		Utility.log("itemList size: " + itemList.size(), "selectedCircleList: "
 				+ selectedCircleList.size());
 	}
 
@@ -76,7 +76,7 @@ public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 		holder.itemTitle.setText(circle.getName() + " ("
 				+ circle.getFriendList().size() + ")");
 
-		Log.i("circle.getId() in getView() " + circle.getId(), "selecetdId: "
+		Utility.log("circle.getId() in getView() " + circle.getId(), "selecetdId: "
 				+ selectedCircleList);
 
 		return v;

@@ -6,7 +6,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
+
+import com.socmaps.util.Utility;
 
 /**
  * GpsService class is used to obtain the current location(Latitude & Longitude)
@@ -40,7 +41,7 @@ public class GpsService {
 						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 				|| locationManager
 						.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
-			Log.e("Location service", "Enabled");
+			Utility.log("Location service", "Enabled");
 
 			Criteria criteria = getCriteria();
 			locationProvider = locationManager.getBestProvider(criteria, true);
@@ -57,7 +58,7 @@ public class GpsService {
 				}
 			}
 		} else {
-			Log.e("Location service", "Disabled");
+			Utility.log("Location service", "Disabled");
 		}
 	}
 

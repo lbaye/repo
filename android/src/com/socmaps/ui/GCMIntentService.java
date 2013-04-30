@@ -59,21 +59,21 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
-		Log.i(TAG, "Device registered: regId = " + registrationId);
+		Utility.log(TAG, "Device registered: regId = " + registrationId);
 		displayMessage(context, getString(R.string.gcm_registered));
 		ServerUtilities.register(context, registrationId);
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String registrationId) {
-		Log.i(TAG, "Device unregistered");
+		Utility.log(TAG, "Device unregistered");
 		displayMessage(context, getString(R.string.gcm_unregistered));
 		if (GCMRegistrar.isRegisteredOnServer(context)) {
 			ServerUtilities.unregister(context, registrationId);
 		} else {
 			// This callback results from the call to unregister made on
 			// ServerUtilities when the registration to the server failed.
-			Log.i(TAG, "Ignoring unregister callback");
+			Utility.log(TAG, "Ignoring unregister callback");
 		}
 	}
 
@@ -83,7 +83,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String action = intent.getAction();
 
 		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
-			Log.w("GCM", "Received message");
+			Utility.log("GCM", "Received message");
 			
 			/*StringBuilder str = new StringBuilder();
 		    Bundle bundle = intent.getExtras();
@@ -97,7 +97,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		            str.append(bundle.get(key));
 		            str.append("\n\r");
 		        }
-		        Log.i("GCM: all keys", str.toString());
+		        Utility.log("GCM: all keys", str.toString());
 		    }*/
 
 			PushData pushData = new PushData();
@@ -106,7 +106,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("objectId")!=null)
 				{
 					pushData.setObjectId(intent.getStringExtra("objectId"));
-					Log.i("objectId", intent.getStringExtra("objectId"));
+					Utility.log("objectId", intent.getStringExtra("objectId"));
 				}
 				
 			}
@@ -114,7 +114,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("objectType")!=null)
 				{
 					pushData.setObjectType(intent.getStringExtra("objectType"));
-					Log.i("objectType", intent.getStringExtra("objectType"));
+					Utility.log("objectType", intent.getStringExtra("objectType"));
 				}				
 			}
 			if (intent.hasExtra("title")) {
@@ -127,14 +127,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("message")!=null)
 				{
 					pushData.setMessage(intent.getStringExtra("message"));
-					Log.i("message", intent.getStringExtra("message"));
+					Utility.log("message", intent.getStringExtra("message"));
 				}				
 			}
 			if (intent.hasExtra("badge")) {
 				if(intent.getStringExtra("badge")!=null)
 				{
 					pushData.setBadge(Integer.parseInt(intent.getStringExtra("badge")));
-					Log.i("badge", intent.getStringExtra("badge"));
+					Utility.log("badge", intent.getStringExtra("badge"));
 				}
 				
 			}
@@ -142,7 +142,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("tabCounts")!=null)
 				{
 					pushData.setTabCounts(intent.getStringExtra("tabCounts"));
-					Log.i("tabCounts", intent.getStringExtra("tabCounts"));
+					Utility.log("tabCounts", intent.getStringExtra("tabCounts"));
 				}				
 			}
 
@@ -150,11 +150,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 				if(intent.getStringExtra("receiverId")!=null)
 				{
 					pushData.setReceiverId(intent.getStringExtra("receiverId"));
-					Log.i("receiverId", intent.getStringExtra("receiverId"));
+					Utility.log("receiverId", intent.getStringExtra("receiverId"));
 				}				
 			}
 
-			//Log.d("GCM: onMessage", "receiverId: " + pushData.getReceiverId());
+			//Utility.log("GCM: onMessage", "receiverId: " + pushData.getReceiverId());
 
 			if (StaticValues.myInfo == null) {
 
@@ -180,7 +180,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					}
 				}
 			} else {
-				Log.d("GCM: onMessage", "Wrong reciever");
+				Utility.log("GCM: onMessage", "Wrong reciever");
 			}
 			
 			/*Intent intent2 = new Intent(
@@ -195,7 +195,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onDeletedMessages(Context context, int total) {
-		Log.i(TAG, "Received deleted messages notification");
+		Utility.log(TAG, "Received deleted messages notification");
 		String message = getString(R.string.gcm_deleted, total);
 		displayMessage(context, message);
 
@@ -207,14 +207,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	public void onError(Context context, String errorId) {
-		Log.i(TAG, "Received error: " + errorId);
+		Utility.log(TAG, "Received error: " + errorId);
 		displayMessage(context, getString(R.string.gcm_error, errorId));
 	}
 
 	@Override
 	protected boolean onRecoverableError(Context context, String errorId) {
 		// log message
-		Log.i(TAG, "Received recoverable error: " + errorId);
+		Utility.log(TAG, "Received recoverable error: " + errorId);
 		displayMessage(context,
 				getString(R.string.gcm_recoverable_error, errorId));
 		return super.onRecoverableError(context, errorId);
@@ -245,7 +245,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(0, notification);
 
-		Log.i("generateNotification: Type", pushData.getObjectType());
+		Utility.log("generateNotification: Type", pushData.getObjectType());
 
 	}
 

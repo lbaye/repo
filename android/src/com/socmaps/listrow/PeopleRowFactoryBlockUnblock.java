@@ -124,7 +124,7 @@ public class PeopleRowFactoryBlockUnblock {
 
 		if (people.getLastLogIn() != null) {
 
-			Log.e("Formatted date - ",
+			Utility.log("Formatted date - ",
 					Utility.getFormattedDisplayDate(people.getLastLogIn()));
 
 			holder.timeText.setText(Utility.getFormattedDisplayDate(people
@@ -220,18 +220,18 @@ public class PeopleRowFactoryBlockUnblock {
 
 		if (people.getUnit() == null) {
 			holder.checked.setChecked(people.isBlocked());
-			Log.i("people.getUnit() null", "" + people.isBlocked());
+			Utility.log("people.getUnit() null", "" + people.isBlocked());
 		} else if (people.getUnit().equalsIgnoreCase(
 				con.getString(R.string.unselectAllLabel))) {
 			holder.checked.setChecked(true);
-			Log.i("people.getUnit() unselectAllLabel", "true");
+			Utility.log("people.getUnit() unselectAllLabel", "true");
 		} else if (people.getUnit().equalsIgnoreCase(
 				con.getString(R.string.selectAllLabel))) {
 			holder.checked.setChecked(false);
-			Log.i("people.getUnit() selectAllLabel", "false");
+			Utility.log("people.getUnit() selectAllLabel", "false");
 		} else {
 			holder.checked.setChecked(people.isBlocked());
-			Log.i("people.getUnit() else", "" + people.isBlocked());
+			Utility.log("people.getUnit() else", "" + people.isBlocked());
 		}
 
 		holder.btnSendMessage.setVisibility(View.INVISIBLE);

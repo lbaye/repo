@@ -10,8 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.CirclesAndFriends;
@@ -2111,7 +2109,7 @@ public class ServerResponseParser {
 			Circle circle = parseCircleEntity(circleObj);
 
 			if (!circle.getName().equalsIgnoreCase("second_degree")) {
-				Log.d("ServerResponseParse", circle.toString());
+				Utility.log("ServerResponseParse", circle.toString());
 				circles.add(circle);
 			}
 
@@ -2138,7 +2136,7 @@ public class ServerResponseParser {
 			Circle circle = parseCircleEntityDetails(circleObj);
 
 			if (!circle.getName().equalsIgnoreCase("second_degree")) {
-				Log.d("ServerResponseParse", circle.toString());
+				Utility.log("ServerResponseParse", circle.toString());
 				circles.add(circle);
 			}
 

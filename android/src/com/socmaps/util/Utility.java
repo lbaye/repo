@@ -22,8 +22,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,6 +81,7 @@ import com.socmaps.images.ImageFetcher;
 import com.socmaps.images.singly.ImageCacheListener;
 import com.socmaps.images.singly.ImageInfo;
 import com.socmaps.images.singly.RemoteImageCache;
+import com.socmaps.ui.BuildConfig;
 import com.socmaps.ui.R;
 import com.socmaps.widget.ImageDownloadListener;
 
@@ -499,7 +498,7 @@ public class Utility {
 			offsetString += minute;
 		}
 
-		Log.i("timezone offset", offsetString);
+		Utility.log("timezone offset", offsetString);
 
 		return offsetString;
 	}
@@ -526,8 +525,8 @@ public class Utility {
 		Date targetDate = getLocalTimeFromUTC(timeEntity);
 		Date now = getCurrentDate();
 
-		Log.e("targetdate in local format", targetDate.toString());
-		Log.e("current in local format", now.toString());
+		Utility.log("targetdate in local format", targetDate.toString());
+		Utility.log("current in local format", now.toString());
 
 		if (today(targetDate, now)) {
 			return "Today at " + todayTimeFormater.format(targetDate);
@@ -553,8 +552,8 @@ public class Utility {
 		Date targetDate = getLocalTimeFromUTC(timeEntity);
 		Date now = getCurrentDate();
 
-		Log.e("targetdate in local format", targetDate.toString());
-		Log.e("current in local format", now.toString());
+		Utility.log("targetdate in local format", targetDate.toString());
+		Utility.log("current in local format", now.toString());
 
 		if (today(targetDate, now)) {
 			return "at " + todayTimeFormater.format(targetDate);
@@ -1433,7 +1432,7 @@ public class Utility {
 						result = address.getAddressLine(0) + ", " + address.getLocality();
 					}
 				} catch (IOException e) {
-					Log.e("GEOCODER", "Impossible to connect to Geocoder", e);
+					Utility.log("GEOCODER", "Impossible to connect to Geocoder");
 				} finally {
 					Message msg = Message.obtain();
 					msg.setTarget(handler);
@@ -1480,7 +1479,7 @@ public class Utility {
 						result = address.getAddressLine(0) + ", " + address.getLocality();
 					}
 				} catch (IOException e) {
-					Log.e("GEOCODER", "Impossible to connect to Geocoder", e);
+					Utility.log("GEOCODER", "Impossible to connect to Geocoder");
 				} finally {
 					Message msg = Message.obtain();
 					msg.setTarget(handler);
@@ -1520,7 +1519,7 @@ public class Utility {
 
 				String serverUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true";
 
-				Log.i("ReverseGeo:url", serverUrl);
+				Utility.log("ReverseGeo:url", serverUrl);
 
 				RestClient client = new RestClient(serverUrl);
 
@@ -1537,7 +1536,7 @@ public class Utility {
 				msg.setTarget(handler);
 				if (result != null) {
 
-					Log.i("ReverseGeo:response", result);
+					Utility.log("ReverseGeo:response", result);
 					String address = null;
 					String name = null;
 
@@ -1658,7 +1657,7 @@ public class Utility {
 			inputManager.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		} catch (Exception e) {
 			// TODO: handle exception
-			Log.e("hideKeyboardContext", e.toString());
+			Utility.log("hideKeyboardContext", e.toString());
 		}
 
 	}
@@ -1675,7 +1674,7 @@ public class Utility {
 			activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		} catch (Exception e) {
 			// TODO: handle exception
-			Log.e("hideKeyboard", e.toString());
+			Utility.log("hideKeyboard", e.toString());
 		}
 
 	}
@@ -1887,22 +1886,22 @@ public class Utility {
 				StaticValues.myInfo.getNotificationCount().setTotalCount(pushData.getBadge());
 				String tabCounts = pushData.getTabCounts().trim();
 
-				Log.i("tabCounts on parser", tabCounts);
+				Utility.log("tabCounts on parser", tabCounts);
 
 				if (!tabCounts.equals("")) {
 
 					String[] tabCountsArray = tabCounts.split("[|]");
 
 					if (tabCountsArray.length == 3) {
-						Log.i("if tabCountsArray.length", tabCountsArray.length + "");
+						Utility.log("if tabCountsArray.length", tabCountsArray.length + "");
 						StaticValues.myInfo.getNotificationCount().setMessageCount(Integer.parseInt(tabCountsArray[0]));
 
-						Log.i("messageCount", tabCountsArray[0]);
+						Utility.log("messageCount", tabCountsArray[0]);
 
 						StaticValues.myInfo.getNotificationCount().setFriendRequestCount(Integer.parseInt(tabCountsArray[1]));
 						StaticValues.myInfo.getNotificationCount().setNotificationCount(Integer.parseInt(tabCountsArray[2]));
 					} else {
-						Log.i("else tabCountsArray.length", tabCountsArray.length + "");
+						Utility.log("else tabCountsArray.length", tabCountsArray.length + "");
 					}
 				}
 			}
@@ -2017,7 +2016,7 @@ public class Utility {
 			}
 
 			if (isValidString(avatarUrl)) {
-				Log.i("Utility:generateMarker", "Attempt 1: " + avatarUrl);
+				Utility.log("Utility:generateMarker", "Attempt 1: " + avatarUrl);
 				imageFetcher.loadImage(avatarUrl, avatar, imageDownloadListener, Utility.getItemId(item));
 			}
 
@@ -2040,13 +2039,13 @@ public class Utility {
 				}
 
 			} else {
-				Log.e("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
+				Utility.log("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
 			}
 
 		}
 
 		catch (OutOfMemoryError e) {
-			Log.i("generateMarker", "OutOfMemory");
+			Utility.log("generateMarker", "OutOfMemory");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -2122,13 +2121,13 @@ public class Utility {
 				}
 
 			} else {
-				Log.e("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
+				Utility.log("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
 			}
 
 		}
 
 		catch (OutOfMemoryError e) {
-			Log.i("generateMarker", "OutOfMemory");
+			Utility.log("generateMarker", "OutOfMemory");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -2202,7 +2201,7 @@ public class Utility {
 					avatar.setImageBitmap(profilePic);
 				}
 
-				Log.i("GenerateMarker:url", avatarUrl);
+				Utility.log("GenerateMarker:url", avatarUrl);
 			}
 
 			// this is the important code
@@ -2224,13 +2223,13 @@ public class Utility {
 				}
 
 			} else {
-				Log.e("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
+				Utility.log("CustomMapMarkers", "Item * generateMarker *** getDrawingCache is null");
 			}
 
 		}
 
 		catch (OutOfMemoryError e) {
-			Log.i("generateMarker", "OutOfMemory");
+			Utility.log("generateMarker", "OutOfMemory");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -2339,7 +2338,7 @@ public class Utility {
 
 				@Override
 				public void onFailure(Throwable error, ImageInfo imageInfo) {
-					Log.i("Utility:setImage:onFailure", imageInfo.id + ":" + imageInfo.imageUrl);
+					Utility.log("Utility:setImage:onFailure", imageInfo.id + ":" + imageInfo.imageUrl);
 					// remoteImageCache.getImage(imageInfo);
 				}
 			};
@@ -2348,7 +2347,7 @@ public class Utility {
 				imageView.setImageBitmap(bitmap);
 			}
 
-			Log.i("Utility:setImage:url", imageUrl);
+			Utility.log("Utility:setImage:url", imageUrl);
 		}
 	}
 
@@ -2370,8 +2369,8 @@ public class Utility {
 
 			} else if (newItem instanceof SecondDegreePeople) {
 
-				//SecondDegreePeople newPeople = (SecondDegreePeople) newItem;
-				//SecondDegreePeople oldPeople = (SecondDegreePeople) oldItem;
+				// SecondDegreePeople newPeople = (SecondDegreePeople) newItem;
+				// SecondDegreePeople oldPeople = (SecondDegreePeople) oldItem;
 
 			} else if (newItem instanceof Place) {
 			} else if (newItem instanceof Event) {
@@ -2383,5 +2382,31 @@ public class Utility {
 		}
 
 		return isDifferent;
+	}
+
+	public static void log(String tag, String message) {
+		log(tag, message, 0);
+	}
+
+	public static void log(String tag, String message, int type) {
+
+		// Type 0 == Info; 1 == error; 2 == warning
+
+		if (BuildConfig.DEBUG && tag != null && message != null) {
+			if (type == 0) {
+
+				Log.i(tag, message);
+
+			} else if (type == 1) {
+				Log.e(tag, message);
+
+			} else if (type == 2) {
+				Log.w(tag, message);
+
+			} else {
+				Log.i(tag, message);
+			}
+		}
+
 	}
 }

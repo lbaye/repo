@@ -2586,50 +2586,15 @@ com.google.android.gms.maps.GoogleMapOptionsCreator -> com.google.android.gms.ma
     void a(com.google.android.gms.maps.GoogleMapOptions,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.maps.MapFragment -> com.google.android.gms.maps.MapFragment:
-    com.google.android.gms.maps.MapFragment$a cO -> a
-    com.google.android.gms.maps.GoogleMap aK -> b
-    com.google.android.gms.maps.GoogleMap getMap() -> a
-    void onAttach(android.app.Activity) -> onAttach
-    void onInflate(android.app.Activity,android.util.AttributeSet,android.os.Bundle) -> onInflate
-    void onCreate(android.os.Bundle) -> onCreate
-    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    void onResume() -> onResume
-    void onPause() -> onPause
-    void onDestroyView() -> onDestroyView
-    void onDestroy() -> onDestroy
-    void onLowMemory() -> onLowMemory
-    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    void setArguments(android.os.Bundle) -> setArguments
-com.google.android.gms.maps.MapFragment$a -> com.google.android.gms.maps.s:
-    android.app.Fragment e -> b
-    com.google.android.gms.internal.ag f -> a
-    android.app.Activity g -> c
-    void a(com.google.android.gms.internal.ag) -> a
-    void a() -> g
-    void a(com.google.android.gms.maps.MapFragment$a,android.app.Activity) -> a
-com.google.android.gms.maps.MapFragment$b -> com.google.android.gms.maps.t:
-    android.app.Fragment e -> a
-    com.google.android.gms.maps.internal.IMapFragmentDelegate ah -> b
-    void onInflate(android.app.Activity,android.os.Bundle,android.os.Bundle) -> a
-    void onCreate(android.os.Bundle) -> a
-    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
-    void onResume() -> a
-    void onPause() -> b
-    void onDestroyView() -> c
-    void onDestroy() -> d
-    void onLowMemory() -> e
-    void onSaveInstanceState(android.os.Bundle) -> b
-    com.google.android.gms.maps.internal.IMapFragmentDelegate g() -> f
 com.google.android.gms.maps.MapView -> com.google.android.gms.maps.MapView:
     com.google.android.gms.maps.MapView$a bq -> a
-com.google.android.gms.maps.MapView$a -> com.google.android.gms.maps.u:
+com.google.android.gms.maps.MapView$a -> com.google.android.gms.maps.s:
     android.view.ViewGroup cC -> b
     android.content.Context mContext -> c
     com.google.android.gms.internal.ag f -> a
     com.google.android.gms.maps.GoogleMapOptions cD -> d
     void a(com.google.android.gms.internal.ag) -> a
-com.google.android.gms.maps.MapView$b -> com.google.android.gms.maps.v:
+com.google.android.gms.maps.MapView$b -> com.google.android.gms.maps.t:
     android.view.ViewGroup cR -> a
     com.google.android.gms.maps.internal.IMapViewDelegate cS -> b
     android.view.View cT -> c
@@ -2642,9 +2607,7 @@ com.google.android.gms.maps.MapView$b -> com.google.android.gms.maps.v:
     void onDestroy() -> d
     void onLowMemory() -> e
     void onSaveInstanceState(android.os.Bundle) -> b
-com.google.android.gms.maps.MapsInitializer -> com.google.android.gms.maps.w:
-    void initialize(android.content.Context) -> a
-com.google.android.gms.maps.Projection -> com.google.android.gms.maps.x:
+com.google.android.gms.maps.Projection -> com.google.android.gms.maps.u:
     com.google.android.gms.maps.internal.IProjectionDelegate E -> a
     com.google.android.gms.maps.model.VisibleRegion getVisibleRegion() -> a
 com.google.android.gms.maps.SupportMapFragment -> com.google.android.gms.maps.SupportMapFragment:
@@ -2661,7 +2624,7 @@ com.google.android.gms.maps.SupportMapFragment -> com.google.android.gms.maps.Su
     void onDestroy() -> o
     void onLowMemory() -> onLowMemory
     void onSaveInstanceState(android.os.Bundle) -> b
-com.google.android.gms.maps.SupportMapFragment$a -> com.google.android.gms.maps.y:
+com.google.android.gms.maps.SupportMapFragment$a -> com.google.android.gms.maps.v:
     android.support.v4.app.Fragment ag -> a
     com.google.android.gms.maps.internal.IMapFragmentDelegate ah -> b
     void onInflate(android.app.Activity,android.os.Bundle,android.os.Bundle) -> a
@@ -2674,14 +2637,14 @@ com.google.android.gms.maps.SupportMapFragment$a -> com.google.android.gms.maps.
     void onLowMemory() -> e
     void onSaveInstanceState(android.os.Bundle) -> b
     com.google.android.gms.maps.internal.IMapFragmentDelegate g() -> f
-com.google.android.gms.maps.SupportMapFragment$b -> com.google.android.gms.maps.z:
+com.google.android.gms.maps.SupportMapFragment$b -> com.google.android.gms.maps.w:
     android.support.v4.app.Fragment ag -> b
     com.google.android.gms.internal.ag f -> a
     android.app.Activity g -> c
     void a(com.google.android.gms.internal.ag) -> a
     void a() -> g
     void a(com.google.android.gms.maps.SupportMapFragment$b,android.app.Activity) -> a
-com.google.android.gms.maps.UiSettings -> com.google.android.gms.maps.aa:
+com.google.android.gms.maps.UiSettings -> com.google.android.gms.maps.x:
     com.google.android.gms.maps.internal.IUiSettingsDelegate aL -> a
     void setZoomControlsEnabled$1385ff() -> a
 com.google.android.gms.maps.internal.ICameraUpdateFactoryDelegate -> j.a:
@@ -6200,8 +6163,7 @@ com.socmaps.ui.HomeActivity$18 -> com.socmaps.ui.dt:
     void run() -> run
 com.socmaps.ui.HomeActivity$19 -> com.socmaps.ui.du:
     com.socmaps.ui.HomeActivity this$0 -> a
-    android.content.Context val$context -> b
-    java.lang.String val$regId -> c
+    java.lang.String val$regId -> b
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 com.socmaps.ui.HomeActivity$2 -> com.socmaps.ui.dv:
@@ -9120,6 +9082,7 @@ com.socmaps.util.Utility -> s.q:
     boolean isFacebookSessionValid(android.content.Context) -> n
     void setImage(java.lang.String,java.lang.String,android.widget.ImageView,com.socmaps.images.singly.RemoteImageCache) -> a
     boolean isDifferent(java.lang.Object,java.lang.Object) -> a
+    void log$16da05f7() -> c
 com.socmaps.util.Utility$3 -> s.r:
     double val$lat -> a
     double val$lng -> b
@@ -9252,14 +9215,14 @@ com.socmaps.widget.ListComparator$COMPARATOR -> com.socmaps.widget.o:
     com.socmaps.widget.ListComparator$COMPARATOR[] values() -> values
     com.socmaps.widget.ListComparator$COMPARATOR valueOf(java.lang.String) -> valueOf
 com.socmaps.widget.LocationPicker -> com.socmaps.widget.LocationPicker:
-    android.widget.TextView showLocation -> a
-    double lat -> b
-    double lng -> c
-    java.lang.String address -> d
-    java.lang.String name -> e
-    android.widget.Button btnOk -> f
-    android.widget.Button btnCancel -> g
-    com.google.android.gms.maps.GoogleMap mapView -> h
+    android.widget.TextView showLocation -> m
+    double lat -> n
+    double lng -> o
+    java.lang.String address -> p
+    java.lang.String name -> q
+    android.widget.Button btnOk -> r
+    android.widget.Button btnCancel -> s
+    com.google.android.gms.maps.GoogleMap mapView -> t
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void onPause() -> onPause
@@ -9275,14 +9238,14 @@ com.socmaps.widget.LocationPicker$LocationAddressHandler -> com.socmaps.widget.p
     com.socmaps.widget.LocationPicker this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
 com.socmaps.widget.LocationPickerProfile -> com.socmaps.widget.LocationPickerProfile:
-    android.widget.TextView showLocation -> a
-    double lat -> b
-    double lng -> c
-    java.lang.String address -> d
-    java.lang.String name -> e
-    android.widget.Button btnOk -> f
-    android.widget.Button btnCancel -> g
-    com.google.android.gms.maps.GoogleMap mapView -> h
+    android.widget.TextView showLocation -> m
+    double lat -> n
+    double lng -> o
+    java.lang.String address -> p
+    java.lang.String name -> q
+    android.widget.Button btnOk -> r
+    android.widget.Button btnCancel -> s
+    com.google.android.gms.maps.GoogleMap mapView -> t
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void onPause() -> onPause

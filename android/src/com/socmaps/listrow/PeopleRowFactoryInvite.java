@@ -1,7 +1,6 @@
 package com.socmaps.listrow;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,10 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-
 /**
- * PeopleRowFactoryInvite class for generating a row (view), which row (view) is associates with corresponding layout.
- *
+ * PeopleRowFactoryInvite class for generating a row (view), which row (view) is
+ * associates with corresponding layout.
+ * 
  */
 public class PeopleRowFactoryInvite {
 
@@ -44,10 +43,7 @@ public class PeopleRowFactoryInvite {
 	 * @see View
 	 */
 
-	public static View getView(final LayoutInflater inflater,
-			final Object peopleObj, final Context con,
-			 final View convertView,
-			final ImageFetcher il,
+	public static View getView(final LayoutInflater inflater, final Object peopleObj, final Context con, final View convertView, final ImageFetcher il,
 			final ListItemClickListenerPeople listItemClickListenerPeople) {
 
 		ViewHolder holder;
@@ -55,23 +51,13 @@ public class PeopleRowFactoryInvite {
 		final People people;
 		// we have a don't have a converView so we'll have to create a new one
 		if (convertView == null) {
-			ViewGroup viewGroup = (ViewGroup) inflater.inflate(
-					R.layout.row_item_people_invite, null);
+			ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.row_item_people_invite, null);
 
 			// use the view holder pattern to save of already looked up subviews
-			holder = new ViewHolder(
-					(ImageView) viewGroup.findViewById(R.id.cover_image_view),
-					(ImageView) viewGroup.findViewById(R.id.people_icon_image),
-					(ImageView) viewGroup.findViewById(R.id.source_image_btn),
-					(ImageView) viewGroup.findViewById(R.id.map_image_btn),
-					(TextView) viewGroup.findViewById(R.id.first_name_text),
-					(TextView) viewGroup.findViewById(R.id.status_msg_text),
-					(TextView) viewGroup.findViewById(R.id.address_text),
-					(TextView) viewGroup.findViewById(R.id.time_text),
-					(TextView) viewGroup.findViewById(R.id.distance_text),
-					(Button) viewGroup
-							.findViewById(R.id.btnMessagePeopleInvite),
-					(Button) viewGroup.findViewById(R.id.btnInvitePeople),
+			holder = new ViewHolder((ImageView) viewGroup.findViewById(R.id.cover_image_view), (ImageView) viewGroup.findViewById(R.id.people_icon_image),
+					(ImageView) viewGroup.findViewById(R.id.source_image_btn), (ImageView) viewGroup.findViewById(R.id.map_image_btn), (TextView) viewGroup.findViewById(R.id.first_name_text),
+					(TextView) viewGroup.findViewById(R.id.status_msg_text), (TextView) viewGroup.findViewById(R.id.address_text), (TextView) viewGroup.findViewById(R.id.time_text),
+					(TextView) viewGroup.findViewById(R.id.distance_text), (Button) viewGroup.findViewById(R.id.btnMessagePeopleInvite), (Button) viewGroup.findViewById(R.id.btnInvitePeople),
 					(CheckBox) viewGroup.findViewById(R.id.checkRow));
 
 			viewGroup.setTag(holder);
@@ -88,17 +74,16 @@ public class PeopleRowFactoryInvite {
 
 		// *****************************************************************check
 		// the user type sm/fb
-		/*if (people.getRegMedia() != null) {
-			if (!people.getRegMedia().equals("")) {
-				if (people.getRegMedia().equals("fb")) {
-					holder.sourceImage.setImageResource(R.drawable.source_fb);
-					holder.sourceImage.setVisibility(View.GONE);
-				} else
-					holder.sourceImage.setVisibility(View.GONE);
-
-			} else
-				holder.sourceImage.setVisibility(View.GONE);
-		}*/
+		/*
+		 * if (people.getRegMedia() != null) { if
+		 * (!people.getRegMedia().equals("")) { if
+		 * (people.getRegMedia().equals("fb")) {
+		 * holder.sourceImage.setImageResource(R.drawable.source_fb);
+		 * holder.sourceImage.setVisibility(View.GONE); } else
+		 * holder.sourceImage.setVisibility(View.GONE);
+		 * 
+		 * } else holder.sourceImage.setVisibility(View.GONE); }
+		 */
 
 		// ******************************************************************first
 
@@ -119,11 +104,9 @@ public class PeopleRowFactoryInvite {
 
 		if (people.getLastLogIn() != null) {
 
-			Log.e("Formatted date - ",
-					Utility.getFormattedDisplayDate(people.getLastLogIn()));
+			Utility.log("Formatted date - ", Utility.getFormattedDisplayDate(people.getLastLogIn()));
 
-			holder.timeText.setText(Utility.getFormattedDisplayDate(people
-					.getLastLogIn()));
+			holder.timeText.setText(Utility.getFormattedDisplayDate(people.getLastLogIn()));
 			holder.timeText.setVisibility(View.GONE);
 		} else
 			holder.timeText.setVisibility(View.GONE);
@@ -137,8 +120,7 @@ public class PeopleRowFactoryInvite {
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
-		if (people.getCoverPhoto() != null
-				&& !people.getCoverPhoto().equals("")) {
+		if (people.getCoverPhoto() != null && !people.getCoverPhoto().equals("")) {
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 			il.loadImage(people.getCoverPhoto(), holder.coverPhoto);
@@ -156,9 +138,7 @@ public class PeopleRowFactoryInvite {
 
 		double distance = Utility.calculateDistanceFromCurrentLocation(people.getPoint());
 		if (distance < Constant.MAX_ITEM_DISTANCE) {
-			holder.distanceText
-					.setText(Utility.getFormatedDistance(distance,
-							StaticValues.myInfo.getSettings().getUnit()));
+			holder.distanceText.setText(Utility.getFormatedDistance(distance, StaticValues.myInfo.getSettings().getUnit()));
 		} else {
 			holder.distanceText.setVisibility(View.INVISIBLE);
 			holder.showOnMap.setVisibility(View.INVISIBLE);
@@ -210,11 +190,8 @@ public class PeopleRowFactoryInvite {
 		final Button btnInvitePeople;
 		final CheckBox checked;
 
-		private ViewHolder(ImageView image1, ImageView image2,
-				ImageView image3, ImageView image4, TextView textView1,
-				TextView textView2, TextView textView3, TextView textView4,
-				TextView textView5, Button sendMessage, Button blockUnblock,
-				CheckBox checkedBox) {
+		private ViewHolder(ImageView image1, ImageView image2, ImageView image3, ImageView image4, TextView textView1, TextView textView2, TextView textView3, TextView textView4, TextView textView5,
+				Button sendMessage, Button blockUnblock, CheckBox checkedBox) {
 			this.coverPhoto = image1;
 			this.avatar = image2;
 			this.sourceImage = image3;

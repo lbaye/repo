@@ -155,7 +155,7 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 					public void onCheckedChanged(CompoundButton arg0,
 							boolean arg1) {
 
-						Log.i("PeopleRowFactoryBlockUnblock",
+						Utility.log("PeopleRowFactoryBlockUnblock",
 								people.getFirstName() + " > isChecked: " + arg1);
 
 						listItemClickListenerSecondDegreePeople.onCheckChange(

@@ -48,7 +48,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 	public void onCreate() {
 
 		// Toast.makeText(this, "My Service Created", Toast.LENGTH_LONG).show();
-		Log.d(TAG, "My Service Created");
+		Utility.log(TAG, "My Service Created");
 
 		gpsService = new GpsService(getApplicationContext(), this);
 
@@ -61,7 +61,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 
 		// Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
 
-		Log.d(TAG, "My Service Started");
+		Utility.log(TAG, "My Service Started");
 
 		timerTask();
 
@@ -87,7 +87,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 
 				
 
-				Log.w(TAG, "timerTask()>>>>>>>>>>>>>>> " + " Lat: " + myLat
+				Utility.log(TAG, "timerTask()>>>>>>>>>>>>>>> " + " Lat: " + myLat
 						+ " Lng: " + myLng + " current time in millise:"
 						+ System.currentTimeMillis());
 
@@ -130,7 +130,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 	@Override
 	public void onDestroy() {
 		// Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
-		Log.d(TAG, "My Service Stopped");
+		Utility.log(TAG, "My Service Stopped");
 
 		// player.stop();
 
@@ -149,7 +149,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 		myLat = location.getLatitude();
 		myLng = location.getLongitude();
 
-		Log.e(TAG + " catchLocationUpdate " + " location.getLatitude():"
+		Utility.log(TAG + " catchLocationUpdate " + " location.getLatitude():"
 				+ location.getLatitude(),
 				"location.getLongitude():" + location.getLongitude());
 
@@ -167,7 +167,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 
 		} else {
 
-			Log.e("Location update", "No internet connection available.");
+			Utility.log("Location update", "No internet connection available.");
 		}
 	}
 
@@ -192,7 +192,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 
 			responseStatusUpdateLocation = restClient.getResponseCode();
 
-			Log.i(TAG + " Update Location response >>",
+			Utility.log(TAG + " Update Location response >>",
 					responseStatusUpdateLocation + " : "
 							+ responseStringUpdateLocation
 							+ " current time in millise:"
@@ -222,7 +222,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 	private void handleResponseUpdateLocation(int responseStatusUpdateLocation,
 			String responseStringUpdateLocation) {
 		// TODO Auto-generated method stub
-		Log.e("Update Location", responseStatusUpdateLocation + " "
+		Utility.log("Update Location", responseStatusUpdateLocation + " "
 				+ responseStringUpdateLocation);
 	}
 }

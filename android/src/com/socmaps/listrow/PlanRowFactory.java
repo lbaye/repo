@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.maps.GeoPoint;
 import com.socmaps.entity.Plan;
 import com.socmaps.images.ImageFetcher;
 import com.socmaps.ui.R;
@@ -49,18 +48,15 @@ public class PlanRowFactory {
 	 * @see View
 	 */
 
-	public static View getView(final LayoutInflater inflater, final Plan plan,
-			final Context context,
-			final ListItemClickListenerPlan clickListener, final int position,
-			final View convertView, final ImageFetcher il, int a) {
+	public static View getView(final LayoutInflater inflater, final Plan plan, final Context context, final ListItemClickListenerPlan clickListener, final int position, final View convertView,
+			final ImageFetcher il, int a) {
 
 		ViewHolder holder;
 		View view;
 
 		// we have a don't have a converView so we'll have to create a new one
 		if (convertView == null) {
-			ViewGroup viewGroup = (ViewGroup) inflater.inflate(
-					R.layout.row_list_plan, null);
+			ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.row_list_plan, null);
 
 			// use the view holder pattern to save of already looked up subviews
 			holder = buildViewHolder(viewGroup);
@@ -97,8 +93,7 @@ public class PlanRowFactory {
 		// set Date
 		if (plan.getPlanTime() != null) {
 
-			holder.planDateTimeText.setText(Utility
-					.getFormattedDisplayDateEventList(plan.getPlanTime()));
+			holder.planDateTimeText.setText(Utility.getFormattedDisplayDateEventList(plan.getPlanTime()));
 			holder.planDateTimeText.setVisibility(View.VISIBLE);
 
 		} else
@@ -116,10 +111,8 @@ public class PlanRowFactory {
 		// set distance
 
 		if (StaticValues.myPoint != null) {
-			holder.distanceText.setText(Utility.getFormatedDistance(
-					Utility.calculateDistance(StaticValues.myPoint, new LatLng(
-							plan.getLatitude(), plan.getLongitude())),
-					StaticValues.myInfo.getSettings().getUnit()));
+			holder.distanceText.setText(Utility.getFormatedDistance(Utility.calculateDistance(StaticValues.myPoint, new LatLng(plan.getLatitude(), plan.getLongitude())), StaticValues.myInfo
+					.getSettings().getUnit()));
 		}
 
 		// set arrowClicklistener
@@ -186,16 +179,9 @@ public class PlanRowFactory {
 	}
 
 	private static ViewHolder buildViewHolder(final ViewGroup viewGroup) {
-		return new ViewHolder(
-				(ImageView) viewGroup.findViewById(R.id.cover_image_view),
-				(ImageView) viewGroup.findViewById(R.id.map_image_btn),
-				(ImageView) viewGroup.findViewById(R.id.arrow_right),
-				(TextView) viewGroup.findViewById(R.id.event_name_text),
-				(TextView) viewGroup.findViewById(R.id.event_date_text),
-				(TextView) viewGroup.findViewById(R.id.address_text),
-				(TextView) viewGroup.findViewById(R.id.distance_text),
-				(Button) viewGroup.findViewById(R.id.editPlanBtn),
-				(Button) viewGroup.findViewById(R.id.deletePlanBtn),
+		return new ViewHolder((ImageView) viewGroup.findViewById(R.id.cover_image_view), (ImageView) viewGroup.findViewById(R.id.map_image_btn), (ImageView) viewGroup.findViewById(R.id.arrow_right),
+				(TextView) viewGroup.findViewById(R.id.event_name_text), (TextView) viewGroup.findViewById(R.id.event_date_text), (TextView) viewGroup.findViewById(R.id.address_text),
+				(TextView) viewGroup.findViewById(R.id.distance_text), (Button) viewGroup.findViewById(R.id.editPlanBtn), (Button) viewGroup.findViewById(R.id.deletePlanBtn),
 				(ImageView) viewGroup.findViewById(R.id.ivSeparator));
 	}
 
@@ -211,10 +197,8 @@ public class PlanRowFactory {
 		final Button btnDelete;
 		final ImageView ivSeparator;
 
-		private ViewHolder(ImageView image1, ImageView image2,
-				ImageView image3, TextView textView1, TextView textView2,
-				TextView textView3, TextView textView4, Button button1,
-				Button button2, ImageView image4) {
+		private ViewHolder(ImageView image1, ImageView image2, ImageView image3, TextView textView1, TextView textView2, TextView textView3, TextView textView4, Button button1, Button button2,
+				ImageView image4) {
 			this.coverPhoto = image1;
 			this.rightArrow = image3;
 			this.showOnMap = image2;

@@ -106,7 +106,7 @@ public class PeopleRowFactory2 {
 
 		if (people.getLastLogIn() != null) {
 
-			Log.e("Formatted date - ", Utility.getFormattedDisplayDate(people.getLastLogIn()));
+			Utility.log("Formatted date - ", Utility.getFormattedDisplayDate(people.getLastLogIn()));
 
 			holder.timeText.setText(Utility.getFormattedDisplayDate(people.getLastLogIn()));
 			holder.timeText.setVisibility(View.VISIBLE);
@@ -119,7 +119,7 @@ public class PeopleRowFactory2 {
 		if (people.getCurrentAddress() != null) {
 			holder.addressText.setText(people.getCurrentAddress());
 			holder.addressText.setVisibility(View.VISIBLE);
-			Log.d("People Row Factory1", people.getCurrentAddress());
+			Utility.log("People Row Factory1", people.getCurrentAddress());
 		} else {
 			holder.addressText.setVisibility(View.GONE);
 		}

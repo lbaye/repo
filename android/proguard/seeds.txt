@@ -71,8 +71,6 @@ com.google.android.gms.internal.aj: aj(android.content.Context,android.util.Attr
 com.google.android.gms.internal.w
 com.google.android.gms.internal.w: w(android.content.Context,android.util.AttributeSet)
 com.google.android.gms.maps.GoogleMapOptions
-com.google.android.gms.maps.MapFragment
-com.google.android.gms.maps.MapFragment: MapFragment()
 com.google.android.gms.maps.MapView
 com.google.android.gms.maps.MapView: MapView(android.content.Context,android.util.AttributeSet)
 com.google.android.gms.maps.MapView: MapView(android.content.Context,android.util.AttributeSet,int)

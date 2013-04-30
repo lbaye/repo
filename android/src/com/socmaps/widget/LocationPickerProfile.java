@@ -1,11 +1,12 @@
 package com.socmaps.widget;
 
-import android.app.Activity;
-import android.app.FragmentManager;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,9 +32,8 @@ import com.socmaps.util.Utility;
 /**
  * LocationPicker MapActivity for providing expected location.
  */
-public class LocationPickerProfile extends Activity implements OnClickListener,
-		OnCameraChangeListener, OnMapClickListener, OnMarkerDragListener,OnMarkerClickListener {
-	
+public class LocationPickerProfile extends FragmentActivity implements OnClickListener, OnCameraChangeListener, OnMapClickListener, OnMarkerDragListener, OnMarkerClickListener {
+
 	private TextView showLocation;
 	private double lat = 0.0, lng = 0.0;
 	private String address = null;
@@ -66,12 +66,11 @@ public class LocationPickerProfile extends Activity implements OnClickListener,
 		markerOptions.position(latLng);
 		markerOptions.draggable(false);
 		mapView.addMarker(markerOptions);
-		
-		
-		mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
-		
+
+		mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+
 		Utility.getAddressByCoordinate(lat, lng, new LocationAddressHandler());
-		
+
 	}
 
 	private class LocationAddressHandler extends Handler {
@@ -107,16 +106,15 @@ public class LocationPickerProfile extends Activity implements OnClickListener,
 	private void init() {
 		// TODO Auto-generated method stub
 		showLocation = (TextView) findViewById(R.id.tvAddress);
-		
+
 		btnOk = (Button) findViewById(R.id.btnOk);
 		btnOk.setOnClickListener(this);
 		btnCancel = (Button) findViewById(R.id.btnCancel);
 		btnCancel.setOnClickListener(this);
 
-		FragmentManager myFragmentManager = getFragmentManager();
-		MapFragment myMapFragment = (MapFragment) myFragmentManager
-				.findFragmentById(R.id.map);
-		mapView = myMapFragment.getMap();
+		FragmentManager myFragmentManager = getSupportFragmentManager();
+		SupportMapFragment supportMapFragment = (SupportMapFragment) myFragmentManager.findFragmentById(R.id.map);
+		mapView = supportMapFragment.getMap();
 		mapView.setMyLocationEnabled(true);
 		// mapView.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 		mapView.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -140,10 +138,8 @@ public class LocationPickerProfile extends Activity implements OnClickListener,
 
 	}
 
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
 
 		return (super.onKeyDown(keyCode, event));
 	}
@@ -192,10 +188,9 @@ public class LocationPickerProfile extends Activity implements OnClickListener,
 
 	@Override
 	public void onMarkerDragEnd(Marker marker) {
-	
+
 		LatLng latLng = marker.getPosition();
-		Utility.getAddressByCoordinate(latLng.latitude, latLng.longitude,
-				new LocationAddressHandler());
+		Utility.getAddressByCoordinate(latLng.latitude, latLng.longitude, new LocationAddressHandler());
 
 	}
 
@@ -204,8 +199,6 @@ public class LocationPickerProfile extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 	@Override
 	public boolean onMarkerClick(Marker marker) {

@@ -131,7 +131,7 @@ public class PlaceRowFactoryForSavedPlace {
 			}
 		});
 
-		Log.i("Save Place Data PlaceRowFactoryForSavedPlace>>>",
+		Utility.log("Save Place Data PlaceRowFactoryForSavedPlace>>>",
 				"Name: " + place.getName() + " Phopt: "
 						+ place.getStreetViewImage() + " Address:"
 						+ place.getAddress() + " Category:"

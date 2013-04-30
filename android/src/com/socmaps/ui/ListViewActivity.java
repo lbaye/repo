@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,7 +18,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +37,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
@@ -51,10 +49,10 @@ import com.socmaps.listrow.RowType;
 import com.socmaps.listrow.SecondDegreePeopleRowFactory;
 import com.socmaps.util.BackProcess;
 import com.socmaps.util.BackProcess.REQUEST_TYPE;
-import com.socmaps.util.Constant.ALLUSER_FRIENDS;
-import com.socmaps.util.Constant.OnlineOffline;
 import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
+import com.socmaps.util.Constant.ALLUSER_FRIENDS;
+import com.socmaps.util.Constant.OnlineOffline;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.SharedPreferencesHelper;
@@ -62,13 +60,12 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.AlluserFriendsOnlyRadioGroup;
 import com.socmaps.widget.ListComparator;
+import com.socmaps.widget.ListComparator.COMPARATOR;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
-import com.socmaps.widget.NearByPlacesPickerListener;
 import com.socmaps.widget.OnlineOfflineRadioGroup;
 import com.socmaps.widget.OnlineOfflineRadioGroupListener;
 import com.socmaps.widget.SearchResultDialog;
 import com.socmaps.widget.SearchResultDialogListener;
-import com.socmaps.widget.ListComparator.COMPARATOR;
 
 /**
  * LayerPreferencesActivity class for generating all users and places list view
@@ -756,7 +753,7 @@ public class ListViewActivity extends FragmentActivity implements OnCheckedChang
 
 		Intent intent = new Intent(context, ProfileActivity2.class);
 		intent.putExtra("otherUser", people);
-		Log.d("People Age", people.getAge() + "");
+		Utility.log("People Age", people.getAge() + "");
 		startActivity(intent);
 		finish();
 
@@ -850,7 +847,7 @@ public class ListViewActivity extends FragmentActivity implements OnCheckedChang
 		params.add(new BasicNameValuePair("people", people));
 		params.add(new BasicNameValuePair("place", place));
 
-		Log.e("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
+		Utility.log("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
 
 		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
 		backProcess.execute(RestClient.RequestMethod.POST);
@@ -862,7 +859,7 @@ public class ListViewActivity extends FragmentActivity implements OnCheckedChang
 		public void onFinish(int status, String result, int type) {
 
 			// TODO Auto-generated method stub
-			Log.w("Got Search list from server callback process >> :", status + ":" + result);
+			Utility.log("Got Search list from server callback process >> :", status + ":" + result);
 			switch (status) {
 			case Constant.STATUS_SUCCESS:
 

@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,8 +44,7 @@ import com.socmaps.util.Utility;
  */
 
 public class RegistrationActivity extends Activity {
-	EditText etEmail, etPassword, etFirstName, etLastName, etCity, etZipCode,
-			etService, etStreetAddress, etBio, etInterests;
+	EditText etEmail, etPassword, etFirstName, etLastName, etCity, etZipCode, etService, etStreetAddress, etBio, etInterests;
 	EditText etUserName;
 	LinearLayout toggleOptionalInfoLayout, optionalInfoLayout;
 	Dialog locationSharingDisclaimerDialog;
@@ -112,37 +110,27 @@ public class RegistrationActivity extends Activity {
 		btnSelectDate.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				showDatePicker();
 
-				/*DatePickerDialog datePickerDialog = new DatePickerDialog(
-						context, new OnDateSetListener() {
-							@Override
-							public void onDateSet(DatePicker arg0, int arg1,
-									int arg2, int arg3) {
-								StringBuilder sb = new StringBuilder();
-								String month, day;
-								if (arg2 < 9) {
-									month = "0".concat(Integer
-											.toString(arg2 + 1));
-								} else {
-									month = Integer.toString(arg2 + 1);
-								}
-								if (arg3 < 9) {
-									day = "0".concat(Integer.toString(arg3));
-								} else {
-									day = Integer.toString(arg3);
-								}
-								sb.append(arg1).append("-").append(month)
-										.append("-").append(day);
-								dob = sb.toString();
-								Log.d("dob", dob);
-								tvShowSelectedDate.setText(dob);
-							}
-
-						}, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now
-								.get(Calendar.DATE));
-				datePickerDialog.show();*/
+				/*
+				 * DatePickerDialog datePickerDialog = new DatePickerDialog(
+				 * context, new OnDateSetListener() {
+				 * 
+				 * @Override public void onDateSet(DatePicker arg0, int arg1,
+				 * int arg2, int arg3) { StringBuilder sb = new StringBuilder();
+				 * String month, day; if (arg2 < 9) { month = "0".concat(Integer
+				 * .toString(arg2 + 1)); } else { month = Integer.toString(arg2
+				 * + 1); } if (arg3 < 9) { day =
+				 * "0".concat(Integer.toString(arg3)); } else { day =
+				 * Integer.toString(arg3); }
+				 * sb.append(arg1).append("-").append(month)
+				 * .append("-").append(day); dob = sb.toString();
+				 * Utility.log("dob", dob); tvShowSelectedDate.setText(dob); }
+				 * 
+				 * }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now
+				 * .get(Calendar.DATE)); datePickerDialog.show();
+				 */
 			}
 		});
 
@@ -151,14 +139,12 @@ public class RegistrationActivity extends Activity {
 			public void onClick(View v) {
 
 				final CharSequence[] items = { "Gallery", "Camera" };
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						RegistrationActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
 				builder.setTitle("Select");
 				builder.setItems(items, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int item) {
-						Toast.makeText(getApplicationContext(), items[item],
-								Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
 						if (items[item].equals("Gallery")) {
 							requestCode = REQUEST_CODE_GALLERY;
 						} else {
@@ -186,11 +172,8 @@ public class RegistrationActivity extends Activity {
 				boolean flag = true;
 				if (avatar == null) {
 					flag = false;
-					Toast.makeText(getApplicationContext(),
-							"Profile picture not selected", Toast.LENGTH_SHORT)
-							.show();
-				} else if (!Utility
-						.isValidEmailID(etEmail.getText().toString())) {
+					Toast.makeText(getApplicationContext(), "Profile picture not selected", Toast.LENGTH_SHORT).show();
+				} else if (!Utility.isValidEmailID(etEmail.getText().toString())) {
 					flag = false;
 					etEmail.setError("Invalid Email Id");
 				} else if (etPassword.getText().toString().length() == 0) {
@@ -199,23 +182,19 @@ public class RegistrationActivity extends Activity {
 				} else if (etUserName.getText().toString().length() == 0) {
 					flag = false;
 					etUserName.setError("User name can not be empty");
-				} /*else if (etFirstName.getText().toString().length() == 0) {
-					flag = false;
-					etFirstName.setError("First name can not be empty.");
-				} else if (etLastName.getText().toString().length() == 0) {
-					flag = false;
-					etLastName.setError("Last name can not be empty.");
-				}*/ 
+				} /*
+				 * else if (etFirstName.getText().toString().length() == 0) {
+				 * flag = false;
+				 * etFirstName.setError("First name can not be empty."); } else
+				 * if (etLastName.getText().toString().length() == 0) { flag =
+				 * false; etLastName.setError("Last name can not be empty."); }
+				 */
 
 				if (flag) {
-					locationSharingDisclaimerDialog = new Dialog(context,
-							android.R.style.Theme_Light_NoTitleBar);
-					locationSharingDisclaimerDialog
-							.setContentView(R.layout.location_sharing_disclaimer_layout);
-					btnAcceptAndLogin = (Button) locationSharingDisclaimerDialog
-							.findViewById(R.id.btnAcceptAndLogin);
-					btnBack = (Button) locationSharingDisclaimerDialog
-							.findViewById(R.id.btnBack);
+					locationSharingDisclaimerDialog = new Dialog(context, android.R.style.Theme_Light_NoTitleBar);
+					locationSharingDisclaimerDialog.setContentView(R.layout.location_sharing_disclaimer_layout);
+					btnAcceptAndLogin = (Button) locationSharingDisclaimerDialog.findViewById(R.id.btnAcceptAndLogin);
+					btnBack = (Button) locationSharingDisclaimerDialog.findViewById(R.id.btnBack);
 
 					btnBack.setOnClickListener(new OnClickListener() {
 						@Override
@@ -233,8 +212,7 @@ public class RegistrationActivity extends Activity {
 
 						private void sendRequest() {
 
-							if (Utility
-									.isConnectionAvailble(getApplicationContext())) {
+							if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 								requestRunnable = new Runnable() {
 									@Override
@@ -244,18 +222,12 @@ public class RegistrationActivity extends Activity {
 
 									}
 								};
-								Thread thread = new Thread(null,
-										requestRunnable, "MagentoBackground");
+								Thread thread = new Thread(null, requestRunnable, "MagentoBackground");
 								thread.start();
-								m_ProgressDialog = ProgressDialog.show(context,
-										"Registration",
-										"Sending request. Please wait...",
-										true, true);
+								m_ProgressDialog = ProgressDialog.show(context, "Registration", "Sending request. Please wait...", true, true);
 
 							} else {
-								Toast.makeText(context,
-										"Internet Connection Unavailable",
-										Toast.LENGTH_SHORT).show();
+								Toast.makeText(context, "Internet Connection Unavailable", Toast.LENGTH_SHORT).show();
 							}
 
 						}
@@ -280,35 +252,32 @@ public class RegistrationActivity extends Activity {
 		selectedMonth = now.get(Calendar.MONTH) + 1;
 		selectedDay = now.get(Calendar.DATE);
 
-		DatePickerDialog datePickerDialog = new DatePickerDialog(
-				RegistrationActivity.this, new OnDateSetListener() {
-					@Override
-					public void onDateSet(DatePicker arg0, int arg1, int arg2,
-							int arg3) {
-						StringBuilder sb = new StringBuilder();
-						String month, day;
-						if (arg2 < 9) {
-							month = "0".concat(Integer.toString(arg2 + 1));
-						} else {
-							month = Integer.toString(arg2 + 1);
-						}
-						if (arg3 < 9) {
-							day = "0".concat(Integer.toString(arg3));
-						} else {
-							day = Integer.toString(arg3);
-						}
-						sb.append(arg1).append("-").append(month).append("-")
-								.append(day);
-						dob = sb.toString();
+		DatePickerDialog datePickerDialog = new DatePickerDialog(RegistrationActivity.this, new OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+				StringBuilder sb = new StringBuilder();
+				String month, day;
+				if (arg2 < 9) {
+					month = "0".concat(Integer.toString(arg2 + 1));
+				} else {
+					month = Integer.toString(arg2 + 1);
+				}
+				if (arg3 < 9) {
+					day = "0".concat(Integer.toString(arg3));
+				} else {
+					day = Integer.toString(arg3);
+				}
+				sb.append(arg1).append("-").append(month).append("-").append(day);
+				dob = sb.toString();
 
-						Log.d("dob", dob);
+				Utility.log("dob", dob);
 
-						// age = Utility.calculateAge(sb.toString()) + " years";
-						tvShowSelectedDate.setText(dob);
+				// age = Utility.calculateAge(sb.toString()) + " years";
+				tvShowSelectedDate.setText(dob);
 
-					}
+			}
 
-				}, selectedYear, selectedMonth - 1, selectedDay);
+		}, selectedYear, selectedMonth - 1, selectedDay);
 
 		datePickerDialog.show();
 	}
@@ -331,21 +300,18 @@ public class RegistrationActivity extends Activity {
 	};
 
 	private void handleResponse(int status, String response) {
-		Log.d("Registration", status + ":" + response);
+		Utility.log("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
 			registrationSuccess(response);
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(),
-					"Bad request. User already exist.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getApplicationContext(), "Bad request. User already exist.", Toast.LENGTH_SHORT).show();
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured.", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -368,7 +334,7 @@ public class RegistrationActivity extends Activity {
 		}
 
 		RestClient client = new RestClient(Constant.smRegistrationUrl);
-		Log.d("userName", etUserName.getText().toString());
+		Utility.log("userName", etUserName.getText().toString());
 
 		client.AddParam("email", email);
 		client.AddParam("password", password);
@@ -398,23 +364,22 @@ public class RegistrationActivity extends Activity {
 		client.AddParam("workStatus", etService.getText().toString());
 
 		if (spRelationshipStatus.getSelectedItemPosition() > 0) {
-			client.AddParam("relationshipStatus", spRelationshipStatus
-					.getSelectedItem().toString());
+			client.AddParam("relationshipStatus", spRelationshipStatus.getSelectedItem().toString());
 		}
 
-		Log.e("Reg request", "Ready to send request");
+		Utility.log("Reg request", "Ready to send request");
 
 		try {
 			client.Execute(RestClient.RequestMethod.POST);
 		} catch (Exception e) {
-			Log.e("Reg request", e.getMessage());
+			Utility.log("Reg request", e.getMessage());
 			e.printStackTrace();
 		}
 
 		responseString = client.getResponse();
 		responseStatus = client.getResponseCode();
 
-		Log.e("Reg request", responseString);
+		Utility.log("Reg request", responseString);
 
 		runOnUiThread(returnRes);
 
@@ -423,21 +388,19 @@ public class RegistrationActivity extends Activity {
 	private void registrationSuccess(String response) {
 		// Have to parse response
 
-		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response,
-				false);
+		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response, false);
 
 		if (myInfo != null) {
 			StaticValues.myInfo = myInfo;
 
 			// save the authToken, id to the storage
-			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(), response, context);
+			Utility.storeSession(StaticValues.myInfo.getId(), StaticValues.myInfo.getAuthToken(), response, context);
 
 			finish();
 			Intent myIntent = new Intent(context, HomeActivity.class);
 			startActivity(myIntent);
 		} else {
-			Log.e("Facebook Login Error", "Error during parsing response");
+			Utility.log("Facebook Login Error", "Error during parsing response");
 		}
 
 	}
@@ -448,12 +411,10 @@ public class RegistrationActivity extends Activity {
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
-			startActivityForResult(
-					Intent.createChooser(intent, "Select Picture"), requestCode);
+			startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
 		case REQUEST_CODE_CAMERA:
-			Intent cameraIntent = new Intent(
-					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
 			break;
 		}
@@ -495,9 +456,7 @@ public class RegistrationActivity extends Activity {
 
 				if (avatar != null) {
 				}
-				avatar = Utility.resizeBitmap(
-						(Bitmap) data.getExtras().get("data"),
-						Constant.thumbWidth, 0, true);
+				avatar = Utility.resizeBitmap((Bitmap) data.getExtras().get("data"), Constant.thumbWidth, 0, true);
 				ivProfilePicture.setImageBitmap(avatar);
 			}
 
@@ -510,9 +469,7 @@ public class RegistrationActivity extends Activity {
 
 				Uri selectedImage = data.getData();
 				try {
-					avatar = Utility.resizeBitmap(Utility.decodeUri(
-							selectedImage, getContentResolver()),
-							Constant.thumbWidth, 0, true);
+					avatar = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.thumbWidth, 0, true);
 
 					ivProfilePicture.setImageBitmap(avatar);
 
@@ -520,10 +477,8 @@ public class RegistrationActivity extends Activity {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (OutOfMemoryError e) {
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
-					Log.e("Gallery image", "OutOfMemoryError");
+					Toast.makeText(context, getString(R.string.errorMessageGallery), Toast.LENGTH_SHORT).show();
+					Utility.log("Gallery image", "OutOfMemoryError");
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO: handle exception

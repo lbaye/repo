@@ -52,7 +52,7 @@ public final class ServerUtilities {
 	 * @return whether the registration succeeded or not.
 	 */
 	public static boolean register(final Context context, final String regId) {
-		Log.i(TAG, "registering device (regId = " + regId + ")");
+		Utility.log(TAG, "registering device (regId = " + regId + ")");
 		String serverUrl = SERVER_URL;
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("device_id", regId);
@@ -62,7 +62,7 @@ public final class ServerUtilities {
 		// demo server. As the server might be down, we will retry it a couple
 		// times.
 		for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-			Log.d(TAG, "Attempt #" + i + " to register");
+			Utility.log(TAG, "Attempt #" + i + " to register");
 			try {
 				displayMessage(context, context.getString(
 						R.string.server_registering, i, MAX_ATTEMPTS));
@@ -75,16 +75,16 @@ public final class ServerUtilities {
 				// Here we are simplifying and retrying on any error; in a real
 				// application, it should retry only on unrecoverable errors
 				// (like HTTP error code 503).
-				Log.e(TAG, "Failed to register on attempt " + i, e);
+				Utility.log(TAG, "Failed to register on attempt " + i);
 				if (i == MAX_ATTEMPTS) {
 					break;
 				}
 				try {
-					Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
+					Utility.log(TAG, "Sleeping for " + backoff + " ms before retry");
 					Thread.sleep(backoff);
 				} catch (InterruptedException e1) {
 					// Activity finished before we complete - exit.
-					Log.d(TAG, "Thread interrupted: abort remaining retries!");
+					Utility.log(TAG, "Thread interrupted: abort remaining retries!");
 					Thread.currentThread().interrupt();
 					return false;
 				}
@@ -102,7 +102,7 @@ public final class ServerUtilities {
 	 * Unregister this account/device pair within the server.
 	 */
 	public static void unregister(final Context context, final String regId) {
-		Log.i(TAG, "unregistering device (regId = " + regId + ")");
+		Utility.log(TAG, "unregistering device (regId = " + regId + ")");
 		String serverUrl = SERVER_URL + "/unregister";
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("regId", regId);
@@ -154,7 +154,7 @@ public final class ServerUtilities {
 			}
 		}
 		String body = bodyBuilder.toString();
-		Log.v(TAG, "Posting '" + body + "' to " + url);
+		Utility.log(TAG, "Posting '" + body + "' to " + url);
 		byte[] bytes = body.getBytes();
 		HttpURLConnection conn = null;
 		try {

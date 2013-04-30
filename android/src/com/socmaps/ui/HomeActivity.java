@@ -7,9 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,15 +38,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -454,7 +449,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			// TODO Auto-generated method stub
 			if (mapView.getMyLocation() != null) {
 
-				Log.i("HomeActivity", "CenterToMyPosition");
+				Utility.log("HomeActivity", "CenterToMyPosition");
 
 				if (!isMoveToAnotherPoint) {
 					mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapView.getMyLocation().getLatitude(), mapView.getMyLocation().getLongitude()), intialZoomLevel));
@@ -479,7 +474,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private void getMapDataFromServer() {
 
-		Log.i("HomeActivity:getMapDataFromServer", "New request");
+		Utility.log("HomeActivity:getMapDataFromServer", "New request");
 
 		getSearchResult();
 		getEventList();
@@ -513,12 +508,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		// boolean forceRegister = true;
 
-		Log.i("GCM RegID", "inside registerPushNotification");
+		Utility.log("GCM RegID", "inside registerPushNotification");
 
 		if (regId == null || regId.equals("")) {
-			Log.i("GCM RegID", "regId is null");
+			Utility.log("GCM RegID", "regId is null");
 			// Automatically registers application on startup.
-			GCMRegistrar.register(getApplicationContext(), CommonUtilities.SENDER_ID);
+			GCMRegistrar.register(context, CommonUtilities.SENDER_ID);
 		} else {
 			registerDeviceOnServer(regId);
 		}
@@ -528,8 +523,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private void registerDeviceOnServer(final String regId) {
 		// TODO Auto-generated method stub
 
-		Log.i("GCM RegId", regId);
-		final Context context = this;
+		Utility.log("GCM RegId", regId);
 		mRegisterTask = new AsyncTask<Void, Void, Void>() {
 
 			@Override
@@ -600,7 +594,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			// TODO: handle exception
 		}
 
-		GCMRegistrar.onDestroy(getApplicationContext());
+		GCMRegistrar.onDestroy(context);
 
 		SessionEvents.removeAuthListener(this);
 		SessionEvents.removeLogoutListener(this);
@@ -624,9 +618,9 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		myLat = location.getLatitude();
 		myLng = location.getLongitude();
 
-		Log.e("location.getLatitude():" + location.getLatitude(), "location.getLongitude():" + location.getLongitude());
+		Utility.log("location.getLatitude():" + location.getLatitude(), "location.getLongitude():" + location.getLongitude());
 
-		// Log.e("Size mapoverlay self", mapOverlays.size() + "");
+		// Utility.log("Size mapoverlay self", mapOverlays.size() + "");
 
 		// itemizedOverlaySelf = (CustomItemizedOverlay) mapOverlays.get(0);
 
@@ -718,7 +712,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 					/*
 					 * if (isSearchEnabled == false) {
 					 * 
-					 * Log.e("UpdateMap", "Inside it");
+					 * Utility.log("UpdateMap", "Inside it");
 					 * updateContentList(listMasterContent);
 					 * updateMapDisplay(listContent); }
 					 */
@@ -728,12 +722,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -775,7 +769,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		responseGeotagStatus = restClient.getResponseCode();
 
-		Log.i("GeoTags", responseGeotagString);
+		Utility.log("GeoTags", responseGeotagString);
 
 		runOnUiThread(returnResGetGeotagList);
 	}
@@ -885,7 +879,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			/*
 			 * if (isSearchEnabled == false) {
 			 * 
-			 * Log.e("UpdateEventMap", "Inside it");
+			 * Utility.log("UpdateEventMap", "Inside it");
 			 * updateContentList(listMasterContent); //
 			 * updateMapDisplay(listContent); }
 			 */
@@ -893,12 +887,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(), Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -1051,7 +1045,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	/*
 	 * private synchronized void updateMapDisplay(final List<Object> list) {
 	 * 
-	 * Log.i("HomeActivity", "updateMapDisplay"); if (list != null) {
+	 * Utility.log("HomeActivity", "updateMapDisplay"); if (list != null) {
 	 * 
 	 * int totalItemDisplayed = 0; String firstItemIdOnList = null;
 	 * 
@@ -1175,7 +1169,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	 */
 
 	private void hideExistingMarkers() {
-		Log.i("hideExistingMarkers", "Entered");
+		Utility.log("hideExistingMarkers", "Entered");
 
 		for (Marker marker : visibleMarkers.values()) {
 			marker.setVisible(false);
@@ -1185,15 +1179,15 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		 * if (objectList != null) { for (String itemId : objectList.keySet()) {
 		 * // Object item = objectList.get(itemId);
 		 * 
-		 * visibleMarkers.get(itemId).setVisible(false); Log.i("MarkerHide",
-		 * visibleMarkers.get(itemId).getId() + ":" +
+		 * visibleMarkers.get(itemId).setVisible(false);
+		 * Utility.log("MarkerHide", visibleMarkers.get(itemId).getId() + ":" +
 		 * visibleMarkers.get(itemId).getTitle()); } }
 		 */
 	}
 
 	private synchronized void updateMapDisplay(final List<Object> list) {
 
-		Log.i("HomeActivity", "updateMapDisplay");
+		Utility.log("HomeActivity", "updateMapDisplay");
 		if (list != null) {
 
 			// mapView.clear();
@@ -1276,7 +1270,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 								visibleMarkers.put(itemId, marker);
 								objectList.put(itemId, item);
 
-								Log.i("NewMarker", marker.getId() + ":" + marker.getTitle());
+								Utility.log("NewMarker", marker.getId() + ":" + marker.getTitle());
 
 								markerUpdateList.put(Utility.getItemId(item), false);
 
@@ -1427,7 +1421,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		// imageFetcher.flushCache();
 
 		isRunning = false;
-		Log.i("Home:onPause memory before", "" + Debug.getNativeHeapAllocatedSize());
+		Utility.log("Home:onPause memory before", "" + Debug.getNativeHeapAllocatedSize());
 
 		gpsService.stopListener();
 
@@ -1440,7 +1434,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		System.gc();
 
-		Log.i("Home:onPause memory after", "" + Debug.getNativeHeapAllocatedSize());
+		Utility.log("Home:onPause memory after", "" + Debug.getNativeHeapAllocatedSize());
 
 		/*
 		 * if (markerUpdateTimer != null) { markerUpdateTimer.cancel(); }
@@ -1454,8 +1448,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private void handleNavigationFromNotificationBar(Intent intent) {
 
+		if (intent == null) {
+			return;
+		}
+
 		Bundle extras = intent.getExtras();
-		Log.i("dbg", "onNewIntent");
+		Utility.log("dbg", "onNewIntent");
 
 		if (StaticValues.myInfo == null) {
 			if (Utility.getUserData(context) != null) {
@@ -1474,12 +1472,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		if (extras != null) {
 			if (extras.containsKey("pushData")) {
-				Log.i("dbg", "containsKey(PushData)");
+				Utility.log("dbg", "containsKey(PushData)");
 				PushData pushData = (PushData) extras.get("pushData");
 				if (pushData != null) {
 
 					if (pushData.getReceiverId().equals(StaticValues.myInfo.getId())) {
-						Log.i("Home:PushData:Type", pushData.getObjectType());
+						Utility.log("Home:PushData:Type", pushData.getObjectType());
 						if (pushData.getObjectType().equals(Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
 							Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
 							i.putExtra("itemThreadId", pushData.getObjectId());
@@ -1534,7 +1532,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 						}
 					}
 				} else {
-					Log.i("Home:PushData:Type", "PushData is null");
+					Utility.log("Home:PushData:Type", "PushData is null");
 				}
 			}
 
@@ -1581,8 +1579,15 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	@Override
 	public void onNewIntent(Intent intent) {
 
-		if (Utility.isLoggedIn(getApplicationContext())) {
-			handleNavigationFromNotificationBar(intent);
+		if (context == null) {
+			context = HomeActivity.this;
+		}
+
+		if (Utility.isLoggedIn(context)) {
+			if (intent != null) {
+				handleNavigationFromNotificationBar(intent);
+			}
+
 		}
 
 	}
@@ -1592,9 +1597,13 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	protected void onResume() {
 		super.onResume();
 
+		if (context == null) {
+			context = HomeActivity.this;
+		}
+
 		validateFacebookSession();
 
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 
 		if (resultCode == ConnectionResult.SUCCESS) {
 
@@ -1603,7 +1612,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		}
 
 		isRunning = true;
-		Log.i("Home:onResume memory before", "" + Debug.getNativeHeapAllocatedSize());
+		Utility.log("Home:onResume memory before", "" + Debug.getNativeHeapAllocatedSize());
 
 		if (getIntent().getBooleanExtra("LOGOUT", false)) {
 			finish();
@@ -1639,7 +1648,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		startGpsService();
 
-		Log.i("Home:onResume memory after", "" + Debug.getNativeHeapAllocatedSize());
+		Utility.log("Home:onResume memory after", "" + Debug.getNativeHeapAllocatedSize());
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 		// Stop background service
@@ -1652,7 +1661,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	private void initializeNotificationBroadcast() {
 		// TODO Auto-generated method stub
 
-		Log.i("inside", "initializeNotificationBroadcast");
+		Utility.log("inside", "initializeNotificationBroadcast");
 
 		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
 		broadcastReceiver.setCallback(this);
@@ -1662,7 +1671,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	@Override
 	public void updateNotificationCountBuble(Intent intent) {
 
-		Log.i("inside updateNotificationCountBuble", "");
+		Utility.log("inside updateNotificationCountBuble", "");
 
 		PushData pushData = (PushData) intent.getSerializableExtra("pushData");
 
@@ -1732,13 +1741,13 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private void facebookAuthentication() {
 
-		Log.i("HomeActivity", "facebookAuthentication");
+		Utility.log("HomeActivity", "facebookAuthentication");
 
 		if (StaticValues.myInfo != null && !Utility.getFacebookInvitationDisplayStatus(context) && StaticValues.myInfo.getLogInCount() == 1) {
 
 			Utility.setFacebookInvitationDisplayStatus(context, true);
 
-			Log.i("HomeActivity", "inside facebookAuthentication");
+			Utility.log("HomeActivity", "inside facebookAuthentication");
 
 			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase(Constant.sourceFacebook)) {
 				initInviteFriends();
@@ -1758,7 +1767,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			showInvitationDialog();
 
 		} else {
-			Toast.makeText(getApplicationContext(), "Internet Connection Unavailable", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Internet Connection Unavailable", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -1773,7 +1782,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		if (!Utility.getFacebookInvitationDisplayStatus(context)) {
 
-			showFirstTimeDialog(context);
+			showFirstTimeDialog();
 
 		}
 
@@ -2143,7 +2152,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		String friendshipStatus = people.getFriendshipStatus();
 
-		Log.e("friendshipStatus", friendshipStatus);
+		Utility.log("friendshipStatus", friendshipStatus);
 
 		if (friendRequestSentList.contains(userId)) {
 			tvFriendshipStatus.setText(getString(R.string.status_friend_request_pending));
@@ -2365,7 +2374,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				Intent eventDetailsIntent = new Intent(context, EventDetailsActivity.class);
 				eventDetailsIntent.putExtra("selectedEvent", event);
 				eventDetailsIntent.putExtra("source", "map");
-				context.startActivity(eventDetailsIntent);
+				startActivity(eventDetailsIntent);
 			}
 		});
 
@@ -2376,7 +2385,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(context, DirectionActivity.class);
 				intent.putExtra("selectedItem", event);
-				context.startActivity(intent);
+				startActivity(intent);
 
 			}
 		});
@@ -2452,7 +2461,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	}
 
 	private void sendSelfLocationToServer() {
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
+		if (Utility.isConnectionAvailble(context)) {
 
 			Thread thread = new Thread(null, updateLocationThread, "Start update location");
 			thread.start();
@@ -2461,7 +2470,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		} else {
 
-			Log.e("Location update", "No internet connection available.");
+			Utility.log("Location update", "No internet connection available.");
 		}
 	}
 
@@ -2504,11 +2513,11 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private void handleResponseUpdateLocation(int responseStatusUpdateLocation, String responseStringUpdateLocation) {
 		// TODO Auto-generated method stub
-		Log.e("Update Location", responseStatusUpdateLocation + " " + responseStringUpdateLocation);
+		Utility.log("Update Location", responseStatusUpdateLocation + " " + responseStringUpdateLocation);
 	}
 
 	private void sendFriendRequest(String friendId, String message) {
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
+		if (Utility.isConnectionAvailble(context)) {
 
 			friendRequestFriendId = friendId;
 			friendRequestMessage = message;
@@ -2580,7 +2589,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 			break;
 		default:
-			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -2607,7 +2616,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private void sendMessage(String friendId, String subject, String content) {
 
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
+		if (Utility.isConnectionAvailble(context)) {
 
 			sendMessageFriendId = friendId;
 			sendMessageSubject = subject;
@@ -2674,7 +2683,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -2780,7 +2789,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			}
 			circleMenu.setVisibility(View.VISIBLE);
 		} else if (v == btnNotification) {
-			Intent i = new Intent(HomeActivity.this, NotificationActivity.class);
+			Intent i = new Intent(context, NotificationActivity.class);
 			startActivity(i);
 		} else if (v == btnDirections) {
 			Intent i = new Intent(context, DirectionActivity.class);
@@ -2813,30 +2822,30 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		} else if (v == btnCircleMenuItemFriends) {
 
-			Intent messageIntent = new Intent(getApplicationContext(), FriendListActivity.class);
+			Intent messageIntent = new Intent(context, FriendListActivity.class);
 			startActivity(messageIntent);
 
 		} else if (v == btnCircleMenuItemMessages) {
-			Intent messageIntent = new Intent(getApplicationContext(), MessageActivity.class);
+			Intent messageIntent = new Intent(context, MessageActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
 
-			Intent messageIntent = new Intent(getApplicationContext(), NewsFeedActivity.class);
+			Intent messageIntent = new Intent(context, NewsFeedActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemPeople) {
 
-			Intent peopleIntent = new Intent(getApplicationContext(), PeopleListActivity.class);
+			Intent peopleIntent = new Intent(context, PeopleListActivity.class);
 			startActivity(peopleIntent);
 
 		} else if (v == btnCircleMenuItemPlaces) {
 
-			Intent placeIntent = new Intent(getApplicationContext(), PlacesListActivity.class);
+			Intent placeIntent = new Intent(context, PlacesListActivity.class);
 			startActivity(placeIntent);
 		} else if (v == btnCircleMenuItemProfile) {
-			Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+			Intent profileIntent = new Intent(context, ProfileActivity.class);
 			startActivity(profileIntent);
 		} else if (v == btnCircleMenuItemSettings) {
-			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+			Intent settingsIntent = new Intent(context, SettingsActivity.class);
 			startActivity(settingsIntent);
 		}
 
@@ -2844,7 +2853,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
 
-			// Log.i("btnDoSearch", "pressed");
+			// Utility.log("btnDoSearch", "pressed");
 
 			if (etSearchField.getText().toString().trim().length() > 2) {
 				// isSearchEnabled = true;
@@ -2870,7 +2879,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private void doSearch() {
 
-		// Log.i("doSearch", "entered");
+		// Utility.log("doSearch", "entered");
 
 		isNewSearch = true;
 
@@ -2936,13 +2945,13 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				StaticValues.myInfo.getSettings().setShareLocation(locationSharingPermission.ordinal());
 			}
 
-			Log.i("LocationSharing update", restClient.getResponseCode() + ":" + restClient.getResponse());
+			Utility.log("LocationSharing update", restClient.getResponseCode() + ":" + restClient.getResponse());
 		}
 	};
 
-	private void showFirstTimeDialog(final Context c) {
+	private void showFirstTimeDialog() {
 
-		isFirstTimeFbdialog = new Dialog(c, R.style.CustomDialogTheme);
+		isFirstTimeFbdialog = new Dialog(context, R.style.CustomDialogTheme);
 		isFirstTimeFbdialog.setContentView(R.layout.first_time_dialog);
 
 		isFirstTimeFbdialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -2992,18 +3001,18 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	// @Override
 	@Override
 	public void onAuthFail(String error) {
-		Log.e("HomeActivity", "Login Failed: " + error);
+		Utility.log("HomeActivity", "Login Failed: " + error);
 	}
 
 	@Override
 	public void onLogoutBegin() {
-		Log.e("HomeActivity", "Logging out...");
+		Utility.log("HomeActivity", "Logging out...");
 	}
 
 	// @Override
 	@Override
 	public void onLogoutFinish() {
-		Log.e("HomeActivity", "You have logged out! ");
+		Utility.log("HomeActivity", "You have logged out! ");
 
 		Utility.setFacebookImage(context, null);
 
@@ -3012,28 +3021,28 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	@Override
 	public void onComplete(Bundle values) {
-		Log.e("LoginDialogListener", "onComplete");
+		Utility.log("LoginDialogListener", "onComplete");
 		SessionEvents.onLoginSuccess();
 	}
 
 	// @Override
 	@Override
 	public void onFacebookError(FacebookError error) {
-		Log.e("LoginDialogListener", "onFacebookError");
+		Utility.log("LoginDialogListener", "onFacebookError");
 		SessionEvents.onLoginError(error.getMessage());
 	}
 
 	// @Override
 	@Override
 	public void onError(DialogError error) {
-		Log.e("LoginDialogListener", "onError");
+		Utility.log("LoginDialogListener", "onError");
 		SessionEvents.onLoginError(error.getMessage());
 	}
 
 	// @Override
 	@Override
 	public void onCancel() {
-		Log.e("LoginDialogListener", "onCancel");
+		Utility.log("LoginDialogListener", "onCancel");
 		SessionEvents.onLoginError("Action Canceled");
 	}
 
@@ -3068,7 +3077,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	/*
 	 * @Override public void onCameraChange(CameraPosition position) { // TODO
-	 * Auto-generated method stub Log.i("HomeActivity", "onCameraChange");
+	 * Auto-generated method stub Utility.log("HomeActivity", "onCameraChange");
 	 * 
 	 * updateMapDisplayOnRegionChange();
 	 * 
@@ -3079,7 +3088,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	public void onCameraChange(CameraPosition position) {
 		// TODO Auto-generated method stub
 
-		Log.i("Home", "onCameraChange");
+		Utility.log("Home", "onCameraChange");
 		/*
 		 * if (isFirstLocationUpdate) { // relocationCurrentPosition();
 		 * isFirstLocationUpdate = false;
@@ -3091,8 +3100,11 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		nePosition = latLngBounds.northeast;
 		centerPosition = position.target;
 
-		Log.i("HomeActivity:onCameraChange", "center: " + centerPosition.latitude + "," + centerPosition.longitude);
-		//Log.i("HomeActivity:onCameraChange", "center: " + centerPosition.latitude + "," + centerPosition.longitude + "sw: " + swPostion.latitude + "," + swPostion.longitude + "  ne: " + nePosition.latitude + "," + nePosition.longitude);
+		Utility.log("HomeActivity:onCameraChange", "center: " + centerPosition.latitude + "," + centerPosition.longitude);
+		// Utility.log("HomeActivity:onCameraChange", "center: " +
+		// centerPosition.latitude + "," + centerPosition.longitude + "sw: " +
+		// swPostion.latitude + "," + swPostion.longitude + "  ne: " +
+		// nePosition.latitude + "," + nePosition.longitude);
 
 		if (timerGetLocations != null) {
 			timerGetLocations.cancel();
@@ -3136,7 +3148,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				return true;
 			}
 
-			Log.i("onMarkerClick", Utility.getItemTitle(item));
+			Utility.log("onMarkerClick", Utility.getItemTitle(item));
 		}
 
 		return false;
@@ -3258,7 +3270,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			if (objectList.containsValue(oldItem)) {
 				objectList.values().remove(oldItem);
 			}
-			
+
 			if (visibleItemsOnMap.containsValue(oldItem)) {
 				visibleItemsOnMap.values().remove(oldItem);
 			}
@@ -3353,10 +3365,9 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				// otherwise replace the marker and visibility
 
 				Marker marker = visibleMarkers.get(itemId);
-				
+
 				boolean isDifferent = Utility.isDifferent(oldItem, newItem);
-				
-				
+
 				if (isDifferent) {
 					// replace the marker
 					marker = replaceMarker(oldItem, newItem);
@@ -3471,7 +3482,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	 * 
 	 * private void validateMarkers() {
 	 * 
-	 * Log.i("HomeActivity", "validateMarkers"); HashMap<String, Boolean>
+	 * Utility.log("HomeActivity", "validateMarkers"); HashMap<String, Boolean>
 	 * tempMap = (HashMap<String, Boolean>) markerUpdateList .clone();
 	 * 
 	 * ImageView imageView = new ImageView(context);
@@ -3479,7 +3490,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	 * tempMap.keySet()) { if (!tempMap.get(itemId)) { Object object =
 	 * objectList.get(itemId); if (object != null) { String imageUrl =
 	 * Utility.getItemImageUrl(object); if (Utility.isValidString(imageUrl)) {
-	 * Log.i("HomeActivity:validateMarkers", "retrying:" + imageUrl);
+	 * Utility.log("HomeActivity:validateMarkers", "retrying:" + imageUrl);
 	 * imageFetcher.loadImage(imageUrl, imageView, HomeActivity.this, itemId); }
 	 * }
 	 * 
@@ -3501,12 +3512,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	/*
 	 * @Override public void onDownloadComplete(final String itemId, final
 	 * Bitmap bitmap, final String imageUrl) { // TODO Auto-generated method
-	 * stub Log.i("ImageDownloaded:" + itemId, imageUrl);
+	 * stub Utility.log("ImageDownloaded:" + itemId, imageUrl);
 	 * 
-	 * // Log.i("ImageDownloaded:>>"+itemId, imageUrl); Timer timer = new
+	 * // Utility.log("ImageDownloaded:>>"+itemId, imageUrl); Timer timer = new
 	 * Timer(); timer.schedule(new TimerTask() {
 	 * 
-	 * @Override public void run() { Log.i("ImageDownloaded:>>" + itemId,
+	 * @Override public void run() { Utility.log("ImageDownloaded:>>" + itemId,
 	 * imageUrl); if (markerUpdateList.containsKey(itemId)) { if
 	 * (!markerUpdateList.get(itemId)) { runOnUiThread(new Runnable() {
 	 * 
@@ -3522,7 +3533,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		@Override
 		public void onSuccess(final ImageInfo imageInfo, final Bitmap bitmap) {
-			Log.i("imageCacheListener:onSuccess", imageInfo.imageUrl);
+			Utility.log("imageCacheListener:onSuccess", imageInfo.imageUrl);
 
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
@@ -3550,7 +3561,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		@Override
 		public void onFailure(Throwable error, ImageInfo imageInfo) {
-			Log.i("imageCacheListener:onFailure", imageInfo.id + ":" + imageInfo.imageUrl);
+			Utility.log("imageCacheListener:onFailure", imageInfo.id + ":" + imageInfo.imageUrl);
 			// remoteImageCache.getImage(imageInfo);
 		}
 	};
@@ -3633,7 +3644,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		params.add(new BasicNameValuePair("people", people));
 		params.add(new BasicNameValuePair("place", place));
 
-		Log.e("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
+		Utility.log("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
 
 		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
 		backProcess.execute(RestClient.RequestMethod.POST);
@@ -3676,7 +3687,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 				break;
 
 			default:
-				Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 
 				break;
 

@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -272,7 +271,7 @@ public class LoginActivity extends Activity {
 		String email = etEmail.getText().toString().trim();
 		String password = etPassword.getText().toString();
 
-		Log.e("Login URL", Constant.smLoginUrl);
+		Utility.log("Login URL", Constant.smLoginUrl);
 		RestClient client = new RestClient(Constant.smLoginUrl);
 		client.AddParam("email", email);
 		client.AddParam("password", password);
@@ -291,7 +290,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void handleForgotPassResponse(int status, String response) {
-		Log.d("ForgotPass", status + ":" + response);
+		Utility.log("ForgotPass", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
@@ -325,7 +324,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void handleResponse(int status, String response) {
-		Log.d("Login", status + ":" + response);
+		Utility.log("Login", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
@@ -352,7 +351,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void handleResponseFb(int status, String response) {
-		Log.d("FB Login", status + ":" + response);
+		Utility.log("FB Login", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
@@ -377,7 +376,7 @@ public class LoginActivity extends Activity {
 
 		String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
 
-		Log.i("facebookAuthToken", facebookAuthToken);
+		Utility.log("facebookAuthToken", facebookAuthToken);
 
 		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response,
 				facebookId, facebookAuthToken, false);
@@ -397,7 +396,7 @@ public class LoginActivity extends Activity {
 			startActivity(myIntent);
 
 		} else {
-			Log.e("Facebook Login Error", "Error during parsing response");
+			Utility.log("Facebook Login Error", "Error during parsing response");
 		}
 
 	}
@@ -426,7 +425,7 @@ public class LoginActivity extends Activity {
 			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
 			startActivity(myIntent);
 		} else {
-			Log.e("Facebook Login Error", "Error during parsing response");
+			Utility.log("Facebook Login Error", "Error during parsing response");
 		}
 
 	}
@@ -482,7 +481,7 @@ public class LoginActivity extends Activity {
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			Log.e("FB parse error", e.getMessage());
+			Utility.log("FB parse error", e.getMessage());
 			e.printStackTrace();
 			closeProgressDialog();
 		}
@@ -555,7 +554,7 @@ public class LoginActivity extends Activity {
 
 					String url = Constant.smForgotPassUrl + "/" + email;
 
-					Log.e("Forgot URL", url);
+					Utility.log("Forgot URL", url);
 
 					RestClient client = new RestClient(url);
 
@@ -633,7 +632,7 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onComplete(final String response, final Object state) {
 
-			Log.e("FB Data", response);
+			Utility.log("FB Data", response);
 
 			facebookResponse = response;
 
@@ -650,14 +649,14 @@ public class LoginActivity extends Activity {
 		// @Override
 		@Override
 		public void onAuthSucceed() {
-			Log.i("FB Login", "success");
+			Utility.log("FB Login", "success");
 			requestUserData();
 		}
 
 		// @Override
 		@Override
 		public void onAuthFail(String error) {
-			Log.e("FB Login", "Login Failed: " + error);
+			Utility.log("FB Login", "Login Failed: " + error);
 		}
 	}
 
@@ -665,13 +664,13 @@ public class LoginActivity extends Activity {
 		// @Override
 		@Override
 		public void onLogoutBegin() {
-			Log.e("LoginActivity", "Logging out...");
+			Utility.log("LoginActivity", "Logging out...");
 		}
 
 		// @Override
 		@Override
 		public void onLogoutFinish() {
-			Log.e("LoginActivity", "You have logged out! ");
+			Utility.log("LoginActivity", "You have logged out! ");
 
 			Utility.setFacebookImage(context, null);
 			ivFacebookProfile.setImageDrawable(getResources().getDrawable(
@@ -689,7 +688,7 @@ public class LoginActivity extends Activity {
 	 */
 	private void initiateRequestUserData() {
 
-		Log.e("LoginActivity", "Fetching user name, profile pic...");
+		Utility.log("LoginActivity", "Fetching user name, profile pic...");
 		Bundle params = new Bundle();
 		params.putString(
 				"fields",
@@ -698,7 +697,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void requestUserData() {
-		Log.i("LoginActivity", "inside requestUserData");
+		Utility.log("LoginActivity", "inside requestUserData");
 
 		Thread thread = new Thread(null, sendRequestThread,
 				"Start send request");
@@ -739,28 +738,28 @@ public class LoginActivity extends Activity {
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {
-			Log.e("LoginDialogListener", "onComplete");
+			Utility.log("LoginDialogListener", "onComplete");
 			SessionEvents.onLoginSuccess();
 		}
 
 		// @Override
 		@Override
 		public void onFacebookError(FacebookError error) {
-			Log.e("LoginDialogListener", "onFacebookError");
+			Utility.log("LoginDialogListener", "onFacebookError");
 			SessionEvents.onLoginError(error.getMessage());
 		}
 
 		// @Override
 		@Override
 		public void onError(DialogError error) {
-			Log.e("LoginDialogListener", "onError");
+			Utility.log("LoginDialogListener", "onError");
 			SessionEvents.onLoginError(error.getMessage());
 		}
 
 		// @Override
 		@Override
 		public void onCancel() {
-			Log.e("LoginDialogListener", "onCancel");
+			Utility.log("LoginDialogListener", "onCancel");
 			SessionEvents.onLoginError("Action Canceled");
 		}
 	}

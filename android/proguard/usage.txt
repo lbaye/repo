@@ -1825,9 +1825,9 @@ com.google.android.gms.maps.GoogleMapOptionsCreator:
     public static final int CONTENT_DESCRIPTION
 com.google.android.gms.maps.LocationSource
 com.google.android.gms.maps.LocationSource$OnLocationChangedListener
-com.google.android.gms.maps.MapFragment:
-    public static com.google.android.gms.maps.MapFragment newInstance()
-    public static com.google.android.gms.maps.MapFragment newInstance(com.google.android.gms.maps.GoogleMapOptions)
+com.google.android.gms.maps.MapFragment
+com.google.android.gms.maps.MapFragment$a
+com.google.android.gms.maps.MapFragment$b
 com.google.android.gms.maps.MapView:
     private com.google.android.gms.maps.GoogleMap aK
     public MapView(android.content.Context)
@@ -2447,7 +2447,7 @@ com.socmaps.listrow.PlaceRowFactoryForSavedPlace:
     26:26:public PlaceRowFactoryForSavedPlace()
     150:150:public int getViewType()
 com.socmaps.listrow.PlanRowFactory:
-    25:25:public PlanRowFactory()
+    24:24:public PlanRowFactory()
 com.socmaps.listrow.Row
 com.socmaps.listrow.SecondDegreePeopleRowFactory:
     22:22:public SecondDegreePeopleRowFactory()
@@ -2518,18 +2518,18 @@ com.socmaps.ui.HomeActivity:
     private android.widget.Button btnFBLogin
     private java.util.TimerTask task
     private java.util.Timer mapUpdateTimer
-    1735:1751:private void facebookAuthentication()
-    1774:1780:private void askForFacebookAccount()
-    2263:2326:private void showSecondDegreePeoplePopUpDetails(com.socmaps.entity.SecondDegreePeople)
-    2426:2452:private void showMessageDialog(com.socmaps.entity.People)
-    2610:2627:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
-    2875:2883:private void doSearch()
-    2945:2982:private void showFirstTimeDialog(android.content.Context)
-    3000:3001:public void onLogoutBegin()
-    3006:3011:public void onLogoutFinish()
-    2608:2608:static synthetic void access$65(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String,java.lang.String)
-    163:163:static synthetic android.app.Dialog access$66(com.socmaps.ui.HomeActivity)
-    225:225:static synthetic android.app.Dialog access$67(com.socmaps.ui.HomeActivity)
+    1744:1760:private void facebookAuthentication()
+    1783:1789:private void askForFacebookAccount()
+    2272:2335:private void showSecondDegreePeoplePopUpDetails(com.socmaps.entity.SecondDegreePeople)
+    2435:2461:private void showMessageDialog(com.socmaps.entity.People)
+    2619:2636:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
+    2884:2892:private void doSearch()
+    2954:2991:private void showFirstTimeDialog()
+    3009:3010:public void onLogoutBegin()
+    3015:3020:public void onLogoutFinish()
+    2617:2617:static synthetic void access$65(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String,java.lang.String)
+    158:158:static synthetic android.app.Dialog access$66(com.socmaps.ui.HomeActivity)
+    220:220:static synthetic android.app.Dialog access$67(com.socmaps.ui.HomeActivity)
 com.socmaps.ui.HomeActivity$40
 com.socmaps.ui.HomeActivity$41
 com.socmaps.ui.HomeActivity$42
@@ -2561,22 +2561,22 @@ com.socmaps.ui.LayerPreferencesActivity:
     android.widget.CheckBox chkFoodspotting
     int requestCode
 com.socmaps.ui.ListViewActivity:
-    729:735:private void doSearch()
-    769:769:public void onArrowButtonClick(com.socmaps.entity.People)
-    775:775:public void onInviteButtonClick(com.socmaps.entity.People)
-    781:781:public void onAddFriendButtonClick(com.socmaps.entity.People)
-    793:793:public void onUnBlockButtonClick(com.socmaps.entity.People)
-    813:813:public void onMeetupButtonClick(com.socmaps.entity.People)
+    726:732:private void doSearch()
+    766:766:public void onArrowButtonClick(com.socmaps.entity.People)
+    772:772:public void onInviteButtonClick(com.socmaps.entity.People)
+    778:778:public void onAddFriendButtonClick(com.socmaps.entity.People)
+    790:790:public void onUnBlockButtonClick(com.socmaps.entity.People)
+    810:810:public void onMeetupButtonClick(com.socmaps.entity.People)
 com.socmaps.ui.LocationSharingSettingsActivity:
     android.widget.LinearLayout customSubgroupItem
     android.widget.LinearLayout strangerItem
 com.socmaps.ui.LoginActivity:
     java.lang.String tempURLString
     java.lang.String facebookFetchedDataString
-    56:56:static synthetic android.app.ProgressDialog access$6(com.socmaps.ui.LoginActivity)
+    55:55:static synthetic android.app.ProgressDialog access$6(com.socmaps.ui.LoginActivity)
 com.socmaps.ui.LoginActivity$FbAPIsLogoutListener:
-    668:669:public void onLogoutBegin()
-    674:684:public void onLogoutFinish()
+    667:668:public void onLogoutBegin()
+    673:683:public void onLogoutFinish()
 com.socmaps.ui.Manifest
 com.socmaps.ui.Manifest$permission
 com.socmaps.ui.MeetupRequestNewActivity:
@@ -2882,9 +2882,9 @@ com.socmaps.util.RestClient:
     304:305:public void setSocketTimeout(int)
 com.socmaps.util.ServerResponseParser:
     private static final java.lang.String JSON_RECIPIENTS
-    48:48:public ServerResponseParser()
-    2150:2155:private static com.google.android.gms.maps.model.LatLng getLatLngFromJSON(org.json.JSONObject)
-    2566:2575:public static com.socmaps.entity.Plan parseGetPlanDetailsResult(java.lang.String)
+    46:46:public ServerResponseParser()
+    2148:2153:private static com.google.android.gms.maps.model.LatLng getLatLngFromJSON(org.json.JSONObject)
+    2564:2573:public static com.socmaps.entity.Plan parseGetPlanDetailsResult(java.lang.String)
 com.socmaps.util.SharedPreferencesHelper:
     34:34:public java.lang.String getString(java.lang.String,java.lang.String)
     38:41:public com.socmaps.util.SharedPreferencesHelper setString(java.lang.String,java.lang.String)
@@ -2895,30 +2895,30 @@ com.socmaps.util.StaticValues:
 com.socmaps.util.Utility:
     private static final double metricDivisor
     private static final double imperialDivisor
-    92:92:public Utility()
-    199:226:public static java.lang.String getItemImageUrl(java.lang.Object)
-    634:642:public static boolean isServiceRunning(java.lang.String,android.content.Context)
-    657:675:public static java.lang.String toMD5Hash(java.lang.String)
-    708:710:public static java.lang.String getdate()
-    733:735:public static java.lang.String getdate(java.lang.String)
-    769:780:public static int calculateAge(int,int,int)
-    965:965:public static boolean isBetaAuthenticated(android.content.Context)
-    1052:1054:public static void setPassword(java.lang.String,android.content.Context)
-    1097:1098:public static void setFacebookInvitationDisplayStatus(android.content.Context,boolean)
-    1110:1110:public static boolean getFacebookInvitationDisplayStatus(android.content.Context)
-    1138:1160:public static android.graphics.Bitmap getThumbnail(android.content.Context,android.net.Uri,int)
-    1164:1168:private static int getPowerOfTwoForSampleRatio(double)
-    1244:1273:public static android.graphics.Bitmap loadBitmapFromURL(java.lang.String)
-    1288:1293:public static android.graphics.drawable.Drawable drawableFromUrl(java.lang.String)
-    1335:1373:public static java.util.List getPeopleListFromFriendsAndCircles(java.util.HashMap,java.util.HashMap)
-    1423:1452:public static void getAddressFromLocation(android.content.Context,android.location.Location,android.os.Handler)
-    1470:1499:public static void getAddressFromLocation(android.content.Context,double,double,android.os.Handler)
-    1691:1700:public static void removeAllChildrenFromView(android.view.View)
-    1714:1726:public static int getMessageCount(java.util.List,java.lang.String)
-    1979:2053:public static android.graphics.Bitmap generateMarker(android.widget.LinearLayout,java.lang.Object,com.socmaps.images.ImageFetcher,com.socmaps.widget.ImageDownloadListener)
-    2253:2263:public static android.util.Pair getMapCorners(com.google.android.maps.MapView)
-    2267:2270:public static android.util.Pair getMapCornerPoints(com.google.android.maps.MapView)
-    2324:2324:public static int convertDipToPixels(android.content.Context,float)
+    91:91:public Utility()
+    198:225:public static java.lang.String getItemImageUrl(java.lang.Object)
+    633:641:public static boolean isServiceRunning(java.lang.String,android.content.Context)
+    656:674:public static java.lang.String toMD5Hash(java.lang.String)
+    707:709:public static java.lang.String getdate()
+    732:734:public static java.lang.String getdate(java.lang.String)
+    768:779:public static int calculateAge(int,int,int)
+    964:964:public static boolean isBetaAuthenticated(android.content.Context)
+    1051:1053:public static void setPassword(java.lang.String,android.content.Context)
+    1096:1097:public static void setFacebookInvitationDisplayStatus(android.content.Context,boolean)
+    1109:1109:public static boolean getFacebookInvitationDisplayStatus(android.content.Context)
+    1137:1159:public static android.graphics.Bitmap getThumbnail(android.content.Context,android.net.Uri,int)
+    1163:1167:private static int getPowerOfTwoForSampleRatio(double)
+    1243:1272:public static android.graphics.Bitmap loadBitmapFromURL(java.lang.String)
+    1287:1292:public static android.graphics.drawable.Drawable drawableFromUrl(java.lang.String)
+    1334:1372:public static java.util.List getPeopleListFromFriendsAndCircles(java.util.HashMap,java.util.HashMap)
+    1422:1451:public static void getAddressFromLocation(android.content.Context,android.location.Location,android.os.Handler)
+    1469:1498:public static void getAddressFromLocation(android.content.Context,double,double,android.os.Handler)
+    1690:1699:public static void removeAllChildrenFromView(android.view.View)
+    1713:1725:public static int getMessageCount(java.util.List,java.lang.String)
+    1978:2052:public static android.graphics.Bitmap generateMarker(android.widget.LinearLayout,java.lang.Object,com.socmaps.images.ImageFetcher,com.socmaps.widget.ImageDownloadListener)
+    2252:2262:public static android.util.Pair getMapCorners(com.google.android.maps.MapView)
+    2266:2269:public static android.util.Pair getMapCornerPoints(com.google.android.maps.MapView)
+    2323:2323:public static int convertDipToPixels(android.content.Context,float)
 com.socmaps.util.Utility$1
 com.socmaps.util.Utility$2
 com.socmaps.widget.AlluserFriendsOnlyRadioGroup:

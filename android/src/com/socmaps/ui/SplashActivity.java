@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.socmaps.util.Constant;
@@ -63,8 +62,7 @@ public class SplashActivity extends Activity {
 			if (Utility.isLoggedIn(getApplicationContext())) {
 
 				if (Utility.getAuthToken(getApplicationContext()) != null) {
-					if (!Utility.getAuthToken(getApplicationContext()).equals(
-							"")) {
+					if (!Utility.getAuthToken(getApplicationContext()).equals("")) {
 
 						requestRunnable = new Runnable() {
 							@Override
@@ -75,8 +73,7 @@ public class SplashActivity extends Activity {
 							}
 
 						};
-						Thread thread = new Thread(null, requestRunnable,
-								"MagentoBackground");
+						Thread thread = new Thread(null, requestRunnable, "MagentoBackground");
 						thread.start();
 					}
 				}
@@ -89,20 +86,17 @@ public class SplashActivity extends Activity {
 					try {
 						for (int i = 1; i <= loopCount && isRunning; i++) {
 							Thread.sleep(splashDuration / loopCount);
-							splashHandler1.sendMessage(splashHandler
-									.obtainMessage());
+							splashHandler1.sendMessage(splashHandler.obtainMessage());
 
 							if (i == loopCount) {
 								isTimeOver = true;
 
-								if (!Utility
-										.isLoggedIn(getApplicationContext())) {
+								if (!Utility.isLoggedIn(getApplicationContext())) {
 									splashHandler.sendEmptyMessage(0);
 								}
 
 								else if (isRequestingToServer) {
-									parseUserData(Utility
-											.getUserData(getApplicationContext()));
+									parseUserData(Utility.getUserData(getApplicationContext()));
 								}
 							}
 						}
@@ -120,13 +114,12 @@ public class SplashActivity extends Activity {
 	private void getUserInfo() {
 		// TODO Auto-generated method stub
 
-		Log.i("Splash: getUserInfo", "Requesting to server.");
+		Utility.log("Splash: getUserInfo", "Requesting to server.");
 
 		isRequestingToServer = true;
 
 		RestClient client = new RestClient(Constant.smServerUrl + "/me");
-		client.AddHeader("Auth-Token",
-				Utility.getAuthToken(getApplicationContext()));
+		client.AddHeader("Auth-Token", Utility.getAuthToken(getApplicationContext()));
 		client.setConnectionTimeout(5);
 
 		try {
@@ -154,7 +147,7 @@ public class SplashActivity extends Activity {
 	};
 
 	private void handleResponse(int status, String response) {
-		Log.d("Login", status + ":" + response);
+		Utility.log("Login", status + ":" + response);
 
 		isRequestingToServer = false;
 		if (isTimeOver) {
@@ -180,21 +173,15 @@ public class SplashActivity extends Activity {
 			if (!response.equals("")) {
 				isError = false;
 
-				StaticValues.myInfo = ServerResponseParser
-						.parseUserProfileInfo(response, false);
+				StaticValues.myInfo = ServerResponseParser.parseUserProfileInfo(response, false);
 
 				if (StaticValues.myInfo != null) {
-					Utility.storeSession(StaticValues.myInfo.getId(),
-							StaticValues.myInfo.getAuthToken(), response,
-							getApplicationContext());
+					Utility.storeSession(StaticValues.myInfo.getId(), StaticValues.myInfo.getAuthToken(), response, getApplicationContext());
 				}
 
 				splashHandler.sendEmptyMessage(1);
 			} else {
-				StaticValues.myInfo = ServerResponseParser
-						.parseUserProfileInfo(
-								Utility.getUserData(getApplicationContext()),
-								false);
+				StaticValues.myInfo = ServerResponseParser.parseUserProfileInfo(Utility.getUserData(getApplicationContext()), false);
 				splashHandler.sendEmptyMessage(1);
 			}
 
@@ -235,8 +222,7 @@ public class SplashActivity extends Activity {
 			case 0:
 				finish();
 
-				startActivity(new Intent(SplashActivity.this,
-						LoginActivity.class));
+				startActivity(new Intent(SplashActivity.this, LoginActivity.class));
 
 				break;
 
@@ -248,10 +234,7 @@ public class SplashActivity extends Activity {
 
 					isValid = true;
 
-					if (StaticValues.myInfo.getRegMedia().equals(
-							Constant.sourceFacebook)
-							&& !Utility
-									.isFacebookSessionValid(SplashActivity.this)) {
+					if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook) && !Utility.isFacebookSessionValid(SplashActivity.this)) {
 
 						isValid = false;
 
@@ -261,12 +244,10 @@ public class SplashActivity extends Activity {
 
 				if (isValid) {
 					finish();
-					startActivity(new Intent(SplashActivity.this,
-							HomeActivity.class));
+					startActivity(new Intent(SplashActivity.this, HomeActivity.class));
 				} else {
 					finish();
-					startActivity(new Intent(SplashActivity.this,
-							LoginActivity.class));
+					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
 				}
 
 				break;
