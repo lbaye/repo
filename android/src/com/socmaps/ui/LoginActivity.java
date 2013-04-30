@@ -41,10 +41,10 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-
 /**
- * LoginActivity class for generating login view by two way (sm and fb) also navigate to register view.
- *
+ * LoginActivity class for generating login view by two way (sm and fb) also
+ * navigate to register view.
+ * 
  */
 public class LoginActivity extends Activity {
 	EditText etEmail, etPassword;
@@ -93,16 +93,14 @@ public class LoginActivity extends Activity {
 			try {
 
 				String savedEmail = Utility.getEmail(getApplicationContext());
-				String savedPassword = Utility
-						.getPassword(getApplicationContext());
+				String savedPassword = Utility.getPassword(getApplicationContext());
 
 				if (savedEmail != null) {
 					etEmail.setText(Utility.getEmail(getApplicationContext()));
 				}
 
 				if (savedPassword != null) {
-					etPassword.setText(Utility
-							.getPassword(getApplicationContext()));
+					etPassword.setText(Utility.getPassword(getApplicationContext()));
 				}
 
 				chkRememberPassword.setChecked(true);
@@ -137,8 +135,7 @@ public class LoginActivity extends Activity {
 				Utility.hideKeyboardContext(context);
 
 				finish();
-				Intent myIntent = new Intent(LoginActivity.this,
-						RegistrationActivity.class);
+				Intent myIntent = new Intent(LoginActivity.this, RegistrationActivity.class);
 				startActivity(myIntent);
 			}
 		});
@@ -178,17 +175,12 @@ public class LoginActivity extends Activity {
 
 							}
 						};
-						Thread thread = new Thread(null, requestRunnable,
-								"MagentoBackground");
+						Thread thread = new Thread(null, requestRunnable, "MagentoBackground");
 						thread.start();
-						m_ProgressDialog = ProgressDialog.show(
-								LoginActivity.this, "Login",
-								"Authenticating. Please wait...", true, true);
+						m_ProgressDialog = ProgressDialog.show(LoginActivity.this, "Login", "Authenticating. Please wait...", true, true);
 
 					} else {
-						Toast.makeText(getApplicationContext(),
-								"Internet Connection Unavailable",
-								Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Internet Connection Unavailable", Toast.LENGTH_SHORT).show();
 					}
 				}
 			}
@@ -197,8 +189,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void authenticateFacebook() {
-		FBUtility.mFacebook.authorize(LoginActivity.this,
-				Constant.facebookPermissions, new LoginDialogListener());
+		FBUtility.mFacebook.authorize(LoginActivity.this, Constant.facebookPermissions, new LoginDialogListener());
 
 	}
 
@@ -250,8 +241,7 @@ public class LoginActivity extends Activity {
 
 			// have to do something here
 
-			handleForgotPassResponse(forgotpassResponseStatus,
-					forgotpassResponseString);
+			handleForgotPassResponse(forgotpassResponseStatus, forgotpassResponseString);
 
 			closeProgressDialog();
 		}
@@ -294,30 +284,23 @@ public class LoginActivity extends Activity {
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
-			Toast.makeText(
-					getApplicationContext(),
-					"Request sent successfully. An email has been sent to your supplied address with detailed instructions.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Request sent successfully. An email has been sent to your supplied address with detailed instructions.", Toast.LENGTH_SHORT).show();
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(), "Email not found.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Email not found.", Toast.LENGTH_SHORT).show();
 			break;
 
 		case Constant.STATUS_UNAUTHORIZEZ:
-			Toast.makeText(getApplicationContext(), "Unauthorized request.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Unauthorized request.", Toast.LENGTH_SHORT).show();
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(), "Bad request.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Bad request.", Toast.LENGTH_SHORT).show();
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured.", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -332,19 +315,15 @@ public class LoginActivity extends Activity {
 			break;
 
 		case Constant.STATUS_NOTFOUND:
-			Toast.makeText(getApplicationContext(),
-					"Email/Password does not match.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getApplicationContext(), "Email/Password does not match.", Toast.LENGTH_SHORT).show();
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(), "Bad request.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Bad request.", Toast.LENGTH_SHORT).show();
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured.", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -359,14 +338,11 @@ public class LoginActivity extends Activity {
 			break;
 
 		case Constant.STATUS_BADREQUEST:
-			Toast.makeText(getApplicationContext(),
-					"Bad request. User already exist.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getApplicationContext(), "Bad request. User already exist.", Toast.LENGTH_SHORT).show();
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured.", Toast.LENGTH_SHORT).show();
 			break;
 
 		}
@@ -378,17 +354,14 @@ public class LoginActivity extends Activity {
 
 		Utility.log("facebookAuthToken", facebookAuthToken);
 
-		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response,
-				facebookId, facebookAuthToken, false);
+		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response, facebookId, facebookAuthToken, false);
 
 		if (myInfo != null) {
 			StaticValues.myInfo = myInfo;
 
 			// save the authToken, id to the storage
-			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(), response,
-					LoginActivity.this);
-			
+			Utility.storeSession(StaticValues.myInfo.getId(), StaticValues.myInfo.getAuthToken(), response, LoginActivity.this);
+
 			Utility.setFacebookSessionExpireTime(context, FBUtility.mFacebook.getAccessExpires());
 
 			finish();
@@ -402,24 +375,19 @@ public class LoginActivity extends Activity {
 	}
 
 	private void loginSuccess(String response) {
-		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response,
-				false);
+		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response, false);
 
 		if (myInfo != null) {
 			StaticValues.myInfo = myInfo;
 
 			if (chkRememberPassword.isChecked()) {
-				Utility.storeLoginInfo(etEmail.getText().toString().trim(),
-						etPassword.getText().toString(),
-						getApplicationContext());
+				Utility.storeLoginInfo(etEmail.getText().toString().trim(), etPassword.getText().toString(), getApplicationContext());
 			} else {
 				Utility.storeLoginInfo(null, null, getApplicationContext());
 			}
 
 			// save the authToken, id to the storage
-			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(), response,
-					LoginActivity.this);
+			Utility.storeSession(StaticValues.myInfo.getId(), StaticValues.myInfo.getAuthToken(), response, LoginActivity.this);
 
 			finish();
 			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -434,35 +402,55 @@ public class LoginActivity extends Activity {
 		try {
 			JSONObject jsonObject = new JSONObject(fbResponse);
 			if (!jsonObject.isNull("id")) {
+
+				RestClient client = new RestClient(Constant.smFbLoginUrl);
+
 				facebookId = jsonObject.getString("id");
 
 				String facebookId = jsonObject.getString("id");
 
 				String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
 
-				String avatarString = "https://graph.facebook.com/"
-						+ facebookId + "/picture?type=large";
-
-				String firstName = jsonObject.getString("first_name");
-				String lastName = jsonObject.getString("last_name");
-				String email = jsonObject.getString("email");
-				String gender = jsonObject.getString("gender");
-				String username = jsonObject.getString("username");
-
-				String birthday = jsonObject.getString("birthday");
-				String dob = Utility.parseFbDob(birthday);
-
-				RestClient client = new RestClient(Constant.smFbLoginUrl);
+				String avatarString = "https://graph.facebook.com/" + facebookId + "/picture?type=large";
+				client.AddParam("avatar", avatarString);
 
 				client.AddParam("facebookId", facebookId);
 				client.AddParam("facebookAuthToken", facebookAuthToken);
-				client.AddParam("email", email);
-				client.AddParam("firstName", firstName);
-				client.AddParam("lastName", lastName);
-				client.AddParam("userName", username);
-				client.AddParam("avatar", avatarString);
-				client.AddParam("gender", gender);
-				client.AddParam("dateOfBirth", dob);
+
+				if (!jsonObject.isNull("first_name")) {
+					String firstName = jsonObject.getString("first_name");
+					client.AddParam("firstName", firstName);
+
+				}
+
+				if (!jsonObject.isNull("last_name")) {
+					String lastName = jsonObject.getString("last_name");
+					client.AddParam("lastName", lastName);
+
+				}
+
+				if (!jsonObject.isNull("email")) {
+					String email = jsonObject.getString("email");
+					client.AddParam("email", email);
+
+				}
+
+				if (!jsonObject.isNull("gender")) {
+					String gender = jsonObject.getString("gender");
+					client.AddParam("gender", gender);
+				}
+
+				if (!jsonObject.isNull("username")) {
+					String username = jsonObject.getString("username");
+					client.AddParam("userName", username);
+
+				}
+
+				if (!jsonObject.isNull("birthday")) {
+					String birthday = jsonObject.getString("birthday");
+					String dob = Utility.parseFbDob(birthday);
+					client.AddParam("dateOfBirth", dob);
+				}
 
 				try {
 					client.Execute(RestClient.RequestMethod.POST);
@@ -497,8 +485,7 @@ public class LoginActivity extends Activity {
 
 	private void performForgotPass() {
 		// custom dialog
-		forgotpassDialog = new Dialog(LoginActivity.this,
-				R.style.CustomDialogTheme);
+		forgotpassDialog = new Dialog(LoginActivity.this, R.style.CustomDialogTheme);
 		forgotpassDialog.setContentView(R.layout.forgotpass_dialog_layout);
 
 		forgotpassDialog.setOnDismissListener(new OnDismissListener() {
@@ -510,11 +497,9 @@ public class LoginActivity extends Activity {
 			}
 		});
 
-		etForgotpassEmail = (EditText) forgotpassDialog
-				.findViewById(R.id.etForgotpassEmail);
+		etForgotpassEmail = (EditText) forgotpassDialog.findViewById(R.id.etForgotpassEmail);
 
-		Button btnCancel = (Button) forgotpassDialog
-				.findViewById(R.id.btnCancel);
+		Button btnCancel = (Button) forgotpassDialog.findViewById(R.id.btnCancel);
 		// if button is clicked, close the custom dialog
 		btnCancel.setOnClickListener(new OnClickListener() {
 			@Override
@@ -530,8 +515,7 @@ public class LoginActivity extends Activity {
 		btnSend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!etForgotpassEmail.getText().toString().trim()
-						.equalsIgnoreCase("")) {
+				if (!etForgotpassEmail.getText().toString().trim().equalsIgnoreCase("")) {
 					sendForgotPasswordRequest();
 					forgotpassDialog.dismiss();
 				}
@@ -549,8 +533,7 @@ public class LoginActivity extends Activity {
 				@Override
 				public void run() {
 
-					String email = etForgotpassEmail.getText().toString()
-							.trim();
+					String email = etForgotpassEmail.getText().toString().trim();
 
 					String url = Constant.smForgotPassUrl + "/" + email;
 
@@ -571,17 +554,12 @@ public class LoginActivity extends Activity {
 
 				}
 			};
-			Thread thread = new Thread(null, forgotpassRunnable,
-					"MagentoBackground");
+			Thread thread = new Thread(null, forgotpassRunnable, "MagentoBackground");
 			thread.start();
-			m_ProgressDialog = ProgressDialog.show(LoginActivity.this,
-					"Forgot Password", "Sending request. Please wait...", true,
-					true);
+			m_ProgressDialog = ProgressDialog.show(LoginActivity.this, "Forgot Password", "Sending request. Please wait...", true, true);
 
 		} else {
-			Toast.makeText(getApplicationContext(),
-					"Internet Connection Unavailable", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getApplicationContext(), "Internet Connection Unavailable", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -612,10 +590,8 @@ public class LoginActivity extends Activity {
 		String avatarString = Utility.getFacebookImage(context);
 		if (avatarString != null) {
 			try {
-				byte[] imageAsBytes = Base64.decode(avatarString.getBytes(),
-						Base64.DEFAULT);
-				ivFacebookProfile.setImageBitmap(BitmapFactory.decodeByteArray(
-						imageAsBytes, 0, imageAsBytes.length));
+				byte[] imageAsBytes = Base64.decode(avatarString.getBytes(), Base64.DEFAULT);
+				ivFacebookProfile.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -673,13 +649,9 @@ public class LoginActivity extends Activity {
 			Utility.log("LoginActivity", "You have logged out! ");
 
 			Utility.setFacebookImage(context, null);
-			ivFacebookProfile.setImageDrawable(getResources().getDrawable(
-					R.drawable.icon_facebook));
+			ivFacebookProfile.setImageDrawable(getResources().getDrawable(R.drawable.icon_facebook));
 
-			FBUtility.mFacebook.authorize(activity,
-					Constant.facebookPermissions,
-					Constant.AUTHORIZE_ACTIVITY_RESULT_CODE,
-					new LoginDialogListener());
+			FBUtility.mFacebook.authorize(activity, Constant.facebookPermissions, Constant.AUTHORIZE_ACTIVITY_RESULT_CODE, new LoginDialogListener());
 		}
 	}
 
@@ -690,23 +662,18 @@ public class LoginActivity extends Activity {
 
 		Utility.log("LoginActivity", "Fetching user name, profile pic...");
 		Bundle params = new Bundle();
-		params.putString(
-				"fields",
-				"id,email,name,picture,first_name,last_name,username,bio,birthday,location,relationship_status,gender");
+		params.putString("fields", "id,email,name,picture,first_name,last_name,username,bio,birthday,location,relationship_status,gender");
 		FBUtility.mAsyncRunner.request("me", params, new UserRequestListener());
 	}
 
 	private void requestUserData() {
 		Utility.log("LoginActivity", "inside requestUserData");
 
-		Thread thread = new Thread(null, sendRequestThread,
-				"Start send request");
+		Thread thread = new Thread(null, sendRequestThread, "Start send request");
 		thread.start();
 
 		// show progress dialog if needed
-		m_ProgressDialog = ProgressDialog.show(context, getResources()
-				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.facebook_data_request_message), true, true);
+		m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.facebook_data_request_message), true, true);
 	}
 
 	private Runnable sendRequestThread = new Runnable() {
@@ -719,18 +686,14 @@ public class LoginActivity extends Activity {
 	};
 
 	private void handleFacebookError(String fbResponse) {
-		FacebookErrorResponse fbError = ServerResponseParser
-				.parseFacebookError(fbResponse);
+		FacebookErrorResponse fbError = ServerResponseParser.parseFacebookError(fbResponse);
 
 		if (fbError.getErrorSubCode() > 0) {
 
-			Toast.makeText(context, fbError.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, fbError.getMessage(), Toast.LENGTH_LONG).show();
 
 		} else {
-			Toast.makeText(context,
-					"An unknown error occured during login into Facebook.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "An unknown error occured during login into Facebook.", Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -2575,8 +2575,8 @@ com.socmaps.ui.LoginActivity:
     java.lang.String facebookFetchedDataString
     55:55:static synthetic android.app.ProgressDialog access$6(com.socmaps.ui.LoginActivity)
 com.socmaps.ui.LoginActivity$FbAPIsLogoutListener:
-    667:668:public void onLogoutBegin()
-    673:683:public void onLogoutFinish()
+    643:644:public void onLogoutBegin()
+    649:655:public void onLogoutFinish()
 com.socmaps.ui.Manifest
 com.socmaps.ui.Manifest$permission
 com.socmaps.ui.MeetupRequestNewActivity:
