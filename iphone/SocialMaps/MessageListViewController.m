@@ -524,6 +524,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
   
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
     self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    
+    [self displayNotificationCount];
 }
 
 
