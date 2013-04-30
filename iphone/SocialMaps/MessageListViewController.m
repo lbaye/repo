@@ -83,6 +83,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewThreadDone:) name:NOTIF_GET_NEW_THREAD_DONE object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
     
     //friends list
     frndListScrollView.delegate = self;
@@ -117,8 +118,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [super viewWillAppear:animated];
     [self displayNotificationCount];
     
-    //viewDidAppear is being called manually when push notificaiton comes, so addObserver in viewWillAppear
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
 }
 
 - (void) viewDidAppear:(BOOL)animated
@@ -149,8 +149,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) viewDidDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
-    
     if (replyTimer) {
         [replyTimer invalidate];
         replyTimer = nil;
@@ -499,7 +497,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NSMutableArray *msgReplies = [notif object];
     
-    if ([msgReplies count] == 0 /*|| ![self.msgParentID isEqualToString:[notif.userInfo valueForKey:@"parentMsgId"]]*/) {
+    if ([msgReplies count] == 0 || ![self.msgParentID isEqualToString:[notif.userInfo valueForKey:@"parentMsgId"]]) {
         return;
     }
     
@@ -936,7 +934,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)startReqForReplyMessages
 {
-    if (!messageRepiesView.hidden && !smAppDelegate.isAppInBackgound) {
+    if (!messageRepiesView.hidden /*&& !smAppDelegate.isAppInBackgound*/) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:self.msgParentID since:self.timeSinceLastUpdate];
     } else {
@@ -1246,6 +1244,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_REPLY_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_NEW_THREAD_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     
     [messageReplyList release];
     [messageCreationView release];
