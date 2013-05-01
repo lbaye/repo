@@ -8,8 +8,8 @@
 
 #import "Constants.h"
 
-NSString * const WS_URL = @"http://services.socialmapsapp.com/prodtest";
-//http://services.socialmapsapp.com/v2_4";
+//NSString * const WS_URL = @"http://services.socialmapsapp.com/prodtest";
+NSString * const WS_URL = @"http://services.socialmapsapp.com/v2_4";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
