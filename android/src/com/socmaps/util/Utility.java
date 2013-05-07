@@ -2148,9 +2148,11 @@ public class Utility {
 
 			ImageView avatar = (ImageView) markerLayout.findViewById(R.id.avatar);
 			ImageView ivOnline = (ImageView) markerLayout.findViewById(R.id.ivOnline);
+			ImageView ivSourceIcon = (ImageView) markerLayout.findViewById(R.id.ivSourceIcon);
 
 			// String avatarUrl = null;
 			ivOnline.setVisibility(View.GONE);
+			ivSourceIcon.setVisibility(View.GONE);
 
 			avatar.setImageResource(R.drawable.img_blank);
 
@@ -2175,6 +2177,8 @@ public class Utility {
 			} else if (item instanceof SecondDegreePeople) {
 
 				SecondDegreePeople user = (SecondDegreePeople) item;
+				
+				ivSourceIcon.setVisibility(View.VISIBLE);
 
 				avatarUrl = user.getAvatar();
 
@@ -2308,11 +2312,15 @@ public class Utility {
 	}
 
 	public static boolean isFacebookSessionValid(Context context) {
-		if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook)) {
-			long expireTime = Utility.getFacebookSessionExpireTime(context);
-			if (expireTime > Utility.getUnixTimestamp()) {
-				// session expired, auto sign-out
-				return true;
+		if (StaticValues.myInfo != null) {
+			if (StaticValues.myInfo.getRegMedia() != null) {
+				if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook)) {
+					long expireTime = Utility.getFacebookSessionExpireTime(context);
+					if (expireTime > Utility.getUnixTimestamp()) {
+						// session not expired
+						return true;
+					}
+				}
 			}
 		}
 

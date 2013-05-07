@@ -594,7 +594,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			// TODO: handle exception
 		}
 
-		GCMRegistrar.onDestroy(context);
+		try {
+			GCMRegistrar.onDestroy(context);
+		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		SessionEvents.removeAuthListener(this);
 		SessionEvents.removeLogoutListener(this);
@@ -1442,7 +1447,9 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		 */
 
 		// Start background service
-		startService(new Intent(HomeActivity.this, LocationUpdateService.class));
+		if (!getIntent().getBooleanExtra("LOGOUT", false)) {
+			startService(new Intent(HomeActivity.this, LocationUpdateService.class));
+		}
 
 	}
 
@@ -3500,10 +3507,15 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 	 */
 
 	private void validateFacebookSession() {
-		if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook) && !Utility.isFacebookSessionValid(context)) {
+		if (StaticValues.myInfo != null) {
+			if (StaticValues.myInfo.getRegMedia() != null) {
+				if (StaticValues.myInfo.getRegMedia().equals(Constant.sourceFacebook) && !Utility.isFacebookSessionValid(context)) {
 
-			finish();
-			startActivity(new Intent(context, LoginActivity.class));
+					finish();
+					startActivity(new Intent(context, LoginActivity.class));
+
+				}
+			}
 
 		}
 

@@ -415,7 +415,12 @@ public class LoginActivity extends Activity {
 				client.AddParam("avatar", avatarString);
 
 				client.AddParam("facebookId", facebookId);
-				client.AddParam("facebookAuthToken", facebookAuthToken);
+				
+				if(facebookAuthToken!=null)
+				{
+					client.AddParam("facebookAuthToken", facebookAuthToken);
+				}
+				
 
 				if (!jsonObject.isNull("first_name")) {
 					String firstName = jsonObject.getString("first_name");

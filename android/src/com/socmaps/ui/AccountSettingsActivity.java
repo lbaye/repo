@@ -3,7 +3,11 @@ package com.socmaps.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -38,12 +42,15 @@ import android.widget.Toast;
 
 import com.socmaps.entity.MyInfo;
 import com.socmaps.images.ImageFetcher;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.widget.ExpandablePanel;
 
 /**
@@ -934,15 +941,14 @@ public class AccountSettingsActivity extends FragmentActivity implements
 	}
 
 	private void executeLogout() {
+		
+		String url = Constant.smServerUrl + "/auth/logout";
 
-		Log.e("Account settings", "You have logged out! ");
-		Utility.setFacebookImage(context, null);
-		Utility.destroySession(context);
+		BackProcess backProcess = new BackProcess(context, null, url, REQUEST_TYPE.LOGOUT, true, "Logout", "Please wait...", new BackProcessCallBackListener(), false);
 
-		Intent intent = new Intent(context, HomeActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra("LOGOUT", true);
-		startActivity(intent);
+		backProcess.execute(RestClient.RequestMethod.GET);
+
+		
 
 	}
 
@@ -1011,6 +1017,43 @@ public class AccountSettingsActivity extends FragmentActivity implements
 		responseStatus = client.getResponseCode();
 
 		runOnUiThread(returnResPasswordChange);
+
+	}
+	
+	private class BackProcessCallBackListener implements BackProcessCallback {
+
+		@Override
+		public void onFinish(int status, String result, int type) {
+
+			// TODO Auto-generated method stub
+			Log.w("RESPONSE:", status + ":" + result);
+			
+			
+			if(type == REQUEST_TYPE.LOGOUT.ordinal())
+			{
+				switch (status) {
+				case Constant.STATUS_SUCCESS:
+
+					//Utility.log("Account settings", "You have logged out! ");
+					Utility.setFacebookImage(context, null);
+					Utility.destroySession(context);
+
+					Intent intent = new Intent(context, HomeActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.putExtra("LOGOUT", true);
+					startActivity(intent);
+					break;
+
+				default:
+					Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+
+					break;
+
+				}
+			}
+			
+
+		}
 
 	}
 }

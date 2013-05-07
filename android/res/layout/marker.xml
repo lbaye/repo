@@ -35,6 +35,17 @@
             android:scaleType="fitCenter"
             android:src="@drawable/offline"
             android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ivSourceIcon"
+            android:layout_width="14dip"
+            android:layout_height="14dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/facebookicon" 
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </LinearLayout>
