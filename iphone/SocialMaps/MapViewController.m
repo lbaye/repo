@@ -406,16 +406,38 @@ ButtonClickCallbackData callBackData;
 {
     smAppDelegate.needToCenterMap = FALSE;
     
+    BOOL isUserExist = FALSE;
+    
+    if ([anno isKindOfClass:[LocationItemPeople class]])
+    {
+        for (LocationItemPeople *people in smAppDelegate.peopleList ) {
+            if ([((LocationItemPeople*)anno).userInfo.userId isEqualToString:people.userInfo.userId])
+            {
+                isUserExist = YES;
+                break;
+            }
+        }
+    }
+    
+    [self.mapView addAnnotation:anno];
+    
+    if ([anno isKindOfClass:[LocationItemPeople class]] && !isUserExist)
+        [smAppDelegate.peopleList addObject:anno];
+    
+    /*
     if (![self.mapView.annotations containsObject:anno])
     {
         [self.mapView addAnnotation:anno];
         
-        if ([anno isKindOfClass:[LocationItemPeople class]])
+        if ([anno isKindOfClass:[LocationItemPeople class]] && ![smAppDelegate.peopleList containsObject:anno])
              [smAppDelegate.peopleList addObject:anno];
-        else if ([anno isKindOfClass:[LocationItemPlace class]])
+        else if ([anno isKindOfClass:[LocationItemPlace class]] && ![smAppDelegate.placeList containsObject:anno])
             [smAppDelegate.placeList addObject:anno];
     }
-
+     */
+    
+    
+    
     self.selectedAnno = anno;
     LocationItem *selLocation = (LocationItem*) anno;
     [self mapAnnotationChanged:selLocation];
@@ -2460,7 +2482,7 @@ ButtonClickCallbackData callBackData;
                         aPerson.userInfo.lastName = item.lastName;
                         aPerson.itemName=[NSString stringWithFormat:@"%@ %@",aPerson.userInfo.firstName,aPerson.userInfo.lastName];
                         
-                        if (smAppDelegate.showPeople == TRUE && ((item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || (item.isOnline && item.isOnline != aPerson.userInfo.isOnline) || loc.latitude != aPerson.coordinate.latitude || loc.longitude != aPerson.coordinate.longitude))
+                        if (smAppDelegate.showPeople == TRUE && ((item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || item.isOnline != aPerson.userInfo.isOnline || loc.latitude != aPerson.coordinate.latitude || loc.longitude != aPerson.coordinate.longitude))
                         {
                             
                             if (CLLocationCoordinate2DIsValid(loc))
