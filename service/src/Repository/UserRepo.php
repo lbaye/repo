@@ -985,7 +985,17 @@ class UserRepo extends Base
         $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
 
         # Set Online/offline status
-        $userHash['online'] = $userObj->isOnlineUser();
+        if ($userObj->isOnlineUser() || $userObj->isLoginWithinLastFiveHours()) {
+            if ($userObj->getOnlineNow()) {
+                $onlineNow = true;
+            } else {
+                $onlineNow = false;
+            }
+        } else {
+            $onlineNow = false;
+        }
+//        $userHash['online'] = $userObj->isOnlineUser();
+        $userHash['online'] = $onlineNow;
 
         # Set street view image if no cover photo is set
         $noCoverPhotoSet = !isset($userHash['coverPhoto']) || empty($userHash['coverPhoto']);
@@ -1436,5 +1446,20 @@ class UserRepo extends Base
             ->getQuery()->execute()->toArray();
 
         return $results;
+    }
+
+    public function updateOnlineNow($id, $loginLogoutNow = true)
+    {
+        $user = $this->find($id);
+
+        if (false === $user) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $user->setOnlineNow($loginLogoutNow);
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
     }
 }

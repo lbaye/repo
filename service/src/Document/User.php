@@ -28,7 +28,7 @@ class User
     const PREF_FIELD_STATUS = "status";
     const PREF_FIELD_GEO_FENCES = "geo_fences";
 
-    const MAX_IDLE_TIME_IN_MINS = 30;
+    const MAX_IDLE_TIME_IN_MINS = 10;
 
     /** @ODM\Id */
     protected $id;
@@ -157,6 +157,9 @@ class User
 
     /** @ODM\Date */
     protected $createDate;
+
+    /** @ODM\Boolean */
+    protected $onlineNow = true;
 
     /** @ODM\Date */
     protected $updateDate;
@@ -392,6 +395,16 @@ class User
 
     public function toArrayDetailed()
     {
+        if ($this->isOnlineUser() || $this->isLoginWithinLastFiveHours()) {
+            if ($this->getOnlineNow()) {
+                $onlineNow = true;
+            } else {
+                $onlineNow = false;
+            }
+        } else {
+            $onlineNow = false;
+        }
+
         $data = array(
             'id' => $this->getId(),
             'email' => $this->getEmail(),
@@ -430,7 +443,7 @@ class User
             'age' => $this->getAge(),
             'status' => $this->getStatus(),
             'company' => $this->getCompany(),
-            'online' => $this->isOnlineUser()
+            'online' => $onlineNow
         );
 
         if ($this->getCircles()) {
@@ -1314,6 +1327,11 @@ class User
         return self::isOnline($this->getLastPulse());
     }
 
+    public function isLoginWithinLastFiveHours()
+    {
+        return self::isOnline($this->getLastLogin());
+    }
+
     public static function isOnline($lastPulse)
     {
         if ($lastPulse instanceof \MongoDate) {
@@ -1343,7 +1361,8 @@ class User
         return (is_array($value) && !empty($value[$key]));
     }
 
-    public function getUsernameOrFirstName() {
+    public function getUsernameOrFirstName()
+    {
         if ($this->username != null && !empty($this->username))
             return $this->getUsername();
         else
@@ -1358,6 +1377,16 @@ class User
     public function getAvatarOriginal()
     {
         return $this->avatarOriginal;
+    }
+
+    public function setOnlineNow($onlineNow)
+    {
+        $this->onlineNow = $onlineNow;
+    }
+
+    public function getOnlineNow()
+    {
+        return $this->onlineNow;
     }
 
 }

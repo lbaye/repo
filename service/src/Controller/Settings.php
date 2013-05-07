@@ -351,6 +351,7 @@ class Settings extends Base {
 
             $this->debug('Updating current location');
             $this->user->setCurrentLocation($newLocation);
+            $this->userRepository->updateOnlineNow($this->user->getId(),true);
             $this->_updateVisibility($this->user);
 
             // Update additional information
