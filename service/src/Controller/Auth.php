@@ -137,6 +137,8 @@ class Auth extends Base
 
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
+            $this->userRepository->updateOnlineNow($user->getId());
+
             $this->user = $user;
             $userData = $user->toArrayDetailed();
 
@@ -204,6 +206,7 @@ class Auth extends Base
                 }
 
                 $this->userRepository->updateLoginCount($user->getId());
+                $this->userRepository->updateOnlineNow($user->getId());
                 $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
 
             } else {
@@ -406,6 +409,33 @@ class Auth extends Base
         try {
             $this->userRepository->changePassword($data);
             $this->response->setContent(json_encode(array('password' => true)));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception\ResourceNotFoundException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
+
+
+        return $this->response;
+    }
+
+    /**
+     * POST /auth/logout
+     *
+     * logout.
+     *
+     * @throws \Exception\ResourceNotFoundException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function  logout()
+    {
+        try {
+            $this->_ensureLoggedIn();
+            $this->userRepository->updateOnlineNow($this->user->getId(),false);
+            $this->response->setContent(json_encode(array('logout' => true)));
             $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceNotFoundException $e) {

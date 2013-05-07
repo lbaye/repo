@@ -37,3 +37,8 @@ change_password:
   pattern: /auth/change_pass
   defaults: { _controller: Controller\Auth::changePassword }
   requirements: { _method: PUT }
+
+user_logout:
+  pattern: /auth/logout
+  defaults: { _controller: Controller\Auth::logout }
+  requirements: { _method: GET }

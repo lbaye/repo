@@ -6,7 +6,7 @@ web:
 mongodb:
   host: 'localhost'
   port: 27017
-  database: 'socialmaps_import'
+  database: 'socialmaps_v13'
 
 logging:
   # DEBUG, WARN, ERROR

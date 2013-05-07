@@ -27,7 +27,7 @@ class Facebook extends Base {
      */
     public function getFriendsCheckins() {
         $fql = '
-            SELECT author_uid, coords, page_id, timestamp
+            SELECT author_uid, coords, timestamp
             FROM checkin
             WHERE author_uid
             IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND timestamp > '.strtotime("-2 week").'
