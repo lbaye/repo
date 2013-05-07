@@ -1522,6 +1522,12 @@ ButtonClickCallbackData callBackData;
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     NSLog(@"in location manager");
+    
+    //if loggout
+    if (!smAppDelegate.authToken || [smAppDelegate.authToken isEqualToString:@""]) {
+        return;
+    }
+    
     if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
         return;
     // Calculate move from last position

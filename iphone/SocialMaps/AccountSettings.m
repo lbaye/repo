@@ -466,6 +466,8 @@
         [smAppDelegate.timerGotListing invalidate];
         smAppDelegate.timerGotListing = nil;
     }
+    
+    smAppDelegate.authToken = @"";
 }
 
 // UITextFieldDelegate
