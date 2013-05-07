@@ -18,6 +18,8 @@
 #import "AppDelegate.h"
 #import "UITextField+Scrolling.h"
 #import "Globals.h"
+#import "RestClient.h"
+#import "UtilityClass.h"
 
 #define ROW_HEIGHT 62
 
@@ -356,6 +358,21 @@
     [self accSettingResetButtonClicked:parent.btn];
 }
 
+- (void)logoutSocialMaps
+{
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [smAppDelegate showActivityViewer:smAppDelegate.window];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient logout:@"Auth-Token" authTokenVal:smAppDelegate.authToken callBack:^(BOOL isLoggedOut) {
+        [smAppDelegate hideActivityViewer];
+        if (isLoggedOut) {
+            [self resetAllGlobalVariableAndLogout];
+        } else {
+            [UtilityClass showAlert:@"" :@"Network problem. Try again"];
+        }
+    }];
+}
+
 - (void) yesButtonClicked:(id)sender {
     NSLog(@"ConfirmView:yesButtonClicked");
     
@@ -364,7 +381,7 @@
     switch (parent.tag) {
         case 1999:
             // Logout
-            [self resetAllGlobalVariableAndLogout];
+            [self logoutSocialMaps];
             break;
         case 2000:
             // Erase data
