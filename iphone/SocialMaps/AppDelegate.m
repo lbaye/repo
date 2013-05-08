@@ -472,6 +472,10 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     self.isAppInBackgound = NO;
+    
+    [self startSendingNewPositionToServer];
+    
+    //NEEED FOR UNREAD MESSAGE IF DON'T TAP ON PUSH NOTIFICATION
     RestClient *rc = [[[RestClient alloc] init] autorelease];
     if ([authToken isKindOfClass:[NSString class]]) {
         [rc getInbox:@"Auth-Token" authTokenVal:authToken];
@@ -624,4 +628,24 @@
     notifPrefs = [notif object];
     NSLog(@"AppDelegate: gotNotifications - %@", notifPrefs);
 }
+
+- (void)startSendingNewPositionToServer
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(sendNewPositionToServer) object:nil];
+    [self sendNewPositionToServer];
+}
+
+- (void)sendNewPositionToServer
+{
+    //if not loggout
+    if (self.authToken && ![self.authToken isEqualToString:@""])
+    {
+        NSLog(@"Send new location to server");
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient updatePosition:self.currPosition authToken:@"Auth-Token" authTokenVal:self.authToken];
+    }
+    
+    [self performSelector:@selector(sendNewPositionToServer) withObject:nil afterDelay:300]; //5 MINS
+}
+
 @end
