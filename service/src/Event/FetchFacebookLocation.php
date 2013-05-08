@@ -261,7 +261,9 @@ class FetchFacebookLocation extends Base
             $fbFriendId = $fbCheckIn['author_uid'];
             $fbCoords = $fbCheckIn['coords'];
             $fbTimestamp = $fbCheckIn['timestamp'];
-            $pageIdByCheckinIds = $facebook->getFriendsPageId($fbCheckIn['checkin_id']);
+            $pageIdByCheckinIdsArray = $facebook->getFriendsPageId($fbCheckIn['checkin_id']);
+            $pageIdByCheckinIds = $pageIdByCheckinIdsArray['data'];
+            $this->debug('Found checkin_id info - ' . json_encode($pageIdByCheckinIdsArray['data']));
             foreach ($pageIdByCheckinIds as $pageIdByCheckinId) {
                 $fbPageId = $pageIdByCheckinId['page_id'];
                 $this->debug("getting page_id " . $fbPageId . " for " . $fbFriendId);
