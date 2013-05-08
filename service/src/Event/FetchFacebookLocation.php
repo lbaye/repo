@@ -335,6 +335,8 @@ class FetchFacebookLocation extends Base
         if (!empty($pagesResult)) {
             $pages = $pagesResult['data'];
 
+        $this->debug('page_id from page table - ' . json_encode($pages));
+
             if (!empty($pages)) {
                 $map = array();
                 foreach ($pages as $page) $map[$page['page_id']] = $page;
