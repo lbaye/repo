@@ -794,4 +794,6 @@
 
 - (void)getSearchResultWithKeyWord:(NSString*)keyWord authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 
+- (void)logout:(NSString*)authToken authTokenVal:(NSString*)authTokenValue callBack:(void (^) (BOOL isLoggedOut)) block;
+
 @end

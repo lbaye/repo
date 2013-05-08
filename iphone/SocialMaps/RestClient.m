@@ -7907,5 +7907,41 @@ AppDelegate *smAppDelegate;
     return distanceFromMe;
 }
 
+- (void)logout:(NSString*)authTokenKey authTokenVal:(NSString*)authTokenValue callBack:(void (^) (BOOL isLoggedOut)) block
+{
+    NSString *route = [NSString stringWithFormat:@"%@/auth/logout", WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authTokenKey value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^
+     {
+         int responseStatus = [request responseStatusCode];
+         
+         NSString *responseString = [request responseString];
+         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+         
+         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+         NSError *error = nil;
+         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+         
+         if (responseStatus == 200 || responseStatus == 204) block([[jsonObjects objectForKey:@"logout"] boolValue]);
+         
+         else block(FALSE);
+         
+         [jsonParser release];
+         jsonParser = nil;
+     }];
+    
+    [request setFailedBlock:^{
+        block (FALSE);
+    }];
+    
+    [request startAsynchronous];
+}
 
 @end
