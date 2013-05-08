@@ -39,12 +39,31 @@ class Facebook extends Base
     }
 
     /**
+     * Retrieve checkins from all facebook friends from location_post.
+     *
+     * @return array of checkins
+     */
+    public function getFriendsCheckins()
+    {
+        $fql = '
+            SELECT id, author_uid, page_id, type, coords, timestamp, tagged_uids
+            FROM location_post
+            WHERE author_uid
+            IN (SELECT uid2 FROM friend WHERE uid1=me()) AND type="checkin" AND timestamp > ' . strtotime("-2 week") . '
+            ';
+
+        $fbCheckins = $this->fetchFqlResult($fql);
+
+        return (!empty($fbCheckins)) ? $fbCheckins : array();
+    }
+
+    /**
      * Retrieve checkins from all facebook friends.
      *
      * @param  $authToken string
      * @return array of checkins
      */
-    public function getFriendsCheckins()
+    public function prev_getFriendsCheckins()
     {
         $fql = '
             SELECT author_uid, coords, checkin_id, timestamp
