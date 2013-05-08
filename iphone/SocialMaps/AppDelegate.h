@@ -202,4 +202,6 @@
  */
 -(void)initData;
 
+- (void)startSendingNewPositionToServer;
+
 @end
