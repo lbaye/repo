@@ -1151,7 +1151,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     CGRect rect = self.view.frame;
 	
 	rect.origin.y = 0;
-	msgReplyCreationView.frame = CGRectMake(0, 300, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+	msgReplyCreationView.frame = CGRectMake(0, messageRepiesView.frame.size.height - 59, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
 	
     self.view.frame = rect;
     [UIView commitAnimations];
@@ -1183,19 +1183,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             CGRect rect = self.view.frame;
             int moveBy = -totalVisibleCellHeight + 55;
             
-            if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
+            //commented for iPhone 5 calculation complication
+            //if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
                 moveBy = -kOFFSET_FOR_KEYBOARD; 
-            }
+            //}
             
             rect.origin.y = moveBy;
             self.view.frame = rect;
-            msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+            msgReplyCreationView.frame = CGRectMake(0, messageRepiesView.frame.size.height - 59 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
         } else {
-            msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+            msgReplyCreationView.frame = CGRectMake(0, messageRepiesView.frame.size.height - 59 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
         }
         [UIView commitAnimations];
-    
-    
 }
 
 -(void)setViewMovedUp:(UIView*)view
