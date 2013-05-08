@@ -236,7 +236,8 @@ class UserActivities extends Base
         foreach ($activities as $activity) {
             if ($activity->getObjectType() == "photo") {
                 $photo = $this->photoRepository->getByPhotoId($user, $activity->getObjectId());
-                $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
+//                $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
+                $permittedDocs = $this->_filterByPermissionForBothUsers($photo, $this->user);
 
                 if (empty($permittedDocs))
                     unset($activity);
@@ -276,7 +277,8 @@ class UserActivities extends Base
         foreach ($activities as $activity) {
             if ($activity->getObjectType() == "photo") {
                 $photo = $this->photoRepository->getByPhotoIdWithoutAuth($user, $activity->getObjectId());
-                $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
+//                $permittedDocs = $this->_filterByPermissionForDetails($photo, $this->user);
+                $permittedDocs = $this->_filterByPermissionForBothUsers($photo, $this->user);
 
                 if (empty($permittedDocs))
                     unset($activity);
