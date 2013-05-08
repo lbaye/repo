@@ -229,8 +229,8 @@ class FetchFacebookLocation extends Base
                 $smFriendsList = array();
                 $smFriendsList = $extUser->getSmFriends();
                 if (!empty($smFriendsList)) {
-                    $this->debug("Result of array_merge".var_dump(array_merge($extUser->getSmFriends(), (array) $smUser->getId())));
-                    $extUser->setSmFriends(array_merge($extUser->getSmFriends(), (array) $smUser->getId()));
+                    $this->debug("Result of array_merge" . var_dump(array_merge($extUser->getSmFriends(), (array)$smUser->getId())));
+                    $extUser->setSmFriends(array_merge($extUser->getSmFriends(), (array)$smUser->getId()));
                     $this->debug("smfriends is not empty!");
                 } else {
                     $extUser->setSmFriends(array($smUser->getId()));
@@ -261,7 +261,11 @@ class FetchFacebookLocation extends Base
             $fbFriendId = $fbCheckIn['author_uid'];
             $fbCoords = $fbCheckIn['coords'];
             $fbTimestamp = $fbCheckIn['timestamp'];
-            $fbPageId = $fbCheckIn['page_id'];
+            $pageIdByCheckinIds = $facebook->getFriendsPageId($fbCheckIn['checkin_id']);
+            foreach ($pageIdByCheckinIds as $pageIdByCheckinId) {
+                $fbPageId = $pageIdByCheckinId['page_id'];
+                $this->debug("getting page_id " . $fbPageId . " for " . $fbFriendId);
+            }
 
             $checkinsInfo[$fbFriendId] = array(
                 'friendId' => $fbFriendId,
