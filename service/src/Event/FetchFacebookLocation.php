@@ -271,6 +271,7 @@ class FetchFacebookLocation extends Base
             );
 
             $pageIds[] = $fbPageId;
+            $this->debug("Get friend id: ".$fbFriendId." page_id : ".$fbPageId);
         }
 
         # Retrieve all users information
