@@ -2518,16 +2518,16 @@ com.socmaps.ui.HomeActivity:
     private android.widget.Button btnFBLogin
     private java.util.TimerTask task
     private java.util.Timer mapUpdateTimer
-    1744:1760:private void facebookAuthentication()
-    1783:1789:private void askForFacebookAccount()
-    2272:2335:private void showSecondDegreePeoplePopUpDetails(com.socmaps.entity.SecondDegreePeople)
-    2435:2461:private void showMessageDialog(com.socmaps.entity.People)
-    2619:2636:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
-    2884:2892:private void doSearch()
-    2954:2991:private void showFirstTimeDialog()
-    3009:3010:public void onLogoutBegin()
-    3015:3020:public void onLogoutFinish()
-    2617:2617:static synthetic void access$65(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String,java.lang.String)
+    1751:1767:private void facebookAuthentication()
+    1790:1796:private void askForFacebookAccount()
+    2279:2342:private void showSecondDegreePeoplePopUpDetails(com.socmaps.entity.SecondDegreePeople)
+    2442:2468:private void showMessageDialog(com.socmaps.entity.People)
+    2626:2643:private void sendMessage(java.lang.String,java.lang.String,java.lang.String)
+    2891:2899:private void doSearch()
+    2961:2998:private void showFirstTimeDialog()
+    3016:3017:public void onLogoutBegin()
+    3022:3027:public void onLogoutFinish()
+    2624:2624:static synthetic void access$65(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String,java.lang.String)
     158:158:static synthetic android.app.Dialog access$66(com.socmaps.ui.HomeActivity)
     220:220:static synthetic android.app.Dialog access$67(com.socmaps.ui.HomeActivity)
 com.socmaps.ui.HomeActivity$40
@@ -2575,8 +2575,8 @@ com.socmaps.ui.LoginActivity:
     java.lang.String facebookFetchedDataString
     55:55:static synthetic android.app.ProgressDialog access$6(com.socmaps.ui.LoginActivity)
 com.socmaps.ui.LoginActivity$FbAPIsLogoutListener:
-    643:644:public void onLogoutBegin()
-    649:655:public void onLogoutFinish()
+    648:649:public void onLogoutBegin()
+    654:660:public void onLogoutFinish()
 com.socmaps.ui.Manifest
 com.socmaps.ui.Manifest$permission
 com.socmaps.ui.MeetupRequestNewActivity:
@@ -2916,9 +2916,9 @@ com.socmaps.util.Utility:
     1690:1699:public static void removeAllChildrenFromView(android.view.View)
     1713:1725:public static int getMessageCount(java.util.List,java.lang.String)
     1978:2052:public static android.graphics.Bitmap generateMarker(android.widget.LinearLayout,java.lang.Object,com.socmaps.images.ImageFetcher,com.socmaps.widget.ImageDownloadListener)
-    2252:2262:public static android.util.Pair getMapCorners(com.google.android.maps.MapView)
-    2266:2269:public static android.util.Pair getMapCornerPoints(com.google.android.maps.MapView)
-    2323:2323:public static int convertDipToPixels(android.content.Context,float)
+    2256:2266:public static android.util.Pair getMapCorners(com.google.android.maps.MapView)
+    2270:2273:public static android.util.Pair getMapCornerPoints(com.google.android.maps.MapView)
+    2331:2331:public static int convertDipToPixels(android.content.Context,float)
 com.socmaps.util.Utility$1
 com.socmaps.util.Utility$2
 com.socmaps.widget.AlluserFriendsOnlyRadioGroup:

@@ -47,31 +47,29 @@ import com.socmaps.widget.PermissionRadioGroup;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
 /**
- * PhotoUploadNewPhotoActivity class is used to upload new photos to the web server. 
+ * PhotoUploadNewPhotoActivity class is used to upload new photos to the web
+ * server.
  */
 
-public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
-		PeoplePickerListener {
+public class PhotoUploadNewPhotoActivity extends FragmentActivity implements PeoplePickerListener {
 
 	private Context context;
 	private LocationRadioGroup locationRadioGroupView;
-	private LinearLayout selectedLocationInfoPanel,
-			shareWithRadioGroupContainer, locationRadioGroupContainer;
+	private LinearLayout selectedLocationInfoPanel, shareWithRadioGroupContainer, locationRadioGroupContainer;
 	private PermissionRadioGroup permissionRadioGroupView;
 
 	private TextView tvSelectedLocationAddress, tvSelectedLocationTitle;
 
 	private String permissionValue = "";
 	private String shareWithPickerName = "sharewith";
-	private Button btnBack, btnAddTakeAnotherPhoto, btnCancel, btnUploadPhoto,
-			btnMyPhotos;
+	private Button btnBack, btnAddTakeAnotherPhoto, btnCancel, btnUploadPhoto, btnMyPhotos;
 
 	private ButtonActionListener buttonActionListener;
 	private ImageView ivPhoto;
 	private Bitmap photoIcon;
 	private int requestCode;
 	private EditText editImageDiscription;
-	private String  address = "";
+	private String address = "";
 	private double latitude = 0, longitude = 0;
 
 	List<String> shareWithSelectedFriendList;
@@ -82,7 +80,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 	private String savePhotoResponse;
 	private int savePhotoStatus;
 	private String title, description;
-	
+
 	private final int REQUEST_CODE_CAMERA = 100;
 	private final int REQUEST_CODE_GALLERY = 101;
 
@@ -153,8 +151,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 
 			} else if (v == btnMyPhotos) {
 
-				Intent uploadPhotoIntent = new Intent(context,
-						PhotoListActivity.class);
+				Intent uploadPhotoIntent = new Intent(context, PhotoListActivity.class);
 				uploadPhotoIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(uploadPhotoIntent);
 				finish();
@@ -168,14 +165,12 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 	private void takeIconFromGalaryOrCamara() {
 		// TODO Auto-generated method stub
 		final CharSequence[] items = { "Gallery", "Camera" };
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				PhotoUploadNewPhotoActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(PhotoUploadNewPhotoActivity.this);
 		builder.setTitle("Select");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int item) {
-				Toast.makeText(getApplicationContext(), items[item],
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
 				if (items[item].equals("Gallery")) {
 					requestCode = REQUEST_CODE_GALLERY;
 				} else {
@@ -195,12 +190,10 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
-			startActivityForResult(
-					Intent.createChooser(intent, "Select Picture"), requestCode);
+			startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
 		case REQUEST_CODE_CAMERA:
-			Intent cameraIntent = new Intent(
-					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
 			break;
 		}
@@ -213,9 +206,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 		if (requestCode == REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
 
-				photoIcon = Utility.resizeBitmap(
-						(Bitmap) data.getExtras().get("data"),
-						Constant.photoWidth*2, 0, true);
+				photoIcon = Utility.resizeBitmap((Bitmap) data.getExtras().get("data"), Constant.photoWidth * 2, 0, true);
 
 				ivPhoto.setImageBitmap(photoIcon);
 
@@ -227,32 +218,29 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 
 		} else if (requestCode == REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				
+
 				Uri selectedImage = data.getData();
-	            try {
-	            	photoIcon = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.photoWidth, 0, true);
-					
-	            	ivPhoto.setImageBitmap(photoIcon);
-					
+				try {
+					photoIcon = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.photoWidth, 0, true);
+
+					ivPhoto.setImageBitmap(photoIcon);
+
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}  catch (OutOfMemoryError e) {
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
+				} catch (OutOfMemoryError e) {
+					Toast.makeText(context, getString(R.string.errorMessageGallery), Toast.LENGTH_SHORT).show();
 					Log.e("Gallery image", "OutOfMemoryError");
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-				
+
 			}
 		}
 
-		else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
-				&& resultCode == RESULT_OK) {
+		else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER && resultCode == RESULT_OK) {
 			address = data.getStringExtra("ADDRESS");
 			latitude = data.getDoubleExtra("LAT", 0.0);
 			longitude = data.getDoubleExtra("LNG", 0.0);
@@ -263,38 +251,30 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 
 	private void addLocationRadioGroup() {
 		// TODO Auto-generated method stub
-		locationRadioGroupView = new LocationRadioGroup(context,
-				new LocationSelectionListener());
+		locationRadioGroupView = new LocationRadioGroup(context, new LocationSelectionListener());
 
-		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView
-				.findViewById(R.id.selectedLocationInfoPanel);
-		tvSelectedLocationAddress = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationAddress);
+		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView.findViewById(R.id.selectedLocationInfoPanel);
+		tvSelectedLocationAddress = (TextView) locationRadioGroupView.findViewById(R.id.tvSelectedLocationAddress);
 
-		tvSelectedLocationTitle = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationTitle);
+		tvSelectedLocationTitle = (TextView) locationRadioGroupView.findViewById(R.id.tvSelectedLocationTitle);
 
 		locationRadioGroupContainer.addView(locationRadioGroupView);
 
-		locationRadioGroupView
-				.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
+		locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 	}
 
 	private void addPermissionRadioGroup() {
 		// TODO Auto-generated method stub
-		permissionRadioGroupView = new PermissionRadioGroup(context,
-				new ShareWithSelectionListener());
+		permissionRadioGroupView = new PermissionRadioGroup(context, new ShareWithSelectionListener());
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
 
-	private class ShareWithSelectionListener implements
-			PermissionRadioGroupListener {
+	private class ShareWithSelectionListener implements PermissionRadioGroupListener {
 
 		@Override
-		public void onPermissionChanged(RadioGroup group, RadioButton radio,
-				Constant.Permission selectedItem) {
+		public void onPermissionChanged(RadioGroup group, RadioButton radio, Constant.Permission selectedItem) {
 			// TODO Auto-generated method stub
 
 			permissionValue = "";
@@ -323,12 +303,10 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 		}
 	}
 
-	private class LocationSelectionListener implements
-			LocationRadioGroupListener {
+	private class LocationSelectionListener implements LocationRadioGroupListener {
 
 		@Override
-		public void onLocationSelectionChanged(RadioGroup group,
-				RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
+		public void onLocationSelectionChanged(RadioGroup group, RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
 			// TODO Auto-generated method stub
 			selectedLocationInfoPanel.setVisibility(View.GONE);
 			tvSelectedLocationAddress.setText("");
@@ -362,8 +340,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 			if (StaticValues.myPoint != null) {
 				latitude = StaticValues.myPoint.latitude;
 				longitude = StaticValues.myPoint.longitude;
-				Utility.getAddressByCoordinate(latitude, longitude,
-						new LocationAddressHandler());
+				Utility.getAddressByCoordinate(latitude, longitude, new LocationAddressHandler());
 
 			}
 		}
@@ -399,9 +376,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 	private void getNearByPlaces() {
 		if (StaticValues.searchResult != null) {
 			if (StaticValues.searchResult.getPlaces() != null) {
-				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
-						context, new NearByPlacesPickerhandler(),
-						"NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
+				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(context, new NearByPlacesPickerhandler(), "NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
 
 				nearByPlacesPicker.show();
 			}
@@ -409,8 +384,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 
 	}
 
-	private class NearByPlacesPickerhandler implements
-			NearByPlacesPickerListener {
+	private class NearByPlacesPickerhandler implements NearByPlacesPickerListener {
 
 		@Override
 		public void onPlaceSelect(String pickerName, Place selectedPlace) {
@@ -460,17 +434,13 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 
 	private void showPeoplePicker(String pickerName) {
 		// custom dialog
-		Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
-				shareWithSelectedFriendList, shareWithSelectedCircleList);
+		Dialog peoplePicker = new PeoplePicker(context, this, pickerName, shareWithSelectedFriendList, shareWithSelectedCircleList);
 
 		peoplePicker.show();
 	}
 
 	@Override
-	public void onSelect(String pickerName, List<String> selectedFriendList,
-			List<String> selectedCircleList,
-			List<String> selectedCircleFriendList,
-			List<String> selectedFriendListAll) {
+	public void onSelect(String pickerName, List<String> selectedFriendList, List<String> selectedCircleList, List<String> selectedCircleFriendList, List<String> selectedFriendListAll) {
 		// TODO Auto-generated method stub
 
 		if (pickerName.equalsIgnoreCase(shareWithPickerName)) {
@@ -495,24 +465,19 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 
 			if (Utility.isConnectionAvailble(getApplicationContext())) {
 
-				Thread thread = new Thread(null, uploadPhotoThread,
-						"Start upload image to server");
+				Thread thread = new Thread(null, uploadPhotoThread, "Start upload image to server");
 				thread.start();
 
 				// show progress dialog if needed
-				m_ProgressDialog = ProgressDialog.show(context, getResources()
-						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true,true);
+				m_ProgressDialog = ProgressDialog.show(context, getResources().getString(R.string.please_wait_text), getResources().getString(R.string.sending_request_text), true, true);
 
 			} else {
 
-				DialogsAndToasts
-						.showNoInternetConnectionDialog(context);
+				DialogsAndToasts.showNoInternetConnectionDialog(context);
 			}
 
 		} else {
-			Toast.makeText(context, "Photo should not be empty.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Photo should not be empty.", Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -522,8 +487,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smUploadPhoto);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+			restClient.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 
 			if (title != null) {
 				if (!title.equals("")) {
@@ -551,6 +515,20 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 			if (permissionValue != null) {
 				if (!permissionValue.equals("")) {
 					restClient.AddParam("permission", permissionValue);
+
+					if (permissionValue.equalsIgnoreCase(Constant.PERMISSION_CUSTOM)) {
+						if (shareWithSelectedCircleList != null) {
+							for (int i = 0; i < shareWithSelectedCircleList.size(); i++) {
+								restClient.AddParam("permittedCircles[]", shareWithSelectedCircleList.get(i));
+							}
+						}
+						if (shareWithSelectedFriendList != null) {
+							for (int i = 0; i < shareWithSelectedFriendList.size(); i++) {
+								restClient.AddParam("permittedUsers[]", shareWithSelectedFriendList.get(i));
+							}
+						}
+					}
+
 				}
 			}
 
@@ -562,8 +540,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 				photoIcon.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 
 				byte[] full_bytes = full_stream.toByteArray();
-				placeImageString = Base64.encodeToString(full_bytes,
-						Base64.DEFAULT);
+				placeImageString = Base64.encodeToString(full_bytes, Base64.DEFAULT);
 				restClient.AddParam("image", placeImageString);
 
 				photoIcon = null;
@@ -591,7 +568,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 			handleResponseUploadPhpto(savePhotoStatus, savePhotoResponse);
 
 			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 		}
@@ -602,17 +579,15 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 		Log.w("Photo upload response from server", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			
-			Toast.makeText(context, "Photo uploaded successfully.",
-					Toast.LENGTH_SHORT).show();
+
+			Toast.makeText(context, "Photo uploaded successfully.", Toast.LENGTH_SHORT).show();
 
 			PhotoListActivity.isUploadNewPhoto = true;
 
-			Intent uploadPhotoIntent = new Intent(context,
-					PhotoListActivity.class);
+			Intent uploadPhotoIntent = new Intent(context, PhotoListActivity.class);
 
 			uploadPhotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		
+
 			startActivity(uploadPhotoIntent);
 
 			finish();
@@ -620,9 +595,7 @@ public class PhotoUploadNewPhotoActivity extends FragmentActivity implements
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
 			break;
 
 		}

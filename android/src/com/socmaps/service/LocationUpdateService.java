@@ -129,7 +129,7 @@ public class LocationUpdateService extends Service implements ILocationUpdateInd
 
 	@Override
 	public void onDestroy() {
-		// Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
 		Utility.log(TAG, "My Service Stopped");
 
 		// player.stop();

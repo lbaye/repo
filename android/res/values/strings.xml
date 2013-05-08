@@ -10,7 +10,7 @@
     -->
 
     <string name="app_name">Socialmaps</string>
-    <string name="app_version">1.0.8</string>
+    <string name="app_version">1.0.9</string>
     <string name="login">Login</string>
     <string name="registerLabel">Register</string>
     <string name="passwordLabel">Password</string>

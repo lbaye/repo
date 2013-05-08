@@ -4869,6 +4869,9 @@ com.socmaps.ui.AccountSettingsActivity$9 -> com.socmaps.ui.o:
     com.socmaps.ui.AccountSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
+com.socmaps.ui.AccountSettingsActivity$BackProcessCallBackListener -> com.socmaps.ui.p:
+    com.socmaps.ui.AccountSettingsActivity this$0 -> a
+    void onFinish(int,java.lang.String,int) -> a
 com.socmaps.ui.BetaLoginActivity -> com.socmaps.ui.BetaLoginActivity:
     android.widget.EditText etPassword -> a
     android.widget.Button btnLogin -> b
@@ -4923,29 +4926,29 @@ com.socmaps.ui.DirectionActivity -> com.socmaps.ui.DirectionActivity:
     void access$5(com.socmaps.ui.DirectionActivity) -> e
     void access$6(com.socmaps.ui.DirectionActivity) -> f
     void access$7(com.socmaps.ui.DirectionActivity,java.lang.String,java.lang.String) -> b
-com.socmaps.ui.DirectionActivity$1 -> com.socmaps.ui.p:
+com.socmaps.ui.DirectionActivity$1 -> com.socmaps.ui.q:
     com.socmaps.ui.DirectionActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.DirectionActivity$LocationAddressHandler -> com.socmaps.ui.q:
+com.socmaps.ui.DirectionActivity$LocationAddressHandler -> com.socmaps.ui.r:
     com.socmaps.ui.DirectionActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.DirectionActivity$LocationAddressHandlerRe -> com.socmaps.ui.r:
+com.socmaps.ui.DirectionActivity$LocationAddressHandlerRe -> com.socmaps.ui.s:
     com.socmaps.ui.DirectionActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.DirectionActivity$LocationSelectionListenerDest -> com.socmaps.ui.s:
+com.socmaps.ui.DirectionActivity$LocationSelectionListenerDest -> com.socmaps.ui.t:
     com.socmaps.ui.DirectionActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.DirectionActivity$LocationSelectionListenerSource -> com.socmaps.ui.t:
+com.socmaps.ui.DirectionActivity$LocationSelectionListenerSource -> com.socmaps.ui.u:
     com.socmaps.ui.DirectionActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.DirectionActivity$NearByPlacesPickerhandler -> com.socmaps.ui.u:
+com.socmaps.ui.DirectionActivity$NearByPlacesPickerhandler -> com.socmaps.ui.v:
     com.socmaps.ui.DirectionActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
-com.socmaps.ui.DirectionActivity$NearByPlacesPickerhandlerRe -> com.socmaps.ui.v:
+com.socmaps.ui.DirectionActivity$NearByPlacesPickerhandlerRe -> com.socmaps.ui.w:
     com.socmaps.ui.DirectionActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
 com.socmaps.ui.EventDetailsActivity -> com.socmaps.ui.EventDetailsActivity:
@@ -5013,40 +5016,40 @@ com.socmaps.ui.EventDetailsActivity -> com.socmaps.ui.EventDetailsActivity:
     void access$12(com.socmaps.ui.EventDetailsActivity) -> j
     void access$13(com.socmaps.ui.EventDetailsActivity) -> k
     void access$14(com.socmaps.ui.EventDetailsActivity) -> l
-com.socmaps.ui.EventDetailsActivity$1 -> com.socmaps.ui.w:
+com.socmaps.ui.EventDetailsActivity$1 -> com.socmaps.ui.x:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
-com.socmaps.ui.EventDetailsActivity$10 -> com.socmaps.ui.x:
+com.socmaps.ui.EventDetailsActivity$10 -> com.socmaps.ui.y:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.EventDetailsActivity$11 -> com.socmaps.ui.y:
+com.socmaps.ui.EventDetailsActivity$11 -> com.socmaps.ui.z:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.EventDetailsActivity$2 -> com.socmaps.ui.z:
+com.socmaps.ui.EventDetailsActivity$2 -> com.socmaps.ui.aa:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$3 -> com.socmaps.ui.aa:
+com.socmaps.ui.EventDetailsActivity$3 -> com.socmaps.ui.ab:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$4 -> com.socmaps.ui.ab:
+com.socmaps.ui.EventDetailsActivity$4 -> com.socmaps.ui.ac:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$5 -> com.socmaps.ui.ac:
+com.socmaps.ui.EventDetailsActivity$5 -> com.socmaps.ui.ad:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$6 -> com.socmaps.ui.ad:
+com.socmaps.ui.EventDetailsActivity$6 -> com.socmaps.ui.ae:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$7 -> com.socmaps.ui.ae:
+com.socmaps.ui.EventDetailsActivity$7 -> com.socmaps.ui.af:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$8 -> com.socmaps.ui.af:
+com.socmaps.ui.EventDetailsActivity$8 -> com.socmaps.ui.ag:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$9 -> com.socmaps.ui.ag:
+com.socmaps.ui.EventDetailsActivity$9 -> com.socmaps.ui.ah:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventDetailsActivity$InviteMorePeopleListener -> com.socmaps.ui.ah:
+com.socmaps.ui.EventDetailsActivity$InviteMorePeopleListener -> com.socmaps.ui.ai:
     com.socmaps.ui.EventDetailsActivity this$0 -> a
     void onSelect(java.lang.String,java.util.List,java.util.List,java.util.List,java.util.List) -> a
 com.socmaps.ui.EventEditActivity -> com.socmaps.ui.EventEditActivity:
@@ -5156,76 +5159,76 @@ com.socmaps.ui.EventEditActivity -> com.socmaps.ui.EventEditActivity:
     void access$19(com.socmaps.ui.EventEditActivity) -> q
     void access$20(com.socmaps.ui.EventEditActivity,java.lang.String,java.lang.String) -> a
     boolean access$21(com.socmaps.ui.EventEditActivity,int) -> b
-com.socmaps.ui.EventEditActivity$1 -> com.socmaps.ui.ai:
+com.socmaps.ui.EventEditActivity$1 -> com.socmaps.ui.aj:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.EventEditActivity$10 -> com.socmaps.ui.aj:
+com.socmaps.ui.EventEditActivity$10 -> com.socmaps.ui.ak:
     com.socmaps.ui.EventEditActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     android.app.Dialog val$mDateTimeDialog -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$11 -> com.socmaps.ui.ak:
+com.socmaps.ui.EventEditActivity$11 -> com.socmaps.ui.al:
     com.socmaps.ui.EventEditActivity this$0 -> a
     android.app.Dialog val$mDateTimeDialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$12 -> com.socmaps.ui.al:
+com.socmaps.ui.EventEditActivity$12 -> com.socmaps.ui.am:
     com.socmaps.ui.EventEditActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$13 -> com.socmaps.ui.am:
+com.socmaps.ui.EventEditActivity$13 -> com.socmaps.ui.an:
     com.socmaps.ui.EventEditActivity this$0 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.EventEditActivity$2 -> com.socmaps.ui.an:
+com.socmaps.ui.EventEditActivity$2 -> com.socmaps.ui.ao:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventEditActivity$3 -> com.socmaps.ui.ao:
+com.socmaps.ui.EventEditActivity$3 -> com.socmaps.ui.ap:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventEditActivity$4 -> com.socmaps.ui.ap:
+com.socmaps.ui.EventEditActivity$4 -> com.socmaps.ui.aq:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.EventEditActivity$5 -> com.socmaps.ui.aq:
+com.socmaps.ui.EventEditActivity$5 -> com.socmaps.ui.ar:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.EventEditActivity$6 -> com.socmaps.ui.ar:
+com.socmaps.ui.EventEditActivity$6 -> com.socmaps.ui.as:
     com.socmaps.ui.EventEditActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$proficPicContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$7 -> com.socmaps.ui.as:
+com.socmaps.ui.EventEditActivity$7 -> com.socmaps.ui.at:
     com.socmaps.ui.EventEditActivity this$0 -> a
     java.lang.String val$id -> b
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.socmaps.ui.EventEditActivity$8 -> com.socmaps.ui.at:
+com.socmaps.ui.EventEditActivity$8 -> com.socmaps.ui.au:
     com.socmaps.ui.EventEditActivity this$0 -> a
     android.app.Dialog val$dialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$9 -> com.socmaps.ui.au:
+com.socmaps.ui.EventEditActivity$9 -> com.socmaps.ui.av:
     com.socmaps.ui.EventEditActivity this$0 -> a
     android.widget.EditText val$etInputText -> b
     int val$type -> c
     android.app.Dialog val$dialog -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$ButtonActionListener -> com.socmaps.ui.av:
+com.socmaps.ui.EventEditActivity$ButtonActionListener -> com.socmaps.ui.aw:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventEditActivity$LocationAddressHandler -> com.socmaps.ui.aw:
+com.socmaps.ui.EventEditActivity$LocationAddressHandler -> com.socmaps.ui.ax:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.EventEditActivity$LocationSelectionListener -> com.socmaps.ui.ax:
+com.socmaps.ui.EventEditActivity$LocationSelectionListener -> com.socmaps.ui.ay:
     com.socmaps.ui.EventEditActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.EventEditActivity$NearByPlacesPickerhandler -> com.socmaps.ui.ay:
+com.socmaps.ui.EventEditActivity$NearByPlacesPickerhandler -> com.socmaps.ui.az:
     com.socmaps.ui.EventEditActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
-com.socmaps.ui.EventEditActivity$ShareWithSelectionListener -> com.socmaps.ui.az:
+com.socmaps.ui.EventEditActivity$ShareWithSelectionListener -> com.socmaps.ui.ba:
     com.socmaps.ui.EventEditActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$util$Constant$Permission -> b
     void onPermissionChanged$1d271f38(com.socmaps.util.Constant$Permission) -> a
@@ -5274,24 +5277,24 @@ com.socmaps.ui.EventListActivity -> com.socmaps.ui.EventListActivity:
     void access$3(com.socmaps.ui.EventListActivity,int,java.lang.String) -> a
     com.socmaps.ui.EventListActivity$ListArrayAdapter access$4(com.socmaps.ui.EventListActivity) -> d
     com.socmaps.images.ImageFetcher access$5(com.socmaps.ui.EventListActivity) -> e
-com.socmaps.ui.EventListActivity$1 -> com.socmaps.ui.ba:
+com.socmaps.ui.EventListActivity$1 -> com.socmaps.ui.bb:
     com.socmaps.ui.EventListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventListActivity$2 -> com.socmaps.ui.bb:
+com.socmaps.ui.EventListActivity$2 -> com.socmaps.ui.bc:
     com.socmaps.ui.EventListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventListActivity$3 -> com.socmaps.ui.bc:
+com.socmaps.ui.EventListActivity$3 -> com.socmaps.ui.bd:
     com.socmaps.ui.EventListActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.EventListActivity$ItemListener -> com.socmaps.ui.bd:
+com.socmaps.ui.EventListActivity$ItemListener -> com.socmaps.ui.be:
     com.socmaps.ui.EventListActivity this$0 -> a
     void onItemClick(com.socmaps.entity.Event) -> a
     void onArrowButtonClick(com.socmaps.entity.Event) -> b
     void onRSVPSelection(com.socmaps.entity.Event,java.lang.String) -> a
     void onShowOnMapButtonClick(com.socmaps.entity.Event) -> c
-com.socmaps.ui.EventListActivity$ListArrayAdapter -> com.socmaps.ui.be:
+com.socmaps.ui.EventListActivity$ListArrayAdapter -> com.socmaps.ui.bf:
     java.util.List mObjects -> b
     java.lang.Object mLock -> c
     int mResource -> d
@@ -5315,11 +5318,11 @@ com.socmaps.ui.EventListActivity$ListArrayAdapter -> com.socmaps.ui.be:
     java.util.List access$3(com.socmaps.ui.EventListActivity$ListArrayAdapter) -> c
     void access$4(com.socmaps.ui.EventListActivity$ListArrayAdapter,java.util.List) -> a
     void access$5(com.socmaps.ui.EventListActivity$ListArrayAdapter,java.util.List) -> b
-com.socmaps.ui.EventListActivity$ListArrayAdapter$ArrayFilter -> com.socmaps.ui.bf:
+com.socmaps.ui.EventListActivity$ListArrayAdapter$ArrayFilter -> com.socmaps.ui.bg:
     com.socmaps.ui.EventListActivity$ListArrayAdapter this$1 -> a
     android.widget.Filter$FilterResults performFiltering(java.lang.CharSequence) -> performFiltering
     void publishResults(java.lang.CharSequence,android.widget.Filter$FilterResults) -> publishResults
-com.socmaps.ui.EventListActivity$UpdateRSVPTask -> com.socmaps.ui.bg:
+com.socmaps.ui.EventListActivity$UpdateRSVPTask -> com.socmaps.ui.bh:
     android.app.ProgressDialog updateDialog -> b
     com.socmaps.ui.EventListActivity this$0 -> a
     void onPreExecute() -> onPreExecute
@@ -5365,24 +5368,24 @@ com.socmaps.ui.EventListActivityOther -> com.socmaps.ui.EventListActivityOther:
     void access$3(com.socmaps.ui.EventListActivityOther,int,java.lang.String) -> a
     com.socmaps.ui.EventListActivityOther$ListArrayAdapter access$4(com.socmaps.ui.EventListActivityOther) -> d
     com.socmaps.images.ImageFetcher access$5(com.socmaps.ui.EventListActivityOther) -> e
-com.socmaps.ui.EventListActivityOther$1 -> com.socmaps.ui.bh:
+com.socmaps.ui.EventListActivityOther$1 -> com.socmaps.ui.bi:
     com.socmaps.ui.EventListActivityOther this$0 -> a
     void run() -> run
-com.socmaps.ui.EventListActivityOther$2 -> com.socmaps.ui.bi:
+com.socmaps.ui.EventListActivityOther$2 -> com.socmaps.ui.bj:
     com.socmaps.ui.EventListActivityOther this$0 -> a
     void run() -> run
-com.socmaps.ui.EventListActivityOther$3 -> com.socmaps.ui.bj:
+com.socmaps.ui.EventListActivityOther$3 -> com.socmaps.ui.bk:
     com.socmaps.ui.EventListActivityOther this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.EventListActivityOther$ItemListener -> com.socmaps.ui.bk:
+com.socmaps.ui.EventListActivityOther$ItemListener -> com.socmaps.ui.bl:
     com.socmaps.ui.EventListActivityOther this$0 -> a
     void onItemClick(com.socmaps.entity.Event) -> a
     void onArrowButtonClick(com.socmaps.entity.Event) -> b
     void onRSVPSelection(com.socmaps.entity.Event,java.lang.String) -> a
     void onShowOnMapButtonClick(com.socmaps.entity.Event) -> c
-com.socmaps.ui.EventListActivityOther$ListArrayAdapter -> com.socmaps.ui.bl:
+com.socmaps.ui.EventListActivityOther$ListArrayAdapter -> com.socmaps.ui.bm:
     java.util.List mObjects -> b
     java.lang.Object mLock -> c
     int mResource -> d
@@ -5406,11 +5409,11 @@ com.socmaps.ui.EventListActivityOther$ListArrayAdapter -> com.socmaps.ui.bl:
     java.util.List access$3(com.socmaps.ui.EventListActivityOther$ListArrayAdapter) -> c
     void access$4(com.socmaps.ui.EventListActivityOther$ListArrayAdapter,java.util.List) -> a
     void access$5(com.socmaps.ui.EventListActivityOther$ListArrayAdapter,java.util.List) -> b
-com.socmaps.ui.EventListActivityOther$ListArrayAdapter$ArrayFilter -> com.socmaps.ui.bm:
+com.socmaps.ui.EventListActivityOther$ListArrayAdapter$ArrayFilter -> com.socmaps.ui.bn:
     com.socmaps.ui.EventListActivityOther$ListArrayAdapter this$1 -> a
     android.widget.Filter$FilterResults performFiltering(java.lang.CharSequence) -> performFiltering
     void publishResults(java.lang.CharSequence,android.widget.Filter$FilterResults) -> publishResults
-com.socmaps.ui.EventListActivityOther$UpdateRSVPTask -> com.socmaps.ui.bn:
+com.socmaps.ui.EventListActivityOther$UpdateRSVPTask -> com.socmaps.ui.bo:
     android.app.ProgressDialog updateDialog -> b
     com.socmaps.ui.EventListActivityOther this$0 -> a
     void onPreExecute() -> onPreExecute
@@ -5521,76 +5524,76 @@ com.socmaps.ui.EventNewActivity -> com.socmaps.ui.EventNewActivity:
     void access$19(com.socmaps.ui.EventNewActivity) -> q
     void access$20(com.socmaps.ui.EventNewActivity,java.lang.String,java.lang.String) -> a
     boolean access$21(com.socmaps.ui.EventNewActivity,int) -> b
-com.socmaps.ui.EventNewActivity$1 -> com.socmaps.ui.bo:
+com.socmaps.ui.EventNewActivity$1 -> com.socmaps.ui.bp:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.EventNewActivity$10 -> com.socmaps.ui.bp:
+com.socmaps.ui.EventNewActivity$10 -> com.socmaps.ui.bq:
     com.socmaps.ui.EventNewActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     android.app.Dialog val$mDateTimeDialog -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$11 -> com.socmaps.ui.bq:
+com.socmaps.ui.EventNewActivity$11 -> com.socmaps.ui.br:
     com.socmaps.ui.EventNewActivity this$0 -> a
     android.app.Dialog val$mDateTimeDialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$12 -> com.socmaps.ui.br:
+com.socmaps.ui.EventNewActivity$12 -> com.socmaps.ui.bs:
     com.socmaps.ui.EventNewActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$13 -> com.socmaps.ui.bs:
+com.socmaps.ui.EventNewActivity$13 -> com.socmaps.ui.bt:
     com.socmaps.ui.EventNewActivity this$0 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.EventNewActivity$2 -> com.socmaps.ui.bt:
+com.socmaps.ui.EventNewActivity$2 -> com.socmaps.ui.bu:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventNewActivity$3 -> com.socmaps.ui.bu:
+com.socmaps.ui.EventNewActivity$3 -> com.socmaps.ui.bv:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.EventNewActivity$4 -> com.socmaps.ui.bv:
+com.socmaps.ui.EventNewActivity$4 -> com.socmaps.ui.bw:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.EventNewActivity$5 -> com.socmaps.ui.bw:
+com.socmaps.ui.EventNewActivity$5 -> com.socmaps.ui.bx:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.EventNewActivity$6 -> com.socmaps.ui.bx:
+com.socmaps.ui.EventNewActivity$6 -> com.socmaps.ui.by:
     com.socmaps.ui.EventNewActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$proficPicContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$7 -> com.socmaps.ui.by:
+com.socmaps.ui.EventNewActivity$7 -> com.socmaps.ui.bz:
     com.socmaps.ui.EventNewActivity this$0 -> a
     java.lang.String val$id -> b
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.socmaps.ui.EventNewActivity$8 -> com.socmaps.ui.bz:
+com.socmaps.ui.EventNewActivity$8 -> com.socmaps.ui.ca:
     com.socmaps.ui.EventNewActivity this$0 -> a
     android.app.Dialog val$dialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$9 -> com.socmaps.ui.ca:
+com.socmaps.ui.EventNewActivity$9 -> com.socmaps.ui.cb:
     com.socmaps.ui.EventNewActivity this$0 -> a
     android.widget.EditText val$etInputText -> b
     int val$type -> c
     android.app.Dialog val$dialog -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$ButtonActionListener -> com.socmaps.ui.cb:
+com.socmaps.ui.EventNewActivity$ButtonActionListener -> com.socmaps.ui.cc:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.EventNewActivity$LocationAddressHandler -> com.socmaps.ui.cc:
+com.socmaps.ui.EventNewActivity$LocationAddressHandler -> com.socmaps.ui.cd:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.EventNewActivity$LocationSelectionListener -> com.socmaps.ui.cd:
+com.socmaps.ui.EventNewActivity$LocationSelectionListener -> com.socmaps.ui.ce:
     com.socmaps.ui.EventNewActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.EventNewActivity$NearByPlacesPickerhandler -> com.socmaps.ui.ce:
+com.socmaps.ui.EventNewActivity$NearByPlacesPickerhandler -> com.socmaps.ui.cf:
     com.socmaps.ui.EventNewActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
-com.socmaps.ui.EventNewActivity$ShareWithSelectionListener -> com.socmaps.ui.cf:
+com.socmaps.ui.EventNewActivity$ShareWithSelectionListener -> com.socmaps.ui.cg:
     com.socmaps.ui.EventNewActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$util$Constant$Permission -> b
     void onPermissionChanged$1d271f38(com.socmaps.util.Constant$Permission) -> a
@@ -5646,14 +5649,14 @@ com.socmaps.ui.FriendListActivity -> com.socmaps.ui.FriendListActivity:
     void access$6(com.socmaps.ui.FriendListActivity,java.util.List) -> d
     void access$7(com.socmaps.ui.FriendListActivity) -> d
     android.content.Context access$8(com.socmaps.ui.FriendListActivity) -> e
-com.socmaps.ui.FriendListActivity$1 -> com.socmaps.ui.cg:
+com.socmaps.ui.FriendListActivity$1 -> com.socmaps.ui.ch:
     com.socmaps.ui.FriendListActivity this$0 -> a
     com.socmaps.entity.People val$people -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.FriendListActivity$BackProcessCallBackListener -> com.socmaps.ui.ch:
+com.socmaps.ui.FriendListActivity$BackProcessCallBackListener -> com.socmaps.ui.ci:
     com.socmaps.ui.FriendListActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.FriendListActivity$SelectedTab -> com.socmaps.ui.ci:
+com.socmaps.ui.FriendListActivity$SelectedTab -> com.socmaps.ui.cj:
     com.socmaps.ui.FriendListActivity$SelectedTab ATOZ -> a
     com.socmaps.ui.FriendListActivity$SelectedTab DISTANCE -> b
     com.socmaps.ui.FriendListActivity$SelectedTab CIRCLES -> c
@@ -5697,45 +5700,45 @@ com.socmaps.ui.FriendRequestNotificationActivity -> com.socmaps.ui.FriendRequest
     void access$8(com.socmaps.ui.FriendRequestNotificationActivity,int,java.lang.String) -> d
     void access$9(com.socmaps.ui.FriendRequestNotificationActivity,java.lang.String) -> a
     void access$10(com.socmaps.ui.FriendRequestNotificationActivity,java.lang.String) -> b
-com.socmaps.ui.FriendRequestNotificationActivity$1 -> com.socmaps.ui.cj:
+com.socmaps.ui.FriendRequestNotificationActivity$1 -> com.socmaps.ui.ck:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$10 -> com.socmaps.ui.ck:
+com.socmaps.ui.FriendRequestNotificationActivity$10 -> com.socmaps.ui.cl:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     java.lang.String val$senderId -> b
     android.view.View val$itemView -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.FriendRequestNotificationActivity$11 -> com.socmaps.ui.cl:
+com.socmaps.ui.FriendRequestNotificationActivity$11 -> com.socmaps.ui.cm:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     android.view.View val$itemView -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.FriendRequestNotificationActivity$2 -> com.socmaps.ui.cm:
+com.socmaps.ui.FriendRequestNotificationActivity$2 -> com.socmaps.ui.cn:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$3 -> com.socmaps.ui.cn:
+com.socmaps.ui.FriendRequestNotificationActivity$3 -> com.socmaps.ui.co:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$4 -> com.socmaps.ui.co:
+com.socmaps.ui.FriendRequestNotificationActivity$4 -> com.socmaps.ui.cp:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$5 -> com.socmaps.ui.cp:
+com.socmaps.ui.FriendRequestNotificationActivity$5 -> com.socmaps.ui.cq:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$6 -> com.socmaps.ui.cq:
+com.socmaps.ui.FriendRequestNotificationActivity$6 -> com.socmaps.ui.cr:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$7 -> com.socmaps.ui.cr:
+com.socmaps.ui.FriendRequestNotificationActivity$7 -> com.socmaps.ui.cs:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$8 -> com.socmaps.ui.cs:
+com.socmaps.ui.FriendRequestNotificationActivity$8 -> com.socmaps.ui.ct:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.FriendRequestNotificationActivity$9 -> com.socmaps.ui.ct:
+com.socmaps.ui.FriendRequestNotificationActivity$9 -> com.socmaps.ui.cu:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     java.lang.String val$senderId -> b
     android.view.View val$itemView -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.FriendRequestNotificationActivity$ButtonActionListener -> com.socmaps.ui.cu:
+com.socmaps.ui.FriendRequestNotificationActivity$ButtonActionListener -> com.socmaps.ui.cv:
     com.socmaps.ui.FriendRequestNotificationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.GCMIntentService -> com.socmaps.ui.GCMIntentService:
@@ -5836,56 +5839,56 @@ com.socmaps.ui.GeoTagActivity -> com.socmaps.ui.GeoTagActivity:
     void access$17(com.socmaps.ui.GeoTagActivity) -> q
     void access$18(com.socmaps.ui.GeoTagActivity,java.lang.String,java.lang.String) -> a
     boolean access$19(com.socmaps.ui.GeoTagActivity,int) -> a
-com.socmaps.ui.GeoTagActivity$1 -> com.socmaps.ui.cv:
+com.socmaps.ui.GeoTagActivity$1 -> com.socmaps.ui.cw:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.GeoTagActivity$2 -> com.socmaps.ui.cw:
+com.socmaps.ui.GeoTagActivity$2 -> com.socmaps.ui.cx:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.GeoTagActivity$3 -> com.socmaps.ui.cx:
+com.socmaps.ui.GeoTagActivity$3 -> com.socmaps.ui.cy:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.GeoTagActivity$4 -> com.socmaps.ui.cy:
+com.socmaps.ui.GeoTagActivity$4 -> com.socmaps.ui.cz:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     java.lang.String[] val$relArray -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.GeoTagActivity$5 -> com.socmaps.ui.cz:
+com.socmaps.ui.GeoTagActivity$5 -> com.socmaps.ui.da:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$proficPicContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.GeoTagActivity$6 -> com.socmaps.ui.da:
+com.socmaps.ui.GeoTagActivity$6 -> com.socmaps.ui.db:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     java.lang.String val$id -> b
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.socmaps.ui.GeoTagActivity$7 -> com.socmaps.ui.db:
+com.socmaps.ui.GeoTagActivity$7 -> com.socmaps.ui.dc:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     android.app.Dialog val$dialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.GeoTagActivity$8 -> com.socmaps.ui.dc:
+com.socmaps.ui.GeoTagActivity$8 -> com.socmaps.ui.dd:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     android.widget.EditText val$etInputText -> b
     int val$type -> c
     android.app.Dialog val$dialog -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.GeoTagActivity$9 -> com.socmaps.ui.dd:
+com.socmaps.ui.GeoTagActivity$9 -> com.socmaps.ui.de:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.GeoTagActivity$ButtonActionListener -> com.socmaps.ui.de:
+com.socmaps.ui.GeoTagActivity$ButtonActionListener -> com.socmaps.ui.df:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.GeoTagActivity$LocationAddressHandler -> com.socmaps.ui.df:
+com.socmaps.ui.GeoTagActivity$LocationAddressHandler -> com.socmaps.ui.dg:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.GeoTagActivity$LocationSelectionListener -> com.socmaps.ui.dg:
+com.socmaps.ui.GeoTagActivity$LocationSelectionListener -> com.socmaps.ui.dh:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.GeoTagActivity$NearByPlacesPickerhandler -> com.socmaps.ui.dh:
+com.socmaps.ui.GeoTagActivity$NearByPlacesPickerhandler -> com.socmaps.ui.di:
     com.socmaps.ui.GeoTagActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
 com.socmaps.ui.HomeActivity -> com.socmaps.ui.HomeActivity:
@@ -6119,187 +6122,187 @@ com.socmaps.ui.HomeActivity -> com.socmaps.ui.HomeActivity:
     void access$63(com.socmaps.ui.HomeActivity,java.lang.String,java.lang.String) -> a
     android.app.Dialog access$64(com.socmaps.ui.HomeActivity) -> T
     java.lang.Runnable access$68(com.socmaps.ui.HomeActivity) -> U
-com.socmaps.ui.HomeActivity$1 -> com.socmaps.ui.di:
+com.socmaps.ui.HomeActivity$1 -> com.socmaps.ui.dj:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$10 -> com.socmaps.ui.dj:
+com.socmaps.ui.HomeActivity$10 -> com.socmaps.ui.dk:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$11 -> com.socmaps.ui.dk:
+com.socmaps.ui.HomeActivity$11 -> com.socmaps.ui.dl:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$12 -> com.socmaps.ui.dl:
+com.socmaps.ui.HomeActivity$12 -> com.socmaps.ui.dm:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$13 -> com.socmaps.ui.dm:
+com.socmaps.ui.HomeActivity$13 -> com.socmaps.ui.dn:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$14 -> com.socmaps.ui.dn:
+com.socmaps.ui.HomeActivity$14 -> com.socmaps.ui.do:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$15 -> com.socmaps.ui.do:
+com.socmaps.ui.HomeActivity$15 -> com.socmaps.ui.dp:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$16 -> com.socmaps.ui.dp:
+com.socmaps.ui.HomeActivity$16 -> com.socmaps.ui.dq:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onSuccess(com.socmaps.images.singly.ImageInfo,android.graphics.Bitmap) -> a
     void onFailure$6767596d(com.socmaps.images.singly.ImageInfo) -> a
-com.socmaps.ui.HomeActivity$16$1 -> com.socmaps.ui.dq:
+com.socmaps.ui.HomeActivity$16$1 -> com.socmaps.ui.dr:
     com.socmaps.ui.HomeActivity$16 this$1 -> a
     com.socmaps.images.singly.ImageInfo val$imageInfo -> b
     android.graphics.Bitmap val$bitmap -> c
     void run() -> run
     com.socmaps.ui.HomeActivity$16 access$0(com.socmaps.ui.HomeActivity$16$1) -> a
-com.socmaps.ui.HomeActivity$16$1$1 -> com.socmaps.ui.dr:
+com.socmaps.ui.HomeActivity$16$1$1 -> com.socmaps.ui.ds:
     com.socmaps.ui.HomeActivity$16$1 this$2 -> a
     com.socmaps.images.singly.ImageInfo val$imageInfo -> b
     android.graphics.Bitmap val$bitmap -> c
     void run() -> run
-com.socmaps.ui.HomeActivity$17 -> com.socmaps.ui.ds:
+com.socmaps.ui.HomeActivity$17 -> com.socmaps.ui.dt:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$18 -> com.socmaps.ui.dt:
+com.socmaps.ui.HomeActivity$18 -> com.socmaps.ui.du:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$19 -> com.socmaps.ui.du:
+com.socmaps.ui.HomeActivity$19 -> com.socmaps.ui.dv:
     com.socmaps.ui.HomeActivity this$0 -> a
     java.lang.String val$regId -> b
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.socmaps.ui.HomeActivity$2 -> com.socmaps.ui.dv:
+com.socmaps.ui.HomeActivity$2 -> com.socmaps.ui.dw:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$20 -> com.socmaps.ui.dw:
+com.socmaps.ui.HomeActivity$20 -> com.socmaps.ui.dx:
     com.socmaps.ui.HomeActivity this$0 -> a
     boolean handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.HomeActivity$21 -> com.socmaps.ui.dx:
+com.socmaps.ui.HomeActivity$21 -> com.socmaps.ui.dy:
     android.os.Message msg -> a
     android.location.Location location -> b
     com.socmaps.ui.HomeActivity this$0 -> c
     void run() -> run
-com.socmaps.ui.HomeActivity$22 -> com.socmaps.ui.dy:
+com.socmaps.ui.HomeActivity$22 -> com.socmaps.ui.dz:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.HomeActivity$23 -> com.socmaps.ui.dz:
+com.socmaps.ui.HomeActivity$23 -> com.socmaps.ui.ea:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.HomeActivity$24 -> com.socmaps.ui.ea:
+com.socmaps.ui.HomeActivity$24 -> com.socmaps.ui.eb:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$25 -> com.socmaps.ui.eb:
-    com.socmaps.ui.HomeActivity this$0 -> a
-    com.socmaps.entity.Place val$item -> b
-    void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$26 -> com.socmaps.ui.ec:
+com.socmaps.ui.HomeActivity$25 -> com.socmaps.ui.ec:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Place val$item -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$27 -> com.socmaps.ui.ed:
+com.socmaps.ui.HomeActivity$26 -> com.socmaps.ui.ed:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Place val$item -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$28 -> com.socmaps.ui.ee:
+com.socmaps.ui.HomeActivity$27 -> com.socmaps.ui.ee:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Place val$item -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$29 -> com.socmaps.ui.ef:
+com.socmaps.ui.HomeActivity$28 -> com.socmaps.ui.ef:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Place val$item -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$3 -> com.socmaps.ui.eg:
+com.socmaps.ui.HomeActivity$29 -> com.socmaps.ui.eg:
+    com.socmaps.ui.HomeActivity this$0 -> a
+    com.socmaps.entity.Place val$item -> b
+    void onClick(android.view.View) -> onClick
+com.socmaps.ui.HomeActivity$3 -> com.socmaps.ui.eh:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$30 -> com.socmaps.ui.eh:
+com.socmaps.ui.HomeActivity$30 -> com.socmaps.ui.ei:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$31 -> com.socmaps.ui.ei:
+com.socmaps.ui.HomeActivity$31 -> com.socmaps.ui.ej:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Place val$item -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$32 -> com.socmaps.ui.ej:
+com.socmaps.ui.HomeActivity$32 -> com.socmaps.ui.ek:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$33 -> com.socmaps.ui.ek:
-    com.socmaps.ui.HomeActivity this$0 -> a
-    com.socmaps.entity.People val$people -> b
-    void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$34 -> com.socmaps.ui.el:
-    com.socmaps.ui.HomeActivity this$0 -> a
-    void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$35 -> com.socmaps.ui.em:
+com.socmaps.ui.HomeActivity$33 -> com.socmaps.ui.el:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.People val$people -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$36 -> com.socmaps.ui.en:
+com.socmaps.ui.HomeActivity$34 -> com.socmaps.ui.em:
+    com.socmaps.ui.HomeActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+com.socmaps.ui.HomeActivity$35 -> com.socmaps.ui.en:
+    com.socmaps.ui.HomeActivity this$0 -> a
+    com.socmaps.entity.People val$people -> b
+    void onClick(android.view.View) -> onClick
+com.socmaps.ui.HomeActivity$36 -> com.socmaps.ui.eo:
     com.socmaps.ui.HomeActivity this$0 -> a
     java.lang.String val$userId -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$37 -> com.socmaps.ui.eo:
+com.socmaps.ui.HomeActivity$37 -> com.socmaps.ui.ep:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.People val$people -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$38 -> com.socmaps.ui.ep:
+com.socmaps.ui.HomeActivity$38 -> com.socmaps.ui.eq:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$39 -> com.socmaps.ui.eq:
+com.socmaps.ui.HomeActivity$39 -> com.socmaps.ui.er:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.People val$people -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$4 -> com.socmaps.ui.er:
+com.socmaps.ui.HomeActivity$4 -> com.socmaps.ui.es:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$43 -> com.socmaps.ui.es:
+com.socmaps.ui.HomeActivity$43 -> com.socmaps.ui.et:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Event val$event -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$44 -> com.socmaps.ui.et:
+com.socmaps.ui.HomeActivity$44 -> com.socmaps.ui.eu:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.Event val$event -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$45 -> com.socmaps.ui.eu:
+com.socmaps.ui.HomeActivity$45 -> com.socmaps.ui.ev:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$46 -> com.socmaps.ui.ev:
+com.socmaps.ui.HomeActivity$46 -> com.socmaps.ui.ew:
     com.socmaps.ui.HomeActivity this$0 -> a
     com.socmaps.entity.People val$item -> b
     android.widget.EditText val$msgEditText -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$47 -> com.socmaps.ui.ew:
+com.socmaps.ui.HomeActivity$47 -> com.socmaps.ui.ex:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.HomeActivity$5 -> com.socmaps.ui.ex:
+com.socmaps.ui.HomeActivity$5 -> com.socmaps.ui.ey:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$52 -> com.socmaps.ui.ey:
+com.socmaps.ui.HomeActivity$52 -> com.socmaps.ui.ez:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$6 -> com.socmaps.ui.ez:
+com.socmaps.ui.HomeActivity$6 -> com.socmaps.ui.fa:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$7 -> com.socmaps.ui.fa:
+com.socmaps.ui.HomeActivity$7 -> com.socmaps.ui.fb:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$8 -> com.socmaps.ui.fb:
+com.socmaps.ui.HomeActivity$8 -> com.socmaps.ui.fc:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$9 -> com.socmaps.ui.fc:
+com.socmaps.ui.HomeActivity$9 -> com.socmaps.ui.fd:
     com.socmaps.ui.HomeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.HomeActivity$AppRequestsListener -> com.socmaps.ui.fd:
+com.socmaps.ui.HomeActivity$AppRequestsListener -> com.socmaps.ui.fe:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onComplete(android.os.Bundle) -> a
     void onFacebookError(com.facebook.android.FacebookError) -> a
     void onCancel() -> a_
-com.socmaps.ui.HomeActivity$BackProcessCallBackListener -> com.socmaps.ui.fe:
+com.socmaps.ui.HomeActivity$BackProcessCallBackListener -> com.socmaps.ui.ff:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.HomeActivity$BottomDrawerListener -> com.socmaps.ui.ff:
+com.socmaps.ui.HomeActivity$BottomDrawerListener -> com.socmaps.ui.fg:
     void onDrawerClosed() -> a
     void onDrawerOpened() -> b
-com.socmaps.ui.HomeActivity$SearchResultDialoghandler -> com.socmaps.ui.fg:
+com.socmaps.ui.HomeActivity$SearchResultDialoghandler -> com.socmaps.ui.fh:
     com.socmaps.ui.HomeActivity this$0 -> a
     void onPlaceSelect$645b3fe5(java.lang.Object) -> a
-com.socmaps.ui.HomeActivity$TopDrawerListener -> com.socmaps.ui.fh:
+com.socmaps.ui.HomeActivity$TopDrawerListener -> com.socmaps.ui.fi:
     void onDrawerClosed() -> a
     void onDrawerOpened() -> b
 com.socmaps.ui.InformationSharingSettingsActivity -> com.socmaps.ui.InformationSharingSettingsActivity:
@@ -6362,63 +6365,63 @@ com.socmaps.ui.InformationSharingSettingsActivity -> com.socmaps.ui.InformationS
     void access$1(com.socmaps.ui.InformationSharingSettingsActivity,int,java.lang.String) -> a
     void access$2(com.socmaps.ui.InformationSharingSettingsActivity) -> b
     void access$3(com.socmaps.ui.InformationSharingSettingsActivity,int,java.lang.String) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$1 -> com.socmaps.ui.fi:
+com.socmaps.ui.InformationSharingSettingsActivity$1 -> com.socmaps.ui.fj:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.InformationSharingSettingsActivity$10 -> com.socmaps.ui.fj:
+com.socmaps.ui.InformationSharingSettingsActivity$10 -> com.socmaps.ui.fk:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$11 -> com.socmaps.ui.fk:
+com.socmaps.ui.InformationSharingSettingsActivity$11 -> com.socmaps.ui.fl:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$12 -> com.socmaps.ui.fl:
+com.socmaps.ui.InformationSharingSettingsActivity$12 -> com.socmaps.ui.fm:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$13 -> com.socmaps.ui.fm:
+com.socmaps.ui.InformationSharingSettingsActivity$13 -> com.socmaps.ui.fn:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$14 -> com.socmaps.ui.fn:
+com.socmaps.ui.InformationSharingSettingsActivity$14 -> com.socmaps.ui.fo:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$15 -> com.socmaps.ui.fo:
+com.socmaps.ui.InformationSharingSettingsActivity$15 -> com.socmaps.ui.fp:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$16 -> com.socmaps.ui.fp:
+com.socmaps.ui.InformationSharingSettingsActivity$16 -> com.socmaps.ui.fq:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$2 -> com.socmaps.ui.fq:
+com.socmaps.ui.InformationSharingSettingsActivity$2 -> com.socmaps.ui.fr:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.InformationSharingSettingsActivity$3 -> com.socmaps.ui.fr:
+com.socmaps.ui.InformationSharingSettingsActivity$3 -> com.socmaps.ui.fs:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.InformationSharingSettingsActivity$4 -> com.socmaps.ui.fs:
+com.socmaps.ui.InformationSharingSettingsActivity$4 -> com.socmaps.ui.ft:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.InformationSharingSettingsActivity$5 -> com.socmaps.ui.ft:
+com.socmaps.ui.InformationSharingSettingsActivity$5 -> com.socmaps.ui.fu:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$6 -> com.socmaps.ui.fu:
+com.socmaps.ui.InformationSharingSettingsActivity$6 -> com.socmaps.ui.fv:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$7 -> com.socmaps.ui.fv:
+com.socmaps.ui.InformationSharingSettingsActivity$7 -> com.socmaps.ui.fw:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$8 -> com.socmaps.ui.fw:
+com.socmaps.ui.InformationSharingSettingsActivity$8 -> com.socmaps.ui.fx:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.InformationSharingSettingsActivity$9 -> com.socmaps.ui.fx:
+com.socmaps.ui.InformationSharingSettingsActivity$9 -> com.socmaps.ui.fy:
     com.socmaps.ui.InformationSharingSettingsActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
@@ -6448,16 +6451,16 @@ com.socmaps.ui.LayerPreferencesActivity -> com.socmaps.ui.LayerPreferencesActivi
     java.lang.Runnable access$1(com.socmaps.ui.LayerPreferencesActivity) -> a
     void access$2(com.socmaps.ui.LayerPreferencesActivity) -> b
     void access$3(com.socmaps.ui.LayerPreferencesActivity,int,java.lang.String) -> b
-com.socmaps.ui.LayerPreferencesActivity$1 -> com.socmaps.ui.fy:
+com.socmaps.ui.LayerPreferencesActivity$1 -> com.socmaps.ui.fz:
     com.socmaps.ui.LayerPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LayerPreferencesActivity$2 -> com.socmaps.ui.fz:
+com.socmaps.ui.LayerPreferencesActivity$2 -> com.socmaps.ui.ga:
     com.socmaps.ui.LayerPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LayerPreferencesActivity$3 -> com.socmaps.ui.ga:
+com.socmaps.ui.LayerPreferencesActivity$3 -> com.socmaps.ui.gb:
     com.socmaps.ui.LayerPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LayerPreferencesActivity$4 -> com.socmaps.ui.gb:
+com.socmaps.ui.LayerPreferencesActivity$4 -> com.socmaps.ui.gc:
     com.socmaps.ui.LayerPreferencesActivity this$0 -> a
     void run() -> run
 com.socmaps.ui.ListViewActivity -> com.socmaps.ui.ListViewActivity:
@@ -6531,20 +6534,20 @@ com.socmaps.ui.ListViewActivity -> com.socmaps.ui.ListViewActivity:
     com.socmaps.images.ImageFetcher access$1(com.socmaps.ui.ListViewActivity) -> a
     com.socmaps.widget.ListComparator access$2(com.socmaps.ui.ListViewActivity) -> b
     android.content.Context access$3(com.socmaps.ui.ListViewActivity) -> c
-com.socmaps.ui.ListViewActivity$1 -> com.socmaps.ui.gc:
+com.socmaps.ui.ListViewActivity$1 -> com.socmaps.ui.gd:
     com.socmaps.ui.ListViewActivity this$0 -> a
     void onLocationChanged(android.location.Location) -> onLocationChanged
     void onProviderDisabled(java.lang.String) -> onProviderDisabled
     void onProviderEnabled(java.lang.String) -> onProviderEnabled
     void onStatusChanged(java.lang.String,int,android.os.Bundle) -> onStatusChanged
-com.socmaps.ui.ListViewActivity$BackProcessCallBackListener -> com.socmaps.ui.gd:
+com.socmaps.ui.ListViewActivity$BackProcessCallBackListener -> com.socmaps.ui.ge:
     com.socmaps.ui.ListViewActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.ListViewActivity$BottomDrawerListener -> com.socmaps.ui.ge:
+com.socmaps.ui.ListViewActivity$BottomDrawerListener -> com.socmaps.ui.gf:
     com.socmaps.ui.ListViewActivity this$0 -> a
     void onDrawerClosed() -> a
     void onDrawerOpened() -> b
-com.socmaps.ui.ListViewActivity$ContentListAdapter -> com.socmaps.ui.gf:
+com.socmaps.ui.ListViewActivity$ContentListAdapter -> com.socmaps.ui.gg:
     java.util.List items -> b
     android.content.Context context -> c
     com.socmaps.ui.ListViewActivity this$0 -> a
@@ -6554,10 +6557,10 @@ com.socmaps.ui.ListViewActivity$ContentListAdapter -> com.socmaps.ui.gf:
     java.lang.Object getItem(int) -> getItem
     long getItemId(int) -> getItemId
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.socmaps.ui.ListViewActivity$SearchResultDialoghandler -> com.socmaps.ui.gg:
+com.socmaps.ui.ListViewActivity$SearchResultDialoghandler -> com.socmaps.ui.gh:
     com.socmaps.ui.ListViewActivity this$0 -> a
     void onPlaceSelect$645b3fe5(java.lang.Object) -> a
-com.socmaps.ui.ListViewActivity$TopDrawerListener -> com.socmaps.ui.gh:
+com.socmaps.ui.ListViewActivity$TopDrawerListener -> com.socmaps.ui.gi:
     com.socmaps.ui.ListViewActivity this$0 -> a
     void onDrawerClosed() -> a
     void onDrawerOpened() -> b
@@ -6633,38 +6636,38 @@ com.socmaps.ui.LocationSharingSettingsActivity -> com.socmaps.ui.LocationSharing
     java.lang.Runnable access$11(com.socmaps.ui.LocationSharingSettingsActivity) -> g
     void access$12(com.socmaps.ui.LocationSharingSettingsActivity,int,java.lang.String) -> c
     void access$13$1e446e87(com.socmaps.ui.LocationSharingSettingsActivity,com.socmaps.entity.Place) -> a
-com.socmaps.ui.LocationSharingSettingsActivity$1 -> com.socmaps.ui.gi:
+com.socmaps.ui.LocationSharingSettingsActivity$1 -> com.socmaps.ui.gj:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
-com.socmaps.ui.LocationSharingSettingsActivity$2 -> com.socmaps.ui.gj:
+com.socmaps.ui.LocationSharingSettingsActivity$2 -> com.socmaps.ui.gk:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LocationSharingSettingsActivity$3 -> com.socmaps.ui.gk:
+com.socmaps.ui.LocationSharingSettingsActivity$3 -> com.socmaps.ui.gl:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LocationSharingSettingsActivity$4 -> com.socmaps.ui.gl:
+com.socmaps.ui.LocationSharingSettingsActivity$4 -> com.socmaps.ui.gm:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LocationSharingSettingsActivity$5 -> com.socmaps.ui.gm:
+com.socmaps.ui.LocationSharingSettingsActivity$5 -> com.socmaps.ui.gn:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LocationSharingSettingsActivity$6 -> com.socmaps.ui.gn:
+com.socmaps.ui.LocationSharingSettingsActivity$6 -> com.socmaps.ui.go:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LocationSharingSettingsActivity$7 -> com.socmaps.ui.go:
+com.socmaps.ui.LocationSharingSettingsActivity$7 -> com.socmaps.ui.gp:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LocationSharingSettingsActivity$8 -> com.socmaps.ui.gp:
+com.socmaps.ui.LocationSharingSettingsActivity$8 -> com.socmaps.ui.gq:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     android.app.Dialog val$dialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LocationSharingSettingsActivity$9 -> com.socmaps.ui.gq:
+com.socmaps.ui.LocationSharingSettingsActivity$9 -> com.socmaps.ui.gr:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     android.widget.EditText val$etInputText -> b
     com.socmaps.entity.Place val$place -> c
     android.app.Dialog val$dialog -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LocationSharingSettingsActivity$PeoplePickerHandler -> com.socmaps.ui.gr:
+com.socmaps.ui.LocationSharingSettingsActivity$PeoplePickerHandler -> com.socmaps.ui.gs:
     com.socmaps.ui.LocationSharingSettingsActivity this$0 -> a
     void onSelect(java.lang.String,java.util.List,java.util.List,java.util.List,java.util.List) -> a
 com.socmaps.ui.LoginActivity -> com.socmaps.ui.LoginActivity:
@@ -6718,62 +6721,62 @@ com.socmaps.ui.LoginActivity -> com.socmaps.ui.LoginActivity:
     void access$14(com.socmaps.ui.LoginActivity,android.app.ProgressDialog) -> a
     void access$15(com.socmaps.ui.LoginActivity) -> h
     java.lang.Runnable access$16(com.socmaps.ui.LoginActivity) -> i
-com.socmaps.ui.LoginActivity$1 -> com.socmaps.ui.gs:
+com.socmaps.ui.LoginActivity$1 -> com.socmaps.ui.gt:
     com.socmaps.ui.LoginActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$10 -> com.socmaps.ui.gt:
+com.socmaps.ui.LoginActivity$10 -> com.socmaps.ui.gu:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onDismiss(android.content.DialogInterface) -> onDismiss
-com.socmaps.ui.LoginActivity$11 -> com.socmaps.ui.gu:
+com.socmaps.ui.LoginActivity$11 -> com.socmaps.ui.gv:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LoginActivity$12 -> com.socmaps.ui.gv:
+com.socmaps.ui.LoginActivity$12 -> com.socmaps.ui.gw:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LoginActivity$13 -> com.socmaps.ui.gw:
+com.socmaps.ui.LoginActivity$13 -> com.socmaps.ui.gx:
     com.socmaps.ui.LoginActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$2 -> com.socmaps.ui.gx:
+com.socmaps.ui.LoginActivity$2 -> com.socmaps.ui.gy:
     com.socmaps.ui.LoginActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$3 -> com.socmaps.ui.gy:
+com.socmaps.ui.LoginActivity$3 -> com.socmaps.ui.gz:
     com.socmaps.ui.LoginActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$4 -> com.socmaps.ui.gz:
+com.socmaps.ui.LoginActivity$4 -> com.socmaps.ui.ha:
     com.socmaps.ui.LoginActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$5 -> com.socmaps.ui.ha:
+com.socmaps.ui.LoginActivity$5 -> com.socmaps.ui.hb:
     com.socmaps.ui.LoginActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$6 -> com.socmaps.ui.hb:
+com.socmaps.ui.LoginActivity$6 -> com.socmaps.ui.hc:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LoginActivity$7 -> com.socmaps.ui.hc:
+com.socmaps.ui.LoginActivity$7 -> com.socmaps.ui.hd:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LoginActivity$8 -> com.socmaps.ui.hd:
+com.socmaps.ui.LoginActivity$8 -> com.socmaps.ui.he:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.LoginActivity$9 -> com.socmaps.ui.he:
+com.socmaps.ui.LoginActivity$9 -> com.socmaps.ui.hf:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onClick(android.view.View) -> onClick
     com.socmaps.ui.LoginActivity access$0(com.socmaps.ui.LoginActivity$9) -> a
-com.socmaps.ui.LoginActivity$9$1 -> com.socmaps.ui.hf:
+com.socmaps.ui.LoginActivity$9$1 -> com.socmaps.ui.hg:
     com.socmaps.ui.LoginActivity$9 this$1 -> a
     void run() -> run
-com.socmaps.ui.LoginActivity$FbAPIsAuthListener -> com.socmaps.ui.hg:
+com.socmaps.ui.LoginActivity$FbAPIsAuthListener -> com.socmaps.ui.hh:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onAuthSucceed() -> a
     void onAuthFail(java.lang.String) -> a
-com.socmaps.ui.LoginActivity$FbAPIsLogoutListener -> com.socmaps.ui.hh:
+com.socmaps.ui.LoginActivity$FbAPIsLogoutListener -> com.socmaps.ui.hi:
     com.socmaps.ui.LoginActivity this$0 -> a
-com.socmaps.ui.LoginActivity$LoginDialogListener -> com.socmaps.ui.hi:
+com.socmaps.ui.LoginActivity$LoginDialogListener -> com.socmaps.ui.hj:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onComplete(android.os.Bundle) -> a
     void onFacebookError(com.facebook.android.FacebookError) -> a
     void onError(com.facebook.android.DialogError) -> a
     void onCancel() -> a_
-com.socmaps.ui.LoginActivity$UserRequestListener -> com.socmaps.ui.hj:
+com.socmaps.ui.LoginActivity$UserRequestListener -> com.socmaps.ui.hk:
     com.socmaps.ui.LoginActivity this$0 -> a
     void onComplete$645b3fe5(java.lang.String) -> a
 com.socmaps.ui.MeetupRequestListActivity -> com.socmaps.ui.MeetupRequestListActivity:
@@ -6808,47 +6811,47 @@ com.socmaps.ui.MeetupRequestListActivity -> com.socmaps.ui.MeetupRequestListActi
     java.lang.Runnable access$3(com.socmaps.ui.MeetupRequestListActivity) -> c
     void access$4(com.socmaps.ui.MeetupRequestListActivity,int,java.lang.String) -> b
     void access$5(com.socmaps.ui.MeetupRequestListActivity,android.view.View,java.lang.String,java.lang.String) -> a
-com.socmaps.ui.MeetupRequestListActivity$1 -> com.socmaps.ui.hk:
+com.socmaps.ui.MeetupRequestListActivity$1 -> com.socmaps.ui.hl:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MeetupRequestListActivity$2 -> com.socmaps.ui.hl:
+com.socmaps.ui.MeetupRequestListActivity$2 -> com.socmaps.ui.hm:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MeetupRequestListActivity$3 -> com.socmaps.ui.hm:
+com.socmaps.ui.MeetupRequestListActivity$3 -> com.socmaps.ui.hn:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MeetupRequestListActivity$4 -> com.socmaps.ui.hn:
+com.socmaps.ui.MeetupRequestListActivity$4 -> com.socmaps.ui.ho:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MeetupRequestListActivity$5 -> com.socmaps.ui.ho:
+com.socmaps.ui.MeetupRequestListActivity$5 -> com.socmaps.ui.hp:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     android.view.View val$itemView -> b
     java.lang.String val$requestId -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MeetupRequestListActivity$6 -> com.socmaps.ui.hp:
+com.socmaps.ui.MeetupRequestListActivity$6 -> com.socmaps.ui.hq:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     android.view.View val$itemView -> b
     java.lang.String val$requestId -> c
     void onClick(android.view.View) -> onClick
     com.socmaps.ui.MeetupRequestListActivity access$0(com.socmaps.ui.MeetupRequestListActivity$6) -> a
-com.socmaps.ui.MeetupRequestListActivity$6$1 -> com.socmaps.ui.hq:
+com.socmaps.ui.MeetupRequestListActivity$6$1 -> com.socmaps.ui.hr:
     com.socmaps.ui.MeetupRequestListActivity$6 this$1 -> a
     android.view.View val$itemView -> b
     java.lang.String val$requestId -> c
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.MeetupRequestListActivity$6$2 -> com.socmaps.ui.hr:
+com.socmaps.ui.MeetupRequestListActivity$6$2 -> com.socmaps.ui.hs:
     com.socmaps.ui.MeetupRequestListActivity$6 this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.MeetupRequestListActivity$7 -> com.socmaps.ui.hs:
+com.socmaps.ui.MeetupRequestListActivity$7 -> com.socmaps.ui.ht:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     android.view.View val$itemView -> b
     java.lang.String val$requestId -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MeetupRequestListActivity$8 -> com.socmaps.ui.ht:
+com.socmaps.ui.MeetupRequestListActivity$8 -> com.socmaps.ui.hu:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     com.socmaps.entity.MeetupRequest val$meetupRequest -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MeetupRequestListActivity$ButtonActionListener -> com.socmaps.ui.hu:
+com.socmaps.ui.MeetupRequestListActivity$ButtonActionListener -> com.socmaps.ui.hv:
     com.socmaps.ui.MeetupRequestListActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.MeetupRequestNewActivity -> com.socmaps.ui.MeetupRequestNewActivity:
@@ -6923,38 +6926,38 @@ com.socmaps.ui.MeetupRequestNewActivity -> com.socmaps.ui.MeetupRequestNewActivi
     void access$13(com.socmaps.ui.MeetupRequestNewActivity) -> m
     void access$14(com.socmaps.ui.MeetupRequestNewActivity) -> n
     void access$15(com.socmaps.ui.MeetupRequestNewActivity,java.lang.String,java.lang.String) -> a
-com.socmaps.ui.MeetupRequestNewActivity$1 -> com.socmaps.ui.hv:
+com.socmaps.ui.MeetupRequestNewActivity$1 -> com.socmaps.ui.hw:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.MeetupRequestNewActivity$2 -> com.socmaps.ui.hw:
+com.socmaps.ui.MeetupRequestNewActivity$2 -> com.socmaps.ui.hx:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MeetupRequestNewActivity$3 -> com.socmaps.ui.hx:
+com.socmaps.ui.MeetupRequestNewActivity$3 -> com.socmaps.ui.hy:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MeetupRequestNewActivity$4 -> com.socmaps.ui.hy:
+com.socmaps.ui.MeetupRequestNewActivity$4 -> com.socmaps.ui.hz:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$proficPicContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MeetupRequestNewActivity$5 -> com.socmaps.ui.hz:
+com.socmaps.ui.MeetupRequestNewActivity$5 -> com.socmaps.ui.ia:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     java.lang.String val$id -> b
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.socmaps.ui.MeetupRequestNewActivity$ButtonActionListener -> com.socmaps.ui.ia:
+com.socmaps.ui.MeetupRequestNewActivity$ButtonActionListener -> com.socmaps.ui.ib:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MeetupRequestNewActivity$LocationAddressHandler -> com.socmaps.ui.ib:
+com.socmaps.ui.MeetupRequestNewActivity$LocationAddressHandler -> com.socmaps.ui.ic:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.MeetupRequestNewActivity$LocationSelectionListener -> com.socmaps.ui.ic:
+com.socmaps.ui.MeetupRequestNewActivity$LocationSelectionListener -> com.socmaps.ui.id:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.MeetupRequestNewActivity$NearByPlacesPickerhandler -> com.socmaps.ui.id:
+com.socmaps.ui.MeetupRequestNewActivity$NearByPlacesPickerhandler -> com.socmaps.ui.ie:
     com.socmaps.ui.MeetupRequestNewActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
 com.socmaps.ui.MessageActivity -> com.socmaps.ui.MessageActivity:
@@ -6970,7 +6973,7 @@ com.socmaps.ui.MessageActivity -> com.socmaps.ui.MessageActivity:
     void onResume() -> onResume
     void onPause() -> onPause
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-com.socmaps.ui.MessageActivity$ButtonActionListener -> com.socmaps.ui.ie:
+com.socmaps.ui.MessageActivity$ButtonActionListener -> com.socmaps.ui.if:
     com.socmaps.ui.MessageActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.MessageComposeActivity -> com.socmaps.ui.MessageComposeActivity:
@@ -7026,27 +7029,27 @@ com.socmaps.ui.MessageComposeActivity -> com.socmaps.ui.MessageComposeActivity:
     void access$13(com.socmaps.ui.MessageComposeActivity) -> m
     android.widget.Button access$14(com.socmaps.ui.MessageComposeActivity) -> n
     void access$15(com.socmaps.ui.MessageComposeActivity) -> o
-com.socmaps.ui.MessageComposeActivity$1 -> com.socmaps.ui.if:
+com.socmaps.ui.MessageComposeActivity$1 -> com.socmaps.ui.ig:
     com.socmaps.ui.MessageComposeActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.MessageComposeActivity$2 -> com.socmaps.ui.ig:
+com.socmaps.ui.MessageComposeActivity$2 -> com.socmaps.ui.ih:
     com.socmaps.ui.MessageComposeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageComposeActivity$3 -> com.socmaps.ui.ih:
+com.socmaps.ui.MessageComposeActivity$3 -> com.socmaps.ui.ii:
     com.socmaps.ui.MessageComposeActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageComposeActivity$4 -> com.socmaps.ui.ii:
+com.socmaps.ui.MessageComposeActivity$4 -> com.socmaps.ui.ij:
     com.socmaps.ui.MessageComposeActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$proficPicContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MessageComposeActivity$5 -> com.socmaps.ui.ij:
+com.socmaps.ui.MessageComposeActivity$5 -> com.socmaps.ui.ik:
     com.socmaps.ui.MessageComposeActivity this$0 -> a
     java.lang.String val$id -> b
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.socmaps.ui.MessageComposeActivity$ButtonActionListener -> com.socmaps.ui.ik:
+com.socmaps.ui.MessageComposeActivity$ButtonActionListener -> com.socmaps.ui.il:
     com.socmaps.ui.MessageComposeActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.MessageConversationActivity -> com.socmaps.ui.MessageConversationActivity:
@@ -7090,33 +7093,33 @@ com.socmaps.ui.MessageConversationActivity -> com.socmaps.ui.MessageConversation
     void access$5(com.socmaps.ui.MessageConversationActivity) -> d
     void access$6(com.socmaps.ui.MessageConversationActivity) -> e
     void access$7(com.socmaps.ui.MessageConversationActivity) -> f
-com.socmaps.ui.MessageConversationActivity$1 -> com.socmaps.ui.il:
+com.socmaps.ui.MessageConversationActivity$1 -> com.socmaps.ui.im:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$2 -> com.socmaps.ui.im:
+com.socmaps.ui.MessageConversationActivity$2 -> com.socmaps.ui.in:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$3 -> com.socmaps.ui.in:
+com.socmaps.ui.MessageConversationActivity$3 -> com.socmaps.ui.io:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$4 -> com.socmaps.ui.io:
+com.socmaps.ui.MessageConversationActivity$4 -> com.socmaps.ui.ip:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$5 -> com.socmaps.ui.ip:
+com.socmaps.ui.MessageConversationActivity$5 -> com.socmaps.ui.iq:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$6 -> com.socmaps.ui.iq:
+com.socmaps.ui.MessageConversationActivity$6 -> com.socmaps.ui.ir:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     com.socmaps.entity.MessageEntity val$mEntity -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MessageConversationActivity$7 -> com.socmaps.ui.ir:
+com.socmaps.ui.MessageConversationActivity$7 -> com.socmaps.ui.is:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     android.os.Handler val$handler -> b
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$7$1 -> com.socmaps.ui.is:
+com.socmaps.ui.MessageConversationActivity$7$1 -> com.socmaps.ui.it:
     com.socmaps.ui.MessageConversationActivity$7 this$1 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationActivity$ButtonActionListener -> com.socmaps.ui.it:
+com.socmaps.ui.MessageConversationActivity$ButtonActionListener -> com.socmaps.ui.iu:
     com.socmaps.ui.MessageConversationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.MessageConversationFromNotificationActivity -> com.socmaps.ui.MessageConversationFromNotificationActivity:
@@ -7169,39 +7172,39 @@ com.socmaps.ui.MessageConversationFromNotificationActivity -> com.socmaps.ui.Mes
     void access$6(com.socmaps.ui.MessageConversationFromNotificationActivity,int,java.lang.String) -> c
     void access$7(com.socmaps.ui.MessageConversationFromNotificationActivity) -> e
     void access$8(com.socmaps.ui.MessageConversationFromNotificationActivity) -> f
-com.socmaps.ui.MessageConversationFromNotificationActivity$1 -> com.socmaps.ui.iu:
+com.socmaps.ui.MessageConversationFromNotificationActivity$1 -> com.socmaps.ui.iv:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$2 -> com.socmaps.ui.iv:
+com.socmaps.ui.MessageConversationFromNotificationActivity$2 -> com.socmaps.ui.iw:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$3 -> com.socmaps.ui.iw:
+com.socmaps.ui.MessageConversationFromNotificationActivity$3 -> com.socmaps.ui.ix:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$4 -> com.socmaps.ui.ix:
+com.socmaps.ui.MessageConversationFromNotificationActivity$4 -> com.socmaps.ui.iy:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$5 -> com.socmaps.ui.iy:
+com.socmaps.ui.MessageConversationFromNotificationActivity$5 -> com.socmaps.ui.iz:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$6 -> com.socmaps.ui.iz:
+com.socmaps.ui.MessageConversationFromNotificationActivity$6 -> com.socmaps.ui.ja:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$7 -> com.socmaps.ui.ja:
+com.socmaps.ui.MessageConversationFromNotificationActivity$7 -> com.socmaps.ui.jb:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$8 -> com.socmaps.ui.jb:
+com.socmaps.ui.MessageConversationFromNotificationActivity$8 -> com.socmaps.ui.jc:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     com.socmaps.entity.MessageEntity val$mEntity -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MessageConversationFromNotificationActivity$9 -> com.socmaps.ui.jc:
+com.socmaps.ui.MessageConversationFromNotificationActivity$9 -> com.socmaps.ui.jd:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     android.os.Handler val$handler -> b
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$9$1 -> com.socmaps.ui.jd:
+com.socmaps.ui.MessageConversationFromNotificationActivity$9$1 -> com.socmaps.ui.je:
     com.socmaps.ui.MessageConversationFromNotificationActivity$9 this$1 -> a
     void run() -> run
-com.socmaps.ui.MessageConversationFromNotificationActivity$ButtonActionListener -> com.socmaps.ui.je:
+com.socmaps.ui.MessageConversationFromNotificationActivity$ButtonActionListener -> com.socmaps.ui.jf:
     com.socmaps.ui.MessageConversationFromNotificationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.MessageGroupActivity -> com.socmaps.ui.MessageGroupActivity:
@@ -7220,10 +7223,10 @@ com.socmaps.ui.MessageGroupActivity -> com.socmaps.ui.MessageGroupActivity:
     android.content.Context access$0(com.socmaps.ui.MessageGroupActivity) -> a
     java.lang.Runnable access$1(com.socmaps.ui.MessageGroupActivity) -> b
     void access$2(com.socmaps.ui.MessageGroupActivity,int,java.lang.String) -> a
-com.socmaps.ui.MessageGroupActivity$1 -> com.socmaps.ui.jf:
+com.socmaps.ui.MessageGroupActivity$1 -> com.socmaps.ui.jg:
     com.socmaps.ui.MessageGroupActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageGroupActivity$2 -> com.socmaps.ui.jg:
+com.socmaps.ui.MessageGroupActivity$2 -> com.socmaps.ui.jh:
     com.socmaps.ui.MessageGroupActivity this$0 -> a
     void run() -> run
 com.socmaps.ui.MessageListActivity -> com.socmaps.ui.MessageListActivity:
@@ -7246,14 +7249,14 @@ com.socmaps.ui.MessageListActivity -> com.socmaps.ui.MessageListActivity:
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
     void access$0(com.socmaps.ui.MessageListActivity) -> a
     android.content.Context access$1(com.socmaps.ui.MessageListActivity) -> b
-com.socmaps.ui.MessageListActivity$1 -> com.socmaps.ui.jh:
+com.socmaps.ui.MessageListActivity$1 -> com.socmaps.ui.ji:
     com.socmaps.ui.MessageListActivity this$0 -> a
     com.socmaps.entity.MessageEntity val$messageEntity -> b
     android.view.View val$v -> c
     java.lang.String val$threadId -> d
     java.lang.String val$messageId -> e
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MessageListActivity$ButtonActionListener -> com.socmaps.ui.ji:
+com.socmaps.ui.MessageListActivity$ButtonActionListener -> com.socmaps.ui.jj:
     com.socmaps.ui.MessageListActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.MessageNotificationActivity -> com.socmaps.ui.MessageNotificationActivity:
@@ -7274,23 +7277,23 @@ com.socmaps.ui.MessageNotificationActivity -> com.socmaps.ui.MessageNotification
     android.content.Context access$0(com.socmaps.ui.MessageNotificationActivity) -> a
     java.lang.Runnable access$1(com.socmaps.ui.MessageNotificationActivity) -> b
     void access$2(com.socmaps.ui.MessageNotificationActivity,int,java.lang.String) -> a
-com.socmaps.ui.MessageNotificationActivity$1 -> com.socmaps.ui.jj:
+com.socmaps.ui.MessageNotificationActivity$1 -> com.socmaps.ui.jk:
     com.socmaps.ui.MessageNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageNotificationActivity$2 -> com.socmaps.ui.jk:
+com.socmaps.ui.MessageNotificationActivity$2 -> com.socmaps.ui.jl:
     com.socmaps.ui.MessageNotificationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.MessageNotificationActivity$3 -> com.socmaps.ui.jl:
+com.socmaps.ui.MessageNotificationActivity$3 -> com.socmaps.ui.jm:
     com.socmaps.ui.MessageNotificationActivity this$0 -> a
     java.lang.String val$threadId -> b
     java.lang.String val$messageId -> c
     android.view.View val$v -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.MessageNotificationActivity$4 -> com.socmaps.ui.jm:
+com.socmaps.ui.MessageNotificationActivity$4 -> com.socmaps.ui.jn:
     com.socmaps.ui.MessageNotificationActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.MessageNotificationActivity$ButtonActionListener -> com.socmaps.ui.jn:
+com.socmaps.ui.MessageNotificationActivity$ButtonActionListener -> com.socmaps.ui.jo:
     com.socmaps.ui.MessageNotificationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.NewsFeedActivity -> com.socmaps.ui.NewsFeedActivity:
@@ -7310,23 +7313,23 @@ com.socmaps.ui.NewsFeedActivity -> com.socmaps.ui.NewsFeedActivity:
     com.socmaps.images.ImageFetcher access$1(com.socmaps.ui.NewsFeedActivity) -> b
     void access$2(com.socmaps.ui.NewsFeedActivity,java.lang.String,java.lang.String) -> a
     android.widget.ProgressBar access$3(com.socmaps.ui.NewsFeedActivity) -> c
-com.socmaps.ui.NewsFeedActivity$1 -> com.socmaps.ui.jo:
+com.socmaps.ui.NewsFeedActivity$1 -> com.socmaps.ui.jp:
     com.socmaps.ui.NewsFeedActivity this$0 -> a
     void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
-com.socmaps.ui.NewsFeedActivity$BackProcessCallBackListener -> com.socmaps.ui.jp:
+com.socmaps.ui.NewsFeedActivity$BackProcessCallBackListener -> com.socmaps.ui.jq:
     com.socmaps.ui.NewsFeedActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.NewsFeedActivity$MyWebViewClient -> com.socmaps.ui.jq:
+com.socmaps.ui.NewsFeedActivity$MyWebViewClient -> com.socmaps.ui.jr:
     com.socmaps.ui.NewsFeedActivity this$0 -> a
     void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
     void onPageStarted(android.webkit.WebView,java.lang.String,android.graphics.Bitmap) -> onPageStarted
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     com.socmaps.ui.NewsFeedActivity access$1(com.socmaps.ui.NewsFeedActivity$MyWebViewClient) -> a
-com.socmaps.ui.NewsFeedActivity$MyWebViewClient$1 -> com.socmaps.ui.jr:
+com.socmaps.ui.NewsFeedActivity$MyWebViewClient$1 -> com.socmaps.ui.js:
     com.socmaps.ui.NewsFeedActivity$MyWebViewClient this$1 -> a
     java.lang.String[] val$typeId -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.NewsFeedActivity$MyWebViewClient$2 -> com.socmaps.ui.js:
+com.socmaps.ui.NewsFeedActivity$MyWebViewClient$2 -> com.socmaps.ui.jt:
     com.socmaps.ui.NewsFeedActivity$MyWebViewClient this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.socmaps.ui.NotificationActivity -> com.socmaps.ui.NotificationActivity:
@@ -7347,7 +7350,7 @@ com.socmaps.ui.NotificationActivity -> com.socmaps.ui.NotificationActivity:
     void onResume() -> onResume
     void onPause() -> onPause
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-com.socmaps.ui.NotificationActivity$ButtonActionListener -> com.socmaps.ui.jt:
+com.socmaps.ui.NotificationActivity$ButtonActionListener -> com.socmaps.ui.ju:
     com.socmaps.ui.NotificationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.NotificationPreferencesActivity -> com.socmaps.ui.NotificationPreferencesActivity:
@@ -7389,27 +7392,27 @@ com.socmaps.ui.NotificationPreferencesActivity -> com.socmaps.ui.NotificationPre
     void access$3(com.socmaps.ui.NotificationPreferencesActivity) -> c
     void access$4(com.socmaps.ui.NotificationPreferencesActivity,int,java.lang.String) -> b
     void access$5(com.socmaps.ui.NotificationPreferencesActivity) -> d
-com.socmaps.ui.NotificationPreferencesActivity$1 -> com.socmaps.ui.ju:
+com.socmaps.ui.NotificationPreferencesActivity$1 -> com.socmaps.ui.jv:
     com.socmaps.ui.NotificationPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.NotificationPreferencesActivity$2 -> com.socmaps.ui.jv:
+com.socmaps.ui.NotificationPreferencesActivity$2 -> com.socmaps.ui.jw:
     com.socmaps.ui.NotificationPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.NotificationPreferencesActivity$3 -> com.socmaps.ui.jw:
+com.socmaps.ui.NotificationPreferencesActivity$3 -> com.socmaps.ui.jx:
     com.socmaps.ui.NotificationPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.NotificationPreferencesActivity$4 -> com.socmaps.ui.jx:
+com.socmaps.ui.NotificationPreferencesActivity$4 -> com.socmaps.ui.jy:
     com.socmaps.ui.NotificationPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.NotificationPreferencesActivity$5 -> com.socmaps.ui.jy:
+com.socmaps.ui.NotificationPreferencesActivity$5 -> com.socmaps.ui.jz:
     com.socmaps.ui.NotificationPreferencesActivity this$0 -> a
     void onCollapse(android.view.View,android.view.View) -> a
     void onExpand(android.view.View,android.view.View) -> b
-com.socmaps.ui.NotificationPreferencesActivity$6 -> com.socmaps.ui.jz:
+com.socmaps.ui.NotificationPreferencesActivity$6 -> com.socmaps.ui.ka:
     com.socmaps.ui.NotificationPreferencesActivity this$0 -> a
     android.os.Handler val$handler -> b
     void run() -> run
-com.socmaps.ui.NotificationPreferencesActivity$6$1 -> com.socmaps.ui.ka:
+com.socmaps.ui.NotificationPreferencesActivity$6$1 -> com.socmaps.ui.kb:
     com.socmaps.ui.NotificationPreferencesActivity$6 this$1 -> a
     void run() -> run
 com.socmaps.ui.NotifyNotificationActivity -> com.socmaps.ui.NotifyNotificationActivity:
@@ -7420,7 +7423,7 @@ com.socmaps.ui.NotifyNotificationActivity -> com.socmaps.ui.NotifyNotificationAc
     void onResume() -> onResume
     void onPause() -> onPause
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-com.socmaps.ui.NotifyNotificationActivity$ButtonActionListener -> com.socmaps.ui.kb:
+com.socmaps.ui.NotifyNotificationActivity$ButtonActionListener -> com.socmaps.ui.kc:
     com.socmaps.ui.NotifyNotificationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.PeopleBlockUnblockActivity -> com.socmaps.ui.PeopleBlockUnblockActivity:
@@ -7466,10 +7469,10 @@ com.socmaps.ui.PeopleBlockUnblockActivity -> com.socmaps.ui.PeopleBlockUnblockAc
     java.util.HashMap access$1(com.socmaps.ui.PeopleBlockUnblockActivity) -> b
     void access$2(com.socmaps.ui.PeopleBlockUnblockActivity) -> c
     com.socmaps.images.ImageFetcher access$3(com.socmaps.ui.PeopleBlockUnblockActivity) -> d
-com.socmaps.ui.PeopleBlockUnblockActivity$BackProcessCallBackListener -> com.socmaps.ui.kc:
+com.socmaps.ui.PeopleBlockUnblockActivity$BackProcessCallBackListener -> com.socmaps.ui.kd:
     com.socmaps.ui.PeopleBlockUnblockActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.PeopleBlockUnblockActivity$ContentListAdapter -> com.socmaps.ui.kd:
+com.socmaps.ui.PeopleBlockUnblockActivity$ContentListAdapter -> com.socmaps.ui.ke:
     java.util.List items -> b
     com.socmaps.ui.PeopleBlockUnblockActivity this$0 -> a
     int getViewTypeCount() -> getViewTypeCount
@@ -7478,7 +7481,7 @@ com.socmaps.ui.PeopleBlockUnblockActivity$ContentListAdapter -> com.socmaps.ui.k
     java.lang.Object getItem(int) -> getItem
     long getItemId(int) -> getItemId
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.socmaps.ui.PeopleBlockUnblockActivity$PeopleItemListener -> com.socmaps.ui.ke:
+com.socmaps.ui.PeopleBlockUnblockActivity$PeopleItemListener -> com.socmaps.ui.kf:
     com.socmaps.ui.PeopleBlockUnblockActivity this$0 -> a
     void onItemClick(com.socmaps.entity.People) -> a
     void onShowOnMapButtonClick(java.lang.Object) -> a
@@ -7551,12 +7554,12 @@ com.socmaps.ui.PeopleInviteActivity -> com.socmaps.ui.PeopleInviteActivity:
     com.socmaps.images.ImageFetcher access$1(com.socmaps.ui.PeopleInviteActivity) -> b
     java.util.HashMap access$2(com.socmaps.ui.PeopleInviteActivity) -> c
     void access$3(com.socmaps.ui.PeopleInviteActivity) -> d
-com.socmaps.ui.PeopleInviteActivity$AppRequestsListener -> com.socmaps.ui.kf:
+com.socmaps.ui.PeopleInviteActivity$AppRequestsListener -> com.socmaps.ui.kg:
     com.socmaps.ui.PeopleInviteActivity this$0 -> a
     void onComplete(android.os.Bundle) -> a
     void onFacebookError(com.facebook.android.FacebookError) -> a
     void onCancel() -> a_
-com.socmaps.ui.PeopleInviteActivity$ContentListAdapter -> com.socmaps.ui.kg:
+com.socmaps.ui.PeopleInviteActivity$ContentListAdapter -> com.socmaps.ui.kh:
     java.util.List items -> b
     com.socmaps.ui.PeopleInviteActivity this$0 -> a
     int getViewTypeCount() -> getViewTypeCount
@@ -7565,19 +7568,19 @@ com.socmaps.ui.PeopleInviteActivity$ContentListAdapter -> com.socmaps.ui.kg:
     java.lang.Object getItem(int) -> getItem
     long getItemId(int) -> getItemId
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.socmaps.ui.PeopleInviteActivity$FbAPIsAuthListener -> com.socmaps.ui.kh:
+com.socmaps.ui.PeopleInviteActivity$FbAPIsAuthListener -> com.socmaps.ui.ki:
     com.socmaps.ui.PeopleInviteActivity this$0 -> a
     void onAuthSucceed() -> a
     void onAuthFail(java.lang.String) -> a
-com.socmaps.ui.PeopleInviteActivity$FbAPIsLogoutListener -> com.socmaps.ui.ki:
+com.socmaps.ui.PeopleInviteActivity$FbAPIsLogoutListener -> com.socmaps.ui.kj:
     com.socmaps.ui.PeopleInviteActivity this$0 -> a
-com.socmaps.ui.PeopleInviteActivity$LoginDialogListener -> com.socmaps.ui.kj:
+com.socmaps.ui.PeopleInviteActivity$LoginDialogListener -> com.socmaps.ui.kk:
     com.socmaps.ui.PeopleInviteActivity this$0 -> a
     void onComplete(android.os.Bundle) -> a
     void onFacebookError(com.facebook.android.FacebookError) -> a
     void onError(com.facebook.android.DialogError) -> a
     void onCancel() -> a_
-com.socmaps.ui.PeopleInviteActivity$SecondDegreePeopleItemListener -> com.socmaps.ui.kk:
+com.socmaps.ui.PeopleInviteActivity$SecondDegreePeopleItemListener -> com.socmaps.ui.kl:
     com.socmaps.ui.PeopleInviteActivity this$0 -> a
     void onInviteButtonClick$5bd13730() -> a
     void onShowOnMapButtonClick(com.socmaps.entity.SecondDegreePeople) -> a
@@ -7622,7 +7625,7 @@ com.socmaps.ui.PeopleListActivity -> com.socmaps.ui.PeopleListActivity:
     android.content.Context access$0(com.socmaps.ui.PeopleListActivity) -> a
     com.socmaps.images.ImageFetcher access$1(com.socmaps.ui.PeopleListActivity) -> b
     android.widget.Button access$2(com.socmaps.ui.PeopleListActivity) -> c
-com.socmaps.ui.PeopleListActivity$ContentListAdapter -> com.socmaps.ui.kl:
+com.socmaps.ui.PeopleListActivity$ContentListAdapter -> com.socmaps.ui.km:
     java.util.List items -> b
     com.socmaps.ui.PeopleListActivity this$0 -> a
     int getViewTypeCount() -> getViewTypeCount
@@ -7631,17 +7634,17 @@ com.socmaps.ui.PeopleListActivity$ContentListAdapter -> com.socmaps.ui.kl:
     java.lang.Object getItem(int) -> getItem
     long getItemId(int) -> getItemId
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.socmaps.ui.PeopleListActivity$PeopleItemListener -> com.socmaps.ui.km:
+com.socmaps.ui.PeopleListActivity$PeopleItemListener -> com.socmaps.ui.kn:
     com.socmaps.ui.PeopleListActivity this$0 -> a
     void onItemClick(com.socmaps.entity.People) -> a
     void onShowOnMapButtonClick(java.lang.Object) -> a
     void onCheckChange(java.lang.String,boolean) -> a
-com.socmaps.ui.PeopleListActivity$SecondDegreePeopleItemListener -> com.socmaps.ui.kn:
+com.socmaps.ui.PeopleListActivity$SecondDegreePeopleItemListener -> com.socmaps.ui.ko:
     com.socmaps.ui.PeopleListActivity this$0 -> a
     void onInviteButtonClick$5bd13730() -> a
     void onShowOnMapButtonClick(com.socmaps.entity.SecondDegreePeople) -> a
     void onCheckChange(java.lang.String,boolean) -> a
-com.socmaps.ui.PeopleListActivity$TopDrawerListener -> com.socmaps.ui.ko:
+com.socmaps.ui.PeopleListActivity$TopDrawerListener -> com.socmaps.ui.kp:
     com.socmaps.ui.PeopleListActivity this$0 -> a
     void onDrawerClosed() -> a
     void onDrawerOpened() -> b
@@ -7695,24 +7698,24 @@ com.socmaps.ui.PhotoListActivity -> com.socmaps.ui.PhotoListActivity:
     int access$12(com.socmaps.ui.PhotoListActivity) -> i
     android.widget.LinearLayout access$13(com.socmaps.ui.PhotoListActivity) -> j
     java.util.List access$14(com.socmaps.ui.PhotoListActivity) -> k
-com.socmaps.ui.PhotoListActivity$1 -> com.socmaps.ui.kp:
+com.socmaps.ui.PhotoListActivity$1 -> com.socmaps.ui.kq:
     com.socmaps.ui.PhotoListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoListActivity$2 -> com.socmaps.ui.kq:
+com.socmaps.ui.PhotoListActivity$2 -> com.socmaps.ui.kr:
     com.socmaps.ui.PhotoListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoListActivity$3 -> com.socmaps.ui.kr:
+com.socmaps.ui.PhotoListActivity$3 -> com.socmaps.ui.ks:
     com.socmaps.ui.PhotoListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoListActivity$4 -> com.socmaps.ui.ks:
+com.socmaps.ui.PhotoListActivity$4 -> com.socmaps.ui.kt:
     com.socmaps.ui.PhotoListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoListActivity$5 -> com.socmaps.ui.kt:
+com.socmaps.ui.PhotoListActivity$5 -> com.socmaps.ui.ku:
     com.socmaps.ui.PhotoListActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$photoContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PhotoListActivity$6 -> com.socmaps.ui.ku:
+com.socmaps.ui.PhotoListActivity$6 -> com.socmaps.ui.kv:
     com.socmaps.ui.PhotoListActivity this$0 -> a
     com.socmaps.entity.Photo val$photo -> b
     void onClick(android.view.View) -> onClick
@@ -7799,31 +7802,31 @@ com.socmaps.ui.PhotoUploadNewPhotoActivity -> com.socmaps.ui.PhotoUploadNewPhoto
     void access$36(com.socmaps.ui.PhotoUploadNewPhotoActivity,int) -> b
     int access$37(com.socmaps.ui.PhotoUploadNewPhotoActivity) -> B
     boolean access$38(com.socmaps.ui.PhotoUploadNewPhotoActivity,int) -> c
-com.socmaps.ui.PhotoUploadNewPhotoActivity$1 -> com.socmaps.ui.kv:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$1 -> com.socmaps.ui.kw:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoUploadNewPhotoActivity$2 -> com.socmaps.ui.kw:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$2 -> com.socmaps.ui.kx:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoUploadNewPhotoActivity$3 -> com.socmaps.ui.kx:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$3 -> com.socmaps.ui.ky:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PhotoUploadNewPhotoActivity$ButtonActionListener -> com.socmaps.ui.ky:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$ButtonActionListener -> com.socmaps.ui.kz:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PhotoUploadNewPhotoActivity$LocationAddressHandler -> com.socmaps.ui.kz:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$LocationAddressHandler -> com.socmaps.ui.la:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.PhotoUploadNewPhotoActivity$LocationSelectionListener -> com.socmaps.ui.la:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$LocationSelectionListener -> com.socmaps.ui.lb:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem -> b
     void onLocationSelectionChanged$1586770c(com.socmaps.widget.LocationRadioGroup$SelectedItem) -> a
     int[] $SWITCH_TABLE$com$socmaps$widget$LocationRadioGroup$SelectedItem() -> a
-com.socmaps.ui.PhotoUploadNewPhotoActivity$NearByPlacesPickerhandler -> com.socmaps.ui.lb:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$NearByPlacesPickerhandler -> com.socmaps.ui.lc:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     void onPlaceSelect$5da29d94(com.socmaps.entity.Place) -> a
-com.socmaps.ui.PhotoUploadNewPhotoActivity$ShareWithSelectionListener -> com.socmaps.ui.lc:
+com.socmaps.ui.PhotoUploadNewPhotoActivity$ShareWithSelectionListener -> com.socmaps.ui.ld:
     com.socmaps.ui.PhotoUploadNewPhotoActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$util$Constant$Permission -> b
     void onPermissionChanged$1d271f38(com.socmaps.util.Constant$Permission) -> a
@@ -7852,38 +7855,38 @@ com.socmaps.ui.PhotoZoomActivity -> com.socmaps.ui.PhotoZoomActivity:
     void access$5(com.socmaps.ui.PhotoZoomActivity,int) -> b
     com.socmaps.images.ImageFetcher access$6(com.socmaps.ui.PhotoZoomActivity) -> c
     int access$7(com.socmaps.ui.PhotoZoomActivity) -> d
-com.socmaps.ui.PhotoZoomActivity$1 -> com.socmaps.ui.ld:
+com.socmaps.ui.PhotoZoomActivity$1 -> com.socmaps.ui.le:
     com.socmaps.ui.PhotoZoomActivity this$0 -> a
     void onPageSelected(int) -> a
     void onPageScrolled$486775f1(int,float) -> a
     void onPageScrollStateChanged(int) -> b
-com.socmaps.ui.PhotoZoomActivity$2 -> com.socmaps.ui.le:
+com.socmaps.ui.PhotoZoomActivity$2 -> com.socmaps.ui.lf:
     com.socmaps.ui.PhotoZoomActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PhotoZoomActivity$2$1 -> com.socmaps.ui.lf:
+com.socmaps.ui.PhotoZoomActivity$2$1 -> com.socmaps.ui.lg:
     com.socmaps.ui.PhotoZoomActivity$2 this$1 -> a
     void run() -> run
-com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter -> com.socmaps.ui.lg:
+com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter -> com.socmaps.ui.lh:
     com.socmaps.ui.PhotoZoomActivity this$0 -> a
     int getCount() -> a
     boolean isViewFromObject(android.view.View,java.lang.Object) -> a
     java.lang.Object instantiateItem(android.view.ViewGroup,int) -> a
     void destroyItem$30510aeb(android.view.ViewGroup,java.lang.Object) -> a
-com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$1 -> com.socmaps.ui.lh:
+com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$1 -> com.socmaps.ui.li:
     com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter this$1 -> a
     android.widget.Button val$btnPhotoZoomRight -> b
     android.widget.Button val$btnPhotoZoomLeft -> c
     android.widget.Button val$btnPhotoZoomClose -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$2 -> com.socmaps.ui.li:
+com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$2 -> com.socmaps.ui.lj:
     com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter this$1 -> a
     int val$position -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$3 -> com.socmaps.ui.lj:
+com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$3 -> com.socmaps.ui.lk:
     com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter this$1 -> a
     int val$position -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$4 -> com.socmaps.ui.lk:
+com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter$4 -> com.socmaps.ui.ll:
     com.socmaps.ui.PhotoZoomActivity$ImagePagerAdapter this$1 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.PlaceEditSaveActivity -> com.socmaps.ui.PlaceEditSaveActivity:
@@ -7934,34 +7937,34 @@ com.socmaps.ui.PlaceEditSaveActivity -> com.socmaps.ui.PlaceEditSaveActivity:
     void access$6(com.socmaps.ui.PlaceEditSaveActivity,java.lang.String) -> b
     void access$7(com.socmaps.ui.PlaceEditSaveActivity,java.lang.String) -> c
     void access$8(com.socmaps.ui.PlaceEditSaveActivity,int) -> c
-com.socmaps.ui.PlaceEditSaveActivity$1 -> com.socmaps.ui.ll:
+com.socmaps.ui.PlaceEditSaveActivity$1 -> com.socmaps.ui.lm:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PlaceEditSaveActivity$2 -> com.socmaps.ui.lm:
+com.socmaps.ui.PlaceEditSaveActivity$2 -> com.socmaps.ui.ln:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PlaceEditSaveActivity$3 -> com.socmaps.ui.ln:
+com.socmaps.ui.PlaceEditSaveActivity$3 -> com.socmaps.ui.lo:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PlaceEditSaveActivity$4 -> com.socmaps.ui.lo:
+com.socmaps.ui.PlaceEditSaveActivity$4 -> com.socmaps.ui.lp:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     void onDismiss(android.content.DialogInterface) -> onDismiss
-com.socmaps.ui.PlaceEditSaveActivity$5 -> com.socmaps.ui.lp:
+com.socmaps.ui.PlaceEditSaveActivity$5 -> com.socmaps.ui.lq:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     android.app.Dialog val$dialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlaceEditSaveActivity$6 -> com.socmaps.ui.lq:
+com.socmaps.ui.PlaceEditSaveActivity$6 -> com.socmaps.ui.lr:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     android.widget.EditText val$etInputText -> b
     int val$id -> c
     android.app.Dialog val$dialog -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlaceEditSaveActivity$7 -> com.socmaps.ui.lr:
+com.socmaps.ui.PlaceEditSaveActivity$7 -> com.socmaps.ui.ls:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     java.lang.String[] val$categoryArray -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PlaceEditSaveActivity$BackProcessCallBackListener -> com.socmaps.ui.ls:
+com.socmaps.ui.PlaceEditSaveActivity$BackProcessCallBackListener -> com.socmaps.ui.lt:
     com.socmaps.ui.PlaceEditSaveActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
 com.socmaps.ui.PlacesListActivity -> com.socmaps.ui.PlacesListActivity:
@@ -8003,10 +8006,10 @@ com.socmaps.ui.PlacesListActivity -> com.socmaps.ui.PlacesListActivity:
     void access$6(com.socmaps.ui.PlacesListActivity,java.util.List) -> b
     java.util.List access$7(com.socmaps.ui.PlacesListActivity) -> f
     void access$8(com.socmaps.ui.PlacesListActivity,java.util.List) -> c
-com.socmaps.ui.PlacesListActivity$BackProcessCallBackListener -> com.socmaps.ui.lt:
+com.socmaps.ui.PlacesListActivity$BackProcessCallBackListener -> com.socmaps.ui.lu:
     com.socmaps.ui.PlacesListActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.PlacesListActivity$ContentListAdapter -> com.socmaps.ui.lu:
+com.socmaps.ui.PlacesListActivity$ContentListAdapter -> com.socmaps.ui.lv:
     java.util.List items -> b
     com.socmaps.ui.PlacesListActivity this$0 -> a
     int getViewTypeCount() -> getViewTypeCount
@@ -8015,7 +8018,7 @@ com.socmaps.ui.PlacesListActivity$ContentListAdapter -> com.socmaps.ui.lu:
     java.lang.Object getItem(int) -> getItem
     long getItemId(int) -> getItemId
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.socmaps.ui.PlacesListActivity$PlaceItemListener -> com.socmaps.ui.lv:
+com.socmaps.ui.PlacesListActivity$PlaceItemListener -> com.socmaps.ui.lw:
     com.socmaps.ui.PlacesListActivity this$0 -> a
     void onReviewButtonClick(com.socmaps.entity.Place) -> a
     void onShowOnMapButtonClick(com.socmaps.entity.Place) -> b
@@ -8049,7 +8052,7 @@ com.socmaps.ui.PlacesNearToMe -> com.socmaps.ui.PlacesNearToMe:
     void onDestroy() -> onDestroy
     android.content.Context access$0(com.socmaps.ui.PlacesNearToMe) -> a
     com.socmaps.images.ImageFetcher access$1(com.socmaps.ui.PlacesNearToMe) -> b
-com.socmaps.ui.PlacesNearToMe$ContentListAdapter -> com.socmaps.ui.lw:
+com.socmaps.ui.PlacesNearToMe$ContentListAdapter -> com.socmaps.ui.lx:
     java.util.List items -> b
     com.socmaps.ui.PlacesNearToMe this$0 -> a
     int getViewTypeCount() -> getViewTypeCount
@@ -8058,7 +8061,7 @@ com.socmaps.ui.PlacesNearToMe$ContentListAdapter -> com.socmaps.ui.lw:
     java.lang.Object getItem(int) -> getItem
     long getItemId(int) -> getItemId
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.socmaps.ui.PlacesNearToMe$PlaceItemListener -> com.socmaps.ui.lx:
+com.socmaps.ui.PlacesNearToMe$PlaceItemListener -> com.socmaps.ui.ly:
     com.socmaps.ui.PlacesNearToMe this$0 -> a
     void onItemClick(com.socmaps.entity.People) -> a
     void onShowOnMapButtonClick(java.lang.Object) -> a
@@ -8111,29 +8114,29 @@ com.socmaps.ui.PlanCreateActivity -> com.socmaps.ui.PlanCreateActivity:
     void access$3(com.socmaps.ui.PlanCreateActivity) -> c
     void access$4(com.socmaps.ui.PlanCreateActivity) -> d
     void access$5(com.socmaps.ui.PlanCreateActivity,java.lang.String) -> a
-com.socmaps.ui.PlanCreateActivity$1 -> com.socmaps.ui.ly:
+com.socmaps.ui.PlanCreateActivity$1 -> com.socmaps.ui.lz:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanCreateActivity$2 -> com.socmaps.ui.lz:
+com.socmaps.ui.PlanCreateActivity$2 -> com.socmaps.ui.ma:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanCreateActivity$3 -> com.socmaps.ui.ma:
+com.socmaps.ui.PlanCreateActivity$3 -> com.socmaps.ui.mb:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     android.app.Dialog val$mDateTimeDialog -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanCreateActivity$4 -> com.socmaps.ui.mb:
+com.socmaps.ui.PlanCreateActivity$4 -> com.socmaps.ui.mc:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     android.app.Dialog val$mDateTimeDialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanCreateActivity$5 -> com.socmaps.ui.mc:
+com.socmaps.ui.PlanCreateActivity$5 -> com.socmaps.ui.md:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanCreateActivity$ButtonActionListener -> com.socmaps.ui.md:
+com.socmaps.ui.PlanCreateActivity$ButtonActionListener -> com.socmaps.ui.me:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanCreateActivity$ShareWithSelectionListener -> com.socmaps.ui.me:
+com.socmaps.ui.PlanCreateActivity$ShareWithSelectionListener -> com.socmaps.ui.mf:
     com.socmaps.ui.PlanCreateActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$util$Constant$Permission -> b
     void onPermissionChanged$1d271f38(com.socmaps.util.Constant$Permission) -> a
@@ -8186,29 +8189,29 @@ com.socmaps.ui.PlanEditActivity -> com.socmaps.ui.PlanEditActivity:
     void access$2(com.socmaps.ui.PlanEditActivity) -> b
     void access$3(com.socmaps.ui.PlanEditActivity) -> c
     void access$4(com.socmaps.ui.PlanEditActivity,java.lang.String) -> a
-com.socmaps.ui.PlanEditActivity$1 -> com.socmaps.ui.mf:
+com.socmaps.ui.PlanEditActivity$1 -> com.socmaps.ui.mg:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanEditActivity$2 -> com.socmaps.ui.mg:
+com.socmaps.ui.PlanEditActivity$2 -> com.socmaps.ui.mh:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanEditActivity$3 -> com.socmaps.ui.mh:
+com.socmaps.ui.PlanEditActivity$3 -> com.socmaps.ui.mi:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     android.app.Dialog val$mDateTimeDialog -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanEditActivity$4 -> com.socmaps.ui.mi:
+com.socmaps.ui.PlanEditActivity$4 -> com.socmaps.ui.mj:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     android.app.Dialog val$mDateTimeDialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanEditActivity$5 -> com.socmaps.ui.mj:
+com.socmaps.ui.PlanEditActivity$5 -> com.socmaps.ui.mk:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     com.socmaps.widget.DateTimePicker val$mDateTimePicker -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanEditActivity$ButtonActionListener -> com.socmaps.ui.mk:
+com.socmaps.ui.PlanEditActivity$ButtonActionListener -> com.socmaps.ui.ml:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.PlanEditActivity$ShareWithSelectionListener -> com.socmaps.ui.ml:
+com.socmaps.ui.PlanEditActivity$ShareWithSelectionListener -> com.socmaps.ui.mm:
     com.socmaps.ui.PlanEditActivity this$0 -> a
     int[] $SWITCH_TABLE$com$socmaps$util$Constant$Permission -> b
     void onPermissionChanged$1d271f38(com.socmaps.util.Constant$Permission) -> a
@@ -8252,30 +8255,30 @@ com.socmaps.ui.PlanListActivity -> com.socmaps.ui.PlanListActivity:
     com.socmaps.images.ImageFetcher access$6(com.socmaps.ui.PlanListActivity) -> e
     void access$7(com.socmaps.ui.PlanListActivity) -> f
     void access$8(com.socmaps.ui.PlanListActivity) -> g
-com.socmaps.ui.PlanListActivity$1 -> com.socmaps.ui.mm:
+com.socmaps.ui.PlanListActivity$1 -> com.socmaps.ui.mn:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanListActivity$2 -> com.socmaps.ui.mn:
+com.socmaps.ui.PlanListActivity$2 -> com.socmaps.ui.mo:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanListActivity$3 -> com.socmaps.ui.mo:
+com.socmaps.ui.PlanListActivity$3 -> com.socmaps.ui.mp:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanListActivity$4 -> com.socmaps.ui.mp:
+com.socmaps.ui.PlanListActivity$4 -> com.socmaps.ui.mq:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlanListActivity$5 -> com.socmaps.ui.mq:
+com.socmaps.ui.PlanListActivity$5 -> com.socmaps.ui.mr:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PlanListActivity$6 -> com.socmaps.ui.mr:
+com.socmaps.ui.PlanListActivity$6 -> com.socmaps.ui.ms:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.PlanListActivity$ItemListener -> com.socmaps.ui.ms:
+com.socmaps.ui.PlanListActivity$ItemListener -> com.socmaps.ui.mt:
     com.socmaps.ui.PlanListActivity this$0 -> a
     void onShowOnMapButtonClick(com.socmaps.entity.Plan) -> a
     void onShowEditButtonClick(com.socmaps.entity.Plan) -> b
     void onShowDeleteButtonClick(com.socmaps.entity.Plan) -> c
-com.socmaps.ui.PlanListActivity$ListArrayAdapter -> com.socmaps.ui.mt:
+com.socmaps.ui.PlanListActivity$ListArrayAdapter -> com.socmaps.ui.mu:
     java.util.List mObjects -> b
     java.lang.Object mLock -> c
     int mResource -> d
@@ -8299,7 +8302,7 @@ com.socmaps.ui.PlanListActivity$ListArrayAdapter -> com.socmaps.ui.mt:
     java.util.List access$3(com.socmaps.ui.PlanListActivity$ListArrayAdapter) -> c
     void access$4(com.socmaps.ui.PlanListActivity$ListArrayAdapter,java.util.List) -> a
     void access$5(com.socmaps.ui.PlanListActivity$ListArrayAdapter,java.util.List) -> b
-com.socmaps.ui.PlanListActivity$ListArrayAdapter$ArrayFilter -> com.socmaps.ui.mu:
+com.socmaps.ui.PlanListActivity$ListArrayAdapter$ArrayFilter -> com.socmaps.ui.mv:
     com.socmaps.ui.PlanListActivity$ListArrayAdapter this$1 -> a
     android.widget.Filter$FilterResults performFiltering(java.lang.CharSequence) -> performFiltering
     void publishResults(java.lang.CharSequence,android.widget.Filter$FilterResults) -> publishResults
@@ -8336,30 +8339,30 @@ com.socmaps.ui.PlatformPreferencesActivity -> com.socmaps.ui.PlatformPreferences
     void access$2(com.socmaps.ui.PlatformPreferencesActivity) -> b
     void access$3(com.socmaps.ui.PlatformPreferencesActivity,int,java.lang.String) -> b
     void access$4(com.socmaps.ui.PlatformPreferencesActivity) -> c
-com.socmaps.ui.PlatformPreferencesActivity$1 -> com.socmaps.ui.mv:
+com.socmaps.ui.PlatformPreferencesActivity$1 -> com.socmaps.ui.mw:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlatformPreferencesActivity$2 -> com.socmaps.ui.mw:
+com.socmaps.ui.PlatformPreferencesActivity$2 -> com.socmaps.ui.mx:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlatformPreferencesActivity$3 -> com.socmaps.ui.mx:
+com.socmaps.ui.PlatformPreferencesActivity$3 -> com.socmaps.ui.my:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlatformPreferencesActivity$4 -> com.socmaps.ui.my:
+com.socmaps.ui.PlatformPreferencesActivity$4 -> com.socmaps.ui.mz:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.PlatformPreferencesActivity$AppRequestsListener -> com.socmaps.ui.mz:
+com.socmaps.ui.PlatformPreferencesActivity$AppRequestsListener -> com.socmaps.ui.na:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void onComplete(android.os.Bundle) -> a
     void onFacebookError(com.facebook.android.FacebookError) -> a
     void onCancel() -> a_
-com.socmaps.ui.PlatformPreferencesActivity$FbAPIsAuthListener -> com.socmaps.ui.na:
+com.socmaps.ui.PlatformPreferencesActivity$FbAPIsAuthListener -> com.socmaps.ui.nb:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void onAuthSucceed() -> a
     void onAuthFail(java.lang.String) -> a
-com.socmaps.ui.PlatformPreferencesActivity$FbAPIsLogoutListener -> com.socmaps.ui.nb:
+com.socmaps.ui.PlatformPreferencesActivity$FbAPIsLogoutListener -> com.socmaps.ui.nc:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
-com.socmaps.ui.PlatformPreferencesActivity$LoginDialogListener -> com.socmaps.ui.nc:
+com.socmaps.ui.PlatformPreferencesActivity$LoginDialogListener -> com.socmaps.ui.nd:
     com.socmaps.ui.PlatformPreferencesActivity this$0 -> a
     void onComplete(android.os.Bundle) -> a
     void onFacebookError(com.facebook.android.FacebookError) -> a
@@ -8440,59 +8443,59 @@ com.socmaps.ui.ProfileActivity -> com.socmaps.ui.ProfileActivity:
     android.widget.ProgressBar access$6(com.socmaps.ui.ProfileActivity) -> d
     void access$7(com.socmaps.ui.ProfileActivity) -> e
     boolean access$8(com.socmaps.ui.ProfileActivity,int) -> a
-com.socmaps.ui.ProfileActivity$1 -> com.socmaps.ui.nd:
+com.socmaps.ui.ProfileActivity$1 -> com.socmaps.ui.ne:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity$10 -> com.socmaps.ui.ne:
+com.socmaps.ui.ProfileActivity$10 -> com.socmaps.ui.nf:
     com.socmaps.ui.ProfileActivity this$0 -> a
     android.app.Dialog val$dialog -> b
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.ProfileActivity$11 -> com.socmaps.ui.nf:
+com.socmaps.ui.ProfileActivity$11 -> com.socmaps.ui.ng:
     com.socmaps.ui.ProfileActivity this$0 -> a
     android.widget.EditText val$etInputText -> b
     int val$id -> c
     android.app.Dialog val$dialog -> d
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.ProfileActivity$2 -> com.socmaps.ui.ng:
+com.socmaps.ui.ProfileActivity$2 -> com.socmaps.ui.nh:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity$3 -> com.socmaps.ui.nh:
+com.socmaps.ui.ProfileActivity$3 -> com.socmaps.ui.ni:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
-com.socmaps.ui.ProfileActivity$4 -> com.socmaps.ui.ni:
+com.socmaps.ui.ProfileActivity$4 -> com.socmaps.ui.nj:
     com.socmaps.ui.ProfileActivity this$0 -> a
     java.lang.String[] val$relArray -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.ProfileActivity$5 -> com.socmaps.ui.nj:
+com.socmaps.ui.ProfileActivity$5 -> com.socmaps.ui.nk:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.ProfileActivity$6 -> com.socmaps.ui.nk:
+com.socmaps.ui.ProfileActivity$6 -> com.socmaps.ui.nl:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.ProfileActivity$7 -> com.socmaps.ui.nl:
+com.socmaps.ui.ProfileActivity$7 -> com.socmaps.ui.nm:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onDateSet(android.widget.DatePicker,int,int,int) -> onDateSet
-com.socmaps.ui.ProfileActivity$8 -> com.socmaps.ui.nm:
+com.socmaps.ui.ProfileActivity$8 -> com.socmaps.ui.nn:
     com.socmaps.ui.ProfileActivity this$0 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.ProfileActivity$9 -> com.socmaps.ui.nn:
+com.socmaps.ui.ProfileActivity$9 -> com.socmaps.ui.no:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onDismiss(android.content.DialogInterface) -> onDismiss
-com.socmaps.ui.ProfileActivity$BackProcessCallBackListener -> com.socmaps.ui.no:
+com.socmaps.ui.ProfileActivity$BackProcessCallBackListener -> com.socmaps.ui.np:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.ProfileActivity$MyWebViewClient -> com.socmaps.ui.np:
+com.socmaps.ui.ProfileActivity$MyWebViewClient -> com.socmaps.ui.nq:
     com.socmaps.ui.ProfileActivity this$0 -> a
     void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
     void onPageStarted(android.webkit.WebView,java.lang.String,android.graphics.Bitmap) -> onPageStarted
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     com.socmaps.ui.ProfileActivity access$1(com.socmaps.ui.ProfileActivity$MyWebViewClient) -> a
-com.socmaps.ui.ProfileActivity$MyWebViewClient$1 -> com.socmaps.ui.nq:
+com.socmaps.ui.ProfileActivity$MyWebViewClient$1 -> com.socmaps.ui.nr:
     com.socmaps.ui.ProfileActivity$MyWebViewClient this$1 -> a
     java.lang.String[] val$typeId -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.ProfileActivity$MyWebViewClient$2 -> com.socmaps.ui.nr:
+com.socmaps.ui.ProfileActivity$MyWebViewClient$2 -> com.socmaps.ui.ns:
     com.socmaps.ui.ProfileActivity$MyWebViewClient this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.socmaps.ui.ProfileActivity2 -> com.socmaps.ui.ProfileActivity2:
@@ -8589,53 +8592,53 @@ com.socmaps.ui.ProfileActivity2 -> com.socmaps.ui.ProfileActivity2:
     android.widget.ProgressBar access$14(com.socmaps.ui.ProfileActivity2) -> i
     void access$15(com.socmaps.ui.ProfileActivity2,java.lang.String,java.lang.String) -> b
     android.app.Dialog access$16(com.socmaps.ui.ProfileActivity2) -> j
-com.socmaps.ui.ProfileActivity2$1 -> com.socmaps.ui.ns:
+com.socmaps.ui.ProfileActivity2$1 -> com.socmaps.ui.nt:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity2$2 -> com.socmaps.ui.nt:
+com.socmaps.ui.ProfileActivity2$2 -> com.socmaps.ui.nu:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity2$3 -> com.socmaps.ui.nu:
+com.socmaps.ui.ProfileActivity2$3 -> com.socmaps.ui.nv:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity2$4 -> com.socmaps.ui.nv:
+com.socmaps.ui.ProfileActivity2$4 -> com.socmaps.ui.nw:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity2$5 -> com.socmaps.ui.nw:
+com.socmaps.ui.ProfileActivity2$5 -> com.socmaps.ui.nx:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity2$6 -> com.socmaps.ui.nx:
+com.socmaps.ui.ProfileActivity2$6 -> com.socmaps.ui.ny:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void run() -> run
-com.socmaps.ui.ProfileActivity2$7 -> com.socmaps.ui.ny:
+com.socmaps.ui.ProfileActivity2$7 -> com.socmaps.ui.nz:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
-com.socmaps.ui.ProfileActivity2$8 -> com.socmaps.ui.nz:
+com.socmaps.ui.ProfileActivity2$8 -> com.socmaps.ui.oa:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     com.socmaps.entity.People val$people -> b
     android.widget.EditText val$msgEditText -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.ProfileActivity2$9 -> com.socmaps.ui.oa:
+com.socmaps.ui.ProfileActivity2$9 -> com.socmaps.ui.ob:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.ProfileActivity2$BackProcessCallBackListener -> com.socmaps.ui.ob:
+com.socmaps.ui.ProfileActivity2$BackProcessCallBackListener -> com.socmaps.ui.oc:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void onFinish(int,java.lang.String,int) -> a
-com.socmaps.ui.ProfileActivity2$MyWebViewClient -> com.socmaps.ui.oc:
+com.socmaps.ui.ProfileActivity2$MyWebViewClient -> com.socmaps.ui.od:
     com.socmaps.ui.ProfileActivity2 this$0 -> a
     void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
     void onPageStarted(android.webkit.WebView,java.lang.String,android.graphics.Bitmap) -> onPageStarted
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     com.socmaps.ui.ProfileActivity2 access$1(com.socmaps.ui.ProfileActivity2$MyWebViewClient) -> a
-com.socmaps.ui.ProfileActivity2$MyWebViewClient$1 -> com.socmaps.ui.od:
+com.socmaps.ui.ProfileActivity2$MyWebViewClient$1 -> com.socmaps.ui.oe:
     com.socmaps.ui.ProfileActivity2$MyWebViewClient this$1 -> a
     java.lang.String[] val$typeId -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.ProfileActivity2$MyWebViewClient$2 -> com.socmaps.ui.oe:
+com.socmaps.ui.ProfileActivity2$MyWebViewClient$2 -> com.socmaps.ui.of:
     com.socmaps.ui.ProfileActivity2$MyWebViewClient this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.R -> com.socmaps.ui.of:
-com.socmaps.ui.R$styleable -> com.socmaps.ui.og:
+com.socmaps.ui.R -> com.socmaps.ui.og:
+com.socmaps.ui.R$styleable -> com.socmaps.ui.oh:
     int[] ExpandablePanel -> a
     int[] MapAttrs -> b
     int[] MultiDirectionSlidingDrawer -> c
@@ -8694,23 +8697,23 @@ com.socmaps.ui.RecommendationActivity -> com.socmaps.ui.RecommendationActivity:
     void access$10(com.socmaps.ui.RecommendationActivity) -> j
     android.widget.Button access$11(com.socmaps.ui.RecommendationActivity) -> k
     void access$12(com.socmaps.ui.RecommendationActivity) -> l
-com.socmaps.ui.RecommendationActivity$1 -> com.socmaps.ui.oh:
+com.socmaps.ui.RecommendationActivity$1 -> com.socmaps.ui.oi:
     com.socmaps.ui.RecommendationActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.socmaps.ui.RecommendationActivity$2 -> com.socmaps.ui.oi:
+com.socmaps.ui.RecommendationActivity$2 -> com.socmaps.ui.oj:
     com.socmaps.ui.RecommendationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.RecommendationActivity$3 -> com.socmaps.ui.oj:
+com.socmaps.ui.RecommendationActivity$3 -> com.socmaps.ui.ok:
     com.socmaps.ui.RecommendationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.RecommendationActivity$4 -> com.socmaps.ui.ok:
+com.socmaps.ui.RecommendationActivity$4 -> com.socmaps.ui.ol:
     com.socmaps.ui.RecommendationActivity this$0 -> a
     java.lang.String val$id -> b
     android.widget.LinearLayout val$proficPicContainer -> c
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.RecommendationActivity$ButtonActionListener -> com.socmaps.ui.ol:
+com.socmaps.ui.RecommendationActivity$ButtonActionListener -> com.socmaps.ui.om:
     com.socmaps.ui.RecommendationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.RegistrationActivity -> com.socmaps.ui.RegistrationActivity:
@@ -8764,41 +8767,41 @@ com.socmaps.ui.RegistrationActivity -> com.socmaps.ui.RegistrationActivity:
     void access$6(com.socmaps.ui.RegistrationActivity,java.lang.Runnable) -> a
     java.lang.Runnable access$7(com.socmaps.ui.RegistrationActivity) -> e
     void access$8(com.socmaps.ui.RegistrationActivity,android.app.ProgressDialog) -> a
-com.socmaps.ui.RegistrationActivity$1 -> com.socmaps.ui.om:
+com.socmaps.ui.RegistrationActivity$1 -> com.socmaps.ui.on:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.RegistrationActivity$2 -> com.socmaps.ui.on:
+com.socmaps.ui.RegistrationActivity$2 -> com.socmaps.ui.oo:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.RegistrationActivity$3 -> com.socmaps.ui.oo:
+com.socmaps.ui.RegistrationActivity$3 -> com.socmaps.ui.op:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.RegistrationActivity$4 -> com.socmaps.ui.op:
+com.socmaps.ui.RegistrationActivity$4 -> com.socmaps.ui.oq:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
     com.socmaps.ui.RegistrationActivity access$0(com.socmaps.ui.RegistrationActivity$4) -> a
-com.socmaps.ui.RegistrationActivity$4$1 -> com.socmaps.ui.oq:
+com.socmaps.ui.RegistrationActivity$4$1 -> com.socmaps.ui.or:
     com.socmaps.ui.RegistrationActivity$4 this$1 -> a
     java.lang.CharSequence[] val$items -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.socmaps.ui.RegistrationActivity$5 -> com.socmaps.ui.or:
+com.socmaps.ui.RegistrationActivity$5 -> com.socmaps.ui.os:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.RegistrationActivity$6 -> com.socmaps.ui.os:
+com.socmaps.ui.RegistrationActivity$6 -> com.socmaps.ui.ot:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void onClick(android.view.View) -> onClick
     com.socmaps.ui.RegistrationActivity access$0(com.socmaps.ui.RegistrationActivity$6) -> a
-com.socmaps.ui.RegistrationActivity$6$1 -> com.socmaps.ui.ot:
+com.socmaps.ui.RegistrationActivity$6$1 -> com.socmaps.ui.ou:
     com.socmaps.ui.RegistrationActivity$6 this$1 -> a
     void onClick(android.view.View) -> onClick
-com.socmaps.ui.RegistrationActivity$6$2 -> com.socmaps.ui.ou:
+com.socmaps.ui.RegistrationActivity$6$2 -> com.socmaps.ui.ov:
     com.socmaps.ui.RegistrationActivity$6 this$1 -> a
     void onClick(android.view.View) -> onClick
     com.socmaps.ui.RegistrationActivity$6 access$0(com.socmaps.ui.RegistrationActivity$6$2) -> a
-com.socmaps.ui.RegistrationActivity$6$2$1 -> com.socmaps.ui.ov:
+com.socmaps.ui.RegistrationActivity$6$2$1 -> com.socmaps.ui.ow:
     com.socmaps.ui.RegistrationActivity$6$2 this$2 -> a
     void run() -> run
-com.socmaps.ui.RegistrationActivity$7 -> com.socmaps.ui.ow:
+com.socmaps.ui.RegistrationActivity$7 -> com.socmaps.ui.ox:
     com.socmaps.ui.RegistrationActivity this$0 -> a
     void onDateSet(android.widget.DatePicker,int,int,int) -> onDateSet
 com.socmaps.ui.SettingsActivity -> com.socmaps.ui.SettingsActivity:
@@ -8814,7 +8817,7 @@ com.socmaps.ui.SettingsActivity -> com.socmaps.ui.SettingsActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void onAttachedToWindow() -> onAttachedToWindow
     void onResume() -> onResume
-com.socmaps.ui.SettingsActivity$ButtonClickListener -> com.socmaps.ui.ox:
+com.socmaps.ui.SettingsActivity$ButtonClickListener -> com.socmaps.ui.oy:
     com.socmaps.ui.SettingsActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.socmaps.ui.SplashActivity -> com.socmaps.ui.SplashActivity:
@@ -8839,22 +8842,22 @@ com.socmaps.ui.SplashActivity -> com.socmaps.ui.SplashActivity:
     android.os.Handler access$2(com.socmaps.ui.SplashActivity) -> b
     android.os.Handler access$3(com.socmaps.ui.SplashActivity) -> c
     void access$4(com.socmaps.ui.SplashActivity,java.lang.String) -> a
-com.socmaps.ui.SplashActivity$1 -> com.socmaps.ui.oy:
+com.socmaps.ui.SplashActivity$1 -> com.socmaps.ui.oz:
     com.socmaps.ui.SplashActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.SplashActivity$2 -> com.socmaps.ui.oz:
+com.socmaps.ui.SplashActivity$2 -> com.socmaps.ui.pa:
     com.socmaps.ui.SplashActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.SplashActivity$3 -> com.socmaps.ui.pa:
+com.socmaps.ui.SplashActivity$3 -> com.socmaps.ui.pb:
     com.socmaps.ui.SplashActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.socmaps.ui.SplashActivity$4 -> com.socmaps.ui.pb:
+com.socmaps.ui.SplashActivity$4 -> com.socmaps.ui.pc:
     com.socmaps.ui.SplashActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.SplashActivity$5 -> com.socmaps.ui.pc:
+com.socmaps.ui.SplashActivity$5 -> com.socmaps.ui.pd:
     com.socmaps.ui.SplashActivity this$0 -> a
     void run() -> run
-com.socmaps.ui.SplashActivity$6 -> com.socmaps.ui.pd:
+com.socmaps.ui.SplashActivity$6 -> com.socmaps.ui.pe:
     com.socmaps.ui.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.socmaps.util.BackProcess -> s.a:
@@ -8882,7 +8885,8 @@ com.socmaps.util.BackProcess$REQUEST_TYPE -> s.b:
     com.socmaps.util.BackProcess$REQUEST_TYPE ADD -> f
     com.socmaps.util.BackProcess$REQUEST_TYPE MOVE -> g
     com.socmaps.util.BackProcess$REQUEST_TYPE REPORT -> h
-    com.socmaps.util.BackProcess$REQUEST_TYPE[] ENUM$VALUES -> i
+    com.socmaps.util.BackProcess$REQUEST_TYPE LOGOUT -> i
+    com.socmaps.util.BackProcess$REQUEST_TYPE[] ENUM$VALUES -> j
     com.socmaps.util.BackProcess$REQUEST_TYPE[] values() -> values
     com.socmaps.util.BackProcess$REQUEST_TYPE valueOf(java.lang.String) -> valueOf
 com.socmaps.util.BackProcessCallback -> s.c:
