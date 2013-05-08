@@ -39,9 +39,8 @@ class Facebook extends Base
     }
 
     /**
-     * Retrieve checkins from all facebook friends.
+     * Retrieve checkins from all facebook friends from location_post.
      *
-     * @param  $authToken string
      * @return array of checkins
      */
     public function getFriendsCheckins()
