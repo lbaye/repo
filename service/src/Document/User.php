@@ -28,7 +28,7 @@ class User
     const PREF_FIELD_STATUS = "status";
     const PREF_FIELD_GEO_FENCES = "geo_fences";
 
-    const MAX_IDLE_TIME_IN_MINS = 10;
+    const MAX_IDLE_TIME_IN_MINS = 300;
 
     /** @ODM\Id */
     protected $id;
