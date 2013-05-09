@@ -2241,8 +2241,8 @@ ButtonClickCallbackData callBackData;
     {
         _mapView.showsUserLocation=YES;
         // Send new location to server
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        //RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        //[restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     } else
     {
         _mapView.showsUserLocation=NO;
