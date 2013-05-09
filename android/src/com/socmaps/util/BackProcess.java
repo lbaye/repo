@@ -27,7 +27,7 @@ public class BackProcess extends AsyncTask<RequestMethod, Void, String> {
 	private boolean isProgressDialogCancelable = true;
 
 	public static enum REQUEST_TYPE {
-		GET_SERVER_DATA, UPDATE, DELETE, SAVE, RENAME, ADD, MOVE, REPORT, LOGOUT
+		GET_SERVER_DATA, UPDATE, DELETE, SAVE, RENAME, ADD, MOVE, REPORT, LOGOUT, GET_USER_DETAILS, GET_SEARCH_RESULT
 	}
 
 	int requestType;

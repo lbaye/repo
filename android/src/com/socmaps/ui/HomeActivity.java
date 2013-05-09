@@ -13,6 +13,8 @@ import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -264,6 +266,9 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 	private boolean isOffline = true;
 	private boolean isAllUser = true;
+
+	private String objectIdFromPush = null;
+	private Marker markerFromPush;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -1201,6 +1206,20 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			// objectList.clear();
 			// markerUpdateList.clear();
 
+			
+			if (markerFromPush != null) {
+				
+				visibleItemsOnMap.remove(markerFromPush.getId());
+				markerFromPush.remove();	
+				String pushedItemId = Utility.getItemId(activeItem);				
+				if(Utility.isValidString(pushedItemId))
+				{					
+					visibleMarkers.remove(pushedItemId);
+					objectList.remove(pushedItemId);
+					markerUpdateList.remove(pushedItemId);		
+				}							
+			}
+			
 			hideExistingMarkers();
 
 			int totalItemDisplayed = 0;
@@ -1479,9 +1498,14 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		if (extras != null) {
 			if (extras.containsKey("pushData")) {
+
+				objectIdFromPush = null;
+
 				Utility.log("dbg", "containsKey(PushData)");
 				PushData pushData = (PushData) extras.get("pushData");
 				if (pushData != null) {
+
+					objectIdFromPush = pushData.getObjectId();
 
 					if (pushData.getReceiverId().equals(StaticValues.myInfo.getId())) {
 						Utility.log("Home:PushData:Type", pushData.getObjectType());
@@ -1523,7 +1547,6 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 								 * if (isSearchEnabled) { disableSearch();
 								 * doSearch(); }
 								 */
-
 								People people = Utility.getPeopleById(pushData.getObjectId(), StaticValues.searchResult.getPeoples());
 								if (people != null) {
 									StaticValues.isHighlightAnnotation = true;
@@ -1533,6 +1556,12 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 									LatLng selectedLatLng = Utility.getLatLngFromObject(StaticValues.highlightAnnotationItem);
 									mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, intialZoomLevel));
 
+								} else {
+									// fetch user info from server
+									// navigate user to corresponding location
+									// create appropriate marker with new data
+
+									getUserDetails();
 								}
 							}
 
@@ -1544,6 +1573,18 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 			}
 
 		}
+	}
+
+	private void getUserDetails() {
+
+		if (Utility.isValidString(objectIdFromPush)) {
+			String url = Constant.smServerUrl + "/users/" + objectIdFromPush;
+
+			BackProcess backProcess = new BackProcess(context, null, url, REQUEST_TYPE.GET_USER_DETAILS, true, "On progress", "Please wait...", new BackProcessCallBackListener(), true);
+
+			backProcess.execute(RestClient.RequestMethod.GET);
+		}
+
 	}
 
 	private void updateFriendList() {
@@ -3658,7 +3699,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 
 		Utility.log("Search key also", "Keyword : " + keyWord + "  people: " + people + " place: " + place);
 
-		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.REPORT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
+		BackProcess backProcess = new BackProcess(context, params, url, REQUEST_TYPE.GET_SEARCH_RESULT, true, "Searching", "Please wait...", new BackProcessCallBackListener(), false);
 		backProcess.execute(RestClient.RequestMethod.POST);
 	}
 
@@ -3667,41 +3708,91 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		@Override
 		public void onFinish(int status, String result, int type) {
 
+			Utility.log("RESPONSE FROM SERVER", status + ":" + result);
 			// TODO Auto-generated method stub
-			Log.w("Got Search list from server callback process >> :", status + ":" + result);
-			switch (status) {
-			case Constant.STATUS_SUCCESS:
+			if (type == REQUEST_TYPE.GET_SEARCH_RESULT.ordinal()) {
+				switch (status) {
+				case Constant.STATUS_SUCCESS:
 
-				SearchResult tempSearchResult = ServerResponseParser.parseSeachResult(result);
+					SearchResult tempSearchResult = ServerResponseParser.parseSeachResult(result);
 
-				List<Object> tempMasterContent = new ArrayList<Object>();
+					List<Object> tempMasterContent = new ArrayList<Object>();
 
-				for (int i = 0; i < tempSearchResult.getPeoples().size(); i++) {
-					tempMasterContent.add(tempSearchResult.getPeoples().get(i));
+					for (int i = 0; i < tempSearchResult.getPeoples().size(); i++) {
+						tempMasterContent.add(tempSearchResult.getPeoples().get(i));
+					}
+
+					for (int i = 0; i < tempSearchResult.getPlaces().size(); i++) {
+						tempMasterContent.add(tempSearchResult.getPlaces().get(i));
+					}
+
+					for (int i = 0; i < tempSearchResult.getSecondDegreePeoples().size(); i++) {
+						tempMasterContent.add(tempSearchResult.getSecondDegreePeoples().get(i));
+					}
+
+					listComparator.setType(COMPARATOR.DISTANCE);
+					Collections.sort(tempMasterContent, listComparator);
+
+					if (tempMasterContent.size() != 0) {
+						SearchResultDialog searchResultDialog = new SearchResultDialog(context, new SearchResultDialoghandler(), "SEARCH_Result", tempMasterContent);
+						searchResultDialog.show();
+					}
+
+					break;
+
+				default:
+					Toast.makeText(context, "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+
+					break;
+
 				}
+			} else if (type == REQUEST_TYPE.GET_USER_DETAILS.ordinal()) {
+				switch (status) {
+				case Constant.STATUS_SUCCESS:
 
-				for (int i = 0; i < tempSearchResult.getPlaces().size(); i++) {
-					tempMasterContent.add(tempSearchResult.getPlaces().get(i));
+					try {
+						JSONObject jsonObject = new JSONObject(result);
+						People people = ServerResponseParser.parsePeople(jsonObject);
+
+						if (people != null) {
+							
+							if(markerFromPush!=null)
+							{
+								markerFromPush.remove();
+							}
+
+							activeItem = people;
+							MarkerOptions markerOptions = getMarkerOptions(people);
+							markerFromPush = mapView.addMarker(markerOptions);
+
+							visibleItemsOnMap.put(markerFromPush.getId(), people);
+							visibleMarkers.put(Utility.getItemId(people), markerFromPush);
+							objectList.put(Utility.getItemId(people), people);
+
+							markerUpdateList.put(Utility.getItemId(people), false);
+
+							customInfoWindowAdapter = new CustomInfoWindowAdapter(context, getLayoutInflater(), visibleItemsOnMap, remoteImageCache, imageCacheListener);
+
+							mapView.setInfoWindowAdapter(customInfoWindowAdapter);
+
+							mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(markerFromPush.getPosition(),intialZoomLevel));
+							markerFromPush.showInfoWindow();
+						}
+
+					} catch (JSONException e) {
+						// TODO: handle exception
+					} catch (Exception e) {
+
+					}
+
+					break;
+
+				default:
+					Toast.makeText(context, "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+
+					break;
+
 				}
-
-				for (int i = 0; i < tempSearchResult.getSecondDegreePeoples().size(); i++) {
-					tempMasterContent.add(tempSearchResult.getSecondDegreePeoples().get(i));
-				}
-
-				listComparator.setType(COMPARATOR.DISTANCE);
-				Collections.sort(tempMasterContent, listComparator);
-
-				if (tempMasterContent.size() != 0) {
-					SearchResultDialog searchResultDialog = new SearchResultDialog(context, new SearchResultDialoghandler(), "SEARCH_Result", tempMasterContent);
-					searchResultDialog.show();
-				}
-
-				break;
-
-			default:
-				Toast.makeText(context, "An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
-
-				break;
 
 			}
 
