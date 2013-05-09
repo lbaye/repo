@@ -582,7 +582,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Ej-UG-Mt3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2076" y="1837"/>
+            <point key="canvasLocation" x="1436" y="1624"/>
         </scene>
     </scenes>
     <resources>
@@ -603,6 +603,95 @@
         <image name="sp2.png" width="1" height="59"/>
         <image name="top_curve_bg.png" width="640" height="138"/>
     </resources>
+    <classes>
+        <class className="GeotagViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GeotagViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addAll:"/>
+                <relationship kind="action" name="backButton:"/>
+                <relationship kind="action" name="cancelCircle:"/>
+                <relationship kind="action" name="cancelComments:"/>
+                <relationship kind="action" name="cancelCustom:"/>
+                <relationship kind="action" name="cancelEntity:"/>
+                <relationship kind="action" name="cancelGeotag:"/>
+                <relationship kind="action" name="cancelMapLoc:"/>
+                <relationship kind="action" name="cancelPhoto:"/>
+                <relationship kind="action" name="categoriesButtonAction:"/>
+                <relationship kind="action" name="createGeotag:"/>
+                <relationship kind="action" name="customSegment:"/>
+                <relationship kind="action" name="dateButtonAction:"/>
+                <relationship kind="action" name="deleteButtonAction"/>
+                <relationship kind="action" name="gotoNotification:"/>
+                <relationship kind="action" name="hideKeyboard:"/>
+                <relationship kind="action" name="nameButtonAction"/>
+                <relationship kind="action" name="photoButtonAction"/>
+                <relationship kind="action" name="saveCircle:"/>
+                <relationship kind="action" name="saveComments:"/>
+                <relationship kind="action" name="saveCustom:"/>
+                <relationship kind="action" name="saveEntity:"/>
+                <relationship kind="action" name="saveMapLoc:"/>
+                <relationship kind="action" name="savePhoto:"/>
+                <relationship kind="action" name="showCircle:"/>
+                <relationship kind="action" name="unSelectAll:"/>
+                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="commentsView" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="createButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="createLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="createView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="curLoc" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="custom" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="customScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="customSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="customSelectionView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="customTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="dateButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="degreeFriends" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="deleteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="deletePhotoButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="descriptionButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="entryTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="eventImagview" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="friends" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="frndListScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="guestCanInviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="largePhotoScroller" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="line" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="lowerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="mapContainerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+                <relationship kind="outlet" name="myPlace" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="nameButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="neamePlace" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="nextButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="people" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="photoButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="photoScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="pointOnMap" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="prevButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="private" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="summaryButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="titleTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="uploadPhotoButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="upperView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="viewContainerScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="zoomView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
