@@ -1183,10 +1183,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             CGRect rect = self.view.frame;
             int moveBy = -totalVisibleCellHeight + 55;
             
-            //commented for iPhone 5 calculation complication
-            //if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
+            //TODO: for iPhone 5 calculation complication
+            if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
                 moveBy = -kOFFSET_FOR_KEYBOARD; 
-            //}
+            }
             
             rect.origin.y = moveBy;
             self.view.frame = rect;
