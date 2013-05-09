@@ -96,7 +96,7 @@ int createCounter=0, updateCounter=0;
     radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 115, 280, 21) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:200000];
     radio.delegate = self;
     
-    shareRadio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(25, 387, 280, 21) numButtons:5 labels:[NSArray arrayWithObjects:@"Private",@"Friends",@"Circles",@"Public",@"Custom",nil]  default:0 sender:self tag:2001];
+    shareRadio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(25, self.view.frame.size.height / 1.19, 280, 21) numButtons:5 labels:[NSArray arrayWithObjects:@"Private",@"Friends",@"Circles",@"Public",@"Custom",nil]  default:0 sender:self tag:2001];
     shareRadio.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];

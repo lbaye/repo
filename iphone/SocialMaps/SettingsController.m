@@ -454,7 +454,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Account settings";
     
-    CGRect scrollFrame = CGRectMake(5, 100, 310, 360);
+    CGRect scrollFrame = CGRectMake(5, 100, 310, self.view.frame.size.height - 100);
     AccountSettings *scrollView = [[AccountSettings alloc] initWithFrame:scrollFrame];
     scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                  green:247.0/255.0 
@@ -499,7 +499,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Location sharing";
     
-    CGRect scrollFrame = CGRectMake(05, 100, 310, 360);
+    CGRect scrollFrame = CGRectMake(05, 100, 310, self.view.frame.size.height - 100);
     LocationSharing *scrollView = [[LocationSharing alloc] initWithFrame:scrollFrame];
     scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                  green:247.0/255.0 

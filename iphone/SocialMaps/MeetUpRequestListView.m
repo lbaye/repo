@@ -32,6 +32,7 @@
 		nibViews = [[NSBundle mainBundle] loadNibNamed:@"MeetUpRequestListView" owner:self options:nil];
 		UIView *infoView = [nibViews objectAtIndex:0];
         [self addSubview:infoView];
+        infoView.frame = frame;
         
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         meetUpRequestList = smAppDelegate.meetUpRequests;
