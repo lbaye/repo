@@ -84,7 +84,7 @@ CGPathRef NewPathWithRoundRect(CGRect rect, CGFloat cornerRadius)
 + (id)loadingViewInView:(UIView *)aSuperview
 {
 	LoadingView *loadingView =
-		[[[LoadingView alloc] initWithFrame:CGRectMake(46, 170, 230, 120)] autorelease];
+		[[[LoadingView alloc] initWithFrame:CGRectMake((aSuperview.frame.size.width - 230) / 2, (aSuperview.frame.size.height - 120) / 2, 230, 120)] autorelease];
 	if (!loadingView)
 	{
 		return nil;

@@ -53,7 +53,7 @@
         [self showPlacesNearbyTab];
     }
     
-    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate showActivityViewer:smAppDelegate.window];
     
     copyListOfItems = [[NSMutableArray alloc] init];
     

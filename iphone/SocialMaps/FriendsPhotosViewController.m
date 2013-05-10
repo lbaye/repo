@@ -108,7 +108,7 @@
     zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
     [UIView beginAnimations:@"Zoom" context:NULL];
     [UIView setAnimationDuration:0.8];
-    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+    zoomView.frame = CGRectMake(xpos, ypos-20, 320, self.view.frame.size.height);
     [UIView commitAnimations];
     [self.view addSubview:zoomView];
     NSLog(@"tag: %d",[sender tag]);
@@ -125,7 +125,7 @@
     [zoomScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     photoScrollView.contentSize=CGSizeMake(320,(ceilf([photoList count]/4.0))*90);
-    zoomScrollView.contentSize=CGSizeMake([photoList count]*320, 460);
+    zoomScrollView.contentSize=CGSizeMake([photoList count]*320, self.view.frame.size.height);
     
     for(int i=0; i<[photoList count];i++)
     {
@@ -179,8 +179,8 @@
             [aView release];
             
             //Big image
-            UIImageView *bigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
-            UIView *viewForBigImage = [[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
+            UIImageView *bigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+            UIView *viewForBigImage = [[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, self.view.frame.size.height)];
             
             bigImageView.image = nil;
             bigImageView.userInteractionEnabled = YES;

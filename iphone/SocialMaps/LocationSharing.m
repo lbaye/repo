@@ -422,7 +422,7 @@
             
         } else if (parent.tag == 3007) {
             // Show New Location view
-            NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) title:(NSString*)@"Location Name" sender:self tag:parent.tag+1000];
+            NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(5, 46, 310, /*480-46-20*/ self.superview.frame.size.height - 46) title:(NSString*)@"Location Name" sender:self tag:parent.tag+1000];
             locSharing.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                          green:247.0/255.0 
                                                           blue:247.0/255.0 

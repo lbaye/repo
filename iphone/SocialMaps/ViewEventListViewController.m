@@ -81,7 +81,7 @@ bool searchFlags=true;
     {
         CGRect tableFrame = self.eventListTableView.frame;
         tableFrame.origin.y = 97;
-        tableFrame.size.height = 338 + 123 - 97;
+        tableFrame.size.height = self.view.frame.size.height - 97;
         self.eventListTableView.frame = tableFrame;
         [self.view bringSubviewToFront:self.eventListTableView];
         

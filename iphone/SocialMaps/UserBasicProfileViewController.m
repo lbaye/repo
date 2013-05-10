@@ -103,7 +103,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     statusMsgLabel.layer.shadowOffset = CGSizeZero;
     statusMsgLabel.layer.masksToBounds = NO;
 
-    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate showActivityViewer:smAppDelegate.window];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;
     rc=[[RestClient alloc] init];
