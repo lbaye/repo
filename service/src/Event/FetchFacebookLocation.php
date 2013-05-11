@@ -257,8 +257,8 @@ class FetchFacebookLocation extends Base
 
         # Iterate through each checkin data and map into a hash map
         for ($i = 0; $i < count($fbCheckIns); $i++) {
+            $fbCheckIn = $fbCheckIns[$i];
             if (!empty($fbCheckIn['author_uid']) && !empty($fbCheckIn['page_id'])) {
-                $fbCheckIn = $fbCheckIns[$i];
                 $fbFriendId = $fbCheckIn['author_uid'];
                 $fbCoords = $fbCheckIn['coords'];
                 $fbTimestamp = $fbCheckIn['timestamp'];
