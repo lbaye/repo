@@ -229,8 +229,8 @@ class FetchFacebookLocation extends Base
                 $smFriendsList = array();
                 $smFriendsList = $extUser->getSmFriends();
                 if (!empty($smFriendsList)) {
-                    $this->debug("Result of array_merge".var_dump(array_merge($extUser->getSmFriends(), (array) $smUser->getId())));
-                    $extUser->setSmFriends(array_merge($extUser->getSmFriends(), (array) $smUser->getId()));
+                    $this->debug("Result of array_merge" . var_dump(array_merge($extUser->getSmFriends(), (array)$smUser->getId())));
+                    $extUser->setSmFriends(array_merge($extUser->getSmFriends(), (array)$smUser->getId()));
                     $this->debug("smfriends is not empty!");
                 } else {
                     $extUser->setSmFriends(array($smUser->getId()));
@@ -257,21 +257,23 @@ class FetchFacebookLocation extends Base
 
         # Iterate through each checkin data and map into a hash map
         for ($i = 0; $i < count($fbCheckIns); $i++) {
-            $fbCheckIn = $fbCheckIns[$i];
-            $fbFriendId = $fbCheckIn['author_uid'];
-            $fbCoords = $fbCheckIn['coords'];
-            $fbTimestamp = $fbCheckIn['timestamp'];
-            $fbPageId = $fbCheckIn['page_id'];
+            if (!empty($fbCheckIn['author_uid']) && !empty($fbCheckIn['page_id'])) {
+                $fbCheckIn = $fbCheckIns[$i];
+                $fbFriendId = $fbCheckIn['author_uid'];
+                $fbCoords = $fbCheckIn['coords'];
+                $fbTimestamp = $fbCheckIn['timestamp'];
+                $fbPageId = $fbCheckIn['page_id'];
 
-            $checkinsInfo[$fbFriendId] = array(
-                'friendId' => $fbFriendId,
-                'coords' => $fbCoords,
-                'timestamp' => $fbTimestamp,
-                'pageId' => $fbPageId
-            );
+                $checkinsInfo[$fbFriendId] = array(
+                    'friendId' => $fbFriendId,
+                    'coords' => $fbCoords,
+                    'timestamp' => $fbTimestamp,
+                    'pageId' => $fbPageId
+                );
 
-            $pageIds[] = $fbPageId;
-            $this->debug("Get friend id: ".$fbFriendId." page_id : ".$fbPageId);
+                $pageIds[] = $fbPageId;
+                $this->debug("Get friend id: " . $fbFriendId . " page_id : " . $fbPageId);
+            }
         }
 
         # Retrieve all users information
@@ -312,6 +314,7 @@ class FetchFacebookLocation extends Base
                     'address' => $this->buildAddress($pageInfo)
                 )
             );
+            $this->debug("Full checkin info: " . json_encode($fullCheckinsInfo[$uid]));
         }
 
         $this->debug("Found and constructed checkins with meta data");
@@ -337,7 +340,7 @@ class FetchFacebookLocation extends Base
         if (!empty($pagesResult['data'])) {
             $pages = $pagesResult['data'];
 
-        $this->debug('page_id from page table - ' . json_encode($pages));
+            $this->debug('page_id from page table - ' . json_encode($pages));
 
             if (!empty($pages)) {
                 $map = array();
