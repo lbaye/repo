@@ -289,6 +289,7 @@ class FetchFacebookLocation extends Base
             $uid = $userInfo['uid'];
             $checkinInfo = &$checkinsInfo[$uid];
             $pageInfo = &$pages[$checkinInfo['pageId']];
+            $this->debug('Get page_id with info after mapping - ' . $checkinInfo['pageId']);
             $this->debug('Found page info - ' . json_encode($pageInfo));
 
             $created_at = new \DateTime();
@@ -331,8 +332,9 @@ class FetchFacebookLocation extends Base
     private function mapByPageId(array &$pagesResult)
     {
         $this->debug('Remapping pages with page_id as key and data as value');
+        $this->debug('page_id with location - ' . json_encode($pagesResult['data']));
 
-        if (!empty($pagesResult)) {
+        if (!empty($pagesResult['data'])) {
             $pages = $pagesResult['data'];
 
         $this->debug('page_id from page table - ' . json_encode($pages));
