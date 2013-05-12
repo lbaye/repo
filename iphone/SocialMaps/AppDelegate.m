@@ -30,6 +30,7 @@
 #import "LoadingView.h"
 #import "RestClient.h"
 #import "GoogleConversionPing.h"
+#import "UtilityClass.h"
 
 @implementation AppDelegate
 
@@ -398,28 +399,45 @@
         else if (newNotif.notifType == PushNotificationProximityAlert)
         {
             NSLog(@"in proxomity alert");            
-            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-            MapViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
             LocationItemPeople *locItemPeople=[[LocationItemPeople alloc] init];
+            
+            BOOL didUserFoundOnMap = NO;
+            
             for (int i=0; i<[self.displayList count]; i++)
             {
                 LocationItemPeople *locItem = (LocationItemPeople*)[self.displayList objectAtIndex:i];
                 if ([[newNotif.objectIds objectAtIndex:0] isEqualToString:locItem.userInfo.userId])
                 {
-                    locItemPeople=locItem;
+                    locItemPeople = locItem;
+                    didUserFoundOnMap = YES;
+                    break;
                 }                
             }
 
-            
-            if ([self.currentModelViewController isKindOfClass:[MapViewController class]]) 
+            if (didUserFoundOnMap)
             {
-                [(MapViewController *) self.currentModelViewController showAnnotationDetailView:locItemPeople];
-                return;
+                [self showAnnotationDetailViewOnMap:locItemPeople];
             }
-            
-            [controller showAnnotationDetailView:locItemPeople];
-            [self.currentModelViewController presentModalViewController:controller animated:YES];
+            else
+            {
+                [self showActivityViewer:self.window];
+
+                RestClient *rc=[[RestClient alloc] init];
+                [rc getPeopleFromUserId:[newNotif.objectIds objectAtIndex:0] authToken:@"Auth-Token" authTokenValue:self.authToken callBack:^(id people)
+                {
+                    [self hideActivityViewer];
+                    
+                    if ([people isKindOfClass:[People class]])
+                    {
+                        [self getPeopleFromIdDone:people];
+                    }
+                    else
+                    {
+                        [UtilityClass showAlert:@"" :@"Network problem. Try again"];
+                    }
+                }];
+            }
         }
     }
     else 
@@ -442,6 +460,51 @@
             }
             */
         }
+    }
+}
+
+- (void)getPeopleFromIdDone:(People *)people
+{
+    if ([people isKindOfClass:[People class]])
+    {
+        CLLocationCoordinate2D loc;
+        loc.latitude = [people.currentLocationLat doubleValue];
+        loc.longitude = [people.currentLocationLng doubleValue];
+        
+        CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+        
+        LocationItemPeople *locItemPeople = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", people.firstName, people.lastName] address:people.lastSeenAt type:ObjectTypePeople category:people.gender coordinate:loc dist:distanceFromMe icon:nil bg:nil itemCoverPhotoUrl:[NSURL URLWithString:people.coverPhotoUrl]];
+        locItemPeople.userInfo = people;
+        [self showAnnotationDetailViewOnMap:locItemPeople];
+    }
+}
+
+- (CLLocationDistance) getDistanceFromMe:(CLLocationCoordinate2D) loc
+{
+    Geolocation *myPos = self.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithCoordinate:loc altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
+    
+    [myLoc release];
+    [userLoc release];
+    
+    return distanceFromMe;
+}
+
+- (void)showAnnotationDetailViewOnMap:(LocationItem*)locItem
+{
+    if ([self.currentModelViewController isKindOfClass:[MapViewController class]])
+    {
+        [(MapViewController *) self.currentModelViewController showAnnotationDetailView:locItem];
+    }
+    else
+    {
+        UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        MapViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [controller showAnnotationDetailView:locItem];
+        [self.currentModelViewController presentModalViewController:controller animated:YES];
     }
 }
 

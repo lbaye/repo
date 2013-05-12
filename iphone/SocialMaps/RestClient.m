@@ -5916,6 +5916,84 @@ AppDelegate *smAppDelegate;
     [request startAsynchronous];
 }
 
+- (void)getPeopleFromUserId:(NSString*)userId authToken:(NSString*)authToken authTokenValue:(NSString*)authTokenValue callBack:(void (^) (id people)) block
+{
+    NSString *route = [NSString stringWithFormat:@"%@/users/%@",WS_URL,userId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+
+    [request setCompletionBlock:^{
+        
+        int responseStatus = [request responseStatusCode];
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204)
+        {
+            SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+            NSError *error = nil;
+            NSString *responseString = [request responseString];
+            
+            NSDictionary *item = [jsonParser objectWithString:responseString error:&error];
+            
+            People *people=[[People alloc] init];
+            
+            people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+            people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+            people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+            people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+            people.userName = [self getNestedKeyVal:item key1:@"username" key2:nil key3:nil];
+            
+            if ([people.userName isKindOfClass:[NSString class]])
+            {
+                people.firstName=people.userName;
+                people.lastName=@"";
+            }
+            
+            people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+            people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
+            people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
+            people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
+            people.city = [self getNestedKeyVal:item key1:@"address" key2:@"city" key3:nil];
+            people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
+            //people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
+            NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+            people.friendshipStatus = friendship;
+            people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+            people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
+            people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+            people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+            people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+            people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
+            [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
+            people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+            people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
+            people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+            people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+            people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+            people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
+            //people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
+            people.coverPhotoUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
+            people.isOnline = [[self getNestedKeyVal:item key1:@"online" key2:nil key3:nil] boolValue];
+            
+            [jsonParser release];
+            jsonParser = nil;
+
+            block(people);
+        }
+        else
+        {
+            block(nil);
+        }
+     }];
+    
+    [request setFailedBlock:^{
+        block(nil);
+    }];
+    
+    [request startAsynchronous];
+}
+
 -(void)getOtherUserProfile:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId
 {
     NSString *route = [NSString stringWithFormat:@"%@/users/%@",WS_URL,userId];

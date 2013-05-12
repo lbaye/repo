@@ -796,4 +796,6 @@
 
 - (void)logout:(NSString*)authToken authTokenVal:(NSString*)authTokenValue callBack:(void (^) (BOOL isLoggedOut)) block;
 
+- (void)getPeopleFromUserId:(NSString*)userId authToken:(NSString*)authToken authTokenValue:(NSString*)authTokenValue callBack:(void (^) (id people)) block;
+
 @end
