@@ -13,6 +13,8 @@
 #import "UIImageView+Cached.h"
 #import "UtilityClass.h"
 
+#define CELL_HEIGHT 132
+
 @implementation LocationItem
 @synthesize itemName;
 @synthesize itemAddress;
@@ -215,7 +217,7 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
 }
 
 - (CGFloat) getRowHeight:(UITableView*)tv {    
-    return (tv.frame.size.height/3);
+    return CELL_HEIGHT;
 }
 
 - (NSString*) getIdent {
