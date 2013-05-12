@@ -439,7 +439,6 @@
 		B000233F17044350006DB843 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B000233E17044350006DB843 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B003243316E4D1580070F83F /* transparent_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B003243216E4D1540070F83F /* transparent_icon.png */; };
 		B0044AB716B7A6B8004C6A57 /* CustomSaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0044AB616B7A6B8004C6A57 /* CustomSaveView.m */; };
-		B0187E6317094BA700DFD84C /* libGoogleConversionTracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0187E6217094BA700DFD84C /* libGoogleConversionTracking.a */; };
 		B01C860416DE37E000438C0E /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = B01C860316DE37E000438C0E /* icon_event.png */; };
 		B01DFC4615F5E61000020D49 /* MessageReply.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4515F5E61000020D49 /* MessageReply.m */; };
 		B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4915F5E61F00020D49 /* MessageListViewController.m */; };
@@ -504,6 +503,8 @@
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
 		B0D172FA170C112600AFE506 /* ReportContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D172F9170C112600AFE506 /* ReportContent.m */; };
 		B0D172FD170C3CF900AFE506 /* flag_red.png in Resources */ = {isa = PBXBuildFile; fileRef = B0D172FC170C3CF900AFE506 /* flag_red.png */; };
+		B0D33689173F6CDD00D11D80 /* Changelog.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0D33686173F6CDD00D11D80 /* Changelog.txt */; };
+		B0D3368A173F6CDD00D11D80 /* libGoogleConversionTracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D33688173F6CDD00D11D80 /* libGoogleConversionTracking.a */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
 		B0D648E915FC4F460006DF0E /* MeetUpRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */; };
 		B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */; };
@@ -1142,8 +1143,6 @@
 		B003243216E4D1540070F83F /* transparent_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transparent_icon.png; path = Images/transparent_icon.png; sourceTree = SOURCE_ROOT; };
 		B0044AB516B7A6B8004C6A57 /* CustomSaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSaveView.h; sourceTree = "<group>"; };
 		B0044AB616B7A6B8004C6A57 /* CustomSaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSaveView.m; sourceTree = "<group>"; };
-		B0187E6117094BA700DFD84C /* GoogleConversionPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleConversionPing.h; sourceTree = "<group>"; };
-		B0187E6217094BA700DFD84C /* libGoogleConversionTracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleConversionTracking.a; sourceTree = "<group>"; };
 		B01C860316DE37E000438C0E /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		B01DFC4415F5E61000020D49 /* MessageReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageReply.h; sourceTree = "<group>"; };
 		B01DFC4515F5E61000020D49 /* MessageReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageReply.m; sourceTree = "<group>"; };
@@ -1229,6 +1228,9 @@
 		B0D172F8170C112500AFE506 /* ReportContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportContent.h; sourceTree = "<group>"; };
 		B0D172F9170C112600AFE506 /* ReportContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportContent.m; sourceTree = "<group>"; };
 		B0D172FC170C3CF900AFE506 /* flag_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flag_red.png; path = Images/flag_red.png; sourceTree = SOURCE_ROOT; };
+		B0D33686173F6CDD00D11D80 /* Changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Changelog.txt; sourceTree = "<group>"; };
+		B0D33687173F6CDD00D11D80 /* GoogleConversionPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleConversionPing.h; sourceTree = "<group>"; };
+		B0D33688173F6CDD00D11D80 /* libGoogleConversionTracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleConversionTracking.a; sourceTree = "<group>"; };
 		B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequestController.h; sourceTree = "<group>"; };
 		B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequestController.m; sourceTree = "<group>"; };
 		B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestController.xib; sourceTree = "<group>"; };
@@ -1261,7 +1263,7 @@
 				4F98A2D015BB387D000B3124 /* CoreGraphics.framework in Frameworks */,
 				4FE9607115BC93A80007327A /* MapKit.framework in Frameworks */,
 				4FE425C615C06A4C00A6B6A3 /* FBiOSSDK.framework in Frameworks */,
-				B0187E6317094BA700DFD84C /* libGoogleConversionTracking.a in Frameworks */,
+				B0D3368A173F6CDD00D11D80 /* libGoogleConversionTracking.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1527,7 +1529,7 @@
 				4F98A2D115BB387D000B3124 /* SocialMaps */,
 				4F98A2CA15BB387D000B3124 /* Frameworks */,
 				4F98A2C815BB387D000B3124 /* Products */,
-				B0187E6017094BA700DFD84C /* GoogleConversionTrackingSDK */,
+				B0D33685173F6CDD00D11D80 /* GoogleConversionTrackingSDK-iOS-1.2.0 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2109,13 +2111,14 @@
 			path = FBiOSSDK.pmdoc;
 			sourceTree = "<group>";
 		};
-		B0187E6017094BA700DFD84C /* GoogleConversionTrackingSDK */ = {
+		B0D33685173F6CDD00D11D80 /* GoogleConversionTrackingSDK-iOS-1.2.0 */ = {
 			isa = PBXGroup;
 			children = (
-				B0187E6117094BA700DFD84C /* GoogleConversionPing.h */,
-				B0187E6217094BA700DFD84C /* libGoogleConversionTracking.a */,
+				B0D33686173F6CDD00D11D80 /* Changelog.txt */,
+				B0D33687173F6CDD00D11D80 /* GoogleConversionPing.h */,
+				B0D33688173F6CDD00D11D80 /* libGoogleConversionTracking.a */,
 			);
-			path = GoogleConversionTrackingSDK;
+			path = "GoogleConversionTrackingSDK-iOS-1.2.0";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2468,6 +2471,7 @@
 				B0FE823516E751A400BEEDD8 /* top_curve_bg.png in Resources */,
 				B0D172FD170C3CF900AFE506 /* flag_red.png in Resources */,
 				B08EE140173A719C008C44D8 /* Default-568h@2x.png in Resources */,
+				B0D33689173F6CDD00D11D80 /* Changelog.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2766,6 +2770,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Downloads/GoogleConversionTrackingSDK\"",
 					"\"$(SRCROOT)/GoogleConversionTrackingSDK\"",
+					"\"$(SRCROOT)/GoogleConversionTrackingSDK-iOS-1.2.0\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2798,6 +2803,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../Downloads/GoogleConversionTrackingSDK\"",
 					"\"$(SRCROOT)/GoogleConversionTrackingSDK\"",
+					"\"$(SRCROOT)/GoogleConversionTrackingSDK-iOS-1.2.0\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
