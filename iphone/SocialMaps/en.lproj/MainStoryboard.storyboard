@@ -20,8 +20,8 @@
                             <progressView contentMode="scaleToFill" progress="0.5" id="bDR-82-7Of">
                                 <rect key="frame" x="20" y="182" width="280" height="9"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <color key="progressTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <color key="trackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="progressTintColor" red="0.64705884456634521" green="0.79215693473815918" blue="0.29411765933036804" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="trackTintColor" red="0.80392163991928101" green="0.90980398654937744" blue="0.9647059440612793" alpha="1" colorSpace="deviceRGB"/>
                             </progressView>
                             <view contentMode="scaleToFill" id="7Va-bB-674">
                                 <rect key="frame" x="1000" y="0.0" width="320" height="460"/>
@@ -5984,7 +5984,7 @@ By clicking on "Accept and login" below, you agree to these terms.</string>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="qvJ-bu-e6k"/>
         <segue reference="r7Q-WQ-M5h"/>
-        <segue reference="DXL-pf-M9m"/>
     </inferredMetricsTieBreakers>
 </document>
