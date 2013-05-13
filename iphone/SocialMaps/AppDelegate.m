@@ -475,6 +475,7 @@
         
         LocationItemPeople *locItemPeople = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", people.firstName, people.lastName] address:people.lastSeenAt type:ObjectTypePeople category:people.gender coordinate:loc dist:distanceFromMe icon:nil bg:nil itemCoverPhotoUrl:[NSURL URLWithString:people.coverPhotoUrl]];
         locItemPeople.userInfo = people;
+        locItemPeople.itemAvaterURL = people.avatar;
         [self showAnnotationDetailViewOnMap:locItemPeople];
     }
 }
