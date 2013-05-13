@@ -495,18 +495,28 @@
 
 - (void)showAnnotationDetailViewOnMap:(LocationItem*)locItem
 {
+    MapViewController *controller = [self getMapViewController];
+    [controller showAnnotationDetailView:locItem];
+    [controller performSelector:@selector(prepareForLocaitons) withObject:nil afterDelay:1.5];
+}
+
+- (MapViewController*)getMapViewController
+{
+    MapViewController *controller = nil;
+    
     if ([self.currentModelViewController isKindOfClass:[MapViewController class]])
     {
-        [(MapViewController *) self.currentModelViewController showAnnotationDetailView:locItem];
+        controller = (MapViewController*)self.currentModelViewController;
     }
     else
     {
         UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
         MapViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [controller showAnnotationDetailView:locItem];
         [self.currentModelViewController presentModalViewController:controller animated:YES];
     }
+    
+    return controller;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
