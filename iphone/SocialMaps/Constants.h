@@ -101,6 +101,9 @@ extern float const kNumberRGBBlue;
 // Maximum number of visible annotation
 extern int const MAX_VISIBLE_ANNO;
 
+
+#define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
+
 /**
  * comment the next line out to disable debug logging
  * when bundling the Application for Production

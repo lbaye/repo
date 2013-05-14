@@ -19,7 +19,7 @@
                             </imageView>
                             <progressView contentMode="scaleToFill" progress="0.5" id="bDR-82-7Of">
                                 <rect key="frame" x="20" y="182" width="280" height="9"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="progressTintColor" red="0.64705884456634521" green="0.79215693473815918" blue="0.29411765933036804" alpha="1" colorSpace="deviceRGB"/>
                                 <color key="trackTintColor" red="0.80392163991928101" green="0.90980398654937744" blue="0.9647059440612793" alpha="1" colorSpace="deviceRGB"/>
                             </progressView>
@@ -83,6 +83,7 @@
                         <outlet property="betaPassWord" destination="65E-Kr-BeX" id="ReB-9R-xPC"/>
                         <outlet property="privateBetaView" destination="7Va-bB-674" id="UbS-Vf-tUY"/>
                         <outlet property="progressView" destination="bDR-82-7Of" id="LKt-fO-j67"/>
+                        <outlet property="splashImageView" destination="QRa-DN-808" id="naC-J1-W77"/>
                         <segue destination="hmN-q9-RwG" kind="modal" identifier="showLogin" modalTransitionStyle="crossDissolve" id="qvJ-bu-e6k"/>
                     </connections>
                 </viewController>
@@ -5905,6 +5906,7 @@ By clicking on "Accept and login" below, you agree to these terms.</string>
                 <relationship kind="outlet" name="betaPassWord" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="privateBetaView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="splashImageView" candidateClass="UIImageView"/>
             </relationships>
         </class>
         <class className="ViewEventDetailViewController" superclassName="UIViewController">

@@ -18,6 +18,7 @@
 @property (retain, nonatomic) IBOutlet UIProgressView *progressView;
 @property (nonatomic,retain) IBOutlet UIView *privateBetaView; 
 @property (nonatomic,retain) IBOutlet UITextField *betaPassWord;
+@property (retain, nonatomic) IBOutlet UIImageView *splashImageView;
 
 /**
  * @brief Navigate user to login screen

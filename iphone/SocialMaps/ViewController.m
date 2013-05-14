@@ -57,11 +57,16 @@ AppDelegate *smAppDelegate;
     }
 	// Do any additional setup after loading the view, typically from a nib.
     progressView.progress = 0.0;
+    
+    if (IS_IPHONE_5) {
+        self.splashImageView.image = [UIImage imageNamed:@"Default-568h@2x.png"];
+    }
 }
 
 - (void)viewDidUnload
 {
     [self setProgressView:nil];
+    [self setSplashImageView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -98,6 +103,7 @@ AppDelegate *smAppDelegate;
 
 - (void)dealloc {
     [progressView release];
+    [_splashImageView release];
     [super dealloc];
 }
 
