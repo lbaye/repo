@@ -261,7 +261,7 @@ class ProximityAlert extends Base
 
         return array(
             'title' => $message,
-            'objectId' => $this->getUserId($friends[0]),
+            'objectId' => (string) $this->getUserId($friends[0]),
             'objectType' => 'proximity_alert',
             'message' => $message,
             'receiverId' => $user->getId()
