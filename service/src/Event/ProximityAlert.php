@@ -85,13 +85,14 @@ class ProximityAlert extends Base
         }
     }
 
-    private function findClosebyFriends(\Document\User $user, $newLoc, $oldLoc) {
+    private function findClosebyFriends(\Document\User $user, $newLoc, $oldLoc)
+    {
         $this->debug('Finding closeby friends comparing users last location');
         $this->debug('Old location - ' . json_encode($oldLoc));
         $this->debug('New location - ' . json_encode($newLoc));
 
-        $friendsSetNew = $this->findNearbyFriends($user, (array) $newLoc);
-        $friendsSetOld = $this->findNearbyFriends($user, (array) $oldLoc);
+        $friendsSetNew = $this->findNearbyFriends($user, (array)$newLoc);
+        $friendsSetOld = $this->findNearbyFriends($user, (array)$oldLoc);
 
         $this->debug('Friends from New SET - ' . json_encode($friendsSetNew));
         $this->debug('Friends from Old SET - ' . json_encode($friendsSetOld));
@@ -104,7 +105,8 @@ class ProximityAlert extends Base
         return $friends;
     }
 
-    private function mapWithId(array &$users) {
+    private function mapWithId(array &$users)
+    {
         $this->debug('Map with id');
         var_dump($users);
         $items = array();
@@ -259,6 +261,7 @@ class ProximityAlert extends Base
 
         return array(
             'title' => $message,
+            'objectId' => $this->getUserId($friends[0]),
             'objectType' => 'proximity_alert',
             'message' => $message,
             'receiverId' => $user->getId()
@@ -278,15 +281,25 @@ class ProximityAlert extends Base
             echo $pushNotifier->send($notification, array($pushSettings['device_id']));
     }
 
-    private function getUsername(array &$userHash, $fullName = false) {
+    private function getUsername(array &$userHash, $fullName = false)
+    {
         if (!empty($userHash)) {
             if (isset($userHash['username']) && !$fullName)
                 return $userHash['username'];
             else if ($fullName && !isset($userHash['username']))
                 return implode(" ", array_filter(
-                       array($userHash['firstName'], $userHash['lastName'])));
+                    array($userHash['firstName'], $userHash['lastName'])));
             else
                 return $userHash['firstName'];
+        } else {
+            return null;
+        }
+    }
+
+    private function getUserId(array &$userHash, $fullName = false)
+    {
+        if (!empty($userHash)) {
+            return $userHash['_id'];
         } else {
             return null;
         }
