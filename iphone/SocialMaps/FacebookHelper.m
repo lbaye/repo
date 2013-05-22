@@ -100,6 +100,7 @@ UserDefault *userDefault;
                                 @"email",
                                 @"user_likes",
                                 @"user_photos",
+                                @"create_event",
                                 @"publish_checkins",
                                 @"photo_upload",
                                 @"user_location",
@@ -107,9 +108,12 @@ UserDefault *userDefault;
                                 @"user_about_me",
                                 @"publish_stream",
                                 @"read_stream",
+                                @"read_friendlists",
                                 @"friends_status",
-                                @"user_checkins",
-                                @"friends_checkins",
+                                @"friends_location",
+                                @"friends_photos",
+                                @"friends_about_me",
+                                @"friends_activities",
                                 nil];
         [facebookApi authorize:permissions];
         [permissions release];

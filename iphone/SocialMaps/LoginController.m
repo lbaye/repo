@@ -531,18 +531,22 @@ int fbRegCounter=0;
         [smAppDelegate showActivityViewer:self.view];
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"email",
-                                @"user_likes", 
-                                @"user_photos", 
-                                @"publish_checkins", 
-                                @"photo_upload", 
+                                @"user_likes",
+                                @"user_photos",
+                                @"create_event",
+                                @"publish_checkins",
+                                @"photo_upload",
                                 @"user_location",
                                 @"user_birthday",
                                 @"user_about_me",
                                 @"publish_stream",
                                 @"read_stream",
+                                @"read_friendlists",
                                 @"friends_status",
-                                @"user_checkins",
-                                @"friends_checkins",
+                                @"friends_location",
+                                @"friends_photos",
+                                @"friends_about_me",
+                                @"friends_activities",
                                 nil];
         [facebook authorize:permissions];
         [permissions release];

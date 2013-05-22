@@ -302,19 +302,24 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
         {
             NSArray *permissions = [[NSArray alloc] initWithObjects:
                                     @"email",
-                                    @"user_likes", 
-                                    @"user_photos", 
-                                    @"publish_checkins", 
-                                    @"photo_upload", 
+                                    @"user_likes",
+                                    @"user_photos",
+                                    @"create_event",
+                                    @"publish_checkins",
+                                    @"photo_upload",
                                     @"user_location",
                                     @"user_birthday",
                                     @"user_about_me",
                                     @"publish_stream",
                                     @"read_stream",
+                                    @"read_friendlists",
                                     @"friends_status",
-                                    @"user_checkins",
-                                    @"friends_checkins",
+                                    @"friends_location",
+                                    @"friends_photos",
+                                    @"friends_about_me",
+                                    @"friends_activities",
                                     nil];
+            
             [facebookApi authorize:permissions];
             [permissions release];
         }
@@ -335,6 +340,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                     @"email",
                                     @"user_likes",
                                     @"user_photos",
+                                    @"create_event",
                                     @"publish_checkins",
                                     @"photo_upload",
                                     @"user_location",
@@ -342,9 +348,12 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                     @"user_about_me",
                                     @"publish_stream",
                                     @"read_stream",
+                                    @"read_friendlists",
                                     @"friends_status",
-                                    @"user_checkins",
-                                    @"friends_checkins",
+                                    @"friends_location",
+                                    @"friends_photos",
+                                    @"friends_about_me",
+                                    @"friends_activities",
                                     nil];
             [facebookApi authorize:permissions];
             [permissions release];
