@@ -268,7 +268,7 @@
     UITableViewCell * cell = nil;
     Notification * notif=nil;
     NotifMessage * msg=nil;
-    NotifRequest * req=nil;
+    NotifRequest * request=nil;
     TagNotification *tag=nil;
     switch (selectedType) {
         case Notif:
@@ -287,8 +287,8 @@
             cell = [msg getTableViewCell:tv sender:self];
             break;
         case Request:
-            req = [smAppDelegate.friendRequests objectAtIndex:indexPath.row];
-            cell = [req getTableViewCell:tv sender:self];
+            request = [smAppDelegate.friendRequests objectAtIndex:indexPath.row];
+            cell = [request getTableViewCell:tv sender:self];
             break;
 
         default:
@@ -354,7 +354,7 @@
 	CGFloat cellHeight=0.0;
     Notification *notif;
     NotifMessage * msg=nil;
-    NotifRequest * req=nil;
+    NotifRequest * request=nil;
     
 	switch (selectedType) {
         case Notif:
@@ -366,9 +366,9 @@
             cellHeight = [msg getRowHeight:tableView];
             break;
         case Request:
-            req = [smAppDelegate.friendRequests objectAtIndex:indexPath.row];
-            [req setDelegate:self];
-            cellHeight = [req getRowHeight:tableView];
+            request = [smAppDelegate.friendRequests objectAtIndex:indexPath.row];
+            [request setDelegate:self];
+            cellHeight = [request getRowHeight:tableView];
             break;
             
         default:
@@ -446,7 +446,7 @@
 - (void) buttonClicked:(NSString*)name cellRow:(int)row {
     NSLog(@"Delegate button %@ clicked for row %d", name, row);
     
-    NotifRequest *req = [smAppDelegate.friendRequests objectAtIndex:row];
+    req = [smAppDelegate.friendRequests objectAtIndex:row];
     
     if ([name isEqualToString:@"Profile"])
     {
@@ -457,10 +457,6 @@
         [controller release];
         return;
     }
-    
-    [smAppDelegate.friendRequests removeObjectAtIndex:row];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
-    [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
     
     if ([name isEqualToString:@"Accept"])
     {
@@ -481,15 +477,39 @@
         [restClient acceptFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
         [self setNOtificationCount];
+        
+        [smAppDelegate.friendRequests removeObjectAtIndex:row];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
+        [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+    }
+    else if ([name isEqualToString:@"Ignore"])
+    {
+        [smAppDelegate.friendRequests removeObjectAtIndex:row];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
+        [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
     else if ([name isEqualToString:@"Decline"])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Decline?" message:@"After declining a user there is no way to be friends with that user again." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Decline", nil];
+        alertView.tag = row;
+        [alertView show];
+    }
+    
+    [notificationItems reloadData];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex)
     {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient declineFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         [self setNOtificationCount];
+        
+        [smAppDelegate.friendRequests removeObjectAtIndex:alertView.tag];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:alertView.tag inSection:0]; // Only one section
+        [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
-    
-    [notificationItems reloadData];
 }
 
 - (void)setNOtificationCount
