@@ -1,8 +1,10 @@
 package com.socmaps.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -331,15 +333,33 @@ public class FriendRequestNotificationActivity extends Activity {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendId = senderId;
+			
+			
+			AlertDialog.Builder adb = new AlertDialog.Builder(this);
+			adb.setTitle("Decline?");
+			adb.setIcon(R.drawable.icon_alert);
+			adb.setMessage("After declining a user there is no way to be friends with that user again.");
+			adb.setPositiveButton("Decline", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					Thread thread = new Thread(null, declineFriendRequestThread,
+							"Start decline request");
+					thread.start();
 
-			Thread thread = new Thread(null, declineFriendRequestThread,
-					"Start decline request");
-			thread.start();
+					// show progress dialog if needed
+					m_ProgressDialog = ProgressDialog.show(context, getResources()
+							.getString(R.string.please_wait_text), getResources()
+							.getString(R.string.sending_request_text), true,true);
+				}
+			});
+			adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+			adb.show();
 
 		} else {
 

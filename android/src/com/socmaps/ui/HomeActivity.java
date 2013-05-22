@@ -1580,7 +1580,7 @@ public class HomeActivity extends FragmentActivity implements ILocationUpdateInd
 		if (Utility.isValidString(objectIdFromPush)) {
 			String url = Constant.smServerUrl + "/users/" + objectIdFromPush;
 
-			BackProcess backProcess = new BackProcess(context, null, url, REQUEST_TYPE.GET_USER_DETAILS, true, "On progress", "Please wait...", new BackProcessCallBackListener(), true);
+			BackProcess backProcess = new BackProcess(context, null, url, REQUEST_TYPE.GET_USER_DETAILS, true, "Loading", "Please wait...", new BackProcessCallBackListener(), true);
 
 			backProcess.execute(RestClient.RequestMethod.GET);
 		}

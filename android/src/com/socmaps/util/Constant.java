@@ -1,6 +1,5 @@
 package com.socmaps.util;
 
-
 /**
  * Constant class for providing necessary constant values.
  */
@@ -13,13 +12,17 @@ public class Constant {
 	 */
 	// final static public String FB_APP_ID = "260432304058696";
 	final static public String FB_APP_ID = "343783602384766";
-	final static public String[] facebookPermissions = { "offline_access",
-			"publish_stream", "user_photos", "publish_checkins",
-			"photo_upload", "email", "friends_activities", "friends_checkins",
-			"friends_location", "user_checkins", "user_location",
-			"user_about_me", "user_birthday", "user_relationships",
-			"user_likes", "read_stream", "friends_status", "user_checkins",
-			"friends_checkins" };
+	/*
+	 * final static public String[] facebookPermissions = { "offline_access",
+	 * "publish_stream", "user_photos", "publish_checkins", "photo_upload",
+	 * "email", "friends_activities", "friends_checkins", "friends_location",
+	 * "user_checkins", "user_location", "user_about_me", "user_birthday",
+	 * "user_relationships", "user_likes", "read_stream", "friends_status",
+	 * "user_checkins", "friends_checkins" };
+	 */
+	final static public String[] facebookPermissions = { "email", "user_likes", "user_photos", "create_event", "publish_checkins", "photo_upload", "user_location", "user_birthday", "user_about_me",
+			"publish_stream", "read_stream", "read_friendlists", "friends_status", "friends_interests", "friends_status", "friends_photos", "friends_location", "friends_photos", "friends_about_me",
+			"friends_activities" };
 
 	// final static public String[] facebookPermissions =
 	// {"publish_stream","publish_checkins"};
@@ -43,43 +46,37 @@ public class Constant {
 	// final static public String smServerUrl =
 	// "http://192.168.1.71/social_maps/web";
 	// staging server
-	//final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
-	// final static public String smServerUrl ="http://services.socialmapsapp.com/prodtest";
-	//final static public String smServerUrl = "http://192.168.1.212:8888";
-	//final static public String smServerUrl = "http://192.168.1.19/social_maps/web";
+	// final static public String smServerUrl
+	// ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
+	// final static public String smServerUrl
+	// ="http://services.socialmapsapp.com/prodtest";
+	// final static public String smServerUrl = "http://192.168.1.212:8888";
+	// final static public String smServerUrl =
+	// "http://192.168.1.19/social_maps/web";
 
-	final static public String smServerUrl ="http://services.socialmapsapp.com/v2_4";	
-	//final static public String smServerUrl = "http://ec2-54-228-1-129.eu-west-1.compute.amazonaws.com/v2_4";
+	final static public String smServerUrl = "http://services.socialmapsapp.com/v2_4";
+	// final static public String smServerUrl =
+	// "http://ec2-54-228-1-129.eu-west-1.compute.amazonaws.com/v2_4";
 
-	final static public String smRegistrationUrl = smServerUrl
-			+ "/auth/registration";
+	final static public String smRegistrationUrl = smServerUrl + "/auth/registration";
 	final static public String smLoginUrl = smServerUrl + "/auth/login";
 	final static public String smFbLoginUrl = smServerUrl + "/auth/login/fb";
-	final static public String smForgotPassUrl = smServerUrl
-			+ "/auth/forgot_pass";
-	final static public String smAccountSettingsUrl = smServerUrl
-			+ "/settings/account_settings";
-	final static public String smNotificationSettingsUrl = smServerUrl
-			+ "/settings/notifications";
-	final static public String platformsSettingsUrl = smServerUrl
-			+ "/settings/platforms";
+	final static public String smForgotPassUrl = smServerUrl + "/auth/forgot_pass";
+	final static public String smAccountSettingsUrl = smServerUrl + "/settings/account_settings";
+	final static public String smNotificationSettingsUrl = smServerUrl + "/settings/notifications";
+	final static public String platformsSettingsUrl = smServerUrl + "/settings/platforms";
 	final static public String avatarPrefixUrl = smServerUrl + "/images";
-	final static public String changePasswordUrl = smServerUrl
-			+ "/auth/change_pass";
-	final static public String layersSettingsUrl = smServerUrl
-			+ "/settings/layers";
+	final static public String changePasswordUrl = smServerUrl + "/auth/change_pass";
+	final static public String layersSettingsUrl = smServerUrl + "/settings/layers";
 	// final static public String
 	// getAccountSettingsUrl=smServerUrl+"/settings/account_settings";
-	final static public String informationSharingSettingsUrl = smServerUrl
-			+ "/settings/sharing_preference_settings";
+	final static public String informationSharingSettingsUrl = smServerUrl + "/settings/sharing_preference_settings";
 	final static public String smGetUserUrl = smServerUrl + "/search";
 
 	final static public String fbFriendListUrl = "https://graph.facebook.com/me/friends?access_token=";
 
-	final static public String smUpdateLocationUrl = smServerUrl
-			+ "/current-location";
-	final static public String smFriendRequestUrl = smServerUrl
-			+ "/request/friend";
+	final static public String smUpdateLocationUrl = smServerUrl + "/current-location";
+	final static public String smFriendRequestUrl = smServerUrl + "/request/friend";
 	final static public String smMessagesUrl = smServerUrl + "/messages";
 	final static public String smGetEventUrl = smServerUrl + "/events";
 	final static public String smEventUrl = smServerUrl + "/events";
@@ -87,21 +84,19 @@ public class Constant {
 	final static public String smFriendList = smServerUrl + "/me/friends";
 	final static public String smCircleUrl = smServerUrl + "/me/circles";
 	final static public String smBlockUrl = smServerUrl + "/me/users/block";
-	final static public String smUnBlockUrl = smServerUrl
-			+ "/me/users/un-block";
-	final static public String smBlockUnblockUrl = smServerUrl
-			+ "/me/users/block/overwrite";
+	final static public String smUnBlockUrl = smServerUrl + "/me/users/un-block";
+	final static public String smBlockUnblockUrl = smServerUrl + "/me/users/block/overwrite";
 	final static public String smGeoTag = smServerUrl + "/geotags";
 
-	final static public String smPlaces = smServerUrl + "/me/places"; 
+	final static public String smPlaces = smServerUrl + "/me/places";
 	final static public String smCreatePlaces = smServerUrl + "/places";
 	final static public String smUploadPhoto = smServerUrl + "/photos";
 
-	final static public String smPhotoUrl = smServerUrl + "/photos"; 
-	
+	final static public String smPhotoUrl = smServerUrl + "/photos";
+
 	final static public String smPlanUrl = smServerUrl + "/plans";
-	
-	final static public String smLocationSharingUrl = smServerUrl+"/settings/sharing_privacy_mode";
+
+	final static public String smLocationSharingUrl = smServerUrl + "/settings/sharing_privacy_mode";
 
 	/*
 	 * GENERAL STATUS CODE: 400: Bad Request 401: Unauthorized, Auth-Token
@@ -119,7 +114,8 @@ public class Constant {
 	 * PUT: Success: 200 Expectation Failed: 417 � Required data missing
 	 * Conflict: 409 � The resource already exist (duplicate unique field)
 	 * 
-	 * DELETE: Success: 200 Not Found: 404 � The requested resource is not found
+	 * DELETE: Success: 200 Not Found: 404 � The requested resource is not
+	 * found
 	 */
 	public final static String UNIT_METRIC = "metric";
 	public final static String UNIT_IMPERIAL = "imperial";
@@ -143,7 +139,7 @@ public class Constant {
 
 	public final static int eventPhotoWidth = 320;
 	public final static int eventPhotoHeight = 180;
-	
+
 	public final static int photoWidth = 320;
 
 	public final static String authTokenParam = "Auth-Token";
@@ -170,8 +166,8 @@ public class Constant {
 	public final static String PERMISSION_CUSTOM = "custom";
 
 	public final static int REQUEST_CODE_MAP_PICKER = 11111;
-	//public final static int REQUEST_CODE_CAMERA = 100;
-	//public final static int REQUEST_CODE_GALLERY = 101;
+	// public final static int REQUEST_CODE_CAMERA = 100;
+	// public final static int REQUEST_CODE_GALLERY = 101;
 
 	public final static String MY_RESPONSE_YES = "yes";
 	public final static String MY_RESPONSE_NO = "no";
@@ -195,7 +191,7 @@ public class Constant {
 
 	public final static String PEOPLE_SOCIALMAPS = "peoplesocialplaces";
 	public final static String PEOPLE_FACEBOOK = "peoplefacebook";
-	
+
 	public final static String PUSH_NOTIFICATION_FRIEND_REQUEST = "friend_request";
 	public final static String PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT = "accepted_request";
 	public final static String PUSH_NOTIFICATION_MEETUP = "meetup";
@@ -203,21 +199,27 @@ public class Constant {
 	public final static String PUSH_NOTIFICATION_MESSAGE_NEW = "new_message";
 	public final static String PUSH_NOTIFICATION_MESSAGE_REPLY = "reply_message";
 	public final static String PUSH_NOTIFICATION_PROXIMITY_ALERT = "proximity_alert";
-	
+
 	public final static String META_TYPE_VENUE = "venue";
 	public final static String META_TYPE_PLACE = "place";
 	public final static String META_TYPE_GEOTAG = "geotag";
-	
-	public final static int MAX_ITEM_DISTANCE = 50000000;//meter
-	
-	public static enum Permission  {NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM};
-	
+
+	public final static int MAX_ITEM_DISTANCE = 50000000;// meter
+
+	public static enum Permission {
+		NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM
+	};
+
 	public static final String IMAGE_CACHE_DIR = "thumbs";
-	
-	
-	//April 10
-	
-	public static enum OnlineOffline  {ONLINE, OFFLINE};
-	public static enum ALLUSER_FRIENDS {ALLUSER, FRIENDSONLY};
+
+	// April 10
+
+	public static enum OnlineOffline {
+		ONLINE, OFFLINE
+	};
+
+	public static enum ALLUSER_FRIENDS {
+		ALLUSER, FRIENDSONLY
+	};
 
 }
