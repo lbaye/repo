@@ -318,6 +318,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                     @"friends_photos",
                                     @"friends_about_me",
                                     @"friends_activities",
+                                    @"friends_interests",
                                     nil];
             
             [facebookApi authorize:permissions];
@@ -354,6 +355,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                     @"friends_photos",
                                     @"friends_about_me",
                                     @"friends_activities",
+                                    @"friends_interests",
                                     nil];
             [facebookApi authorize:permissions];
             [permissions release];

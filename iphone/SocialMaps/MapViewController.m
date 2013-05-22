@@ -1707,6 +1707,7 @@ ButtonClickCallbackData callBackData;
                                 @"friends_photos",
                                 @"friends_about_me",
                                 @"friends_activities",
+                                @"friends_interests",
                                 nil];
         [facebookApi authorize:permissions];
         [permissions release];

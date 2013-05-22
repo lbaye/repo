@@ -547,6 +547,7 @@ int fbRegCounter=0;
                                 @"friends_photos",
                                 @"friends_about_me",
                                 @"friends_activities",
+                                @"friends_interests",
                                 nil];
         [facebook authorize:permissions];
         [permissions release];
