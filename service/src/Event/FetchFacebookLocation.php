@@ -297,6 +297,12 @@ class FetchFacebookLocation extends Base
             $created_at = new \DateTime();
             $created_at->setTimestamp((int)$checkinInfo['timestamp']);
 
+            if (!empty($pageInfo['name'])) {
+                $lastSeenAt = $pageInfo['name'];
+            } else {
+                $lastSeenAt = $this->buildAddress($pageInfo);
+            }
+
             $fullCheckinsInfo[$uid] = array(
                 'refId' => $uid,
                 'refType' => \Document\ExternalUser::SOURCE_FB,
@@ -306,8 +312,8 @@ class FetchFacebookLocation extends Base
                 'avatar' => $userInfo['pic_square'],
                 'gender' => $userInfo['sex'],
                 'createdAt' => $created_at,
-//                'lastSeenAt' => $pageInfo['name'],
-                'lastSeenAt' => $this->buildAddress($pageInfo),
+                'lastSeenAt' => $lastSeenAt,
+//                'lastSeenAt' => $this->buildAddress($pageInfo),
                 'currentLocation' => array(
                     'lat' => $checkinInfo['coords']['latitude'],
                     'lng' => $checkinInfo['coords']['longitude'],
