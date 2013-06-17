@@ -323,7 +323,12 @@ CGFloat animatedDistance;
 
 +(NSString *)getCurrentTimeOrDate:(NSString *)dateTime
 {
-    NSDate *date=[self dateFromString:dateTime];
+    NSLog(@"date getCurrentTimeOrDate %@", dateTime);
+    
+    //NSDate *date=[self dateFromString:dateTime];
+    
+    NSDate *date = [self convertDate:dateTime tz_type:@"3" tz:@"UTC"];
+    
     NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
     dateFormatter1.dateFormat = @"MMMM d, yyyy";
     NSDateFormatter *dateFormatter2 = [[NSDateFormatter alloc] init];
