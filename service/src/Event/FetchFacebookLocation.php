@@ -219,6 +219,11 @@ class FetchFacebookLocation extends Base
                 $extUser = $extUserRepo->map($checkinWithMeta, $extUser);
 
                 $changed = true;
+            } else {
+                $this->debug("Just changed lat lng for user - {$extUser->getFirstName()}");
+                $extUser = $extUserRepo->map($checkinWithMeta, $extUser);
+
+                $changed = true;
             }
 
             # TODO: How to handle potentially larger friends list ?
