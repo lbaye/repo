@@ -145,7 +145,11 @@ int fbRegCounter=0;
     [bgImgView addGestureRecognizer:tapGesture];
     [tapview addGestureRecognizer:tapGesture1];
     [tapGesture release];
-    [tapGesture1 release];    
+    [tapGesture1 release];
+    
+    if (IS_IPHONE_5) {
+        self.bgImgView.image = [UIImage imageNamed:@"bg-568h@2x.png"];
+    }
 }
 
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender

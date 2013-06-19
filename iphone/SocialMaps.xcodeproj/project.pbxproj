@@ -495,6 +495,7 @@
 		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
 		B08EE140173A719C008C44D8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B08EE13F173A719C008C44D8 /* Default-568h@2x.png */; };
+		B099FA101771AD3C005B68F9 /* bg-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B099FA0F1771AD3C005B68F9 /* bg-568h@2x.png */; };
 		B0B73C1A1654BBB300DDF6E5 /* RecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */; };
 		B0B73C1B1654BBB300DDF6E5 /* RecommendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */; };
 		B0B73C1F1654F38100DDF6E5 /* UITextView+Rounded.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C1E1654F38100DDF6E5 /* UITextView+Rounded.m */; };
@@ -1215,6 +1216,7 @@
 		B08C30D1160AFF570031D7A0 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
 		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
 		B08EE13F173A719C008C44D8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		B099FA0F1771AD3C005B68F9 /* bg-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-568h@2x.png"; path = "Images/bg-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		B0B73C171654BBB300DDF6E5 /* RecommendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendViewController.h; sourceTree = "<group>"; };
 		B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendViewController.m; sourceTree = "<group>"; };
 		B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecommendViewController.xib; sourceTree = "<group>"; };
@@ -1728,6 +1730,7 @@
 				20B3CB1C1626C19C0099D49E /* beta_bg.png */,
 				20B3CB1D1626C19C0099D49E /* beta_text_website.png */,
 				4FE4261115C06FAD00A6B6A3 /* bg.png */,
+				B099FA0F1771AD3C005B68F9 /* bg-568h@2x.png */,
 				4F4CA52415C45351004234E5 /* breadcrumbs_icon.png */,
 				4FB7A04515D124E2001EB905 /* btn_bg_dark.png */,
 				4FB7A02F15D124E2001EB905 /* btn_bg_gray.png */,
@@ -2472,6 +2475,7 @@
 				B0D172FD170C3CF900AFE506 /* flag_red.png in Resources */,
 				B08EE140173A719C008C44D8 /* Default-568h@2x.png in Resources */,
 				B0D33689173F6CDD00D11D80 /* Changelog.txt in Resources */,
+				B099FA101771AD3C005B68F9 /* bg-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2755,8 +2759,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2774,8 +2778,8 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "4CC376DA-6345-4DF5-9859-0813AAD7043D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4CC376DA-6345-4DF5-9859-0813AAD7043D";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2788,8 +2792,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2807,8 +2811,8 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "4CC376DA-6345-4DF5-9859-0813AAD7043D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4CC376DA-6345-4DF5-9859-0813AAD7043D";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
