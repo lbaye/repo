@@ -42,7 +42,9 @@
 #pragma mark TableViewController
 
 
-@interface ViewCircleWisePeopleViewController ()
+@interface ViewCircleWisePeopleViewController (){
+    SectionInfo *opendSectionInfo;
+}
 @property (nonatomic, strong) NSMutableArray* sectionInfoArray;
 @property (nonatomic, strong) NSIndexPath* pinchedIndexPath;
 @property (nonatomic, assign) NSInteger openSectionIndex;
@@ -273,10 +275,10 @@ int renameCircleOndex;
 -(NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView==circleTableView) {
-        SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:section];
-        NSInteger numStoriesInSection = [[sectionInfo.userCircle friends] count];
+        opendSectionInfo = [self.sectionInfoArray objectAtIndex:section];
+        NSInteger numStoriesInSection = [[opendSectionInfo.userCircle friends] count];
         
-        return sectionInfo.open ? numStoriesInSection : 0;
+        return opendSectionInfo.open ? numStoriesInSection : 0;
     }
     else
     {
@@ -545,6 +547,7 @@ int renameCircleOndex;
     self.openSectionIndex = sectionOpened;
     [indexPathsToInsert release];
     [indexPathsToDelete release];
+    [self loadImagesForOnscreenRows];
 }
 
 
@@ -1071,6 +1074,35 @@ int renameCircleOndex;
 }
 #pragma mark Memory management
 
+- (void)loadImagesForOnscreenRows {
+    
+    //if ([filteredList count] > 0) {
+        
+        NSArray *visiblePaths = [self.circleTableView indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
+            
+            CircleListTableCell *cell = (CircleListTableCell*)[self.circleTableView cellForRowAtIndexPath:indexPath];
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell coverPicImgView];
+            
+            UserCircle *circle = [circleListDetailGlobalArray objectAtIndex:indexPath.section];
+            UserFriends *userFrnd = [circle.friends objectAtIndex:indexPath.row];
+            NSLog(@"userFrnd %@",userFrnd);
+            
+            if (userFrnd.coverImageUrl)
+                [imgCover loadFromURL:[NSURL URLWithString:userFrnd.coverImageUrl]];
+            
+            if (userFrnd.imageUrl)
+                [cell.profilePicImgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+        }
+   // }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self loadImagesForOnscreenRows];
+}
 
 - (void)dealloc {
     [labelNotifCount release];

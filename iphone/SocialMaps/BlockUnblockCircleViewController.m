@@ -111,6 +111,7 @@ bool searchFlag3=true;
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self.blockTableView reloadData];
+    [self loadImagesForOnscreenRows];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -752,6 +753,7 @@ bool searchFlag3=true;
     
     NSLog(@"filteredListPeople %@ %d %d ",filteredList,[filteredList count],[peopleListArray count]);
     [self.blockTableView reloadData];
+    [self loadImagesForOnscreenRows];
 }
 //searchbar delegate method end
 
@@ -795,6 +797,8 @@ bool searchFlag3=true;
 
 -(IBAction)viewLocationButton:(id)sender
 {
+    LocationItemPeople *locationItemPeople = (LocationItemPeople *)[filteredList objectAtIndex:[sender tag]];
+    [self showOnMap:locationItemPeople];
 }
 
 - (void)setRsvpDone:(NSNotification *)notif

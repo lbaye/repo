@@ -98,6 +98,7 @@ bool searchFlag4=true;
     filteredList=[[self loadDummyData] mutableCopy];
     peopleListArray=[[self loadDummyData] mutableCopy];
     [self.inviteTableView reloadData];
+    [self loadImagesForOnscreenRows];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -209,6 +210,11 @@ bool searchFlag4=true;
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
         cell1.addressLabel.text=people.itemAddress;
+        CGSize   strSize = [cell1.addressLabel.text sizeWithFont:[UIFont fontWithName:@"Helvetica" size:13.0f]];
+        ((UIScrollView*)cell1.addressLabel.superview).contentSize = strSize;
+        CGRect addressLabelFrame = cell1.addressLabel.frame;
+        addressLabelFrame = CGRectMake(addressLabelFrame.origin.x, addressLabelFrame.origin.y, strSize.width, strSize.height);
+        cell1.addressLabel.frame = addressLabelFrame;
         Geolocation *geoLocation=[[Geolocation alloc] init];
         geoLocation.latitude=people.userInfo.currentLocationLat;
         geoLocation.longitude=people.userInfo.currentLocationLng;
@@ -530,6 +536,7 @@ bool searchFlag4=true;
     // UISearchBar loses focus
     // We don't need to do anything here.
     [self.inviteTableView reloadData];
+    [self loadImagesForOnscreenRows];
     [inviteSearchBar resignFirstResponder];
 }
 
@@ -634,6 +641,8 @@ bool searchFlag4=true;
 
 -(IBAction)viewLocationButton:(id)sender
 {
+    LocationItemPeople *locationItemPeople = (LocationItemPeople *)[filteredList objectAtIndex:[sender tag]];
+    [self showOnMap:locationItemPeople];
 }
 
 - (void)setRsvpDone:(NSNotification *)notif
@@ -642,6 +651,7 @@ bool searchFlag4=true;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
 }
+
 - (void)dealloc {
     [labelNotifCount release];
     [super dealloc];

@@ -13,8 +13,9 @@
 
 #import <UIKit/UIKit.h>
 #import "CircleImageDownloader.h"
+#import "CircleListViewController.h"
 
-@interface BlockUnblockCircleViewController : UIViewController
+@interface BlockUnblockCircleViewController : CircleListViewController
 {
     IBOutlet UITableView *blockTableView;
     IBOutlet UISearchBar *blockSearchBar;

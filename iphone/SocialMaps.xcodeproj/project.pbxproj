@@ -496,6 +496,7 @@
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
 		B08EE140173A719C008C44D8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B08EE13F173A719C008C44D8 /* Default-568h@2x.png */; };
 		B099FA101771AD3C005B68F9 /* bg-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B099FA0F1771AD3C005B68F9 /* bg-568h@2x.png */; };
+		B0A451641772D83600FA722F /* CircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0A451631772D83600FA722F /* CircleListViewController.m */; };
 		B0B73C1A1654BBB300DDF6E5 /* RecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */; };
 		B0B73C1B1654BBB300DDF6E5 /* RecommendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */; };
 		B0B73C1F1654F38100DDF6E5 /* UITextView+Rounded.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C1E1654F38100DDF6E5 /* UITextView+Rounded.m */; };
@@ -1217,6 +1218,8 @@
 		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
 		B08EE13F173A719C008C44D8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		B099FA0F1771AD3C005B68F9 /* bg-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-568h@2x.png"; path = "Images/bg-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		B0A451621772D83600FA722F /* CircleListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleListViewController.h; sourceTree = "<group>"; };
+		B0A451631772D83600FA722F /* CircleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleListViewController.m; sourceTree = "<group>"; };
 		B0B73C171654BBB300DDF6E5 /* RecommendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendViewController.h; sourceTree = "<group>"; };
 		B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendViewController.m; sourceTree = "<group>"; };
 		B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecommendViewController.xib; sourceTree = "<group>"; };
@@ -1664,6 +1667,8 @@
 				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
 				200746D1160ADB39001A0873 /* ViewCircleWisePeopleViewController.h */,
 				200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */,
+				B0A451621772D83600FA722F /* CircleListViewController.h */,
+				B0A451631772D83600FA722F /* CircleListViewController.m */,
 				4F98A2E015BB387D000B3124 /* ViewController.h */,
 				4F98A2E115BB387D000B3124 /* ViewController.m */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
@@ -2678,6 +2683,7 @@
 				B0044AB716B7A6B8004C6A57 /* CustomSaveView.m in Sources */,
 				B0D172FA170C112600AFE506 /* ReportContent.m in Sources */,
 				20F77D7E17168EFF008E4E6D /* SearchListViewController.m in Sources */,
+				B0A451641772D83600FA722F /* CircleListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

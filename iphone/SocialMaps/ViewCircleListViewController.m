@@ -118,7 +118,7 @@ bool showSM=true;
     eventListArray=[[self loadDummyData] mutableCopy];
     [self getSortedDisplayList];
     [self.circleListTableView reloadData];
-    
+    [self loadImagesForOnscreenRows];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -444,7 +444,7 @@ bool showSM=true;
     cell.showOnMapButton.tag=indexPath.row;
     [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
     
-    cell.showOnMapButton.tag=indexPath.row;
+    //cell.showOnMapButton.tag=indexPath.row;
     // Leave cells empty if there's no data yet
     if (nodeCount > 0)
 	{
@@ -610,12 +610,13 @@ bool showSM=true;
     }
 }
 
+/*
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     
     if (!decelerate) 
         [self loadImagesForOnscreenRows];
 }
-
+*/
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
     [self loadImagesForOnscreenRows];
@@ -627,7 +628,10 @@ bool showSM=true;
 //Lazy loading method ends.
 
 -(void)viewLocationButton:(id)sender
-{}
+{
+    LocationItemPeople *locationItemPeople = (LocationItemPeople *)[filteredList objectAtIndex:[sender tag]];
+    [self showOnMap:locationItemPeople];
+}
 
 -(void)inviteButtonAction:(id)sender
 {}

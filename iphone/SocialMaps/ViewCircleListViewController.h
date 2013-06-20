@@ -14,8 +14,9 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "CustomCheckbox.h"
+#import "CircleListViewController.h"
 
-@interface ViewCircleListViewController : UIViewController <CustomCheckboxDelegate>
+@interface ViewCircleListViewController : CircleListViewController <CustomCheckboxDelegate>
 {
     IBOutlet UITableView *circleListTableView;
     IBOutlet UISearchBar *circleSearchBar;

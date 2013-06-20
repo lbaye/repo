@@ -12,8 +12,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "CircleListViewController.h"
 
-@interface InviteFromCircleViewController : UIViewController
+@interface InviteFromCircleViewController : CircleListViewController
 {
     IBOutlet UITableView *inviteTableView;
     IBOutlet UISearchBar *inviteSearchBar;
