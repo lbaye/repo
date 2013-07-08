@@ -1,0 +1,54 @@
+create_mapixTrails:
+  pattern: /mapixTrails
+  defaults: { _controller: Controller\TrailController::create, type: mapix }
+  requirements: { _method: POST }
+
+all_mapixTrails:
+  pattern: /mapixTrails
+  defaults: { _controller: Controller\TrailController::index, type: mapix }
+  requirements: { _method: GET }
+
+a_mapixTrail:
+  pattern:  /mapixTrails/{id}
+  defaults: { _controller: Controller\TrailController::getById, type: mapix }
+  requirements: { _method: GET }
+
+my_mapixTrails:
+  pattern:  /me/mapixTrails
+  defaults: { _controller: Controller\TrailController::getByCurrentUser, type: mapix }
+  requirements: { _method: GET }
+
+edit_mapixTrails:
+  pattern:  /mapixTrails/{id}
+  defaults: { _controller: Controller\TrailController::update, type: mapix }
+  requirements: { _method: PUT }
+
+delete_mapixTrail:
+  pattern:  /mapixTrails/{id}
+  defaults: { _controller: Controller\TrailController::delete, type: mapix }
+  requirements: { _method: DELETE }
+
+add_marker_to_mapixTrail:
+  pattern:  /mapixTrails/marker/{id}
+  defaults: { _controller: Controller\TrailController::addMarker, type: mapix }
+  requirements: { _method: PUT }
+
+delete_marker_from_mapixTrail:
+  pattern:  /mapixTrails/marker/delete/{id}
+  defaults: { _controller: Controller\TrailController::deleteMarker, type: mapix }
+  requirements: { _method: PUT }
+
+add_photo_to_marker:
+  pattern:  /mapixTrails/photo/{id}
+  defaults: { _controller: Controller\TrailController::addPhotoToMarker, type: mapix }
+  requirements: { _method: PUT }
+
+delete_photo_from_marker:
+  pattern:  /mapixTrails/photo/delete/{id}
+  defaults: { _controller: Controller\TrailController::deletePhotoFromMarker, type: mapix }
+  requirements: { _method: PUT }
+
+share_mapixTrail:
+  pattern: /mapixTrails/share/{id}
+  defaults: { _controller: Controller\TrailController::share, type: mapix }
+  requirements: { _method: POST}

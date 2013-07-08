@@ -1,0 +1,19 @@
+hello_world:
+  pattern: /hello
+  defaults: { _controller: Controller\Hello::world }
+  requirements: { _method: GET }
+
+hello_gearman:
+  pattern: /test/gearman
+  defaults: { _controller: Controller\Hello::gearman }
+  requirements: { _method: GET }
+
+hello_gcm:
+  pattern: /test/gcm
+  defaults: { _controller: Controller\Hello::GCM }
+  requirements: { _method: GET }
+
+playground:
+  pattern: /test
+  defaults: { _controller: Controller\Hello::test }
+  requirements: { _method: GET }

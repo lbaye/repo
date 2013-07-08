@@ -1,0 +1,66 @@
+my_newsfeed:
+  pattern: /me/newsfeed
+  defaults: { _controller: Controller\UserActivities::getActivities, type: json }
+  requirements: { _method: GET }
+
+my_network_newsfeed_html:
+  pattern: /me/network/newsfeed.html
+  defaults: { _controller: Controller\UserActivities::getActivities, type: html, networkFeed: true }
+  requirements: { _method: GET }
+
+
+my_newsfeed_html:
+  pattern: /me/newsfeed.html
+  defaults: { _controller: Controller\UserActivities::getActivities, type: html }
+  requirements: { _method: GET }
+
+my_minifeed_html:
+  pattern: /me/minifeed.html
+  defaults: { _controller: Controller\UserActivities::getMiniFeed, type: html }
+  requirements: { _method: GET }
+
+my_network_minifeed_html:
+  pattern: /me/network/minifeed.html
+  defaults: { _controller: Controller\UserActivities::getMiniFeed, type: html, networkFeed: true }
+  requirements: { _method: GET }
+
+user_newsfeed:
+  pattern: /{userId}/newsfeed
+  defaults: { _controller: Controller\UserActivities::getActivitiesByUserId, type: json }
+  requirements: { _method: GET }
+
+user_network_newsfeed_html:
+  pattern: /{userId}/network/newsfeed.html
+  defaults: {_controller: Controller\UserActivities::getActivitiesByUserId, type: html, networkFeed: true }
+  requirements: {_method: GET}
+
+user_newsfeed_html:
+  pattern: /{userId}/newsfeed.html
+  defaults: { _controller: Controller\UserActivities::getActivitiesByUserId, type: html }
+  requirements: { _method: GET }
+
+user_minifeed_html:
+  pattern: /{userId}/minifeed.html
+  defaults: { _controller: Controller\UserActivities::getMiniFeedByUserId, type: html }
+  requirements: { _method: GET }
+
+like_a_feed:
+  pattern: /newsfeed/{id}/like
+  defaults: { _controller: Controller\UserActivities::likeById, type: json }
+  requirements: { _method: PUT }
+
+unlike_a_feed:
+  pattern: /newsfeed/{id}/unlike
+  defaults: { _controller: Controller\UserActivities::unlikeById, type: json }
+  requirements: { _method: PUT }
+
+
+feed_likes_html:
+  pattern: /newsfeed/{id}/likes.html
+  defaults: { _controller: Controller\UserActivities::getLikesById, type: html }
+  requirements: { _method: GET }
+
+report_email:
+  pattern: /report
+  defaults: { _controller: Controller\UserActivities::sentReport }
+  requirements: { _method: POST }

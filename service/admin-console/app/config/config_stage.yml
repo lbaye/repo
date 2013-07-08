@@ -1,0 +1,52 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
+    profiler: { only_exceptions: false }
+
+#web_profiler:
+#    toolbar: false
+#    intercept_redirects: false
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    globals:
+       image_path:      "http://services.socialmapsapp.com/prodtest"
+       image_real_path: "/var/sm-data"
+
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        firephp:
+            type:  firephp
+            level: info
+
+assetic:
+    use_controller: true
+
+#swiftmailer:
+#    delivery_address: me@example.com
+
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://10.239.65.85:27017
+            options: {}
+    default_database: socialmaps_prodtest
+    document_managers:
+        default:
+            auto_mapping: true
+
+#swiftmailer:
+#    transport:  smtp
+#    encryption: ssl
+#    auth_mode:  login
+#    host:       smtp.gmail.com
+#    username:   uddin.borhan@genweb2.com
+#    password:   21212121

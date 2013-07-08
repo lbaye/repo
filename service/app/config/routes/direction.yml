@@ -1,0 +1,4 @@
+share_direction:
+  pattern: /direction/share
+  defaults: { _controller: Controller\Direction::index}
+  requirements: { _method: POST }

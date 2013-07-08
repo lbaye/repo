@@ -1,0 +1,4 @@
+get_version_info:
+  pattern: /about
+  defaults: { _controller: Controller\About::index }
+  requirements: { _method: GET }

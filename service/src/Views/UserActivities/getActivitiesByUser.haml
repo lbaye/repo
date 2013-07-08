@@ -1,0 +1,338 @@
+- if (!$partialView)
+  !!!
+  %html
+    %head
+      %title Hello
+      - $updateTime = filemtime($baseDir . '/assets/stylesheets/newsfeed.css')
+      - $url = $baseUrl . '/assets/stylesheets/newsfeed.css?' . $updateTime
+      - $target = $networkFeed > 0 ? $contextUser->getId() . "/network" :  $contextUser->getId()
+      %link(rel='stylesheet' href=$url)
+      %meta(name="viewport" content="initial-scale=1.0, user-scalable=no")
+
+    %body
+      .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl id="content" offset=0)
+        %ul
+          - $userProfileLink =  "self::profile:" . $contextUser->getId()
+
+          - foreach($activities as $activity)
+            - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
+            - $rowLikesId = $activity->getId() . '_likes'
+            - $rowCommentsId = $activity->getId() . '_comments'
+            - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
+
+            %li.events(offset=$offset)
+              - if ($activity->getObjectType() === 'photo')
+                - $photo = $photoRepo->find($activity->getObjectId())
+
+                .photo
+                  .row
+                    .avatar
+                      - $avatarPath = $photo->getOwner()->getAvatar()
+                      - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                      %a(href= $userProfileLink)
+                        %img.lazy(src=$avatarPath)
+                    .name
+                      %div
+                        .left
+                          %a(href= $userProfileLink)
+                            %h4
+                              = $photo->getOwner()->getName()
+                          %span
+                            uploaded a new picture.
+                    .time
+                      = $activity->toHumanizeDate()
+
+
+                  .row(style='margin-top: 5px;')
+
+                    - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
+                    .image(style=$imagePathCss)
+                      - $photoFullPath = $baseUrl . $photo->getUriMedium();
+                      -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
+                      - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
+                      %a(href=$photoPath)
+                        %img.lazy(src=$photoFullPath style='height:auto;')
+                    .icon.icon_zoom
+
+                  .row
+                    .tools
+                      %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                           data-objecttype=$activity->getObjectType()
+                                           data-liked=$liked)
+                        Like
+
+                      %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                           data-objecttype=$activity->getObjectType()
+                                           data-liked=$liked)
+                        Unlike
+
+                      - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+                      %a(href=$reportLink)
+
+                        Report
+
+                      %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                                    data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
+                        = $activity->getLikesCount()
+                        - if ($activity->getLikesCount() > 1)
+                          Likes
+                        - else
+                          Like
+                  .row.list_of_likes(id=$rowLikesId style='display:none')
+
+
+              - else
+                .activity
+                  .row
+                    .avatar
+                      - $avatarPath = $activity->getOwner()->getAvatar()
+                      - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                      %a(href= $userProfileLink)
+                        %img.lazy(src=$avatarPath)
+                    .name
+                      %a(href= $userProfileLink)
+                        %h4= $activity->getOwner()->getName()
+                    .time
+                      - if ($activity->getCreatedAt() != null)
+                        = $activity->toHumanizeDate()
+
+                    - if ($activity->getObjectType() === 'geotag')
+                      - $geotag = $geotagRepo->find($activity->getObjectId())
+                      - $geoLocation = $geotag->getLocation()->toArray()
+                      - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+
+                      .comment
+                        was geo-tagged
+                        at
+                        %small= $geotag->getLocation()->getAddress()
+                        = ' - '
+                        %strong= stripcslashes($activity->getTitle())
+                        - if ($geotag->getPhoto())
+                          - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                          %img.geoTagImg(src=$geoPhotoFullPath)
+
+                    - if ($activity->getObjectType() === 'friend')
+                      - $friend = $userRepo->find($activity->getObjectId())
+                      - $friendLink = "self::profile:" . $friend->getId()
+                      .comment
+                        is now friend with
+                        %a(href=$friendLink)
+                          = $friend->getName()
+
+
+                  %div.clearfix
+
+                  .row
+                    .tools
+                      %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                           data-objecttype=$activity->getObjectType()
+                                           data-liked=$liked)
+                        Like
+
+                      %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                           data-objecttype=$activity->getObjectType()
+                                           data-liked=$liked)
+                        Unlike
+
+                      - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+                      %a(href=$reportLink)
+
+                        Report
+
+                      %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                                    data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
+                        = $activity->getLikesCount()
+                        - if ($activity->getLikesCount() > 1)
+                          Likes
+                        - else
+                          Like
+
+                  .row.list_of_likes(id=$rowLikesId style='display:none')
+
+          %li.joinDate
+            .activity.tiny
+              .row
+                .avatar
+                  - $avatarPath = $contextUser->getAvatar()
+                  - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                  %a(href= $userProfileLink)
+                    %img.lazy(src=$avatarPath)
+                .name
+                  %div
+                    .left
+                      %a(href= $userProfileLink)
+                        %h4
+                          = $contextUser->getName()
+                      %span
+                        joined
+                        %strong SocialMaps
+                        on
+                      - $date = (array)$contextUser->getCreateDate()
+                      = date('F Y',strtotime($date['date']))
+                      .
+
+            %div.clearfix
+
+          %li
+            .more
+              %span
+                Load more...
+              - $loadingImage = $baseUrl . '/assets/images/loading.gif?'
+              %img(src=$loadingImage)
+
+      - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
+      - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js?' . $jsUpdateTime
+      - $jqScriptUrl = $baseUrl . '/assets/javascripts/jquery-1.8.3.min.js'
+      - $lazyLoadScriptUrl = $baseUrl . '/assets/javascripts/jquery.lazyload.js'
+      - $scrollScript = $baseUrl . '/assets/javascripts/scroll.js?' . $updateTime
+
+      %script(type='text/javascript' src=$jqScriptUrl)
+      %script(type='text/javascript' src=$scriptUrl)
+      %script(type='text/javascript' src=$scrollScript)
+      %script(type='text/javascript')
+        window.appInst.setBaseUrl("#{$baseUrl}");
+        window.appInst.setAuthToken("#{$authToken}");
+
+- else
+  - foreach($activities as $activity)
+    - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
+    - $rowLikesId = $activity->getId() . '_likes'
+    - $rowCommentsId = $activity->getId() . '_comments'
+    - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
+
+    %li.events(offset=$offset)
+      - if ($activity->getObjectType() === 'photo')
+        - $photo = $photoRepo->find($activity->getObjectId())
+
+        .photo
+          .row
+            .avatar
+              - $avatarPath = $photo->getOwner()->getAvatar()
+              - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+              %a(href= $userProfileLink)
+                %img.lazy(src=$avatarPath)
+            .name
+              %div
+                .left
+                  %a(href= $userProfileLink)
+                    %h4
+                      = $photo->getOwner()->getName()
+                  %span
+                    uploaded a new picture.
+            .time
+              = $activity->toHumanizeDate()
+
+
+          .row(style='margin-top: 5px;')
+
+            - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
+            .image(style=$imagePathCss)
+              - $photoFullPath = $baseUrl . $photo->getUriMedium();
+              -$imageWidth = @getimagesize($baseUrl . $photo->getUriMedium());
+              - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
+              %a(href=$photoPath)
+                %img.lazy(src=$photoFullPath style='max-height: '.$imageWidth[1].'px')
+            .icon.icon_zoom
+
+          .row
+            .tools
+              %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                   data-objecttype=$activity->getObjectType()
+                                   data-liked=$liked)
+                Like
+
+              %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                   data-objecttype=$activity->getObjectType()
+                                   data-liked=$liked)
+                Unlike
+
+              - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+              %a(href=$reportLink)
+
+                Report
+              %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                            data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
+                = $activity->getLikesCount()
+                - if ($activity->getLikesCount() > 1)
+                  Likes
+                - else
+                  Like
+
+
+          .row.list_of_likes(id=$rowLikesId style='display:none')
+
+
+      - else
+        .activity
+          .row
+            .avatar
+              - $avatarPath = $activity->getOwner()->getAvatar()
+              - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+              %a(href= $userProfileLink)
+                %img.lazy(src=$avatarPath)
+            .name
+              %a(href= $userProfileLink)
+                %h4= $activity->getOwner()->getName()
+            .time
+              - if ($activity->getCreatedAt() != null)
+                = $activity->toHumanizeDate()
+
+            - if ($activity->getObjectType() === 'geotag')
+              - $geotag = $geotagRepo->find($activity->getObjectId())
+              - $geoLocation = $geotag->getLocation()->toArray()
+              - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+
+              .comment
+                was geo-tagged
+                at
+                %small= $geotag->getLocation()->getAddress()
+                = ' - '
+                %strong= stripcslashes($activity->getTitle())
+                - if ($geotag->getPhoto())
+                  - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                  %img.geoTagImg(src=$geoPhotoFullPath)
+
+
+
+            - if ($activity->getObjectType() === 'friend')
+              - $friend = $userRepo->find($activity->getObjectId())
+              - $friendLink = "self::profile:" . $friend->getId()
+              .comment
+                is now friend with
+                %a(href=$friendLink)
+                  = $friend->getName()
+
+          %div.clearfix
+
+          .row
+            .tools
+              %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                   data-objecttype=$activity->getObjectType()
+                                   data-liked=$liked)
+                Like
+
+              %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                   data-objecttype=$activity->getObjectType()
+                                   data-liked=$liked)
+                Unlike
+
+              - $reportLink = "self::report:" . $activity->getObjectType() . ":" . $activity->getObjectId();
+              %a(href=$reportLink)
+
+                Report
+              %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                            data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
+                = $activity->getLikesCount()
+                - if ($activity->getLikesCount() > 1)
+                  Likes
+                - else
+                  Like
+
+          .row.list_of_likes(id=$rowLikesId style='display:none')
+
+

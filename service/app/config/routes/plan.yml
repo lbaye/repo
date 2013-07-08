@@ -1,0 +1,36 @@
+
+all_plans:
+  pattern: /plans
+  defaults: { _controller: Controller\Gathering::index, type: plan }
+  requirements: { _method: GET }
+
+a_plan:
+  pattern:  /plans/{id}
+  defaults: { _controller: Controller\Gathering::getById, type: plan  }
+  requirements: { _method: GET }
+
+
+plans_of_user:
+  pattern:  /users/{user}/plans
+  defaults: { _controller: Controller\Gathering::getByUser, type: plan }
+  requirements: { _method: GET }
+
+my_plans:
+  pattern:  /me/plans
+  defaults: { _controller: Controller\Gathering::getByCurrentUser, type: plan  }
+  requirements: { _method: GET }
+
+new_plan:
+  pattern:  /plans
+  defaults: { _controller: Controller\Gathering::create, type: plan }
+  requirements: { _method: POST }
+
+edit_plan:
+  pattern:  /plans/{id}
+  defaults: { _controller: Controller\Gathering::update, type: plan  }
+  requirements: { _method: PUT }
+
+delete_plan:
+  pattern:  /plans/{id}
+  defaults: { _controller: Controller\Gathering::delete, type: plan  }
+  requirements: { _method: DELETE }

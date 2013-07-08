@@ -1,0 +1,68 @@
+current_user:
+  pattern: /me
+  defaults: { _controller: Controller\User::getCurrentUser }
+  requirements: { _method: GET }
+
+all_users:
+  pattern: /users
+  defaults: { _controller: Controller\User::get }
+  requirements: { _method: GET }
+
+user_by_id:
+  pattern:  /users/{id}
+  defaults: { _controller: Controller\User::getById }
+  requirements: { _method: GET }
+
+user_by_email:
+  pattern:  /users/email/{email}
+  defaults: { _controller: Controller\User::getByEmail }
+  requirements: { _method: GET }
+
+edit_user:
+  pattern:  /users/{id}
+  defaults: { _controller: Controller\User::update }
+  requirements: { _method: PUT }
+
+delete_user:
+  pattern:  /users/{id}
+  defaults: { _controller: Controller\User::delete }
+  requirements: { _method: DELETE }
+
+block_user:
+  pattern: /me/users/block
+  defaults: { _controller: Controller\User::blockUser}
+  requirements: { _method: PUT}
+
+block_user_overwrite:
+  pattern: /me/users/block/overwrite
+  defaults: { _controller: Controller\User::blockUserOverwrite}
+  requirements: { _method: PUT}
+
+list:
+  pattern: /list
+  defaults: { _controller: Controller\AllList::index}
+  requirements: { _method: GET|PUT}
+
+friends:
+  pattern: /me/friends
+  defaults: { _controller: Controller\User::getFriends}
+  requirements: { _method: GET}
+
+friends_of_friend:
+  pattern: /{id}/friends
+  defaults: { _controller: Controller\User::getFriends}
+  requirements: { _method: GET}
+
+
+update_block_user:
+  pattern: /me/users/un-block
+  defaults: { _controller: Controller\User::unblockUsers}
+  requirements: { _method: PUT}
+
+blocked_users:
+  pattern: /me/blocked-users
+  defaults: { _controller: Controller\User::getBlockedUsers}
+  requirements: { _method: GET}
+
+
+

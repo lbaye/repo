@@ -1,0 +1,29 @@
+all_deals:
+  pattern: /deals
+  defaults: { _controller: Controller\Deal::index }
+  requirements: { _method: GET }
+
+a_deal:
+  pattern:  /deals/{id}
+  defaults: { _controller: Controller\Deal::getById }
+  requirements: { _method: GET }
+
+my_deals:
+  pattern:  /me/deals
+  defaults: { _controller: Controller\Deal::getByCurrentUser }
+  requirements: { _method: GET }
+
+new_deal:
+  pattern:  /deals
+  defaults: { _controller: Controller\Deal::create }
+  requirements: { _method: POST }
+
+edit_deal:
+  pattern:  /deals/{id}
+  defaults: { _controller: Controller\Deal::update }
+  requirements: { _method: PUT }
+
+delete_deal:
+  pattern:  /deals/{id}
+  defaults: { _controller: Controller\Deal::delete }
+  requirements: { _method: DELETE }

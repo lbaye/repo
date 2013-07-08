@@ -1,0 +1,34 @@
+create_breadcrumb:
+  pattern: /breadcrumbs
+  defaults: { _controller: Controller\Breadcrumb::create }
+  requirements: { _method: POST }
+
+all_breadcrumbs:
+  pattern: /breadcrumbs
+  defaults: { _controller: Controller\Breadcrumb::index }
+  requirements: { _method: GET }
+
+a_breadcrumb:
+  pattern:  /breadcrumbs/{id}
+  defaults: { _controller: Controller\Breadcrumb::getById }
+  requirements: { _method: GET }
+
+my_breadcrumbs:
+  pattern:  /me/breadcrumbs
+  defaults: { _controller: Controller\Breadcrumb::getByCurrentUser }
+  requirements: { _method: GET }
+
+edit_breadcrumb:
+  pattern:  /breadcrumbs/{id}
+  defaults: { _controller: Controller\Breadcrumb::update }
+  requirements: { _method: PUT }
+
+add_image_to_breadcrumb:
+  pattern:  /breadcrumbs/{id}/photo
+  defaults: { _controller: Controller\Breadcrumb::addPhoto }
+  requirements: { _method: PUT }
+
+delete_breadcrumb:
+  pattern:  /breadcrumbs/{id}
+  defaults: { _controller: Controller\Breadcrumb::delete }
+  requirements: { _method: DELETE }

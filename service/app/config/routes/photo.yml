@@ -1,0 +1,66 @@
+all_photos:
+  pattern: /photos
+  defaults: { _controller: Controller\Photos::index }
+  requirements: { _method: GET }
+
+upload_photo:
+  pattern: /photos
+  defaults: { _controller: Controller\Photos::create }
+  requirements: { _method: POST }
+
+get_photos_by_user:
+    pattern: /photos/me
+    defaults: { _controller: Controller\Photos::getByAuthenticatedUser }
+    requirements: { _method: GET }
+
+get_photos_by_user_id:
+    pattern: /photos/users/{id}
+    defaults: { _controller: Controller\Photos::getPermittedPhotos }
+    requirements: { _method: GET }
+
+get_photo:
+  pattern: /photos/{id}
+  defaults: { _controller: Controller\Photos::getById }
+  requirements: { _method: GET }
+
+
+update_photo:
+  pattern: /photos/{id}
+  defaults: { _controller: Controller\Photos::update }
+  requirements: { _method: PUT }
+
+delete_photo:
+  pattern: /photos/{id}
+  defaults: { _controller: Controller\Photos::delete }
+  requirements: { _method: DELETE }
+
+delete_photos:
+  pattern: /photos/deletephotos
+  defaults: { _controller: Controller\Photos::deletePhotos }
+  requirements: { _method: POST }
+
+add_comment_to_photo:
+  pattern: /photos/{id}/comments
+  defaults: { _controller: Controller\Photos::createComment }
+  requirements: { _method: POST }
+
+all_comments_from_a_photo:
+  pattern: /photos/{id}/comments
+  defaults: { _controller: Controller\Photos::getCommentsByPhotoId }
+  requirements: { _method: GET }
+
+delete_comment_from_a_photo:
+  pattern: /photos/{id}/comments/{commentId}
+  defaults: { _controller: Controller\Photos::deleteCommentById }
+  requirements: { _method: DELETE }
+
+like_a_photo:
+  pattern: /photos/{id}/like
+  defaults: { _controller: Controller\Photos::likePhoto }
+  requirements: { _method: POST }
+
+dislike_a_photo:
+  pattern: /photos/{id}/unlike
+  defaults: { _controller: Controller\Photos::unlikePhoto }
+  requirements: { _method: POST }
+

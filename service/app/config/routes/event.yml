@@ -1,0 +1,56 @@
+all_events:
+  pattern: /events
+  defaults: { _controller: Controller\Gathering::getActiveEvent, type: event }
+  requirements: { _method: GET }
+
+all_events_by_location:
+  pattern: /events/bylocation
+  defaults: { _controller: Controller\Gathering::getActiveEvent, type: event }
+  requirements: { _method: POST }
+
+a_event:
+  pattern:  /events/{id}
+  defaults: { _controller: Controller\Gathering::getById, type: event }
+  requirements: { _method: GET }
+
+events_of_user:
+  pattern:  /users/{user}/events
+  defaults: { _controller: Controller\Gathering::getPermittedEvents, type: event }
+  requirements: { _method: GET }
+
+my_events:
+  pattern:  /me/events
+  defaults: { _controller: Controller\Gathering::getByCurrentUser, type: event  }
+  requirements: { _method: GET }
+
+new_event:
+  pattern:  /events
+  defaults: { _controller: Controller\Gathering::create, type: event }
+  requirements: { _method: POST }
+
+edit_event:
+  pattern:  /events/{id}
+  defaults: { _controller: Controller\Gathering::update, type: event }
+  requirements: { _method: PUT }
+
+delete_event:
+  pattern:  /events/{id}
+  defaults: { _controller: Controller\Gathering::delete, type: event }
+  requirements: { _method: DELETE }
+
+who_will_attend:
+  pattern:  /events/{id}/rsvp
+  defaults: { _controller: Controller\Gathering::setRsvp, type: event }
+  requirements: { _method: PUT }
+
+
+share:
+  pattern: /events/{id}/share
+  defaults: { _controller: Controller\Gathering::share, type: event }
+  requirements: { _method: POST}
+
+
+add_guests:
+  pattern: /events/{id}/guests
+  defaults: { _controller: Controller\Gathering::addGuests, type: event }
+  requirements: { _method: PUT}

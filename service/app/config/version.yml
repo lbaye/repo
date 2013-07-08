@@ -1,0 +1,4 @@
+about:
+  version: '1.6.0'
+  serviceStatus: 'production'
+  allowedKeys: 'discover2012'

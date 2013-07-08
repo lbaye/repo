@@ -1,0 +1,19 @@
+{
+    "require": {
+        "symfony/class-loader": "2.1.*",
+        "symfony/http-foundation": "2.1.*",
+        "symfony/routing": "2.1.*",
+        "symfony/templating": "2.1.*",
+        "mthaml/mthaml": ">=1.1.1",
+        "doctrine/mongodb-odm": "1.0.0BETA4",
+        "symfony/http-kernel": "2.1.*",
+        "respect/validation": "dev-master",
+        "sami/sami": "dev-master",
+        "emran/php-solr-helper": "dev-master",
+        "swiftmailer/swiftmailer": ">=4.2.0,<4.3-dev",
+        "facebook/php-sdk": "dev-master",
+        "knplabs/gaufrette": "dev-master",
+        "monolog/monolog": "1.2.1"
+    },
+    "minimum-stability": "dev"
+}

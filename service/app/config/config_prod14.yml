@@ -1,0 +1,53 @@
+web:
+  root: http://services.socialmapsapp.com/v1_4
+
+mongodb:
+  host: '10.239.65.85'
+  port: 27017
+  database: 'socialmaps_v13'
+
+
+gearman:
+  host: '10.234.125.185'
+  port: 4730
+
+logging:
+  # DEBUG, WARN, ERROR
+  level: "DEBUG"
+  file: "%s/logs/web_%s.log"
+
+
+swiftmailer:
+  transport:  smtp
+  encryption: ssl
+  auth_mode:  login
+  host:       smtp.gmail.com
+  port:       587
+  username:   test@socialmaps.com
+  password:   123456
+
+facebook:
+  appId: 197770310286117
+  secret: d31a93b130c927645f8f1a97d2bd66e9
+
+googlePlace:
+  apiKey: AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw
+
+
+iOSPushNotification:
+  pemFile: SM_Prod_Push_Cert_Key.pem
+  endPoint: ssl://gateway.push.apple.com:2195
+  passphrase: sm2012
+
+imagetype:
+  thumb:
+    width: 135
+    height: 135
+
+  medium:
+    width: 570
+    height: 370
+
+  large:
+    width: 640
+    height: 920

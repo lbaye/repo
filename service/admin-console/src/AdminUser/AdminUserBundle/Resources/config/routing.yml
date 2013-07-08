@@ -1,0 +1,140 @@
+admin_user_homepage:
+    pattern:  /
+    defaults: { _controller: AdminUserBundle:AdminUser:index }
+
+admin_user_loginpage:
+    pattern:  /login
+    defaults: { _controller: AdminUserBundle:AdminUser:login }
+
+admin_user_listpage:
+    pattern:  /userlist
+    defaults: { _controller: AdminUserBundle:AdminUser:userList }
+
+adminuser_userlist_paginated:
+    pattern:  /userlist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:userList }
+
+admin_user_logoutpage:
+    pattern:  /logout
+    defaults: { _controller: AdminUserBundle:AdminUser:logout }
+
+admin_user_updatepage:
+    pattern:  /userupdate/{id}
+    defaults: { _controller: AdminUserBundle:AdminUser:userUpdate }
+
+admin_user_addpage:
+    pattern:  /useradd
+    defaults: { _controller: AdminUserBundle:AdminUser:addUser }
+
+admin_secure_loginpage:
+    pattern:  /adminlogin
+    defaults: { _controller: AdminUserBundle:Secured:login }
+
+admin_secure_loginaction:
+    pattern:  /demo/secured/login
+    defaults: { _controller: AdminUserBundle:Secured:login }
+
+admin_secure_loginacheck:
+    pattern:  /login_check
+    defaults: { _controller: AdminUserBundle:Secured:securityCheck }
+
+adminuser_search_result:
+    pattern:  /searchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchResult }
+
+adminuser_search_result_paginated:
+    pattern:  /searchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchResult }
+
+user_block_search_result:
+    pattern:  /blcok_searchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:blockSearchResult }
+
+
+emailnotify_user:
+    pattern:  /emailuser/{id}
+    defaults: { _controller: AdminUserBundle:AdminUser:emailUser }
+
+manage_place:
+    pattern:  /placelist
+    defaults: { _controller: AdminUserBundle:AdminUser:placeList }
+
+manage_place_paginated:
+    pattern:  /placelist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:placeList }
+
+add_place:
+    pattern:  /addplace
+    defaults: { _controller: AdminUserBundle:AdminUser:addPlace }
+
+manage_place_edit:
+    pattern:  /placeedit/{id}
+    defaults: { _controller: AdminUserBundle:AdminUser:editPlace }
+
+manage_photo:
+    pattern:  /photolist
+    defaults: { _controller: AdminUserBundle:AdminUser:photoList }
+
+manage_photo_paging:
+    pattern:  /photolist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:photoList }
+
+manage_photo_search:
+    pattern:  /photoearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchPhoto }
+
+photo_delete:
+    pattern:  /photo/{id}
+    defaults: { _controller: AdminUserBundle:AdminUser:deletePhoto }
+
+get_address:
+    pattern:  /address/{lat}/{lng}
+    defaults: { _controller: AdminUserBundle:AdminUser:getAddress }
+
+event_list:
+    pattern:  /eventlist
+    defaults: { _controller: AdminUserBundle:AdminUser:eventList }
+
+event_delete:
+    pattern:  /event/{id}
+    defaults: { _controller: AdminUserBundle:AdminUser:deleteEvent }
+
+manage_event_paging:
+    pattern:  /eventlist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:eventList }
+
+user_block_list:
+    pattern:  /blockuserlist
+    defaults: { _controller: AdminUserBundle:AdminUser:userBlockList }
+
+user_block_list_paging:
+    pattern:  /blockuserlist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:userBlockList }
+
+place_search_result:
+    pattern:  /placesearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchPlace }
+
+place_search_result_paginated:
+    pattern:  /placesearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchPlace }
+
+event_search_result:
+    pattern:  /eventsearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchEvent }
+
+manage_custom_place:
+    pattern:  /customplacelist
+    defaults: { _controller: AdminUserBundle:AdminUser:customPlaceList }
+
+manage_custom_place_paginated:
+    pattern:  /customplacelist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:customPlaceList }
+
+custom_place_search_result:
+    pattern:  /customplacesearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchCustomPlace }
+
+custom_place_search_result_paginated:
+    pattern:  /customplacesearchresult/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:searchCustomPlace }

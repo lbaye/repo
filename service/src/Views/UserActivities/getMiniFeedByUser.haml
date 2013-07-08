@@ -1,0 +1,42 @@
+!!!
+%html
+  %head
+    %title Hello
+
+    - $updateTime = filemtime($baseDir . '/assets/stylesheets/minifeed.css')
+    - $url = $baseUrl . '/assets/stylesheets/minifeed.css?' . $updateTime
+    %link(rel='stylesheet' href=$url)
+
+%body
+  %ul
+    - foreach($activities as $activity)
+      %li
+        %span.name
+          = $activity->getOwner()->getName()
+
+        - if ($activity->getObjectType() === 'photo')
+          uploaded a new photo
+        - else if ($activity->getObjectType() === 'review')
+          reviewed on "Place name"
+        - else if ($activity->getObjectType() === 'checkin')
+          has checked in "Venue name"
+        - else if ($activity->getObjectType() === 'geotag')
+          - $geotag = $geotagRepo->find($activity->getObjectId())
+          - $address = $geotag->getLocation()
+          has tagged
+          = $address->getAddress()
+          as
+          = $geotag->getTitle()
+        - else if ($activity->getObjectType() === 'friend')
+          - $friend = $userRepo->find($activity->getObjectId())
+          and
+          = $friend->getFirstName()
+          both became friend.
+
+        .time
+          - if ($activity->getCreatedAt() != null)
+            = $activity->toHumanizeDate()
+          - else
+            Unknown
+
+

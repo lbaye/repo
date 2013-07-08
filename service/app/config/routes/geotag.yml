@@ -1,0 +1,44 @@
+all_geotags:
+  pattern: /geotags
+  defaults: { _controller: Controller\Place::index, type: geotag }
+  requirements: { _method: GET }
+
+all_geotags_search:
+  pattern:  /geotags/all
+  defaults: { _controller: Controller\Place::search, type: geotag }
+  requirements: { _method: POST }
+
+all_geotags_search_by_location:
+  pattern:  /geotags/bylocation
+  defaults: { _controller: Controller\Place::index, type: geotag }
+  requirements: { _method: POST }
+
+a_geotag:
+  pattern:  /geotags/{id}
+  defaults: { _controller: Controller\Place::getById, type: geotag }
+  requirements: { _method: GET }
+
+geotags_of_user:
+  pattern:  /users/{userId}/geotags
+  defaults: { _controller: Controller\Place::getByUser, type: geotag }
+  requirements: { _method: GET }
+
+my_geotags:
+  pattern:  /me/geotags
+  defaults: { _controller: Controller\Place::getByCurrentUser, type: geotag }
+  requirements: { _method: GET }
+
+new_geotag:
+  pattern:  /geotags
+  defaults: { _controller: Controller\Place::create, type: geotag }
+  requirements: { _method: POST }
+
+edit_geotag:
+  pattern:  /geotags/{id}
+  defaults: { _controller: Controller\Place::update, type: geotag }
+  requirements: { _method: PUT }
+
+delete_geotag:
+  pattern:  /geotags/{id}
+  defaults: { _controller: Controller\Place::delete, type: geotag }
+  requirements: { _method: DELETE }
