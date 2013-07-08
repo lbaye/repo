@@ -1,0 +1,5 @@
+.DS_Store
+*.xcscheme
+*.xcuserdatad
+Images/.DS_Store
+*.orig
